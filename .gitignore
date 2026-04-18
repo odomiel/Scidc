@@ -1,0 +1,11 @@
+# Build artifacts
+*.o
+*.a
+*.so
+src/tkscidb-beta
+src/cdb2sci
+src/cbh2si4
+build.log
+Scidb-x86_64.AppImage
+appimagetool-x86_64.AppImage
+AppDir/
