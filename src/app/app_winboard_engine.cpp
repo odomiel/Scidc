@@ -646,7 +646,7 @@ winboard::Engine::stopAnalysis(bool restartIsPending)
 			{
 				// Catch possible problem: the engine may not respond to "ping".
 				m_waitForPong = true;
-				m_timer = new Timer(this, 2000);
+				m_timer.reset(new Timer(this, 2000));
 			}
 
 			// the engine should now send "pong"
@@ -758,7 +758,7 @@ winboard::Engine::protocolStart(bool isProbing)
 
 		// By spec we must wait up to 2 seconds to
 		// receive all features offers from engine.
-		m_timer = new Timer(this, 2000);
+		m_timer.reset(new Timer(this, 2000));
 	}
 }
 
