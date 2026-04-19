@@ -1102,7 +1102,7 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 			try
 			{
-				db = new ::db::Database(src, encoding);
+				db.reset(new ::db::Database(src, encoding));
 			}
 			catch (...)
 			{
