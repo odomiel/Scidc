@@ -122,10 +122,11 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in two places:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.0 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.0 BETA"` (CodeBlocks IDE fallback only)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.1 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.1 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.1 BETA"` (Tcl-side version — **must match the binary**, otherwise startup fails with "version error")
 
-**Rule:** Increment the third digit (e.g. `1.1.0` → `1.1.1`) with every code change committed. Update both files together.
+**Rule:** Increment the third digit (e.g. `1.1.1` → `1.1.2`) with every code change committed. Update all three files together.
 
 ## Local Git
 
