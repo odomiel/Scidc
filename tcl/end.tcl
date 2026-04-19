@@ -176,7 +176,7 @@ proc keybar::defaultCSS {} {
 }
 
 proc keybar::tr {text} {
-	if {[string length $text] == 1} { return $text }
+	if {[string length $text] <= 1} { return $text }
 	return $::mc::KeyDescr($text)
 }
 
