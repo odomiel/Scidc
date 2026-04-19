@@ -1734,8 +1734,8 @@ proc AdjustDateBox {top} {
 	if {[llength [$w overhang1]] == 0} {
 		after idle [namespace code [list AdjustDateBox $top]]
 	} else {
-		grid rowconfigure $top {16 18} -minsize [expr {$::theme::padding - [$w overhang1]}]
-		grid rowconfigure $top {34 36} -minsize [expr {$::theme::padding - [$w overhang2]}]
+		grid rowconfigure $top {14 34} -minsize [expr {max(0, $::theme::padding - [$w overhang1])}]
+		grid rowconfigure $top {16 36} -minsize [expr {max(0, $::theme::padding - [$w overhang2])}]
 	}
 }
 
