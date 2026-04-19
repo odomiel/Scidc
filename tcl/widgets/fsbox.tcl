@@ -4067,7 +4067,7 @@ proc Glob {w refresh} {
 		set folders {}
 
 		switch $Vars(glob) {
-			Files - Desktop {
+			Files - Desktop - Download {
 				set filter *
 				if {$Vars(showhidden)} { lappend filter .* }
 				if {[catch { glob -nocomplain -directory $Vars(folder) -types d {*}$filter } folders]} {
@@ -4118,7 +4118,7 @@ proc Glob {w refresh} {
 		}
 
 		switch $Vars(glob) {
-			Files - Desktop {
+			Files - Desktop - Download {
 				if {$Vars(type) ne "dir"} {
 					set filter *
 					if {$Vars(showhidden)} { lappend filter .* }
