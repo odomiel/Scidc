@@ -123,12 +123,24 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in two places:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.2 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.2 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.2 BETA"` (Tcl source — becomes part of `tcl/scidb-beta`)
-- `tcl/scidb-beta` line 41: `set version "1.1.2 BETA"` (compiled script, loaded at runtime — **must match binary** or startup fails with "version error")
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.5 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.5 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.5 BETA"` (Tcl source)
 
-**Rule:** Increment the third digit with every code change committed. Update all four files together.
+`tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
+
+**Rule:** Increment the third digit with every code change committed. Update all three source files together.
+
+## C++ modernisation notes (post-r1531)
+
+### `mstl::auto_ptr` is now `std::unique_ptr`
+
+`src/mstl/m_auto_ptr.h` defines `mstl::auto_ptr<T>` as a type alias for `std::unique_ptr<T>`. When writing new code or fixing compilation errors involving `auto_ptr`, follow these rules:
+
+- Assigning a **raw pointer** to a `auto_ptr`/`unique_ptr` field: use `.reset(ptr)`, not `= ptr`
+- Passing a **named** (lvalue) `auto_ptr` to a function that takes it by value: use `std::move(x)` explicitly
+- Passing a **temporary** (`auto_ptr<T>(new T())`) to such a function: no change needed
+- The old `auto_ptr` copy constructor silently transferred ownership from lvalues; `unique_ptr` requires explicit `std::move()`
 
 ## Local Git
 

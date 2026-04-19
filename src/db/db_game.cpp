@@ -1277,7 +1277,7 @@ Game::insertUndo(UndoAction action, Command command, MoveNode* node)
 		Undo* prev = prevUndo();
 
 		if (prev == 0 || prev->command != command || command != StripComments)
-			newUndo(action, command).node = node;
+			newUndo(action, command).node.reset(node);
 		else
 			prev->node.reset(node);
 	}
@@ -1302,7 +1302,7 @@ Game::insertUndo(UndoAction action, Command command, MoveNode* node, unsigned va
 	if (m_maxUndoLevel)
 	{
 		Undo& undo = newUndo(action, command);
-		undo.node = node;
+		undo.node.reset(node);
 		undo.varNo = varNo;
 	}
 	else
@@ -1366,7 +1366,7 @@ Game::insertUndo(UndoAction action, Command command, MoveNode* node, Board const
 	if (m_maxUndoLevel)
 	{
 		Undo& undo = newUndo(action, command);
-		undo.node = node;
+		undo.node.reset(node);
 		undo.board = board;
 	}
 	else
@@ -2881,7 +2881,7 @@ Game::addMoves(MoveList const& moves)
 	}
 
 	n->setNext(new MoveNode);
-	return addMoves(node);
+	return addMoves(std::move(node));
 }
 
 
@@ -3001,7 +3001,7 @@ Game::addVariation(MoveList const& moves, move::Position position)
 	}
 
 	n->setNext(new MoveNode);
-	return addVariation(node, position);
+	return addVariation(std::move(node), position);
 }
 
 
@@ -3021,7 +3021,7 @@ Game::addVariation(Move const& move, move::Position position)
 
 	n->setNext(new MoveNode(board, move, m_variant));
 	n->next()->setNext(new MoveNode);
-	return addVariation(node, position);
+	return addVariation(std::move(node), position);
 }
 
 

@@ -66,7 +66,7 @@
 #include <ctype.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.4 BETA"
+# define SCIDB_VERSION	"1.1.5 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 
