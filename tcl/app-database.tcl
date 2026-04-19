@@ -516,6 +516,8 @@ proc openBase {parent file byUser args} {
 				set args {}
 				if {$ext ne "sci" && $ext ne "si5"} {
 					set opts(-readonly) 1
+				} elseif {$ext eq "si5"} {
+					set opts(-readonly) 0
 				} elseif {$opts(-readonly) == -1} {
 					set opts(-readonly) 0
 				}
