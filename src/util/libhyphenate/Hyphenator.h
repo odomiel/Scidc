@@ -104,8 +104,8 @@ namespace hyphenate
 		~Hyphenator();
 
 		/// Return whether a pattern directory was found.
-		bool has_dictionary() const	{ return m_dictionary; }
-		bool has_lookup() const			{ return m_lookup; }
+		bool has_dictionary() const	{ return m_dictionary != nullptr; }
+		bool has_lookup() const			{ return m_lookup != nullptr; }
 		bool is_german() const			{ return m_is_german; }
 
 		// Dump the content.
