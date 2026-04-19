@@ -289,7 +289,7 @@ proc open {parent base variant position {number 0}} {
 
 	set characteristicsOnly [expr {[llength $position] == 0}]
 	set codec [::scidb::db::get codec $base $variant]
-	if {$codec eq "si4"} { set codec "si3" }
+	if {$codec eq "si4" || $codec eq "si5"} { set codec "si3" }
 	if {$codec eq "sci"} {
 		set characteristics 0
 	} else {
@@ -438,7 +438,8 @@ proc Build {dlg base variant position number} {
 
 	switch $Priv(codec) {
 		si3 -
-		si4 { set excludelost 1; set twoRatings 0; set playertype 0; set useStringForRound 1 }
+		si4 -
+		si5 { set excludelost 1; set twoRatings 0; set playertype 0; set useStringForRound 1 }
 		sci { set excludelost 0; set twoRatings 1; set playertype 1; set useStringForRound 0 }
 	}
 
