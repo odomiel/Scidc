@@ -118,6 +118,15 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 `readonly?` maps to `Database::m_readOnly`, set from the `permission` passed to `open()`. For SI5 this must be `ReadWrite` — see `app-database.tcl` `openBase`.
 
+## Version management
+
+The application version is defined in two places:
+
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.0 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.0 BETA"` (CodeBlocks IDE fallback only)
+
+**Rule:** Increment the third digit (e.g. `1.1.0` → `1.1.1`) with every code change committed. Update both files together.
+
 ## Local Git
 
 All changes must be committed after each modification.
