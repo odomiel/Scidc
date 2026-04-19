@@ -20,10 +20,9 @@
 #define _mstl_scoped_ptr_included
 
 #include "m_utility.h"
+#include "m_auto_ptr.h"
 
 namespace mstl {
-
-template <class> class auto_ptr;
 
 template <class T>
 class scoped_ptr : private mstl::noncopyable

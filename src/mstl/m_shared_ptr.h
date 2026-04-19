@@ -20,12 +20,11 @@
 #define _mstl_shared_ptr_included
 
 #include "m_shared_base.h"
+#include "m_auto_ptr.h"
 
 #include <stddef.h>
 
 namespace mstl {
-
-template <class> class auto_ptr;
 #ifdef HAVE_WEAK_PTR
 template <class> class weak_ptr;
 #endif

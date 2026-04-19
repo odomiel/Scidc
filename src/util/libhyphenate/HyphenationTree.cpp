@@ -175,7 +175,7 @@ HyphenationTree::insert(mstl::auto_ptr<HyphenationRule> pattern)
 		sys::utf8::append(lowerCaseKey, sys::utf8::toLower(code));
 	}
 
-	m_root->insert(lowerCaseKey, pattern);
+	m_root->insert(lowerCaseKey, std::move(pattern));
 }
 
 
@@ -203,7 +203,7 @@ HyphenationTree::HyphenationNode::insert(char const* key_string, mstl::auto_ptr<
 
 		// Go to the next letter and descend.
 		M_ASSERT(find(key));
-		find(key)->insert(key_string + 1, pattern);
+		find(key)->insert(key_string + 1, std::move(pattern));
 	}
 }
 
