@@ -624,7 +624,7 @@ inline bool isOk(State state) { return state == Ok || state == TooManyRoundNames
 
 namespace format {
 
-inline bool isScidFormat(Type type)			{ return type & (Scid3 | Scid4); }
+inline bool isScidFormat(Type type)			{ return type & (Scid3 | Scid4 | Scid5); }
 inline bool isChessBaseFormat(Type type)	{ return type & (ChessBase | ChessBaseDOS); }
 inline bool isPGNArchive(Type type)			{ return type == Pgn; }
 inline bool isWritable(Type type)			{ return type & (Scidb | Scid3 | Scid4 | Scid5); }
