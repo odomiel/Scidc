@@ -61,7 +61,7 @@ src/db/       Database layer (codecs, board, game data)
 
 ### Tcl UI — important detail
 
-The UI is **not** one file. The `tcl/` directory contains many individual `.tcl` source files. The `tcl/Makefile` concatenates them (in a specific order defined by `SOURCES`) into the single script `tcl/scidb-beta`. **Always edit the individual `tcl/*.tcl` source files, never `tcl/scidb-beta` directly.** After editing, `make` regenerates `tcl/scidb-beta`.
+The UI is **not** one file. The `tcl/` directory contains many individual `.tcl` source files. The `tcl/Makefile` concatenates them into the single script `tcl/scidb-beta`. **Always edit the individual `tcl/*.tcl` source files.** Since the user does not run `make` for the Tcl assembly step, **also apply the same change to `tcl/scidb-beta` directly** — find the corresponding line(s) and patch them in both files. `tcl/scidb-beta` is what the running program actually loads.
 
 ### C++ → Tcl communication
 
@@ -109,6 +109,7 @@ SI5 was originally read-only. The following changes enable writing:
 | `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, directory setup |
 | `tcl/end.tcl` | Late-init procs (`keybar::tr`, etc.) |
 | `tcl/load.tcl` | ECO/data file loading at startup |
+| `tcl/widgets/fsbox.tcl` | Custom file-selection dialog (open/save) |
 
 ### Save button state logic (app-board.tcl)
 
@@ -122,11 +123,12 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in two places:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.1 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.1 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.1 BETA"` (Tcl-side version — **must match the binary**, otherwise startup fails with "version error")
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.2 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.2 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.2 BETA"` (Tcl source — becomes part of `tcl/scidb-beta`)
+- `tcl/scidb-beta` line 41: `set version "1.1.2 BETA"` (compiled script, loaded at runtime — **must match binary** or startup fails with "version error")
 
-**Rule:** Increment the third digit (e.g. `1.1.1` → `1.1.2`) with every code change committed. Update all three files together.
+**Rule:** Increment the third digit with every code change committed. Update all four files together.
 
 ## Local Git
 
