@@ -102,7 +102,7 @@ trapChildEvent(int signum)
 						case SIGTERM: signal = "TERM"; break;
 
 						default:
-							sprintf(buf, "%d", int(pid));
+							snprintf(buf, sizeof(buf), "%d", int(pid));
 							signal = buf;
 							break;
 					}

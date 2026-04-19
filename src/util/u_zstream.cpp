@@ -265,7 +265,7 @@ openNewFile(void* cookie, char const* filename, mstl::ios_base::openmode mode)
 			while (zzip::find(dir, fname))
 			{
 				char buf[100];
-				sprintf(buf, "-%d", count++);
+				snprintf(buf, sizeof(buf), "-%d", count++);
 				fname = basename;
 				fname += buf;
 				fname += suffix;

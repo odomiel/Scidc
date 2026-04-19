@@ -78,8 +78,8 @@ GDBM_INC          =
 GDBM_LIB          = -lgdbm
 ZLIB_INC          = 
 ZLIB_LIB          = -lz
-ZZIPLIB_INC       = -I/home/thomas/Downloads/scidb/scidb-code-r1531-trunk/src/util/zzip
-ZZIPLIB_LIB       = /home/thomas/Downloads/scidb/scidb-code-r1531-trunk/src/util/zzip/libzzip.a
+ZZIPLIB_INC       = -I/home/thomas/KI/Claude/scidb/scidb-code-r1531-trunk/src/util/zzip
+ZZIPLIB_LIB       = /home/thomas/KI/Claude/scidb/scidb-code-r1531-trunk/src/util/zzip/libzzip.a
 FAM_LIB           = 
 LIB_SUBDIRS       = util/zzip
 
@@ -97,7 +97,7 @@ ENGINES           = stockfish Sjeng
 .PHONY : clean
 .PRECIOUS:
 
-EXTRA_CFLAGS      = -pipe -Wno-format-security -fcommon -Wno-cpp -fno-stack-protector
-EXTRA_CXXFLAGS    = -std=c++14 -DBROKEN_LINKER_HACK=1 -DTWM_MIGRATE_LAYOUT=1 -DDONT_USE_GDB -DDONT_USE_FRAME_ADDR -pipe -Wno-format-security -fcommon -Wno-cpp -fno-stack-protector
+EXTRA_CFLAGS      = -pipe -fcommon -Wno-cpp
+EXTRA_CXXFLAGS    = -std=c++14 -DBROKEN_LINKER_HACK=1 -DTWM_MIGRATE_LAYOUT=1 -DDONT_USE_GDB -DDONT_USE_FRAME_ADDR -pipe -fcommon -Wno-cpp
 EXTRA_DEBUG_FLAGS = 
 

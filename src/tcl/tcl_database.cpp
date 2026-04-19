@@ -2031,7 +2031,7 @@ getGameInfo(int index, int view, char const* database, variant::Type variant, un
 			{
 				char acv[100];
 
-				int acvSize = sprintf(	acv,
+				int acvSize = snprintf(	acv, sizeof(acv),
 												"%u %u %u",
 												info.countAnnotations(),
 												info.countComments(),
@@ -2103,11 +2103,11 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 
 	M_ASSERT(::memset(objv, 0, sizeof(objv)));
 
-	int acvSize = sprintf(	acv,
-									"%u %u %u",
-									info.countAnnotations(),
-									info.countComments(),
-									info.countVariations());
+	int acvSize = snprintf(	acv, sizeof(acv),
+								"%u %u %u",
+								info.countAnnotations(),
+								info.countComments(),
+								info.countVariations());
 
 	mstl::string startPosition, round;
 

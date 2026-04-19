@@ -39,7 +39,7 @@ ostream&
 ostream::operator<<(int16_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%hd", static_cast<short>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%hd", static_cast<short>(n)));
 }
 
 
@@ -47,7 +47,7 @@ ostream&
 ostream::operator<<(int32_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%d", static_cast<int>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%d", static_cast<int>(n)));
 }
 
 
@@ -55,7 +55,7 @@ ostream&
 ostream::operator<<(int64_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%lld", static_cast<long long>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%lld", static_cast<long long>(n)));
 }
 
 
@@ -63,7 +63,7 @@ ostream&
 ostream::operator<<(uint16_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%hu", static_cast<unsigned short>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%hu", static_cast<unsigned short>(n)));
 }
 
 
@@ -71,7 +71,7 @@ ostream&
 ostream::operator<<(uint32_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%u", static_cast<unsigned>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%u", static_cast<unsigned>(n)));
 }
 
 
@@ -79,7 +79,7 @@ ostream&
 ostream::operator<<(uint64_t n)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%llu", static_cast<unsigned long long>(n)));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%llu", static_cast<unsigned long long>(n)));
 }
 
 
@@ -87,7 +87,7 @@ ostream&
 ostream::operator<<(void const* p)
 {
 	char buf[20];
-	return write(buf, ::sprintf(buf, "%p", p));
+	return write(buf, ::snprintf(buf, sizeof(buf), "%p", p));
 }
 
 

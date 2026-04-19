@@ -415,7 +415,7 @@ public:
 			case PipeClosed:	msg = "closed"; break;
 
 			case Terminated:
-				sprintf(buf, "%d", exitStatus());
+				snprintf(buf, sizeof(buf), "%d", exitStatus());
 				msg = buf;
 				break;
 		}

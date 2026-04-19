@@ -95,7 +95,7 @@ string
 cast(T value, char const* format)
 {
 	char buf[100];
-	sprintf(buf, format, value);
+	snprintf(buf, sizeof(buf), format, value);
 	return buf;
 }
 
