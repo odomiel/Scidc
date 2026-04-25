@@ -286,6 +286,9 @@ if {[file exists [file join $::scidb::dir::user themes Virtual.dat]]} {
 	file delete [file join $::scidb::dir::user themes VirtualColored.dat]
 	file delete [file join $::scidb::dir::user themes VirtualBlue.dat]
 }
+if {[file exists [file join $::scidb::dir::user themes VirtualBrown.dat]]} {
+	file delete [file join $::scidb::dir::user themes VirtualBrown.dat]
+}
 if {	![file exists [file join $::scidb::dir::user themes Primus.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Country-Style.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Blackjack.dat]]
