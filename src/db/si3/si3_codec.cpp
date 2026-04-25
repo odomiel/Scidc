@@ -259,11 +259,8 @@ Codec::Codec(CustomFlags* customFlags, bool isVersion5)
 	,m_extGame(isVersion5 ? ".sg5" : (customFlags ? ".sg4" : ".sg3"))
 	,m_extNamebase(isVersion5 ? ".sn5" : (customFlags ? ".sn4" : ".sn3"))
 	,m_blockSize(customFlags ? 131072 : 32768)
-	,m_progressiveStream(0)
-	,m_codec(0)
 	,m_encoding(sys::utf8::Codec::utf8())
 	,m_customFlags(customFlags)
-	,m_gameData(0)
 	,m_hasMagic(false)
 	,m_playerList(new NameList)
 	,m_eventList(new NameList)
@@ -290,17 +287,7 @@ Codec::Codec(CustomFlags* customFlags, bool isVersion5)
 Codec::~Codec() noexcept
 {
 	if (m_progressiveStream)
-	{
 		m_progressiveStream->close();
-		delete m_progressiveStream;
-	}
-
-	delete m_gameData;
-	delete m_codec;
-	delete m_playerList;
-	delete m_eventList;
-	delete m_siteList;
-	delete m_roundList;
 }
 
 
@@ -611,9 +598,9 @@ Codec::doOpen(mstl::string const& encoding)
 				|| encoding == m_codec->encoding());
 	M_ASSERT(m_gameData == nullptr);
 
-	m_codec = new sys::utf8::Codec(encoding);
+	m_codec.reset(new sys::utf8::Codec(encoding));
 	M_ASSERT(encoding == sys::utf8::Codec::automatic() || m_codec->hasEncoding());
-	m_gameData = new BlockFile(m_blockSize, BlockFile::RequireLength, m_magicGameFile);
+	m_gameData.reset(new BlockFile(m_blockSize, BlockFile::RequireLength, m_magicGameFile));
 	m_hasMagic = true;
 }
 
@@ -632,7 +619,7 @@ Codec::doOpen(	mstl::string const& rootname,
 
 	char buf[8];
 
-	m_codec = new sys::utf8::Codec(encoding);
+	m_codec.reset(new sys::utf8::Codec(encoding));
 	M_ASSERT(encoding == sys::utf8::Codec::automatic() || m_codec->hasEncoding());
 
 	mstl::string indexFilename(rootname + m_extIndex);
@@ -672,11 +659,11 @@ Codec::doOpen(	mstl::string const& rootname,
 	namebases().update();
 
 	if (m_isVersion5)
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength));
 	else if (m_hasMagic)
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
 	else
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength));
 }
 
 
@@ -688,7 +675,7 @@ Codec::doOpen(mstl::string const& rootname, mstl::string const& encoding)
 				|| encoding == m_codec->encoding());
 	M_ASSERT(m_gameData == nullptr);
 
-	m_codec = new sys::utf8::Codec(encoding);
+	m_codec.reset(new sys::utf8::Codec(encoding));
 	M_ASSERT(encoding == sys::utf8::Codec::automatic() || m_codec->hasEncoding());
 
 	mstl::string indexFilename(rootname + m_extIndex);
@@ -704,7 +691,7 @@ Codec::doOpen(mstl::string const& rootname, mstl::string const& encoding)
 		openFile(m_gameStream, gameFilename, Truncate);
 		openFile(indexStream, indexFilename, Truncate);
 		// si5 namebase written separately (no magic)
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength));
 		m_gameData->sync();
 		writeNamebasesSi5(namebaseFilename);
 		// index header: none for si5
@@ -712,7 +699,7 @@ Codec::doOpen(mstl::string const& rootname, mstl::string const& encoding)
 		openFile(m_gameStream, gameFilename, Truncate);
 		openFile(indexStream, indexFilename, MagicIndexFile, Truncate);
 		openFile(namebaseStream, namebaseFilename, MagicNamebase, Truncate);
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
 		m_gameData->sync();
 		m_hasMagic = true;
 		writeNamebases(namebaseStream);
@@ -726,7 +713,7 @@ Codec::doOpenProgressive(mstl::string const& rootname, mstl::string const& encod
 {
 	M_ASSERT(m_progressiveStream == nullptr);
 
-	m_codec = new sys::utf8::Codec(encoding);
+	m_codec.reset(new sys::utf8::Codec(encoding));
 
 	mstl::string indexFilename(rootname + m_extIndex);
 	mstl::string gameFilename(rootname + m_extGame);
@@ -734,7 +721,7 @@ Codec::doOpenProgressive(mstl::string const& rootname, mstl::string const& encod
 
 	mstl::fstream namebaseStream;
 
-	m_progressiveStream = new mstl::fstream;
+	m_progressiveStream.reset(new mstl::fstream);
 	m_gameStream.set_unbuffered();
 
 	openFile(m_gameStream, gameFilename, Readonly);
@@ -749,7 +736,7 @@ Codec::doOpenProgressive(mstl::string const& rootname, mstl::string const& encod
 	::util::Progress progress;
 	readNamebases(namebaseStream, progress);
 	namebaseStream.close();
-	m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile);
+	m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
 
 	return numGames;
 }
@@ -776,13 +763,13 @@ Codec::doClear(mstl::string const& rootname)
 	}
 
 	m_gameData->close();
-	delete m_gameData;
+	m_gameData.reset();
 	m_gameStream.truncate(0);
 	m_gameStream.flush();
 	if (m_isVersion5) {
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength));
 	} else {
-		m_gameData = new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile);
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
 		m_hasMagic = true;
 		writeNamebases(namebaseStream);
 		writeIndexHeader(indexStream);

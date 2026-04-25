@@ -36,6 +36,7 @@
 
 #include "u_crc.h"
 
+#include "m_auto_ptr.h"
 #include "m_fstream.h"
 #include "m_vector.h"
 #include "m_string.h"
@@ -241,19 +242,19 @@ private:
 	mstl::string		m_extGame;
 	mstl::string		m_extNamebase;
 	unsigned				m_blockSize;
-	mstl::fstream		m_gameStream;
-	mstl::fstream*		m_progressiveStream;
-	Lookup				m_roundLookup;
-	sys::utf8::Codec*	m_codec;
-	mstl::string		m_encoding;
-	CustomFlags*		m_customFlags;
-	util::BlockFile*	m_gameData;
-	mstl::string		m_magicGameFile;
-	bool					m_hasMagic;
-	NameList*			m_playerList;
-	NameList*			m_eventList;
-	NameList*			m_siteList;
-	NameList*			m_roundList;
+	mstl::fstream						m_gameStream;
+	mstl::auto_ptr<mstl::fstream>	m_progressiveStream;
+	Lookup								m_roundLookup;
+	mstl::auto_ptr<sys::utf8::Codec>	m_codec;
+	mstl::string						m_encoding;
+	CustomFlags*						m_customFlags;
+	mstl::auto_ptr<util::BlockFile>	m_gameData;
+	mstl::string						m_magicGameFile;
+	bool									m_hasMagic;
+	mstl::auto_ptr<NameList>			m_playerList;
+	mstl::auto_ptr<NameList>			m_eventList;
+	mstl::auto_ptr<NameList>			m_siteList;
+	mstl::auto_ptr<NameList>			m_roundList;
 	NamebaseEntry*		m_roundEntry;
 	unsigned				m_progressFrequency;
 	unsigned				m_progressReportAfter;
