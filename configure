@@ -204,7 +204,7 @@ array set option {
     HAVE_INOTIFY    {}
     SYS_INOTIFY     {}
     HAVE_STATVFS    {}
-    ENGINES         {stockfish Sjeng}
+    ENGINES         {stockfish fairy-stockfish}
     USE_INLINE_TEXT {}
 }
 
