@@ -79,9 +79,23 @@ with open('tcl/lang/deutsch.tcl', 'wb') as f:
     f.write(data)
 ```
 
-Language files are **not** assembled into `tcl/scidb-beta` — they are read at runtime from `SCIDB_SHAREDIR/lang/` via `i18n::selectLang()`. Changes must be synced to `AppDir/usr/share/scidb-beta/lang/` manually (just copy the file).
+Language files are **not** assembled into `tcl/scidb-beta` — they are read at runtime from `SCIDB_SHAREDIR/lang/` via `i18n::selectLang()`. Changes must be synced to both `AppDir/usr/share/scidb-beta/lang/` and `/usr/local/share/scidb-beta/lang/` manually (just copy the file). See **three share directories** below.
 
 `i18n::selectLang()` only **sets** variables found in the chosen language file; it never unsets previous values. The `engine::mc` defaults from `tcl/engine.tcl` therefore serve as English fallback for any missing translation.
+
+### Three share directories — all must be kept in sync
+
+Runtime resources (themes, pieces, lang files, engines, ECO data) exist in **three separate locations**:
+
+| Directory | Purpose |
+|---|---|
+| `tcl/` | Git-tracked sources — always edit here first |
+| `AppDir/usr/share/scidb-beta/` | Used by `./run-scidb.sh` (sets `SCIDB_SHAREDIR` to this path) |
+| `/usr/local/share/scidb-beta/` | System install, used when the binary is launched normally |
+
+When adding, removing, or renaming a resource file (theme, piece set, lang file, engine), apply the change to **all three**. `/usr/local/share/scidb-beta/` requires `sudo`. Forgetting this directory is a common trap: changes work in `./run-scidb.sh` but the system-installed binary still uses the old files.
+
+**Theme/piece update mechanism at startup:** `tcl/load.tcl` calls `::scidb::themes::update` (a C++ command) whenever certain expected theme files are missing from `~/.scidb-beta/themes/`. This command copies **all** theme and piece files from SHAREDIR into the user profile. If old files are in SHAREDIR they will be re-installed on every start. Removing a theme or piece set therefore requires deleting it from all three share directories **and** from `~/.scidb-beta/` — otherwise the update mechanism reinstalls it. Old filenames that must be cleaned from user profiles on upgrade are handled by explicit `file delete` calls at the top of `tcl/load.tcl`.
 
 ### C++ → Tcl communication
 
@@ -170,9 +184,9 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.18 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.18 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.18 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.20 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.20 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.20 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
