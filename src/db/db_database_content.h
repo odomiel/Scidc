@@ -33,6 +33,7 @@
 #include "db_time.h"
 #include "db_common.h"
 
+#include "m_auto_ptr.h"
 #include "m_chunk_vector.h"
 #include "m_vector.h"
 #include "m_string.h"
@@ -72,7 +73,7 @@ public:
 	bool				m_shouldCompact;
 	mstl::string	m_description;
 	mstl::string	m_encoding;
-	Statistic*		m_statistic;
+	mstl::auto_ptr<Statistic>	m_statistic;
 };
 
 } // namespace db

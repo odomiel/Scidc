@@ -118,7 +118,7 @@ Database::Database(Database const& db, mstl::string const& name)
 	,m_encodingOk(true)
 	,m_descriptionHasChanged(false)
 {
-	m_statistic = new Statistic();
+	m_statistic.reset(new Statistic());
 
 	try
 	{
@@ -153,7 +153,7 @@ Database::Database(mstl::string const& name, mstl::string const& encoding)
 
 	// NOTE: we assume normalized (unique) file names.
 
-	m_statistic = new Statistic();
+	m_statistic.reset(new Statistic());
 	m_memoryOnly = false;
 	m_temporary = true;
 	m_created = sys::time::time();
@@ -190,7 +190,7 @@ Database::Database(	mstl::string const& name,
 
 	// NOTE: we assume normalized (unique) file names.
 
-	m_statistic = new Statistic();
+	m_statistic.reset(new Statistic());
 	m_memoryOnly = storage == storage::MemoryOnly;
 	m_temporary = false;
 	m_readOnly = m_temporary;
@@ -254,7 +254,7 @@ Database::Database(	mstl::string const& name,
 
 	// NOTE: we assume normalized (unique) file names.
 
-	m_statistic = new Statistic();
+	m_statistic.reset(new Statistic());
 	m_readOnly = mode == permission::ReadOnly;
 	m_codec = DatabaseCodec::makeCodec(m_name, DatabaseCodec::Existing);
 
@@ -307,7 +307,7 @@ Database::Database(mstl::string const& name, Producer& producer, util::Progress&
 {
 	// NOTE: we assume normalized (unique) file names.
 
-	m_statistic = new Statistic();
+	m_statistic.reset(new Statistic());
 	m_codec = DatabaseCodec::makeCodec(name, DatabaseCodec::Existing);
 	M_ASSERT(m_codec->isWritable());
 
@@ -1858,8 +1858,7 @@ Database::setVariant(variant::Type variant)
 	{
 		m_variant = variant;
 
-		delete m_statistic;
-		m_statistic = new Statistic();
+		m_statistic.reset(new Statistic());
 
 		if (!m_memoryOnly)
 		{
