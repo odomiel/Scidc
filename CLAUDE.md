@@ -121,17 +121,19 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 ## Version management
 
-The application version is defined in two places:
+The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.8 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.8 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.8 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.10 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.10 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.10 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
-**Rule:** Increment the third digit with every code change committed. Update all three source files together.
+**Rule:** Increment the third digit with every code change committed. Update all three source files in the same commit as the code change.
 
 ## C++ modernisation notes (post-r1531)
+
+The build uses **`-std=c++14`** (see `Makefile.in` line 101). C++17 features (structured bindings, `if constexpr`, etc.) are not available.
 
 ### `mstl::auto_ptr` is now `std::unique_ptr`
 
@@ -141,6 +143,18 @@ The application version is defined in two places:
 - Passing a **named** (lvalue) `auto_ptr` to a function that takes it by value: use `std::move(x)` explicitly
 - Passing a **temporary** (`auto_ptr<T>(new T())`) to such a function: no change needed
 - The old `auto_ptr` copy constructor silently transferred ownership from lvalues; `unique_ptr` requires explicit `std::move()`
+
+### nullptr consistency
+
+Use `nullptr` for all pointer null values — not `0` or `NULL`. The project is partially migrated; `src/db/db_database.cpp` and `src/db/si3/si3_codec.cpp` are already clean. `src/mstl/m_types.h` defines `nullptr` as a fallback macro for compilers without C++11 null pointer constant support, so `nullptr` is safe to use everywhere.
+
+**Exception:** `src/db/egtb/tbindex.cpp` is external Nalimov tablebase probing code (Eugene Nalimov, 1998–2001) — do not modernise it.
+
+### Range-for loops
+
+Prefer `for (auto& x : container)` over iterator and index loops where the index is not needed. For `std::map`-like containers use `for (auto& kv : map)` with `kv.first`/`kv.second` (not structured bindings — C++14 only).
+
+**Do not convert** loops that call `container.erase(iterator)` during iteration — those must keep explicit iterator manipulation.
 
 ## Local Git
 
