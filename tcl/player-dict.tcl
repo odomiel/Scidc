@@ -43,6 +43,14 @@ set RangeOfYears			"Range of years"
 set SearchPlayerName		"Search Player Name"
 set HelpPatternMatching	"Help: Pattern Matching"
 
+set UpdateList		"Update FIDE List"
+set Downloading		"Downloading..."
+set UpdateConfirm	"Download the current FIDE player list (~50 MB) from ratings.fide.com and update the player dictionary?"
+set UpdateSuccess	"Player list updated successfully."
+set UpdateFailed	"Update failed:\n%s"
+set PythonNotFound	"Python 3 is required for this function but was not found.\nPlease install Python 3."
+set ScriptNotFound	"Update script not found:\n%s"
+
 set ChessChampion	"%sex% %mode% %age% %region% %champion% %where%"
 set Sex(f)			"Woman"
 set Sex(m)			""
@@ -126,8 +134,10 @@ array set Options {
 }
 
 array set Priv {
-	receiver ""
-	dialog	""
+	receiver         ""
+	dialog           ""
+	update:label     ""
+	update:chan       ""
 }
 
 set History {}
@@ -470,6 +480,9 @@ proc open {parent args} {
 	::widget::dialogButtonAdd $dlg filter ::mc::Filter {}
 	$dlg.filter configure -command [namespace code [list SetFilter $table]]
 	$dlg.filter configure -image $::icon::16x16::filter(inactive) -compound left
+	set Priv(update:label) $mc::UpdateList
+	::widget::dialogButtonAdd $dlg update [namespace current]::Priv(update:label) {}
+	$dlg.update configure -command [namespace code [list UpdatePlayerData $dlg $table]]
 
 	update idletasks
 	set minsize [winfo reqwidth $dlg]
@@ -1324,6 +1337,69 @@ proc PopupMenu {table menu _ _ index _} {
 	if {![string is digit -strict $index]} { return }
 	set info [scidb::player::info $index -web 1]
 	::playercard::buildWebMenu $table $menu $info
+}
+
+
+proc UpdatePlayerData {dlg table} {
+	variable Priv
+
+	if {[::dialog::question \
+			-parent $dlg \
+			-message $mc::UpdateConfirm \
+			-default no \
+		] ne "yes"} {
+		return
+	}
+
+	set python [auto_execok python3]
+	if {$python eq ""} { set python [auto_execok python] }
+	if {$python eq ""} {
+		::dialog::error -parent $dlg -message $mc::PythonNotFound
+		return
+	}
+
+	set script [file join $::scidb::dir::share scripts update-fide-players.py]
+	if {![file readable $script]} {
+		::dialog::error -parent $dlg -message [format $mc::ScriptNotFound $script]
+		return
+	}
+
+	set Priv(update:label) $mc::Downloading
+	$dlg.update configure -state disabled
+
+	set Priv(update:chan) [open "|[list $python $script $::scidb::dir::data] 2>&1" r]
+	fconfigure $Priv(update:chan) -blocking 0
+	fileevent $Priv(update:chan) readable \
+		[namespace code [list OnUpdateData $dlg $table]]
+}
+
+
+proc OnUpdateData {dlg table} {
+	variable Priv
+
+	read $Priv(update:chan)
+
+	if {![eof $Priv(update:chan)]} { return }
+
+	catch {close $Priv(update:chan)} err
+	set Priv(update:chan) ""
+	set Priv(update:label) $mc::UpdateList
+	$dlg.update configure -state normal
+
+	if {[string length $err]} {
+		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $err]
+		return
+	}
+
+	set zippath [file join $::scidb::dir::data players_list.zip]
+	if {[catch {::scidb::app::load fide $zippath} lerr]} {
+		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
+		return
+	}
+
+	::scrolledtable::update $table "" "" [::scidb::player::count]
+	UpdateCount
+	::dialog::info -parent $dlg -message $mc::UpdateSuccess
 }
 
 
