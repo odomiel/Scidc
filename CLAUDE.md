@@ -23,6 +23,10 @@ make depend          # regenerate dependencies
 
 Key configure options: `--tcl-includes`, `--tk-includes`, `--tcl-libraries`, `--tk-libraries`, `--prefix`
 
+### Critical: `configure` regenerates `Makefile.in`
+
+Running `./configure` **overwrites** `Makefile.in` from its internal template (line ~207 in `configure`). Any persistent change to `Makefile.in` (e.g., the `ENGINES` variable) **must also be made in `configure`** — otherwise the next `./configure` run reverts it.
+
 ### Build outputs
 - `src/tkscidb-beta` – main GUI binary (links Tk)
 - `src/tclscidb-beta` – CLI binary
@@ -93,6 +97,21 @@ SI5 was originally read-only. The following changes enable writing:
 - `src/db/db_database.cpp`: constructor `M_REQUIRE` permits SI5 in read-write mode
 - `tcl/end.tcl`: `keybar::tr` handles empty-string keys (`<= 1` instead of `== 1`) — the save dialog passes `{}` as a result key
 
+### Engine infrastructure
+
+Bundled engines live in `engines/` as **pre-compiled binaries** (no source build). The `ENGINES` variable in `Makefile.in` (and its source in `configure` line ~207) lists the subdirectories to install.
+
+| Engine | Directory | Protocol | Variants |
+|--------|-----------|----------|---------|
+| Stockfish 18 (bmi2) | `engines/stockfish/` | UCI | standard, chess960 |
+| Fairy-Stockfish 14 (bmi2) | `engines/fairy-stockfish/` | UCI | standard, chess960, 3check, crazyhouse, antichess, suicide, giveaway, losers, bughouse |
+
+Engine metadata (command path, UCI option profiles, supported variants) is stored in **`tcl/engines/engines.dat`** — this is the source file tracked in git. The copy under `AppDir/` is not tracked.
+
+**UCI variant name mapping:** Scidb's `variant::identifier()` returns mixed-case names (e.g. `"Three-Check"`, `"Crazyhouse"`) that Fairy-Stockfish does not accept — it requires lowercase (`"3check"`, `"crazyhouse"`). The function `uciVariantName()` in `src/app/app_uci_engine.cpp` performs this mapping before sending `setoption name UCI_Variant value …`.
+
+**Adding a new variant to engine support** requires entries in all five language files (`tcl/lang/english.tcl`, `espanol.tcl`, `italiano.tcl`, `svenska.tcl`, `magyar.tcl`) under `engine::mc::Variant(name)`. Missing entries cause a crash when opening engine settings.
+
 ### Key files
 
 | File | Purpose |
@@ -102,10 +121,12 @@ SI5 was originally read-only. The following changes enable writing:
 | `src/db/si3/si3_codec.cpp` | SI3/SI4/SI5 codec (2848 lines) |
 | `src/db/db_common.h/.ipp` | Format enums, `isScidFormat()`, `isWritable()` |
 | `src/app/app_application.h/.cpp` | Top-level application class |
+| `src/app/app_uci_engine.cpp` | UCI engine protocol, variant name mapping |
 | `src/app/app_multi_cursor.cpp` | Multi-variant cursor, variant mapping |
 | `src/tcl/tcl_application.cpp` | Tcl command registration |
 | `tcl/app-database.tcl` | Database open/close/save UI logic, `openBase` proc |
 | `tcl/app-board.tcl` | Board UI, game save/replace button state logic |
+| `tcl/engines/engines.dat` | Bundled engine definitions (source, tracked in git) |
 | `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, directory setup |
 | `tcl/end.tcl` | Late-init procs (`keybar::tr`, etc.) |
 | `tcl/load.tcl` | ECO/data file loading at startup |
@@ -123,17 +144,19 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.10 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.10 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.10 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.16 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.16 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.16 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
-**Rule:** Increment the third digit with every code change committed. Update all three source files in the same commit as the code change.
+**Rule:** Increment the third digit with every code change committed. Update all three source files in the same commit as the code change. CLAUDE.md changes do **not** require a version bump.
 
 ## C++ modernisation notes (post-r1531)
 
 The build uses **`-std=c++14`** (see `Makefile.in` line 101). C++17 features (structured bindings, `if constexpr`, etc.) are not available.
+
+All C-style headers (`<stdio.h>`, `<string.h>`, etc.) have been migrated to their `<c*>` equivalents throughout `src/`. New code should use `<cstdio>`, `<cstring>`, etc.
 
 ### `mstl::auto_ptr` is now `std::unique_ptr`
 
@@ -146,7 +169,7 @@ The build uses **`-std=c++14`** (see `Makefile.in` line 101). C++17 features (st
 
 ### nullptr consistency
 
-Use `nullptr` for all pointer null values — not `0` or `NULL`. The project is partially migrated; `src/db/db_database.cpp` and `src/db/si3/si3_codec.cpp` are already clean. `src/mstl/m_types.h` defines `nullptr` as a fallback macro for compilers without C++11 null pointer constant support, so `nullptr` is safe to use everywhere.
+Use `nullptr` for all pointer null values — not `0` or `NULL`. `src/mstl/m_types.h` defines `nullptr` as a fallback macro for compilers without C++11 null pointer constant support, so `nullptr` is safe to use everywhere.
 
 **Exception:** `src/db/egtb/tbindex.cpp` is external Nalimov tablebase probing code (Eugene Nalimov, 1998–2001) — do not modernise it.
 
