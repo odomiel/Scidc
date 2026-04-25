@@ -90,14 +90,14 @@ FREEDESKTOP       = yes
 # Name of program suffix and engines.
 #-----------------------------------------------------------------------
 SUFFIX            = -beta
-ENGINES           = stockfish Sjeng
+ENGINES           = stockfish fairy-stockfish
 
 # Common targets:
 #-----------------------------------------------------------------------
 .PHONY : clean
 .PRECIOUS:
 
-EXTRA_CFLAGS      = -pipe -fcommon -Wno-cpp
-EXTRA_CXXFLAGS    = -std=c++14 -DBROKEN_LINKER_HACK=1 -DTWM_MIGRATE_LAYOUT=1 -DDONT_USE_GDB -DDONT_USE_FRAME_ADDR -pipe -fcommon -Wno-cpp
+EXTRA_CFLAGS      = -pipe -Wno-format-security -fcommon -Wno-cpp -fno-stack-protector
+EXTRA_CXXFLAGS    = -std=c++14 -DBROKEN_LINKER_HACK=1 -DTWM_MIGRATE_LAYOUT=1 -DDONT_USE_GDB -DDONT_USE_FRAME_ADDR -pipe -Wno-format-security -fcommon -Wno-cpp -fno-stack-protector
 EXTRA_DEBUG_FLAGS = 
 

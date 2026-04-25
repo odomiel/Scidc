@@ -59,6 +59,33 @@ toStr(unsigned value)
 }
 
 
+// Map Scidb variant type to lowercase UCI_Variant value (Fairy-Stockfish compatible)
+static mstl::string const&
+uciVariantName(variant::Type type)
+{
+	static mstl::string const Chess("chess");
+	static mstl::string const ThreeCheck("3check");
+	static mstl::string const Crazyhouse("crazyhouse");
+	static mstl::string const Antichess("antichess");
+	static mstl::string const Suicide("suicide");
+	static mstl::string const Giveaway("giveaway");
+	static mstl::string const Losers("losers");
+	static mstl::string const Bughouse("bughouse");
+
+	switch (type)
+	{
+		case variant::ThreeCheck:	return ThreeCheck;
+		case variant::Crazyhouse:	return Crazyhouse;
+		case variant::Antichess:	return Antichess;
+		case variant::Suicide:		return Suicide;
+		case variant::Giveaway:		return Giveaway;
+		case variant::Losers:		return Losers;
+		case variant::Bughouse:		return Bughouse;
+		default:					return Chess;
+	}
+}
+
+
 // UCI options should be case insensitive
 static bool
 ciEqual(char const* lhs, char const* rhs)
@@ -544,13 +571,7 @@ uci::Engine::processMessage(mstl::string const& message)
 
 					if (m_variant != currentVariant())
 					{
-						mstl::string variant(variant::identifier(currentVariant()));
-						if (variant.empty())
-						{
-							M_ASSERT(currentVariant() == variant::Normal);
-							variant.assign("Normal");
-						}
-						send("setoption name UCI_Variant value " + variant::identifier(currentVariant()));
+						send("setoption name UCI_Variant value " + uciVariantName(currentVariant()));
 						m_variant = currentVariant();
 					}
 
