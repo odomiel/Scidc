@@ -284,11 +284,11 @@ if {[file exists [file join $::scidb::dir::user themes BlueTheme.dat]]} {
 if {[file exists [file join $::scidb::dir::user themes Virtual.dat]]} {
 	file delete [file join $::scidb::dir::user themes Virtual.dat]
 	file delete [file join $::scidb::dir::user themes VirtualColored.dat]
+	file delete [file join $::scidb::dir::user themes VirtualBlue.dat]
 }
 if {	![file exists [file join $::scidb::dir::user themes Primus.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Country-Style.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Blackjack.dat]]
-	|| ![file exists [file join $::scidb::dir::user themes VirtualBlue.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Burnt.dat]]
 	|| ![file exists [file join $::scidb::dir::user themes Creepy.dat]]} {
 	set update 1

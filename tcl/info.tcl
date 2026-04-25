@@ -453,10 +453,6 @@ proc DisplayContributions {w} {
 				<tr><td>\u2001</td><td>[Url http://www.fileformat.info/info/unicode]</td></tr>
 				<tr height='7'></tr>
 
-				<tr><td colspan='2'>[Name {Peter Wong}]</td></tr>
-				<tr><td>\u2001</td><td>Virtual</td></tr>
-				<tr><td>\u2001</td><td>[Url http://www.virtualpieces.net/diagrams]</td></tr>
-				<tr height='7'></tr>
 			</table>
 		</div>
 		<div class='box'>
