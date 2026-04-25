@@ -66,7 +66,7 @@
 #include <cctype>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.17 BETA"
+# define SCIDB_VERSION	"1.1.18 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 
