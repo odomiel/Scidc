@@ -1161,6 +1161,7 @@
 ::engine::mc::Variant(bughouse)		"Bughouse"
 ::engine::mc::Variant(crazyhouse)	"Crazyhouse"
 ::engine::mc::Variant(suicide)		"Antichess"
+::engine::mc::Variant(antichess)	"Antichess"
 ::engine::mc::Variant(giveaway)		"Antichess"
 ::engine::mc::Variant(losers)			"Antichess"
 ::engine::mc::Variant(3check)			"Three-check"

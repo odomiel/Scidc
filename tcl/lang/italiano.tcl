@@ -1169,6 +1169,7 @@
 # NOTE: "Losers" is Antichess according to ICC rules
 # NOTE: You may tarnslate "Suicide", "Giveaway", anmd "Losers" with the same term.
 ::engine::mc::Variant(suicide)		"Vinciperdi"
+::engine::mc::Variant(antichess)	"Vinciperdi"
 ::engine::mc::Variant(giveaway)		"Vinciperdi"
 ::engine::mc::Variant(losers)			"Vinciperdi"
 ::engine::mc::Variant(3check)			"Tre scacchi"

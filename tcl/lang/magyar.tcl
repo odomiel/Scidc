@@ -1170,6 +1170,7 @@
 # NOTE: "Losers" is Antichess according to ICC rules
 # NOTE: You may translate "Suicide", "Giveaway", anmd "Losers" with the same term.
 ::engine::mc::Variant(suicide)		"Franciasakk"
+::engine::mc::Variant(antichess)	"Franciasakk"
 ::engine::mc::Variant(giveaway)		"Franciasakk"
 ::engine::mc::Variant(losers)		"Franciasakk"
 ::engine::mc::Variant(3check)		"Three-check"  ;#NEW
