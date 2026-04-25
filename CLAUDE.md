@@ -93,7 +93,9 @@ Runtime resources (themes, pieces, lang files, engines, ECO data) exist in **thr
 | `AppDir/usr/share/scidb-beta/` | Used by `./run-scidb.sh` (sets `SCIDB_SHAREDIR` to this path) |
 | `/usr/local/share/scidb-beta/` | System install, used when the binary is launched normally |
 
-When adding, removing, or renaming a resource file (theme, piece set, lang file, engine), apply the change to **all three**. `/usr/local/share/scidb-beta/` requires `sudo`. Forgetting this directory is a common trap: changes work in `./run-scidb.sh` but the system-installed binary still uses the old files.
+When adding, removing, or renaming a resource file (theme, piece set, lang file, engine, or script), apply the change to **all three**. `/usr/local/share/scidb-beta/` requires `sudo`. Forgetting this directory is a common trap: changes work in `./run-scidb.sh` but the system-installed binary still uses the old files.
+
+The `scripts/` subdirectory of each SHAREDIR holds helper scripts (`.eXt`, `.css`, Python). New scripts must be placed in `AppDir/usr/share/scidb-beta/scripts/` and copied to `/usr/local/share/scidb-beta/scripts/` with `sudo`. The git-tracked source lives in `tcl/` alongside the Tcl sources (even for non-Tcl scripts).
 
 **Theme/piece update mechanism at startup:** `tcl/load.tcl` calls `::scidb::themes::update` (a C++ command) whenever certain expected theme files are missing from `~/.scidb-beta/themes/`. This command copies **all** theme and piece files from SHAREDIR into the user profile. If old files are in SHAREDIR they will be re-installed on every start. Removing a theme or piece set therefore requires deleting it from all three share directories **and** from `~/.scidb-beta/` — otherwise the update mechanism reinstalls it. Old filenames that must be cleaned from user profiles on upgrade are handled by explicit `file delete` calls at the top of `tcl/load.tcl`.
 
@@ -151,6 +153,18 @@ Engine metadata (command path, UCI option profiles, supported variants) is store
 
 3. **Language files that have `FeatureDetail` translations** (all six have them): add `::engine::mc::FeatureDetail(name) "Translation"`. If omitted, the English default from `tcl/engine.tcl` is used as fallback — acceptable but imperfect.
 
+### Player data — startup loading and runtime update
+
+At startup `tcl/load.tcl` calls `::scidb::app::load <type> <path>` (C++ binding in `src/tcl/tcl_application.cpp`) for each data file. Types: `ssp` (spellcheck), `fide`, `dwz`, `ecf`, `iccf`, `ips`, `wiki`, `cgdc`, `site`, `comp`. All load functions are additive/merging — calling them again at runtime is safe and updates the live in-memory player dictionary without a restart.
+
+The **FIDE player list** (`AppDir/usr/share/scidb-beta/data/players_list.zip`) is updated via the "Update FIDE List" button in the Player Dictionary dialog (`tcl/player-dict.tcl`). It runs `tcl/update-fide-players.py` (Python 3) as an async subprocess, downloads the FIDE XML from `ratings.fide.com/download/players_list_xml.zip`, converts it to the fixed-width TXT format that `parseFideRating()` expects, and reloads with `::scidb::app::load fide`.
+
+**`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female).
+
+### Tcl dialog button API
+
+`::widget::dialogButtonAdd $dlg <name> <labelvar> <icon>` creates a `ttk::button` at `$dlg.<name>` whose text tracks the Tcl variable `<labelvar>` via `trace`. Passing a mutable `Priv(...)` variable instead of a literal `mc::*` variable allows changing button text at runtime (e.g. switching to "Downloading..." while async work runs). The button command is set separately with `$dlg.<name> configure -command ...`.
+
 ### Key files
 
 | File | Purpose |
@@ -162,15 +176,19 @@ Engine metadata (command path, UCI option profiles, supported variants) is store
 | `src/app/app_application.h/.cpp` | Top-level application class |
 | `src/app/app_uci_engine.cpp` | UCI engine protocol, variant name mapping |
 | `src/app/app_multi_cursor.cpp` | Multi-variant cursor, variant mapping |
-| `src/tcl/tcl_application.cpp` | Tcl command registration |
+| `src/tcl/tcl_application.cpp` | Tcl command registration, `::scidb::app::load` dispatcher |
+| `src/db/db_player.cpp` | Player data parsing (`parseFideRating`, `parseDwzRating`, etc.) |
 | `tcl/engine.tcl` | Engine UI + `engine::mc` namespace defaults (Feature/FeatureDetail/Variant) |
 | `tcl/app-database.tcl` | Database open/close/save UI logic, `openBase` proc |
 | `tcl/app-board.tcl` | Board UI, game save/replace button state logic |
+| `tcl/player-dict.tcl` | Player Dictionary dialog + FIDE update button |
+| `tcl/update-fide-players.py` | Python 3 script: download FIDE XML → players_list.zip |
 | `tcl/engines/engines.dat` | Bundled engine definitions (source, tracked in git) |
-| `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, directory setup |
+| `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, `::scidb::dir::*` setup |
 | `tcl/end.tcl` | Late-init procs (`keybar::tr`, etc.) |
 | `tcl/load.tcl` | ECO/data file loading at startup |
 | `tcl/widgets/fsbox.tcl` | Custom file-selection dialog (open/save) |
+| `tcl/widgets/misc.tcl` | `dialogButtons`, `dialogButtonAdd`, `buttonSetText` (textvar tracing) |
 
 ### Save button state logic (app-board.tcl)
 
@@ -184,9 +202,9 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.20 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.20 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.20 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.21 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.21 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.21 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
