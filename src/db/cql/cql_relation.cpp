@@ -34,7 +34,7 @@
 #include "m_string.h"
 #include "m_algorithm.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace cql;
 using namespace cql::error;

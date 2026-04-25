@@ -29,10 +29,10 @@
 #include "u_base.h"
 
 #include <tcl.h>
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cctype>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 using namespace sys::utf8;
 using namespace tcl;

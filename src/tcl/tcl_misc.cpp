@@ -62,11 +62,11 @@
 #include <tcl.h>
 #include <tk.h>
 #include <expat.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.13 BETA"
+# define SCIDB_VERSION	"1.1.14 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 

@@ -39,8 +39,8 @@
 #include "db_move_list.h"
 
 #include <tcl.h>
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 using namespace app;
 using namespace db;

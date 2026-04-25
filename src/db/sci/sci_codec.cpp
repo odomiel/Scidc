@@ -57,8 +57,8 @@
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 #define FIX_INCORRECT_ID 0
 

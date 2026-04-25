@@ -19,7 +19,7 @@
 #ifndef _mstl_uninitialized_included
 #define _mstl_uninitialized_included
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace mstl {
 

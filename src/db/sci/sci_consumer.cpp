@@ -38,8 +38,8 @@
 
 #include "sys_utf8_codec.h"
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 #ifdef M_CHECK
 # define DEBUG(x) x

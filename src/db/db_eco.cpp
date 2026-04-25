@@ -27,7 +27,7 @@
 #include "db_eco.h"
 #include "db_exception.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace db;
 

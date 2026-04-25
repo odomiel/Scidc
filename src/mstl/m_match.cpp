@@ -19,8 +19,8 @@
 #include "m_match.h"
 #include "m_assert.h"
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 using namespace mstl;
 

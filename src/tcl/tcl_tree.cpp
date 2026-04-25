@@ -44,7 +44,7 @@
 #include "m_assert.h"
 
 #include <tcl.h>
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace app;

@@ -47,7 +47,7 @@
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::sci::v92;

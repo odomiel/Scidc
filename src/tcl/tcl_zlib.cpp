@@ -23,7 +23,7 @@
 
 #include <tcl.h>
 #include <zlib.h>
-#include <string.h>
+#include <cstring>
 
 using namespace tcl;
 

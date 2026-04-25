@@ -38,7 +38,7 @@
 #include "m_istream.h"
 #include "m_stdio.h"
 
-#include <ctype.h>
+#include <cctype>
 
 //#define DEBUG
 

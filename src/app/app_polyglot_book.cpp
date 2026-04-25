@@ -45,7 +45,7 @@
 #include "m_hash.h"
 #include "m_assert.h"
 
-#include <ctype.h>
+#include <cctype>
 
 #define U64 UINT64_C
 
@@ -370,8 +370,8 @@ inline static unsigned div2 (unsigned x) { return x >> 1; }
 
 #include "m_set.h"
 
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 
 static void
 checkHashKeys()

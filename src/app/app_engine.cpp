@@ -42,8 +42,8 @@
 #include "m_algorithm.h"
 #include "m_cast.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 using namespace app;
 using namespace db;

@@ -30,7 +30,7 @@
 #include "m_string.h"
 #include "m_stdio.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace db;
 

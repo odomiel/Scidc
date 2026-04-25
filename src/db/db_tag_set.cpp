@@ -29,9 +29,9 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstring>
+#include <cstdlib>
 
 using namespace db;
 

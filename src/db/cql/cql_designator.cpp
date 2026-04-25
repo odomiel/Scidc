@@ -29,7 +29,7 @@
 #include "db_board.h"
 #include "db_board_base.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace cql;
 using namespace cql::error;

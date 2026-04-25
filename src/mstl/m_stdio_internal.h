@@ -226,7 +226,7 @@ extern "C" {
 #else
 /* Fall back to POSIX versions from <limits.h> */
 #define __EXP(x) x
-#include <limits.h>
+#include <climits>
 #endif
 
 #if __EXP(SCHAR_MAX) == 0x7f
@@ -393,7 +393,7 @@ typedef long _ssize_t;
 #endif
 
 #define __need_wint_t
-#include <stddef.h>
+#include <cstddef>
 
 #ifndef __mbstate_t_defined
 /* Conversion state information.  */
@@ -889,7 +889,7 @@ extern const struct __sFILE_fake __sf_fake_stderr;
 
 /* Only built the assert() calls if we are built with debugging.  */
 #if DEBUG
-#include <assert.h>
+#include <cassert>
 #define __reent_assert(x) assert(x)
 #else
 #define __reent_assert(x) ((void)0)
@@ -1262,7 +1262,7 @@ void _reclaim_reent _PARAMS ((struct _reent *));
 #define	_FSTDIO			/* ``function stdio'' */
 
 #define __need_size_t
-#include <stddef.h>
+#include <cstddef>
 
 #define __need___va_list
 #include <stdarg.h>

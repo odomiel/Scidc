@@ -25,10 +25,10 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 #include <stdarg.h>
-#include <ctype.h>
+#include <cctype>
 
 #if __WORDSIZE == 64
 # define __PRI64_PREFIX "l"

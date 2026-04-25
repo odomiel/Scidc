@@ -67,9 +67,9 @@
 
 #include <tcl.h>
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
 
 using namespace db;
 using namespace app;

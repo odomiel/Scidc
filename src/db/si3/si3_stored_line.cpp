@@ -34,8 +34,8 @@
 
 #include "m_utility.h"
 
-#include <string.h>
-#include <assert.h>
+#include <cstring>
+#include <cassert>
 
 using namespace db;
 using namespace db::si3;

@@ -40,9 +40,9 @@
 #include "m_utility.h"
 
 #include <expat.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
 
 using namespace db;
 

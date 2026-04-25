@@ -32,10 +32,10 @@
 #include "m_bit_functions.h"
 #include "m_utility.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <assert.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
+#include <cassert>
 
 using namespace db;
 

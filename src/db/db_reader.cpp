@@ -39,11 +39,11 @@
 #include "sys_file.h"
 #include "sys_utf8_codec.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <cmath>
 
 using namespace db;
 

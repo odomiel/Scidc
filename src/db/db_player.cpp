@@ -50,11 +50,11 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace TeXt;

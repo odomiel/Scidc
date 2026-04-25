@@ -22,7 +22,7 @@
 #include "m_shared_base.h"
 #include "m_auto_ptr.h"
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace mstl {
 #ifdef HAVE_WEAK_PTR

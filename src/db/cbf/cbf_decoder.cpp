@@ -38,7 +38,7 @@
 
 #include "m_assert.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace db;
 using namespace db::cbf;

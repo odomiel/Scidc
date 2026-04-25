@@ -19,7 +19,7 @@
 #ifndef _gain_shared_base_included
 #define _gain_shared_base_included
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace mstl {
 namespace detail {

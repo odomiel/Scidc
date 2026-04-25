@@ -43,7 +43,7 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <string.h>
+#include <cstring>
 
 #ifdef DEBUG
 # undef DEBUG

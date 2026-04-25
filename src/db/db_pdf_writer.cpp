@@ -39,7 +39,7 @@
 #include "m_stdio.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 

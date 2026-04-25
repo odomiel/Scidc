@@ -39,9 +39,9 @@
 #include "m_bit_functions.h"
 
 #include <tcl.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
 
 using namespace tcl;
 using namespace tcl::app;

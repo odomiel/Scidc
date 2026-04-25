@@ -30,8 +30,8 @@
 
 #include "m_algorithm.h"
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 using namespace db;
 

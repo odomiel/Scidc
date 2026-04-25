@@ -44,10 +44,10 @@
 # include "m_set.h"
 #endif
 
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstring>
+#include <cctype>
+#include <cstdlib>
+#include <cassert>
 
 using namespace db;
 using namespace db::sq;

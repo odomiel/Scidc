@@ -30,7 +30,7 @@
 
 #include "m_istream.h"
 
-#include <math.h>
+#include <cmath>
 
 using namespace db;
 

@@ -41,8 +41,8 @@
 #include "m_utility.h"
 #include "m_stdio.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 using namespace db;
 

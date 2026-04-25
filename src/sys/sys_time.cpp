@@ -18,7 +18,7 @@
 
 #include "sys_time.h"
 
-#include <time.h>
+#include <ctime>
 
 #ifdef __WIN32__
 

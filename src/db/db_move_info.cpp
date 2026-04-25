@@ -34,8 +34,8 @@
 #include "m_utility.h"
 #include "m_assert.h"
 
-#include <ctype.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdlib>
 
 using namespace db;
 using namespace util;

@@ -29,7 +29,7 @@
 #include "db_board.h"
 #include "db_exception.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::sci::encoder;

@@ -29,8 +29,8 @@
 #include "m_algorithm.h"
 #include "m_assert.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 using namespace db;
 

@@ -34,7 +34,7 @@
 #include "m_string.h"
 #include "m_assert.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace db::si3;
 

@@ -20,7 +20,7 @@
 #define _sys_inotify_included
 
 #include <unistd.h>
-#include <stdint.h>
+#include <cstdint>
 #include <sys/syscall.h>
 
 // the following are legal, implemented events that user-space can watch for

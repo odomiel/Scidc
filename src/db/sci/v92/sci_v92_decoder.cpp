@@ -45,7 +45,7 @@
 #include "m_utility.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::sci::v92;

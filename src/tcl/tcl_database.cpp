@@ -80,8 +80,8 @@
 #include "m_auto_ptr.h"
 
 #include <tcl.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 
 using namespace db;

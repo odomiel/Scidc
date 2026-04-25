@@ -55,9 +55,9 @@
 #include "m_auto_ptr.h"
 #include "m_assert.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdio>
+#include <cctype>
 
 using namespace db;
 using namespace util;

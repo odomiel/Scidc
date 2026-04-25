@@ -46,7 +46,7 @@
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
 
-#include <string.h>
+#include <cstring>
 
 //#define USE_LZO
 

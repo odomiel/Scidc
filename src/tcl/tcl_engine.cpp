@@ -40,10 +40,10 @@
 #include "m_vector.h"
 #include "m_assert.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
 #include <tcl.h>
 
 using namespace db;

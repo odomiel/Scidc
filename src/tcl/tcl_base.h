@@ -27,7 +27,7 @@
 #ifndef _tcl_base_included
 #define _tcl_base_included
 
-#include <stdint.h>
+#include <cstdint>
 #include <stdarg.h>
 
 #include <tcl.h>

@@ -39,9 +39,9 @@
 #include "m_vector.h"
 #include "m_bitset.h"
 
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstring>
+#include <cstdlib>
 
 using namespace cql;
 using namespace cql::error;

@@ -21,8 +21,8 @@
 
 #include "m_types.h"
 
-#include <limits.h>
-#include <float.h>
+#include <climits>
+#include <cfloat>
 
 #ifndef UINTPTR_MAX
 # if __WORDSIZE == 64

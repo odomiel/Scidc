@@ -39,7 +39,7 @@
 #include "m_limits.h"
 #include "m_ref_counted_ptr.h"
 
-#include <string.h>
+#include <cstring>
 
 #ifdef SHOW_TREE_INFO
 # include "m_stdio.h"

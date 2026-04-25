@@ -39,7 +39,7 @@
 #include "m_auto_ptr.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace app;
 using namespace db;

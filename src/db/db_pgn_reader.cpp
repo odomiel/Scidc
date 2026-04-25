@@ -50,9 +50,9 @@
 #include "sys_utf8.h"
 #include "sys_utf8_codec.h"
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cctype>
+#include <cstdlib>
+#include <cmath>
 
 using namespace db;
 using namespace db::tag;

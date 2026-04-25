@@ -20,7 +20,7 @@
 #include "m_stdio.h"
 #include "m_assert.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 using namespace mstl;
 

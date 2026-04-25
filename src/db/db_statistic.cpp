@@ -27,7 +27,7 @@
 #include "db_statistic.h"
 #include "db_game_info.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 

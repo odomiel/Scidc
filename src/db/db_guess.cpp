@@ -34,7 +34,7 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <string.h>
+#include <cstring>
 
 #ifdef USE_NULL_MOVE_SEARCH
 # define SEARCH(moves, depth, alpha, beta, allowNull)		search(moves, depth, alpha, beta, allowNull)

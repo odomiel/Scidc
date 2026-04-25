@@ -55,10 +55,10 @@
 #include "m_stdio.h"
 #include "m_bitfield.h"
 
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <limits.h>
+#include <cstring>
+#include <cctype>
+#include <cstdlib>
+#include <climits>
 
 using namespace db;
 using namespace db::cbh;

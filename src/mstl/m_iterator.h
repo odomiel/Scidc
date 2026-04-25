@@ -19,7 +19,7 @@
 #ifndef _mstl_iterator_included
 #define _mstl_iterator_included
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace mstl {
 

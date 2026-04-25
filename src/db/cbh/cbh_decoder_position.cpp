@@ -36,7 +36,7 @@
 
 #include "m_utility.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace util;
 using namespace db;

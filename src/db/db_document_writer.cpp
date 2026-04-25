@@ -31,7 +31,7 @@
 #include "m_ostream.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 

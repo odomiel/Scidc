@@ -34,9 +34,9 @@
 #include "m_types.h" // for nullptr
 
 #include <tcl.h>
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdio>
+#include <cctype>
 
 
 namespace {

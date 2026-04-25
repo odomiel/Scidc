@@ -49,7 +49,7 @@
 #include "m_limits.h"
 #include "m_stdio.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace util;
 using namespace db;

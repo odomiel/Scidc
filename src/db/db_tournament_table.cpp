@@ -46,8 +46,8 @@
 #include "m_limits.h"
 #include "m_algorithm.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 //#define DEBUG
 
@@ -137,7 +137,7 @@ struct TournamentTable::Player
 
 #ifdef DEBUG
 
-#include <stdio.h>
+#include <cstdio>
 
 static void
 debugClash(TournamentTable::Player::Clash const* clash)

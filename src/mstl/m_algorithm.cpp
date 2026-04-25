@@ -21,7 +21,7 @@
 #include "m_assert.h"
 
 #include <alloca.h>
-#include <string.h>
+#include <cstring>
 
 
 /// Exchanges ranges [first, first+1) and [first+1, last)

@@ -22,7 +22,7 @@
 #include "m_byte_buf.h"
 #include "m_utility.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace mstl;
 

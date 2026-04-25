@@ -41,7 +41,7 @@
 
 #include "sys_utf8.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::color;

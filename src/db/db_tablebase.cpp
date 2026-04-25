@@ -34,8 +34,8 @@
 #include "m_string.h"
 #include "m_utility.h"
 
-#include <ctype.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdlib>
 
 using namespace db;
 

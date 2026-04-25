@@ -28,8 +28,8 @@
 #include "m_map.h"
 
 #include <tcl.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 //#define DEBUG
 

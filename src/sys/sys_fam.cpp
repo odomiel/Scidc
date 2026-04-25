@@ -171,7 +171,7 @@ Monitor::isSupported()
 // IMPORTANT NOTE: FAM should not be used because some FAM libraries are broken.
 
 #include <fam.h>
-#include <errno.h>
+#include <cerrno>
 
 namespace {
 
@@ -332,10 +332,10 @@ cancelMonitorFAM(Request& req)
 
 #include "m_hash.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <sys/ioctl.h>
 
 #ifdef SYS_INOTIFY
@@ -578,9 +578,9 @@ cancelMonitorFAM(Request& req)
 
 #elif defined(__linux__) && defined(F_NOTIFY) && 0 // XXX not yet working
 
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <signal.h>
 #include <sys/ioctl.h>
 

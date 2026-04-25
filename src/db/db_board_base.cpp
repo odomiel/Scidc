@@ -26,7 +26,7 @@
 
 #include "db_board_base.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::sq;

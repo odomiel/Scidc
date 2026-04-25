@@ -33,7 +33,7 @@
 #include "m_stdio.h"
 #include "m_assert.h"
 
-#include <ctype.h>
+#include <cctype>
 
 using namespace db::edit;
 

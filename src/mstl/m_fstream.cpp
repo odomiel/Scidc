@@ -19,7 +19,7 @@
 #include "m_fstream.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace mstl;
 

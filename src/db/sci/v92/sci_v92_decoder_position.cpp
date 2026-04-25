@@ -30,8 +30,8 @@
 
 #include "m_assert.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 using namespace db;
 using namespace db::sci::v92::decoder;

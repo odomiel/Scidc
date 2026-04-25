@@ -41,10 +41,10 @@
 #include <tcl.h>
 
 #include <stdarg.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <setjmp.h>
-#include <ctype.h>
-#include <assert.h>
+#include <cctype>
+#include <cassert>
 
 extern "C" { int Treectrl_Init(Tcl_Interp*); }
 extern "C" { int Inotify_Init(Tcl_Interp *interp); }

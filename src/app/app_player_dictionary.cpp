@@ -35,9 +35,9 @@
 #include "m_utility.h"
 #include "m_assert.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <cctype>
 
 using namespace app;
 using namespace db;

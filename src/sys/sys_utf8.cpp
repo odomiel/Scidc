@@ -23,7 +23,7 @@
 #include "m_assert.h"
 
 #include <tcl.h>
-#include <ctype.h>
+#include <cctype>
 
 
 inline

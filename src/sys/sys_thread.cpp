@@ -27,7 +27,7 @@
 
 #include <tcl.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifndef __WIN32__
 # include <time.h>

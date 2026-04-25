@@ -68,7 +68,7 @@
 #include "m_assert.h"
 #include "m_stdio.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace app;

@@ -39,7 +39,7 @@
 #include "m_list.h"
 #include "m_assert.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 using namespace app;
 

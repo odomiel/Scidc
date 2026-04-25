@@ -30,8 +30,8 @@
 
 #include "m_assert.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 using namespace db;
 

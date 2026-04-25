@@ -42,8 +42,8 @@
 #include "m_vector.h"
 #include "m_utility.h"
 
-#include <ctype.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdlib>
 
 using namespace db;
 using namespace db::cbf;

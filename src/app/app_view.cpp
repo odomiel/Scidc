@@ -56,7 +56,7 @@
 #include "m_vector.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace app;

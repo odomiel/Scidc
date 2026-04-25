@@ -29,8 +29,8 @@
 #include "m_string.h"
 #include "m_assert.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 using namespace db::country;
 

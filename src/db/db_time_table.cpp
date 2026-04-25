@@ -30,7 +30,7 @@
 #include "m_bit_functions.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 

@@ -21,7 +21,7 @@
 #include "m_string.h"
 #include "m_stdio.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdarg.h>
 
 using namespace mstl;

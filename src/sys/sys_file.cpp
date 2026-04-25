@@ -23,11 +23,11 @@
 #include "m_assert.h"
 
 #include <tcl.h>
-#include <time.h>
+#include <ctime>
 
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string.h>
+#include <cstring>
 
 #ifdef __WIN32__
 # define stat	_stat

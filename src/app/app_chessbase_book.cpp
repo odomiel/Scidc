@@ -49,7 +49,7 @@
 #include "m_limits.h"
 #include "m_assert.h"
 
-#include <string.h>
+#include <cstring>
 
 using namespace db;
 using namespace db::sq;

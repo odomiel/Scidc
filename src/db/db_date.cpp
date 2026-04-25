@@ -29,8 +29,8 @@
 #include "m_utility.h"
 #include "m_stdio.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 using namespace db;
 

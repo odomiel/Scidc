@@ -58,8 +58,8 @@
 
 #include "m_stdio.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 #include <utility>
 
 using namespace db;

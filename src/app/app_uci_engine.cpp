@@ -32,8 +32,8 @@
 #include "m_list.h"
 #include "m_stdio.h"
 
-#include <string.h>
-#include <ctype.h>
+#include <cstring>
+#include <cctype>
 
 using namespace app;
 using namespace app::uci;

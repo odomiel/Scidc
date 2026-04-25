@@ -21,8 +21,8 @@
 #include "m_stdio.h"
 #include "m_assert.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 using namespace mstl;
 

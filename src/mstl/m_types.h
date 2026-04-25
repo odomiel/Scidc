@@ -19,8 +19,8 @@
 #ifndef _mstl_types_included
 #define _mstl_types_included
 
-#include <stdint.h>
-#include <stddef.h>
+#include <cstdint>
+#include <cstddef>
 
 #ifndef __WIN32__
 # if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__) || defined(__WINDOWS_386__)
