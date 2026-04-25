@@ -89,7 +89,7 @@ sleep()
 	struct ::timespec tm;
 	tm.tv_sec = 0;
 	tm.tv_nsec = 2000000L + 1;
-	::nanosleep(&tm, NULL);
+	::nanosleep(&tm, nullptr);
 }
 
 #endif

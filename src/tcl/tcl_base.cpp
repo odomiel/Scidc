@@ -132,7 +132,7 @@ tcl::newListObj(char const* s, unsigned len)
 	Tcl_Obj* obj = newObj(s, len);
 	int unused;
 
-	Tcl_ListObjLength(NULL, obj, &unused); // converting to a list
+	Tcl_ListObjLength(nullptr, obj, &unused); // converting to a list
 	return obj;
 }
 

@@ -258,7 +258,7 @@ Database::Database(	mstl::string const& name,
 	m_readOnly = mode == permission::ReadOnly;
 	m_codec = DatabaseCodec::makeCodec(m_name, DatabaseCodec::Existing);
 
-	if (m_codec == 0)
+	if (m_codec == nullptr)
 	{
 		if (m_suffix.empty())
 			DB_RAISE("no file suffix given");
@@ -707,7 +707,7 @@ Database::close()
 
 		m_codec->close();
 		delete m_codec;
-		m_codec = 0;
+		m_codec = nullptr;
 	}
 }
 
@@ -727,7 +727,7 @@ Database::remove()
 	if (m_codec)
 	{
 		delete m_codec;
-		m_codec = 0;
+		m_codec = nullptr;
 	}
 }
 

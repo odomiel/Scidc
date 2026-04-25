@@ -91,7 +91,7 @@ PdfWriter::PdfWriter(format::Type srcFormat,
 	m_font[Move_Figurine_Variation] =
 	m_font[Move_Figurine_SubVariation] = HPDF_GetFont(m_doc, fontName, "UTF-8");
 
-	m_font[GameInfo] = HPDF_GetFont(m_doc, "Helvetica", NULL);
+	m_font[GameInfo] = HPDF_GetFont(m_doc, "Helvetica", nullptr);
 	m_font[Move_Text_MainLine] =
 		m_font[Move_Text_Variation] =
 		m_font[Move_Text_SubVariation] =

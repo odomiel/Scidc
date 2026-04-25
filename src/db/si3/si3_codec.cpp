@@ -606,10 +606,10 @@ Codec::doDecoding(GameData& data, GameInfo& info, unsigned gameIndex, mstl::stri
 void
 Codec::doOpen(mstl::string const& encoding)
 {
-	M_ASSERT(	m_codec == 0
+	M_ASSERT(	m_codec == nullptr
 				|| encoding == sys::utf8::Codec::automatic()
 				|| encoding == m_codec->encoding());
-	M_ASSERT(m_gameData == 0);
+	M_ASSERT(m_gameData == nullptr);
 
 	m_codec = new sys::utf8::Codec(encoding);
 	M_ASSERT(encoding == sys::utf8::Codec::automatic() || m_codec->hasEncoding());
@@ -625,10 +625,10 @@ Codec::doOpen(	mstl::string const& rootname,
 					util::Progress& progress)
 {
 	M_ASSERT(originalSuffix == "si3" || originalSuffix == "si4" || originalSuffix == "si5");
-	M_ASSERT(	m_codec == 0
+	M_ASSERT(	m_codec == nullptr
 				|| encoding == sys::utf8::Codec::automatic()
 				|| encoding == m_codec->encoding());
-	M_ASSERT(m_gameData == 0);
+	M_ASSERT(m_gameData == nullptr);
 
 	char buf[8];
 
@@ -683,10 +683,10 @@ Codec::doOpen(	mstl::string const& rootname,
 void
 Codec::doOpen(mstl::string const& rootname, mstl::string const& encoding)
 {
-	M_ASSERT(	m_codec == 0
+	M_ASSERT(	m_codec == nullptr
 				|| encoding == sys::utf8::Codec::automatic()
 				|| encoding == m_codec->encoding());
-	M_ASSERT(m_gameData == 0);
+	M_ASSERT(m_gameData == nullptr);
 
 	m_codec = new sys::utf8::Codec(encoding);
 	M_ASSERT(encoding == sys::utf8::Codec::automatic() || m_codec->hasEncoding());
@@ -724,7 +724,7 @@ Codec::doOpen(mstl::string const& rootname, mstl::string const& encoding)
 unsigned
 Codec::doOpenProgressive(mstl::string const& rootname, mstl::string const& encoding)
 {
-	M_ASSERT(m_progressiveStream == 0);
+	M_ASSERT(m_progressiveStream == nullptr);
 
 	m_codec = new sys::utf8::Codec(encoding);
 
@@ -2660,11 +2660,11 @@ Codec::releaseRoundEntry(unsigned index)
 bool
 Codec::saveRoundEntry(unsigned index, mstl::string const& value)
 {
-	m_roundEntry = 0;
+	m_roundEntry = nullptr;
 
 	NamebaseEntry* entry = namebase(Namebase::Round).insert(value, ::MaxRoundCount);
 
-	if (entry == 0)
+	if (entry == nullptr)
 		return false;
 
 	if (index >= m_roundLookup.size())
@@ -2693,7 +2693,7 @@ Codec::restoreRoundEntry(unsigned index)
 		if (entry && m_roundLookup[index]->frequency() == 0)
 			m_roundLookup[index] = m_roundEntry;
 
-		m_roundEntry = 0;
+		m_roundEntry = nullptr;
 	}
 }
 
@@ -2705,7 +2705,7 @@ Codec::useOverflowEntry(unsigned index)
 
 	NamebaseEntry* entry = roundBase.insert("overflow", ::MaxRoundCount);
 
-	if (entry == 0)
+	if (entry == nullptr)
 	{
 		unsigned freq = unsigned(-1);
 
