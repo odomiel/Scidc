@@ -290,14 +290,14 @@ Application::~Application() noexcept
 	m_famService = nullptr;
 	m_instance = nullptr;
 
-	for (EngineList::iterator i = m_engineList.begin(); i != m_engineList.end(); ++i)
+	for (auto* engine : m_engineList)
 	{
-		(*i)->deactivate();
-		delete *i;
+		engine->deactivate();
+		delete engine;
 	}
 
-	for (ThreadList::iterator i = m_threadList.begin(); i != m_threadList.end(); ++i)
-		delete *i;
+	for (auto* thread : m_threadList)
+		delete thread;
 
 	m_gameMap.clear();
 }
@@ -697,14 +697,14 @@ Application::findBase(mstl::string const& name, variant::Type variant) const
 Application::EditGame*
 Application::findGame(Cursor* cursor, unsigned index, unsigned* position)
 {
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		EditGame& game = *i->second;
+		EditGame& game = *kv.second;
 
 		if (game.sink.cursor == cursor && game.sink.index == index)
 		{
 			if (position)
-				*position = i->first;
+				*position = kv.first;
 
 			return &game;
 		}
@@ -862,21 +862,21 @@ Application::closeAll(CloseMode mode)
 
 	setActiveBase(clipbase(variant::Normal));
 
-	for (CursorMap::iterator i = m_cursorMap.begin(); i != m_cursorMap.end(); ++i)
+	for (auto& kv : m_cursorMap)
 	{
-		if (i->second->isScratchbase())
+		if (kv.second->isScratchbase())
 		{
-			map[scratchbaseName()] = i->second;
+			map[scratchbaseName()] = kv.second;
 		}
-		else if (i->second->isClipbase() && mode != Including_Clipbase)
+		else if (kv.second->isClipbase() && mode != Including_Clipbase)
 		{
-			map[clipbaseName()] = i->second;
+			map[clipbaseName()] = kv.second;
 		}
 		else
 		{
 			for (unsigned v = 0; v < variant::NumberOfVariants; ++v)
 			{
-				if (Cursor* cursor = (*i->second)[v])
+				if (Cursor* cursor = (*kv.second)[v])
 				{
 					cancelAllThreads(*cursor);
 					moveGamesToScratchbase(*cursor);
@@ -889,7 +889,7 @@ Application::closeAll(CloseMode mode)
 				}
 			}
 
-			i->second->close();
+			kv.second->close();
 		}
 	}
 
@@ -1951,10 +1951,10 @@ Application::endTrialMode()
 void
 Application::refreshGames()
 {
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		if (i->second->sink.cursor->isScratchbase())
-			i->second->data.refresh = 2;
+		if (kv.second->sink.cursor->isScratchbase())
+			kv.second->data.refresh = 2;
 	}
 }
 
@@ -2039,12 +2039,12 @@ Application::moveGamesToScratchbase(Cursor& cursor, bool overtake)
 	if (cursor.isScratchbase())
 		return;
 
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		EditGame& game = *i->second;
+		EditGame& game = *kv.second;
 
 		if (game.sink.cursor == &cursor)
-			moveGameToScratchbase(*i, overtake);
+			moveGameToScratchbase(kv, overtake);
 	}
 }
 
@@ -2057,9 +2057,9 @@ Application::moveGamesBackToDatabase(Cursor& cursor)
 
 	mstl::string const& databaseName = cursor.database().name();
 
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		EditGame& game = *i->second;
+		EditGame& game = *kv.second;
 
 		if (game.sink.cursor->isScratchbase() && game.link.databaseName == databaseName)
 		{
@@ -2067,7 +2067,7 @@ Application::moveGamesBackToDatabase(Cursor& cursor)
 
 			if (game.link.index < base.countGames())
 			{
-				m_indexMap.erase(i->first);
+				m_indexMap.erase(kv.first);
 
 				game.sink.cursor = &cursor;
 				game.sink.index = game.link.index;
@@ -2208,16 +2208,16 @@ Application::finishUpdateTree(tree::Method method,
 void
 Application::stopAllThreads(Cursor const& cursor)
 {
-	for (unsigned i = 0; i < m_threadList.size(); ++i)
-		m_threadList[i]->signal(Thread::Stop, cursor);
+	for (auto* thread : m_threadList)
+		thread->signal(Thread::Stop, cursor);
 }
 
 
 void
 Application::cancelAllThreads(Cursor const& cursor)
 {
-	for (unsigned i = 0; i < m_threadList.size(); ++i)
-		m_threadList[i]->signal(Thread::Cancel, cursor);
+	for (auto* thread : m_threadList)
+		thread->signal(Thread::Cancel, cursor);
 }
 
 
@@ -2664,14 +2664,14 @@ Application::bindGameToView(unsigned position, int viewId, Update updateMode)
 void
 Application::viewClosed(Cursor const& cursor, unsigned viewId)
 {
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		if (i->second->sink.cursor == &cursor && int(viewId) == i->second->data.viewId)
+		if (kv.second->sink.cursor == &cursor && int(viewId) == kv.second->data.viewId)
 		{
-			i->second->data.viewId = -1;
+			kv.second->data.viewId = -1;
 
 			if (m_subscriber)
-				m_subscriber->updateGameInfo(i->first);
+				m_subscriber->updateGameInfo(kv.first);
 		}
 	}
 }
@@ -2690,9 +2690,9 @@ Application::setupGame(	unsigned linebreakThreshold,
 	M_REQUIRE((displayStyle & (display::CompactStyle | display::ColumnStyle))
 					!= (display::CompactStyle | display::ColumnStyle));
 
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		i->second->data.game->setup(	linebreakThreshold,
+		kv.second->data.game->setup(	linebreakThreshold,
 												linebreakMaxLineLengthMain,
 												linebreakMaxLineLengthVar,
 												linebreakMinCommentLength,
@@ -2700,7 +2700,7 @@ Application::setupGame(	unsigned linebreakThreshold,
 												moveInfoTypes,
 												moveStyle);
 
-		i->second->data.refresh = 1;
+		kv.second->data.refresh = 1;
 	}
 }
 
@@ -2708,8 +2708,8 @@ Application::setupGame(	unsigned linebreakThreshold,
 void
 Application::setupGameUndo(unsigned undoLevel, unsigned combinePredecessingMoves)
 {
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
-		i->second->data.game->setUndoLevel(undoLevel, combinePredecessingMoves);
+	for (auto& kv : m_gameMap)
+		kv.second->data.game->setUndoLevel(undoLevel, combinePredecessingMoves);
 
 	::undoLevel = undoLevel;
 	::undoCombinePredecessingMoves = combinePredecessingMoves;
@@ -2789,8 +2789,8 @@ Application::cursor(unsigned databaseId) const
 void
 Application::finalize()
 {
-	for (unsigned i = 0; i < m_threadList.size(); ++i)
-		m_threadList[i]->signal(Thread::Kill);
+	for (auto* thread : m_threadList)
+		thread->signal(Thread::Kill);
 
 	for (Iterator i = begin(), e = end(); i != e; ++i)
 		i->close();
@@ -2854,10 +2854,10 @@ Application::setEngineLog(mstl::ostream* strm)
 
 	m_engineLog = strm;
 
-	for (unsigned i = 0; i < m_engineList.size(); ++i)
+	for (auto* engine : m_engineList)
 	{
-		if (m_engineList[i])
-			m_engineList[i]->setLog(strm);
+		if (engine)
+			engine->setLog(strm);
 	}
 
 	return old;
@@ -2883,10 +2883,10 @@ Application::stopAnalysis(unsigned engineId)
 void
 Application::stopAnalysis(Game const* game)
 {
-	for (unsigned i = 0; i < m_engineList.size(); ++i)
+	for (auto* engine : m_engineList)
 	{
-		if (m_engineList[i] && m_engineList[i]->currentGame() == game)
-			m_engineList[i]->removeGame();
+		if (engine && engine->currentGame() == game)
+			engine->removeGame();
 	}
 }
 
@@ -3001,14 +3001,14 @@ Application::compact(Cursor& cursor, util::Progress& progress)
 
 	if (!cursor.isScratchbase())
 	{
-		for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+		for (auto& kv : m_gameMap)
 		{
-			EditGame& g = *i->second;
+			EditGame& g = *kv.second;
 
 			if (g.sink.cursor == &cursor && cursor.database().isDeleted(g.sink.index))
 			{
-				moveGameToScratchbase(*i, true);
-				deleted.push_back(i->first);
+				moveGameToScratchbase(kv, true);
+				deleted.push_back(kv.first);
 			}
 		}
 	}
@@ -3017,9 +3017,9 @@ Application::compact(Cursor& cursor, util::Progress& progress)
 
 	if (rc)
 	{
-		for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+		for (auto& kv : m_gameMap)
 		{
-			EditGame& g = *i->second;
+			EditGame& g = *kv.second;
 
 			if (g.sink.cursor == &cursor)
 			{
@@ -3032,7 +3032,7 @@ Application::compact(Cursor& cursor, util::Progress& progress)
 				}
 
 				if (m_subscriber)
-					m_subscriber->updateGameInfo(i->first);
+					m_subscriber->updateGameInfo(kv.first);
 			}
 			else if (g.link.databaseName == cursor.name())
 			{
@@ -3047,14 +3047,14 @@ Application::compact(Cursor& cursor, util::Progress& progress)
 				}
 
 				if (m_subscriber)
-					m_subscriber->updateGameInfo(i->first);
+					m_subscriber->updateGameInfo(kv.first);
 			}
 		}
 
 		if (m_subscriber && !cursor.isScratchbase())
 		{
-			for (unsigned i = 0; i < deleted.size(); ++i)
-				m_subscriber->updateGameInfo(deleted[i]);
+			for (auto pos : deleted)
+				m_subscriber->updateGameInfo(pos);
 
 			m_subscriber->updateList(m_updateCount++, cursor.name(), cursor.variant());
 		}
@@ -3182,9 +3182,9 @@ Application::stripTags(View& view, TagMap const& tags, util::Progress& progress,
 void
 Application::updateGameInfo(Cursor const& cursor, Database& database)
 {
-	for (GameMap::iterator i = m_gameMap.begin(); i != m_gameMap.end(); ++i)
+	for (auto& kv : m_gameMap)
 	{
-		EditGame& game = *i->second;
+		EditGame& game = *kv.second;
 
 		if (game.sink.cursor == &cursor)
 		{
@@ -3194,11 +3194,11 @@ Application::updateGameInfo(Cursor const& cursor, Database& database)
 			if (database.loadGame(game.sink.index, newGame) == load::Ok)
 			{
 				database.getGameTags(game.sink.index, tags);
-				i->second->sink.crcMoves = tags.computeChecksum(newGame.computeChecksum());
-				i->second->link.crcMoves = i->second->sink.crcMoves;
+				kv.second->sink.crcMoves = tags.computeChecksum(newGame.computeChecksum());
+				kv.second->link.crcMoves = kv.second->sink.crcMoves;
 
 				if (m_subscriber)
-					m_subscriber->updateGameInfo(i->first);
+					m_subscriber->updateGameInfo(kv.first);
 			}
 		}
 	}
