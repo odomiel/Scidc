@@ -130,10 +130,13 @@ SI5 was originally read-only. The following changes enable writing:
 
 - `tcl/app-database.tcl` `openBase`: SI5 is excluded from forced `readonly=1` and always forced to `readonly=0` (because RecentFiles may have stale `readonly=1` from pre-write-support sessions)
 - `src/db/si3/si3_codec.cpp` `updateIndex()`: skips header write for SI5 (line ~941: `if (m_isVersion5) return;`)
+- `src/db/si3/si3_codec.cpp` `extension()`: returns `Ext5` (`"si5"`) when `m_isVersion5` is true — without this, `Database::attach` fails its precondition because the file suffix `.si5` does not match the codec's reported extension
 - `src/db/db_common.ipp`: `format::isScidFormat()` includes `Scid5` (needed for `saveGame` and round-entry logic)
 - `src/db/db_common.ipp`: `format::isWritable()` includes `Scid5`
-- `src/db/db_database.cpp`: constructor `M_REQUIRE` permits SI5 in read-write mode
+- `src/db/db_database.cpp`: constructor `M_REQUIRE` permits SI5 in read-write mode; also the switch statement must include `format::Scid5` alongside `Scid3`/`Scid4` — without it the constructor hits an `M_ASSERT(!"unexpected format")`
 - `tcl/end.tcl`: `keybar::tr` handles empty-string keys (`<= 1` instead of `== 1`) — the save dialog passes `{}` as a result key
+
+**Creating new SI5 databases:** `tcl/menu.tcl` `dbNew` offers `.si5` as a file type option (alongside `.sci`) whenever the selected variant is `Normal`. For other variants only `.sci` is shown (SI5 supports Normal and Three-Check only, and new-database creation is restricted to Normal for safety).
 
 ### Engine infrastructure
 
@@ -229,15 +232,17 @@ Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/u
 
 **Critical:** The AppImage FUSE mount at `/tmp/.mount_xxx/` is **read-only**. Any code that writes files (downloads, caches, user data) must target `$::scidb::dir::user` (`~/.scidb-beta/`) or another writable path — never `$::scidb::dir::data` or `$::scidb::dir::share`, which resolve inside SHAREDIR.
 
+**Stale engine paths across AppImage versions:** `WriteEngineOptions` in `tcl/engine.tcl` saves the absolute engine path (e.g. `/tmp/.mount_scidb.HASH/usr/bin/stockfish-scidb`) into `~/.scidb-beta/config/engines.dat`. Each AppImage launch uses a different FUSE hash, so saved paths become invalid. The `setup()` proc's else-branch (loading from the local config file) re-resolves stale paths for bundled engines (`UserDefined == 0`) by checking whether `$engine(Command)` is executable and, if not, substituting `[file join $::scidb::dir::engines [file tail $engine(Command)]]`. This re-resolution runs only for engines where `UserDefined` is `0` — user-added engines (`UserDefined == 1`) are left as-is.
+
 `AppDir/` is rebuilt from scratch on each `build-appimage.sh` run and is **not tracked in git**. However, `AppDir/usr/share/scidb-beta/` is one of the three share directories that must stay in sync with `tcl/` and `/usr/local/share/scidb-beta/` — `build-appimage.sh` copies from `/usr/local/` (post-`sudo make install`), so keeping the system install current is sufficient.
 
 ## Version management
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.27 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.27 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.27 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.30 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.30 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.30 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
