@@ -22,7 +22,7 @@ Column layout of each output line (0-indexed, C++ parser positions):
 
 import sys
 import os
-import io
+import tempfile
 import zipfile
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -30,9 +30,6 @@ from datetime import datetime
 
 FIDE_XML_URL = "https://ratings.fide.com/download/players_list_xml.zip"
 
-# Map FIDE XML title strings to the 2-char codes parseFideRating reads:
-#   'g' -> GM,  'm' -> IM,  'f' -> FM,  'c' -> CM
-#   'w'+'g' -> WGM,  'w'+'m' -> WIM,  'w'+'f' -> WFM,  'w'+'c' -> WCM
 TITLE_MAP = {
     "GM":  "gm",
     "IM":  "im",
@@ -54,74 +51,93 @@ def best_title(elem):
 
 
 def make_line(fideid, name, title, federation, rating, games, birth, female, inactive):
-    id_part    = f"{fideid:8d}  "          # 10 chars  [0:10]
-    name_part  = f"{name:<33.33s}"         # 33 chars  [10:43]
-    sep1       = " "                       #  1 char   [43]
-    title_part = f"{title:<4.4s}"          #  4 chars  [44:48]
-    fed_part   = f"{federation:<3.3s}"     #  3 chars  [48:51]
-    sep2       = "  "                      #  2 chars  [51:53]
-    rat_part   = f"{rating:<5d}"           #  5 chars  [53:58]  digit must be at 53
-    gam_part   = f"{games:6d}"             #  6 chars  [58:64]
-    bir_part   = f"{birth:4d}" if birth else "    "   # 4 chars [64:68]
-    sep3       = "  "                      #  2 chars  [68:70]
-    sex_part   = "w" if female else " "    #  1 char   [70]
-    flg_part   = "i" if inactive else " "  #  1 char   [71]
-    return id_part + name_part + sep1 + title_part + fed_part + sep2 \
-         + rat_part + gam_part + bir_part + sep3 + sex_part + flg_part
+    id_part   = f"{fideid:8d}  "
+    name_part = f"{name:<33.33s}"
+    title_part = f"{title:<4.4s}"
+    fed_part  = f"{federation:<3.3s}"
+    rat_part  = f"{rating:<5d}"
+    gam_part  = f"{games:6d}"
+    bir_part  = f"{birth:4d}" if birth else "    "
+    sex_part  = "w" if female else " "
+    flg_part  = "i" if inactive else " "
+    return (id_part + name_part + " " + title_part + fed_part + "  "
+            + rat_part + gam_part + bir_part + "  " + sex_part + flg_part)
 
 
-def convert(xml_bytes, out_zip_path):
-    root = ET.fromstring(xml_bytes)
-    players = root.findall("player")
-    if not players:
-        players = root.findall(".//player")
-    print(f"Converting {len(players)} players...", flush=True)
-
-    month_tag = datetime.now().strftime("%b%y").lower()
-    txt_name  = f"players_{month_tag}.txt"
-    header    = "ID number Name                              TitlFed  Rating GamesBorn  Flag\n"
-
-    lines = [header]
-    for p in players:
-        try:
-            fideid = int(p.findtext("fideid") or 0)
-            name   = (p.findtext("name") or "").strip()
-            country = (p.findtext("country") or "").strip().upper()
-            if not fideid or not name or not country:
-                continue
-
-            sex      = (p.findtext("sex") or "").strip().upper()
-            title    = best_title(p)
-            rating   = int(p.findtext("rating") or 0)
-            games    = int(p.findtext("games") or 0)
-            birthday = int(p.findtext("birthday") or 0)
-            flag     = (p.findtext("flag") or "").strip().lower()
-            female   = (sex == "F")
-            inactive = ("i" in flag)
-
-            lines.append(make_line(fideid, name, title, country,
-                                   rating, games, birthday, female, inactive) + "\n")
-        except (ValueError, TypeError, AttributeError):
-            continue
-
-    txt_bytes = "".join(lines).encode("utf-8")
-    tmp_path  = out_zip_path + ".tmp"
-    with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr(txt_name, txt_bytes)
-    os.replace(tmp_path, out_zip_path)
-    print(f"Saved {len(lines) - 1} players to {out_zip_path}", flush=True)
-
-
-def download(url):
+def download_to_file(url, path):
+    """Stream-download url in 1 MB chunks to path."""
     print("Downloading FIDE player list (XML, ~50 MB)...", flush=True)
     req = urllib.request.Request(
         url,
         headers={"User-Agent": "Scidb-chess-database/1.1 (player-list-update)"}
     )
-    with urllib.request.urlopen(req, timeout=180) as resp:
-        data = resp.read()
-    print(f"Downloaded {len(data) // 1024} KB.", flush=True)
-    return data
+    downloaded = 0
+    with urllib.request.urlopen(req, timeout=180) as resp, \
+         open(path, "wb") as f:
+        while True:
+            chunk = resp.read(1 << 20)  # 1 MB at a time
+            if not chunk:
+                break
+            f.write(chunk)
+            downloaded += len(chunk)
+            print(f"\r  {downloaded // 1024:6d} KB", end="", flush=True)
+    print(f"\r  {downloaded // 1024} KB downloaded.          ", flush=True)
+
+
+def convert_streaming(xml_fobj, out_zip_path):
+    """Parse XML with iterparse so only one <player> element lives in RAM at a time."""
+    header   = "ID number Name                              TitlFed  Rating GamesBorn  Flag\n"
+    month_tag = datetime.now().strftime("%b%y").lower()
+    txt_name  = f"players_{month_tag}.txt"
+
+    lines    = [header]
+    root_elem = None
+    count    = 0
+
+    for event, elem in ET.iterparse(xml_fobj, events=("start", "end")):
+        if event == "start" and root_elem is None:
+            root_elem = elem  # capture document root on first start
+            continue
+
+        if event != "end" or elem.tag != "player":
+            continue
+
+        try:
+            fideid  = int(elem.findtext("fideid") or 0)
+            name    = (elem.findtext("name") or "").strip()
+            country = (elem.findtext("country") or "").strip().upper()
+            if not fideid or not name or not country:
+                elem.clear()
+                if root_elem is not None:
+                    del root_elem[:]
+                continue
+
+            sex      = (elem.findtext("sex") or "").strip().upper()
+            title    = best_title(elem)
+            rating   = int(elem.findtext("rating") or 0)
+            games    = int(elem.findtext("games") or 0)
+            birthday = int(elem.findtext("birthday") or 0)
+            flag     = (elem.findtext("flag") or "").strip().lower()
+
+            lines.append(make_line(
+                fideid, name, title, country, rating, games,
+                birthday, sex == "F", "i" in flag
+            ) + "\n")
+            count += 1
+        except (ValueError, TypeError, AttributeError):
+            pass
+
+        elem.clear()
+        if root_elem is not None:
+            del root_elem[:]  # drop completed children from root, keep root itself
+
+    print(f"Converting {count} players...", flush=True)
+    txt_bytes = "".join(lines).encode("utf-8")
+    tmp_path  = out_zip_path + ".tmp"
+    with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(txt_name, txt_bytes)
+    os.replace(tmp_path, out_zip_path)
+    print(f"Saved {count} players to {out_zip_path}", flush=True)
 
 
 def main():
@@ -134,18 +150,25 @@ def main():
         print(f"Error: not a directory: {data_dir}", file=sys.stderr)
         sys.exit(1)
 
-    zip_bytes = download(FIDE_XML_URL)
+    tmpzip = None
+    try:
+        fd, tmpzip = tempfile.mkstemp(suffix=".zip", dir=data_dir)
+        os.close(fd)
+        download_to_file(FIDE_XML_URL, tmpzip)
 
-    print("Extracting XML...", flush=True)
-    with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
-        xml_names = [n for n in zf.namelist() if n.lower().endswith(".xml")]
-        if not xml_names:
-            print("Error: no XML file found in FIDE download.", file=sys.stderr)
-            sys.exit(1)
-        xml_bytes = zf.read(xml_names[0])
+        print("Extracting XML...", flush=True)
+        with zipfile.ZipFile(tmpzip) as zf:
+            xml_names = [n for n in zf.namelist() if n.lower().endswith(".xml")]
+            if not xml_names:
+                print("Error: no XML file found in FIDE download.", file=sys.stderr)
+                sys.exit(1)
+            out_path = os.path.join(data_dir, "players_list.zip")
+            with zf.open(xml_names[0]) as xml_fobj:
+                convert_streaming(xml_fobj, out_path)
+    finally:
+        if tmpzip and os.path.exists(tmpzip):
+            os.unlink(tmpzip)
 
-    out_path = os.path.join(data_dir, "players_list.zip")
-    convert(xml_bytes, out_path)
     print("Done.", flush=True)
 
 
