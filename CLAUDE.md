@@ -222,7 +222,10 @@ export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
 export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8.6/tcl8"   # for msgcat-1.6.1.tm
 export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
+export SCIDB_ENGINESDIR="$HERE/usr/bin"
 ```
+
+Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/usr/local/games/` into `$APPDIR/usr/bin/` by `build-appimage.sh`. `tcl/start.tcl` normally sets `::scidb::dir::engines` to the build-time `%ENGINESDIR%` value (`/usr/local/games`), which is inaccessible in the AppImage. `SCIDB_ENGINESDIR` overrides this at runtime — `start.tcl` checks the env var first.
 
 **Critical:** The AppImage FUSE mount at `/tmp/.mount_xxx/` is **read-only**. Any code that writes files (downloads, caches, user data) must target `$::scidb::dir::user` (`~/.scidb-beta/`) or another writable path — never `$::scidb::dir::data` or `$::scidb::dir::share`, which resolve inside SHAREDIR.
 
@@ -232,9 +235,9 @@ export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.25 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.25 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.25 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.27 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.27 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.27 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
