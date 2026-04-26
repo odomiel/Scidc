@@ -1368,7 +1368,7 @@ proc UpdatePlayerData {dlg table} {
 	$dlg.update configure -state disabled
 
 	if {[catch {
-		set Priv(update:chan) [open "|[list $python $script $::scidb::dir::user] 2>&1" r]
+		set Priv(update:chan) [::open "|[list $python $script $::scidb::dir::user] 2>&1" r]
 	} err]} {
 		set Priv(update:label) $mc::UpdateList
 		$dlg.update configure -state normal
