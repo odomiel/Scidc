@@ -372,11 +372,13 @@ install-text-scripts:
 	@install -m 755 -d $(SHAREDIR)/scripts
 	@install -m 644 -p scripts/*.eXt $(SHAREDIR)/scripts
 	@install -m 644 -p scripts/*.css $(SHAREDIR)/scripts
+	@install -m 755 -p update-fide-players.py $(SHAREDIR)/scripts
 
 uninstall-text-scripts:
 	@echo "Uninstall TeXt scripts"
 	@if [ -d $(SHAREDIR)/scripts ]; then                                                        \
 		for f in `ls scripts/*.eXt scripts/*.css`; do rm -f $(SHAREDIR)/$$f; done;               \
+		rm -f $(SHAREDIR)/scripts/update-fide-players.py;                                        \
 		if [ "`find $(SHAREDIR)/scripts -type d -empty`" = "`ls -d $(SHAREDIR)/scripts`" ]; then \
 			rmdir $(SHAREDIR)/scripts;                                                            \
 		fi;                                                                                      \
