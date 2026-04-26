@@ -48,8 +48,9 @@ ldd /usr/local/bin/tkscidb-beta | grep "=>" | awk '{print $3}' | while read lib;
     esac
 done
 
-# Tcl/Tk Skript-Bibliotheken
-for tcldir in /usr/lib/tcl8.6 /usr/lib/tk8.6 \
+# Tcl/Tk Skript-Bibliotheken (echte Skripte: init.tcl usw.)
+for tcldir in /usr/share/tcltk/tcl8.6 /usr/share/tcltk/tk8.6 \
+              /usr/lib/tcl8.6 /usr/lib/tk8.6 \
               /usr/share/tcl8.6 /usr/share/tk8.6; do
     [ -d "$tcldir" ] && cp -rL "$tcldir" "$APPDIR/usr/lib/" 2>/dev/null || true
 done
@@ -65,6 +66,7 @@ export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
 export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
 export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
+export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 
 exec "$HERE/usr/bin/tkscidb-beta" "$HERE/usr/bin/scidb-beta" "$@"
 EOF
