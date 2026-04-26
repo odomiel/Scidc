@@ -80,6 +80,7 @@ static mstl::string const MagicGameFile("Scid.sg\0", 8);
 static mstl::string const MagicNamebase("Scid.sn\0", 8);
 static mstl::string const Ext3("si3");
 static mstl::string const Ext4("si4");
+static mstl::string const Ext5("si5");
 
 
 static unsigned
@@ -303,7 +304,11 @@ unsigned Codec::maxAnnotatorCount() const		{ return 0; }
 unsigned Codec::minYear() const					{ return Date::MinYear; }
 unsigned Codec::maxYear() const					{ return mstl::min(uint16_t(2047), Date::MaxYear); }
 unsigned Codec::maxDescriptionLength() const	{ return 107; }
-mstl::string const& Codec::extension() const	{ return m_customFlags ? Ext4 : Ext3; }
+mstl::string const& Codec::extension() const
+{
+	if (m_isVersion5) return Ext5;
+	return m_customFlags ? Ext4 : Ext3;
+}
 mstl::string const& Codec::defaultEncoding() const { return sys::utf8::Codec::utf8(); }
 
 
