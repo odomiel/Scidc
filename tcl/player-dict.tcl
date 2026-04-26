@@ -1367,7 +1367,14 @@ proc UpdatePlayerData {dlg table} {
 	set Priv(update:label) $mc::Downloading
 	$dlg.update configure -state disabled
 
-	set Priv(update:chan) [open "|[list $python $script $::scidb::dir::data] 2>&1" r]
+	if {[catch {
+		set Priv(update:chan) [open "|[list $python $script $::scidb::dir::user] 2>&1" r]
+	} err]} {
+		set Priv(update:label) $mc::UpdateList
+		$dlg.update configure -state normal
+		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $err]
+		return
+	}
 	fconfigure $Priv(update:chan) -blocking 0
 	fileevent $Priv(update:chan) readable \
 		[namespace code [list OnUpdateData $dlg $table]]
@@ -1391,7 +1398,7 @@ proc OnUpdateData {dlg table} {
 		return
 	}
 
-	set zippath [file join $::scidb::dir::data players_list.zip]
+	set zippath [file join $::scidb::dir::user players_list.zip]
 	if {[catch {::scidb::app::load fide $zippath} lerr]} {
 		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
 		return

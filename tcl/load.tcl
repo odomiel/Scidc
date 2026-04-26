@@ -195,10 +195,17 @@ load::load	[format $load::mc::Loading $load::mc::EngineFile] \
 				;
 
 # --- Load FIDE players ------------------------------------------------
+# Prefer user-updated list (~/.scidb-beta/players_list.zip) over bundled one
+set _fide_user_zip [file join $scidb::dir::user players_list.zip]
+set _fide_zip [expr {[file exists $_fide_user_zip]
+	? $_fide_user_zip
+	: [file join $scidb::dir::data players_list.zip]}]
+unset _fide_user_zip
 load::load	[format $load::mc::Loading [format $load::mc::RatingList FIDE]] \
 				fide \
-				[file join $scidb::dir::data players_list.zip] \
+				$_fide_zip \
 				;
+unset _fide_zip
 
 if {![::process::testOption elo-only]} {
 
