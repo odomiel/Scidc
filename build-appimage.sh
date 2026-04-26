@@ -33,19 +33,34 @@ cp -r /usr/local/share/scidb-beta "$APPDIR/usr/share/scidb-beta"
 [ -d /usr/local/lib/scidb-beta ] && \
     cp -r /usr/local/lib/scidb-beta "$APPDIR/usr/lib/scidb-beta"
 
+echo "Kopiere Schach-Engines..."
+for engine in stockfish-scidb fairy-stockfish-scidb; do
+    if [ -f "/usr/local/games/$engine" ]; then
+        cp "/usr/local/games/$engine" "$APPDIR/usr/bin/"
+        echo "  $engine"
+    else
+        echo "  WARNUNG: $engine nicht gefunden in /usr/local/games/"
+    fi
+done
+
 # --- Schritt 3: Shared Libraries kopieren ----------------------------------
 echo "Kopiere Bibliotheken..."
 
-ldd /usr/local/bin/tkscidb-beta | grep "=>" | awk '{print $3}' | while read lib; do
-    [ -z "$lib" ] || [ ! -f "$lib" ] && continue
-    name=$(basename "$lib")
-    case "$name" in
-        libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|libutil.so*|ld-linux*.so*|libgcc_s.so*)
-            ;;
-        *)
-            cp -L "$lib" "$APPDIR/usr/lib/" 2>/dev/null && echo "  $name" || true
-            ;;
-    esac
+for binary in /usr/local/bin/tkscidb-beta \
+              /usr/local/games/stockfish-scidb \
+              /usr/local/games/fairy-stockfish-scidb; do
+    [ -f "$binary" ] || continue
+    ldd "$binary" | grep "=>" | awk '{print $3}' | while read lib; do
+        [ -z "$lib" ] || [ ! -f "$lib" ] && continue
+        name=$(basename "$lib")
+        case "$name" in
+            libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|libutil.so*|ld-linux*.so*|libgcc_s.so*)
+                ;;
+            *)
+                cp -L "$lib" "$APPDIR/usr/lib/" 2>/dev/null && echo "  $name" || true
+                ;;
+        esac
+    done
 done
 
 # Tcl/Tk Skript-Bibliotheken (echte Skripte: init.tcl usw.)
