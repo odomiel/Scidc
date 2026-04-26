@@ -53,6 +53,8 @@ if {[info exists ::env(SCIDB_SHAREDIR)]} {
 
 if {$::tcl_platform(platform) eq "windows"} {
 	set engines $share/engines
+} elseif {[info exists ::env(SCIDB_ENGINESDIR)]} {
+	set engines $::env(SCIDB_ENGINESDIR)
 } else {
 	set engines "%ENGINESDIR%"
 	if {[string match ?ENGINESDIR? $engines]} { set engines "/usr/local/games" }
@@ -139,7 +141,7 @@ proc update {} {
 			{Glass|1243787890671|yellow.color|gregor}
 			{Goldenrod|1243765848112|yellow.color|gregor}
 			{Gray|1248527850611|yellow.color|gregor}
-			{José|1243683856813|yellow.color|gregor}
+			{Josï¿½|1243683856813|yellow.color|gregor}
 			{Kitsch|1422390619103|purple|gregor}
 			{Kunterbunt|1250851039023|yellow.color|gregor}
 			{Marble - Brown|1243532376507|yellow.color|gregor}
