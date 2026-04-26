@@ -971,6 +971,22 @@ proc setup {} {
 			if {$changed} { ::options::hookWriter [namespace current]::WriteEngineOptions engines }
 		} else {
 			::load::source $localFile -message $::load::mc::ReadingFile(engines) -encoding utf-8
+			# Re-resolve bundled engine paths that are no longer valid (e.g. stale AppImage paths)
+			set resolved {}
+			foreach entry $Engines {
+				array unset engine
+				array set engine $EmptyEngine
+				array set engine $entry
+				if {!$engine(UserDefined) && ![file executable $engine(Command)]} {
+					set candidate [file join $::scidb::dir::engines [file tail $engine(Command)]]
+					if {[file executable $candidate]} {
+						set engine(Command) $candidate
+						catch { file stat $candidate st; set engine(FileTime) $st(mtime) }
+					}
+				}
+				lappend resolved [array get engine]
+			}
+			set Engines $resolved
 		}
 	} elseif {$shareFiletime > 0} {
 		LoadSharedConfiguration $shareFile

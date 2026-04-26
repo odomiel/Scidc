@@ -951,7 +951,7 @@ proc DisplayStartOfMotorFailed {tree rc} {
 	}
 	append msg "."
 	set Vars(current:message) [list [namespace current]::DisplayStartOfMotorFailed $tree $rc]
-	ShowMessage error $msg
+	ShowMessage $tree error $msg
 }
 
 
