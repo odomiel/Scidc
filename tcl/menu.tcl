@@ -583,6 +583,9 @@ proc dbNew {parent variant} {
 	set FileSelBoxInUse 1
 
 	set filetypes [list [list $mc::ScidbBases {.sci}]]
+	if {$variant eq "Normal"} {
+		lappend filetypes [list $mc::ScidBases {.si5}]
+	}
 	if {$variant in {Normal Undetermined}} {
 		lappend filetypes [list $mc::PGNFilesArchives {.pgn .pgn.gz}]
 	}

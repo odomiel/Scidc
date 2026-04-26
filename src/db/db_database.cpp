@@ -203,6 +203,7 @@ Database::Database(	mstl::string const& name,
 
 		case format::Scid3: // fallthru
 		case format::Scid4:
+		case format::Scid5: // fallthru
 		case format::ChessBase:	// fallthru
 		case format::ChessBaseDOS:
 			M_REQUIRE(variant == variant::Normal || variant == variant::ThreeCheck);
