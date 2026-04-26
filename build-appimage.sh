@@ -66,6 +66,7 @@ export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
 export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
 export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
+export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8.6/tcl8"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 
 exec "$HERE/usr/bin/tkscidb-beta" "$HERE/usr/bin/scidb-beta" "$@"
