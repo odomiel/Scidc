@@ -685,7 +685,7 @@ proc IsUsed {file} {
 #			if {![::scidb::db::get readonly? $file]} { return yes }
 		}
 
-		.sci - .si3 - .si4 - .cbh - .cbf {
+		.sci - .si3 - .si4 - .si5 - .cbh - .cbf {
 			if {[::scidb::db::get open? [file normalize $file]]} { return yes }
 		}
 	}
@@ -703,7 +703,7 @@ proc MapExtension {extension} {
 	set result [::scidb::misc::mapExtension $extension]
 	if {[string length $result]} { set result ".$result" }
 	if {$result ne $extension} { return $result }
-	if {$result in {.sci .scv .si3 .si4 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP}} {
+	if {$result in {.sci .scv .si3 .si4 .si5 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP}} {
 		return $result
 	}
 	return ""
@@ -780,7 +780,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 				tk::label $f.treadonly -text $readonly
 
 				switch $ext {
-					.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz - .zip {
+					.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz - .zip {
 						lassign [::scidb::misc::attributes $filename] numGames type variant created descr
 						if {[string length $descr] == 0} { set descr "\u2014" }
 #						set type [set ::application::database::mc::T_$type]
@@ -836,7 +836,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 								lassign $pair attr value
 								if {$attr eq "FileName"} {
 									switch [string tolower [file extension $value]] {
-										.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+										.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 											if {[string length $bases] > 0} { append bases \n }
 											set file [file tail $value]
 											append bases $file

@@ -3068,7 +3068,7 @@ proc Select {nb index} {
 				HideTab $nb $nb.encoding
 			}
 			set var $::menu::mc::ScidBases
-			set ext {.si4 .si3}
+			set ext {.si5 .si4 .si3}
 		}
 
 		pgn {
