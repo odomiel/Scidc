@@ -136,6 +136,17 @@ SI5 was originally read-only. The following changes enable writing:
 - `src/db/db_database.cpp`: constructor `M_REQUIRE` permits SI5 in read-write mode; also the switch statement must include `format::Scid5` alongside `Scid3`/`Scid4` — without it the constructor hits an `M_ASSERT(!"unexpected format")`
 - `tcl/end.tcl`: `keybar::tr` handles empty-string keys (`<= 1` instead of `== 1`) — the save dialog passes `{}` as a result key
 
+**SI5 in the open-database list:** `src/tcl/tcl_tree.cpp` `cmdList()` (backing `::scidb::tree::list`) has a switch on `format::*` that filters which open databases are visible. `format::Scid5` must be included alongside `Scid3`/`Scid4`/`Scidb` — without it SI5 databases are invisible in the save-destination menu.
+
+**BlockFile sequential reads for SI5:** SI5 stores games sequentially (no block alignment). The old `M_REQUIRE` in `src/util/u_block_file.ipp` `BlockFileReader::get()` demanded that reads either fit in one block or start at a block boundary — this fires for SI5 games that straddle a 32 768-byte boundary. Fix: remove that precondition. Also fix the `countSpans()` call in `src/util/u_block_file.cpp` `BlockFile::get()`: use `countSpans(blockOffset(offset) + size)` rather than `countSpans(size)` to account for the offset within the first block.
+
+**SI5 in the export dialog:**
+- `tcl/export.tcl` `Select`: `scid` branch must include `.si5` in the extension list alongside `.si4 .si3`
+- `tcl/dialogs/fileselectionbox.tcl`: three switch statements (`IsUsed`, `MapExtension`, and the file-info display) plus the `.scv` archive listing must all include `.si5`
+- `tcl/start.tcl` `Extensions` list must include `.si5`
+
+**Export crash when `catchException` returns non-zero:** In `tcl/export.tcl` `DoExport`, `::util::catchException` returns **2** for IO errors and **-1** for user-interrupted (not **1** — there is no case that returns 1). When it returns non-zero it never sets the result variable, leaving `count` as `{}`. In Tcl 8.5, `if {{} < 0}` evaluates to true via string comparison, causing the subsequent `expr {-$count - 2}` to crash with "can't use empty string as operand of -". Fix: check `$rc == 2` for IO errors; add an explicit `if {[llength $count] == 0}` guard before the `$count < 0` block.
+
 **Creating new SI5 databases:** `tcl/menu.tcl` `dbNew` offers `.si5` as a file type option (alongside `.sci`) whenever the selected variant is `Normal`. For other variants only `.sci` is shown (SI5 supports Normal and Three-Check only, and new-database creation is restricted to Normal for safety).
 
 ### Engine infrastructure
@@ -170,6 +181,21 @@ The **FIDE player list** is updated via the "Update FIDE List" button in the Pla
 
 **`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female).
 
+### `::util::catchException` return-value contract
+
+`::util::catchException $cmd ?resultVar? ?optsVar?` (defined in `tcl/start.tcl`) wraps C++ Tcl commands and translates C++ exceptions:
+
+| Return value | Meaning |
+|---|---|
+| `0` | Success — `resultVar` is set to the command's return value |
+| `-1` | `InterruptException` with count = −1 (user cancelled before any progress) — `resultVar` is **not** set |
+| `2` | `IOException` — error dialog already shown by `catchException` — `resultVar` is **not** set |
+| rethrows | Any other C++ or Tcl error — `catchException` propagates it; the caller's `catch` block fires |
+
+**Critical:** When the return value is non-zero, `resultVar` is **never set** — it keeps its pre-call value (typically `{}`). Always guard with `if {[llength $count] == 0}` before doing arithmetic on it. Check `$rc == 2` (not `$rc == 1`) for IO errors.
+
+The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` → calls `tcl::interrupt(exc.count())` → sets result `{%Interrupted% count}`; catches `IOException` → calls `tcl::ioError(...)` → sets result `{%IO-Error% file error msg}`. `catchException` looks for these sentinel strings in `$opts(-errorinfo)`.
+
 ### Tcl dialog button API
 
 `::widget::dialogButtonAdd $dlg <name> <labelvar> <icon>` creates a `ttk::button` at `$dlg.<name>` whose text tracks the Tcl variable `<labelvar>` via `trace`. Passing a mutable `Priv(...)` variable instead of a literal `mc::*` variable allows changing button text at runtime (e.g. switching to "Downloading..." while async work runs). The button command is set separately with `$dlg.<name> configure -command ...`.
@@ -198,6 +224,11 @@ The **FIDE player list** is updated via the "Update FIDE List" button in the Pla
 | `tcl/load.tcl` | ECO/data file loading at startup |
 | `tcl/widgets/fsbox.tcl` | Custom file-selection dialog (open/save) |
 | `tcl/widgets/misc.tcl` | `dialogButtons`, `dialogButtonAdd`, `buttonSetText` (textvar tracing) |
+| `tcl/export.tcl` | Export dialog (`DoExport`); handles scid/scidb/pgn/html/pdf/tex output |
+| `tcl/dialogs/fileselectionbox.tcl` | File-type filtering and display in file-open/save dialogs |
+| `src/tcl/tcl_tree.cpp` | `::scidb::tree::list` — list of open databases (must include all writable formats) |
+| `src/tcl/tcl_view.cpp` | `::scidb::view::export` and `::scidb::view::copy` commands |
+| `src/util/u_block_file.cpp/.ipp` | BlockFile: block-based game storage; SI5 uses sequential (non-aligned) layout |
 
 ### Save button state logic (app-board.tcl)
 
@@ -240,9 +271,9 @@ Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/u
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.30 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.30 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.30 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.34 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.34 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.34 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
