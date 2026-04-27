@@ -956,7 +956,7 @@ BlockFile::get(View& view, ByteStream& result, unsigned offset, unsigned size)
 	}
 	else if (size > 0)
 	{
-		unsigned rc = fetch(view, blockNumber(offset), countSpans(size));
+		unsigned rc = fetch(view, blockNumber(offset), countSpans(blockOffset(offset) + size));
 
 		if (rc <= MaxFileSize)	// otherwise it's an error code
 			result.setup(view.m_buffer.m_data + blockOffset(offset), size);
