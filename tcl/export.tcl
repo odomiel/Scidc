@@ -3536,11 +3536,17 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 			set illegal 0
 		}
 
-		if {$rc == 1} {
+		if {$rc == 2} {
 			::log::error $::import::mc::AbortedDueToIoError
 			::progress::close
 			::log::close
-			# show error dialog
+			return 0
+		}
+
+		if {[llength $count] == 0} {
+			::log::warning $::import::mc::UserHasInterrupted
+			::progress::close
+			::log::close
 			return 0
 		}
 
@@ -3564,7 +3570,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 		if {$useCopyOperation} {
 			set cmd [list ::scidb::db::save $file]
 			set rc [::util::catchException { ::progress::start $parent $cmd {} {} 1 } count]
-			if {$rc == 1} { ::log::error $::import::mc::AbortedDueToIoError }
+			if {$rc == 2} { ::log::error $::import::mc::AbortedDueToIoError }
 		}
 
 		::progress::close
