@@ -216,6 +216,7 @@ cmdList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		{
 			case format::Scid3:
 			case format::Scid4:
+			case format::Scid5:
 			case format::Scidb:
 				mstl::string const& name = cursors[i]->database().name();
 				objs[objc++] = Tcl_NewStringObj(name, name.size());
