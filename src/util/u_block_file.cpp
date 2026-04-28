@@ -505,7 +505,7 @@ BlockFile::fetch(View& view, unsigned blockNumber, unsigned span)
 			if (span > 1)
 			{
 				resize(view, span);
-				view.m_buffer.m_size = fileOffset(span);
+				view.m_buffer.m_size = fileOffset(span - 1) + m_sizeInfo[blockNumber + span - 1];
 			}
 			else
 			{
