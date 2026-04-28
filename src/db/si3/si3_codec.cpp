@@ -1451,12 +1451,12 @@ Codec::encodeIndexSi5(GameInfo const& item, unsigned index, ByteStream& buf)
 	unsigned char out[56];
 	::memset(out, 0, 56);
 
-	// IDs from NameList lookup (si5 uses original IDs)
-	uint32_t whiteID  = m_playerList->lookup(item.m_player[color::White]->id())->id;
-	uint32_t blackID  = m_playerList->lookup(item.m_player[color::Black]->id())->id;
-	uint32_t eventID  = m_eventList->lookup(item.m_event->id())->id;
-	uint32_t siteID   = m_siteList->lookup(item.m_event->site()->id())->id;
-	uint32_t roundID  = m_roundList->lookup(m_roundLookup[index]->id())->id;
+	// Use namebase insertion-order IDs directly; writeNamebasesSi5 writes in the same order.
+	uint32_t whiteID  = item.m_player[color::White]->id();
+	uint32_t blackID  = item.m_player[color::Black]->id();
+	uint32_t eventID  = item.m_event->id();
+	uint32_t siteID   = item.m_event->site()->id();
+	uint32_t roundID  = m_roundLookup[index]->id();
 
 	// Flags
 	uint32_t flags = (item.m_gameFlags << 3);
