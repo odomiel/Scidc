@@ -1553,9 +1553,14 @@ Codec::writeNamebasesSi5(mstl::string const& filename)
 			fstrm.put(static_cast<char>(val));
 		};
 		auto writeEntry = [&](mstl::string const& name, unsigned type) {
-			uint64_t hdr = (static_cast<uint64_t>(name.size()) << 3) | type;
+			// Empty names must be written as "?" to match buildList() which substitutes
+			// "?" for empty entries; readNamebasesSi5 skips len==0 entries, causing
+			// ID mismatches that trigger m_lookup[id]==null assertions on re-open.
+			char const* s = name.empty() ? "?" : name.c_str();
+			size_t len = name.empty() ? 1 : name.size();
+			uint64_t hdr = (static_cast<uint64_t>(len) << 3) | type;
 			writeVarint(hdr);
-			fstrm.write(name.c_str(), name.size());
+			fstrm.write(s, len);
 		};
 
 		m_playerList->update(namebase(Namebase::Player), *m_codec);
