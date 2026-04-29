@@ -25,13 +25,12 @@
 // ======================================================================
 
 #include "m_assert.h"
-#include <cstdio>
 
 namespace db {
 namespace si3 {
 
 inline bool NameList::isEmpty() const				{ return m_maxId == 0; }
-inline bool NameList::hasId(unsigned id) const	{ return m_lookup[id] != 0; }
+inline bool NameList::hasId(unsigned id) const	{ return id < m_lookup.size() && m_lookup[id] != 0; }
 
 inline unsigned NameList::size() const				{ return m_maxId; }
 inline unsigned NameList::maxFrequency() const	{ return m_maxFrequency; }
@@ -74,9 +73,6 @@ NameList::Node*
 NameList::lookup(unsigned id)
 {
 	M_ASSERT(id < m_lookup.size());
-	if (!m_lookup[id])
-		::fprintf(stderr, "SI5-DEBUG lookup(%u): null! m_lookup.size=%u m_maxId=%u\n",
-		          id, (unsigned)m_lookup.size(), m_maxId);
 	M_ASSERT(m_lookup[id]);
 
 	return m_lookup[id];

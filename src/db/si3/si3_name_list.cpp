@@ -330,6 +330,21 @@ NameList::reuseNode(Node* node, NamebaseEntry* entry)
 
 
 void
+NameList::aliasId(unsigned id, unsigned canonId)
+{
+	// Map a file position (id) that was collapsed during namebase insertion to the
+	// canonical entry's node.  Called after append() for entries with the same name
+	// that share one namebase slot but have distinct file-position IDs.
+	M_ASSERT(id < m_lookup.size());
+	M_ASSERT(canonId < m_lookup.size());
+	M_ASSERT(m_lookup[canonId]);
+	m_lookup[id] = m_lookup[canonId];
+	m_usedIdSet.set(id);
+	m_maxId = mstl::max(m_maxId, id + 1);
+}
+
+
+void
 NameList::addEntry(unsigned originalId, NamebaseEntry* entry)
 {
 	M_ASSERT(m_lookup[originalId]);

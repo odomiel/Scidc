@@ -82,6 +82,7 @@ public:
 					NamebaseEntry* entry,
 					sys::utf8::Codec& codec);
 	void addEntry(unsigned originalId, NamebaseEntry* entry);
+	void aliasId(unsigned id, unsigned canonId);
 	void update(Namebase& base, sys::utf8::Codec& codec);
 	void reserve(unsigned size);
 	void finish();

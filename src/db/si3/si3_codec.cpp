@@ -1353,10 +1353,6 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	unsigned maxEventID  = m_eventList->size()  ? m_eventList->size()-1  : 0;
 	unsigned maxSiteID   = m_siteList->size()   ? m_siteList->size()-1   : 0;
 	unsigned maxRoundID  = m_roundList->size()  ? m_roundList->size()-1  : 0;
-	::fprintf(stderr, "SI5-DEBUG game[%u]: white=%u black=%u event=%u site=%u round=%u"
-	          " | maxP=%u maxE=%u maxS=%u maxR=%u\n",
-	          index, whiteID, blackID, eventID, siteID, roundID,
-	          maxPlayerID, maxEventID, maxSiteID, maxRoundID);
 	if (whiteID > maxPlayerID) whiteID = 0;
 	if (blackID > maxPlayerID) blackID = 0;
 	if (eventID > maxEventID)  eventID = 0;
@@ -1663,20 +1659,28 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 
 	// Step 2: Insert into Namebase (this sorts internally).
 	// We pass the si5 ID so entry->m_id = si5_id.
+	// Save canonical entry pointers: when two file positions share the same name,
+	// insertXxx returns the existing canonical entry (same key, early return).
+	// We call aliasId() after step 3 to map those duplicate positions.
 	m_playerList->reserve(players.size()+1);
 	m_eventList->reserve(events.size()+1);
 	m_siteList->reserve(sites.size()+1);
 	m_roundList->reserve(rounds.size()+1);
 
+	mstl::vector<Namebase::PlayerEntry*> pCanon(players.size(), nullptr);
+	mstl::vector<Namebase::EventEntry*>  eCanon(events.size(),  nullptr);
+	mstl::vector<Namebase::SiteEntry*>   sCanon(sites.size(),   nullptr);
+	mstl::vector<Namebase::Entry*>       rCanon(rounds.size(),  nullptr);
+
 	for (unsigned i=0; i<players.size(); ++i) {
 		mstl::string& name=players[i].second;
-		namebase(Namebase::Player).insertPlayer(
+		pCanon[i] = namebase(Namebase::Player).insertPlayer(
 			name,players[i].first,country::Unknown,title::None,
 			species::Unspecified,sex::Unspecified,0,maxPlayerCount());
 	}
 	for (unsigned i=0; i<events.size(); ++i) {
 		mstl::string& name=events[i].second;
-		namebase(Namebase::Event).insertEvent(
+		eCanon[i] = namebase(Namebase::Event).insertEvent(
 			name,events[i].first,maxEventCount(),
 			namebase(Namebase::Site).emptySite());
 	}
@@ -1684,11 +1688,11 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 		mstl::string& name=sites[i].second;
 		mstl::string tmp(name);
 		country::Code country=Reader::extractCountryFromSite(tmp);
-		namebase(Namebase::Site).insertSite(name,sites[i].first,country,maxSiteCount());
+		sCanon[i] = namebase(Namebase::Site).insertSite(name,sites[i].first,country,maxSiteCount());
 	}
 	for (unsigned i=0; i<rounds.size(); ++i) {
 		mstl::string& name=rounds[i].second;
-		namebase(Namebase::Round).insert(name,rounds[i].first,::MaxRoundCount);
+		rCanon[i] = namebase(Namebase::Round).insert(name,rounds[i].first,::MaxRoundCount);
 	}
 
 	// Step 3: Build NameList lookup by iterating over the sorted Namebase.
@@ -1714,6 +1718,29 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 	for (unsigned i=0; i<rBase.size(); ++i) {
 		NamebaseEntry* e = rBase.entryAt(i);
 		m_roundList->append(e->name(), e->id(), e, *m_codec);
+	}
+
+	// Alias file positions that were collapsed during insertXxx (two entries with
+	// the same name collapse into one; the duplicate position has no node in m_lookup).
+	for (unsigned i=0; i<players.size(); ++i) {
+		unsigned fp = players[i].first;
+		if (!m_playerList->hasId(fp) && pCanon[i])
+			m_playerList->aliasId(fp, pCanon[i]->id());
+	}
+	for (unsigned i=0; i<events.size(); ++i) {
+		unsigned fp = events[i].first;
+		if (!m_eventList->hasId(fp) && eCanon[i])
+			m_eventList->aliasId(fp, eCanon[i]->id());
+	}
+	for (unsigned i=0; i<sites.size(); ++i) {
+		unsigned fp = sites[i].first;
+		if (!m_siteList->hasId(fp) && sCanon[i])
+			m_siteList->aliasId(fp, sCanon[i]->id());
+	}
+	for (unsigned i=0; i<rounds.size(); ++i) {
+		unsigned fp = rounds[i].first;
+		if (!m_roundList->hasId(fp) && rCanon[i])
+			m_roundList->aliasId(fp, rCanon[i]->id());
 	}
 
 	m_playerList->finish(); m_eventList->finish();
