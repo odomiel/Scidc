@@ -25,6 +25,7 @@
 // ======================================================================
 
 #include "m_assert.h"
+#include <cstdio>
 
 namespace db {
 namespace si3 {
@@ -73,6 +74,9 @@ NameList::Node*
 NameList::lookup(unsigned id)
 {
 	M_ASSERT(id < m_lookup.size());
+	if (!m_lookup[id])
+		::fprintf(stderr, "SI5-DEBUG lookup(%u): null! m_lookup.size=%u m_maxId=%u\n",
+		          id, (unsigned)m_lookup.size(), m_maxId);
 	M_ASSERT(m_lookup[id]);
 
 	return m_lookup[id];

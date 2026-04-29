@@ -1353,6 +1353,10 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	unsigned maxEventID  = m_eventList->size()  ? m_eventList->size()-1  : 0;
 	unsigned maxSiteID   = m_siteList->size()   ? m_siteList->size()-1   : 0;
 	unsigned maxRoundID  = m_roundList->size()  ? m_roundList->size()-1  : 0;
+	::fprintf(stderr, "SI5-DEBUG game[%u]: white=%u black=%u event=%u site=%u round=%u"
+	          " | maxP=%u maxE=%u maxS=%u maxR=%u\n",
+	          index, whiteID, blackID, eventID, siteID, roundID,
+	          maxPlayerID, maxEventID, maxSiteID, maxRoundID);
 	if (whiteID > maxPlayerID) whiteID = 0;
 	if (blackID > maxPlayerID) blackID = 0;
 	if (eventID > maxEventID)  eventID = 0;
