@@ -149,6 +149,10 @@ SI5 was originally read-only. The following changes enable writing:
 
 **Creating new SI5 databases:** `tcl/menu.tcl` `dbNew` offers `.si5` as a file type option (alongside `.sci`) whenever the selected variant is `Normal`. For other variants only `.sci` is shown (SI5 supports Normal and Three-Check only, and new-database creation is restricted to Normal for safety).
 
+**SI5 name-collision on re-open (`aliasId`):** `.sn5` does not store FIDE IDs, so two source players with the same name but different FIDE IDs are written as two identical strings at file positions X and Y. On re-read, `readNamebasesSi5` step 2 calls `insertPlayer("Smith", Y, …)` and gets back the existing entry (ID=X) — no new entry with ID=Y is created. After the step-3 append loop, `m_lookup[Y]` is null, causing `M_ASSERT(m_lookup[id])` in `lookup()` when `decodeIndexSi5` accesses game records for that player.
+
+Fix location: `readNamebasesSi5` saves the canonical entry pointer returned by each `insertPlayer`/`insertEvent`/`insertSite`/`insert` call (step 2). After step 3's append loop it calls `m_playerList->aliasId(fp, canon->id())` for every file position where `hasId(fp)` is still false. `NameList::aliasId()` is declared in `si3_name_list.h`, implemented in `si3_name_list.cpp`, and sets `m_lookup[fp] = m_lookup[canonId]` so both positions resolve to the same node.
+
 ### Engine infrastructure
 
 Bundled engines live in `engines/` as **pre-compiled binaries** (no source build). The `ENGINES` variable in `Makefile.in` (and its source in `configure` line ~207) lists the subdirectories to install.
@@ -207,6 +211,7 @@ The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` 
 | `src/db/db_database_codec.h/.cpp` | Codec base class, factory, `saveGame` |
 | `src/db/db_database.h/.cpp` | Database container, open/save/update logic |
 | `src/db/si3/si3_codec.cpp` | SI3/SI4/SI5 codec (2848 lines) |
+| `src/db/si3/si3_name_list.h/.cpp/.ipp` | NameList: shadow ID-lookup index parallel to Namebase; `append()`, `aliasId()`, `lookup()` |
 | `src/db/db_common.h/.ipp` | Format enums, `isScidFormat()`, `isWritable()` |
 | `src/app/app_application.h/.cpp` | Top-level application class |
 | `src/app/app_uci_engine.cpp` | UCI engine protocol, variant name mapping |
@@ -271,9 +276,9 @@ Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/u
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.34 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.34 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.34 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.39 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.39 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.39 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
