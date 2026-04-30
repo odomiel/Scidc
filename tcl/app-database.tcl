@@ -707,6 +707,9 @@ proc recentFiles {} {
 proc removeRecentFile {file} {
 	variable RecentFiles
 
+	if {[string index $file 0] eq "~"} {
+		set file $::scidb::dir::home[string range $file 1 end]
+	}
 	if {[set index [FindRecentFile $file]] >= 0} {
 		set RecentFiles [lreplace $RecentFiles $index $index]
 		[namespace parent]::information::update

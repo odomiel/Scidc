@@ -500,7 +500,11 @@ proc Mouse3Up {nodes} {
 proc RemoveRecentFile {id} {
 	variable Priv
 
-	[namespace parent]::database::removeRecentFile $id
+	set files [[namespace parent]::database::recentFiles]
+	set entry [lindex $files $id]
+	if {[llength $entry]} {
+		[namespace parent]::database::removeRecentFile [lindex $entry 1]
+	}
 	after idle [list $Priv(html) stimulate]
 }
 
