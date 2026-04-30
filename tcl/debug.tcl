@@ -59,7 +59,7 @@ proc toggleStderr {} {
 			return
 		}
 		set dir [ensureLogDir]
-		set date [clock format [clock seconds] -format "%Y%m%d-%H%M%S"]
+		set date [clock format [clock seconds] -format "%Y%m%d"]
 		set LogFile [file join $dir "stderr-$date.log"]
 		if {[catch { ::scidb::misc::setLogFile $LogFile } err]} {
 			set Options(stderrToFile) 0
