@@ -380,60 +380,12 @@
 ::archive::mc::UnpackFile					"%s kicsomagolása"
 
 ### player photos ######################################################
-::util::photos::mc::InstallPlayerPhotos		"Játékos fotók telepítése/frissítése"
-::util::photos::mc::TimeOut			"Időtúllépés"  ;#"Timeout occurred."
-::util::photos::mc::EnterPassword		"Jelszó"
-::util::photos::mc::Download			"Letöltés"
 # A következő kettő nem biztos, hogy pontos... 
-::util::photos::mc::SharedInstallation		"Mehosztott (shared) telepítés"
-::util::photos::mc::LocalInstallation		"Saját telepítés"
-::util::photos::mc::RetryLater			"Kérjük próbálja meg újra később."
-::util::photos::mc::DownloadStillInProgress	"Fényképek letöltése folyamatban."
-::util::photos::mc::PhotoFiles			"Fényképek"
 
-::util::photos::mc::RequiresSuperuserRights	"A telepítés rendszergazdai jogosultságot igényel.\n\nHa a felhasználói fiókod nincs a sudoers fájlban, akkor nem szerezhetsz rendszergazdai jogosultságot a sudo paranccsal."
-::util::photos::mc::RequiresInternetAccess	"A játékosok fényképeinek telepítéshez/frissétéséhez internet kapcsolatot szükséges."
-::util::photos::mc::AlternativelyDownload(0)	"A fényképek a %link%-ről is letölthetőek. Ezeket a fájlokat másold a %local% könyvtárba."
-::util::photos::mc::AlternativelyDownload(1)	"Alternatively you may download the photo files from %link%. Install these files into the shared directory %shared%, or into the private directory %local%."  ;#NEW
 
-::util::photos::mc::Error(nohttp)		"Internet kapcsolat nem hozható létre a TclHttp csomag hiánya miatt."
-::util::photos::mc::Error(busy)			"Telepítés/frissítés folyamatban." ;#"The installation/update is already running."  ;#NEW
-::util::photos::mc::Error(failed)		"Unexpected error: The invocation of the sub-process has failed."  ;#NEW
-::util::photos::mc::Error(passwd)		"A jelszó hibás."
-::util::photos::mc::Error(nosudo)		"Cannot invoke 'sudo' command because your user is not in the sudoers file."  ;#NEW
-::util::photos::mc::Detail(nosudo)		"As a workaround you may do a private installation, or start this application as a super-user."  ;#NEW
 
-::util::photos::mc::Message(uptodate)		"A fényképek naprakészek"
-::util::photos::mc::Message(finished)		"A fényképek telepítése/frissítése befejeződött"
-::util::photos::mc::Message(broken)		"Sérült Tcl könyvtár verzió"
-::util::photos::mc::Message(noperm)		"A '%s' könyvtárhoz nincs írási jogosultsága."
-::util::photos::mc::Message(missing)		"'%s' könyvtár nem található."
-::util::photos::mc::Message(httperr)		"HTTP hiba: %s"
-::util::photos::mc::Message(httpcode)		"Váratlan HTTP utasítás: %s."
-::util::photos::mc::Message(noconnect)		"HTTP kapcsolat megszakadt."
-::util::photos::mc::Message(timeout)		"HTTP kapcsolat túllépte az időkeretet."
-::util::photos::mc::Message(crcerror)		"Checksum error occurred. Possibly the file server is currently in maintenance mode." ;# NEW
-::util::photos::mc::Message(maintenance)	"Photo file server maintenance is currently in progress." ;# NEW
-::util::photos::mc::Message(notfound)		"Download aborted because photo file server maintenance is currently in progress." ;# NEW
-::util::photos::mc::Message(noreply)		"Server is not replying." ;# NEW
-::util::photos::mc::Message(aborted)		"User has aborted download." ;# NEW
-::util::photos::mc::Message(killed)		"Unexpected termination of download. The sub-process has died." ;# NEW
 
-::util::photos::mc::Detail(nohttp)		"Kérem telepítse a TclHttp csomagot. Pl.: %s."
-::util::photos::mc::Detail(noconnect)		"Probably you don't have an internet connection." ;# NEW
-::util::photos::mc::Detail(badhost)		"Another possibility is a bad host, or a bad port." ;# NEW
 
-::util::photos::mc::Log(started)		"Installation/update of photo files started at %s." ;# NEW
-::util::photos::mc::Log(finished)		"Installation/update of photo files finished at %s." ;# NEW
-::util::photos::mc::Log(destination)		"Destination directory for photo file download is '%s'." ;# NEW
-::util::photos::mc::Log(created:1)		"%s fájl létrehozva."
-::util::photos::mc::Log(created:N)		"%s fájlok létrehozva."
-::util::photos::mc::Log(deleted:1)		"%s fájl törölve."
-::util::photos::mc::Log(deleted:N)		"%s fájlok törölve."
-::util::photos::mc::Log(skipped:1)		"%s fájl kihagyva."
-::util::photos::mc::Log(skipped:N)		"%s fájlok kihagyva."
-::util::photos::mc::Log(updated:1)		"%s fájl frissítve."
-::util::photos::mc::Log(updated:N)		"%s fájlok frissítve."
 
 ### tip of the day #####################################################
 ::tips::mc::TipOfTheDay		"Tip of the Day" ;# NEW
@@ -483,10 +435,8 @@
 
 ::application::mc::ChessInfoDatabase		"Chess Information Data Base"
 ::application::mc::Shutdown			"Kilépés..."
-::application::mc::QuitAnyway			"Biztos ki akar lépni?"
 ::application::mc::CancelLogout			"Cancel Logout" ;# NEW
 ::application::mc::AbortWriteOperation		"Abort write operation" ;# NEW
-::application::mc::UpdatesAvailable		"Új frissítés érhető el"
 
 ::application::mc::WriteOperationInProgress	"Write operation in progress: currently Scidb is modifying/writing database '%s'." ;# NEW
 ::application::mc::LogoutNotPossible		"Logout is currently not possible, the result would be a corrupted database." ;# NEW

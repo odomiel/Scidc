@@ -379,59 +379,11 @@
 ::archive::mc::UnpackFile					"Packa upp %s"
 
 ### player photos ######################################################
-::util::photos::mc::InstallPlayerPhotos		"Installera/Updatera spelarfoton"
-::util::photos::mc::TimeOut						"Timeout inträffade."
-::util::photos::mc::EnterPassword				"Personligt lösenord"
-::util::photos::mc::Download						"Hämta"
-::util::photos::mc::SharedInstallation			"Delad installation"
-::util::photos::mc::LocalInstallation			"Lokal installation"
-::util::photos::mc::RetryLater					"Vänligen försök senare."
-::util::photos::mc::DownloadStillInProgress	"Nerladdning av fotofiler pågår fortfarande."
-::util::photos::mc::PhotoFiles					"Spelarfoton"
 
-::util::photos::mc::RequiresSuperuserRights	"Installationen/uppdateringen kräver super-user rättigheter.\n\nNotera att lösenordet inte kommer att accepteras om din användare inte är med i sudoers filen."
-::util::photos::mc::RequiresInternetAccess	"Installationen/uppdateringen av spelarfoton kräver en internetförbindelse."
-::util::photos::mc::AlternativelyDownload(0)	"Alternativt kan du ladda ner fotofilerna från %link%. Installera sedan filerna i foldern %local%."
-::util::photos::mc::AlternativelyDownload(1)	"Alternativt kan du ladda ner fotofilerna från %link%. Installera sedan filerna i den delade foldern %shared%, eller i den lokala foldern %local%."
 
-::util::photos::mc::Error(nohttp)				"Kan inte öppna internetförbindelsen för att paketet TclHttp inte är installerat."
-::util::photos::mc::Error(busy)					"Installationen/uppdateringen körs redan."
-::util::photos::mc::Error(failed)				"Oväntat fel: Anropet av sub-processen misslyckades."
-::util::photos::mc::Error(passwd)				"Lösenordet är felaktigt."
-::util::photos::mc::Error(nosudo)				"Kan inte anropa 'sudo' kommandot därför  att din användare inte finns i sudoers filen."
-::util::photos::mc::Detail(nosudo)				"Som en väg runt problemet kan du göra en lokal installation, eller starta den här applikationen som en super-user."
 
-::util::photos::mc::Message(uptodate)			"Fotofilerna är redan uppdaterade."
-::util::photos::mc::Message(finished)			"Installationen/uppdateringen av fotofiler har avslutas."
-::util::photos::mc::Message(broken)				"Trasig Tcl library version."
-::util::photos::mc::Message(noperm)				"Du har inte skrivrättigheter i foldern '%s'."
-::util::photos::mc::Message(missing)			"Kan inte hitta foldern '%s'."
-::util::photos::mc::Message(httperr)			"HTTP fel: %s"
-::util::photos::mc::Message(httpcode)			"Oväntad HTTP kod %s."
-::util::photos::mc::Message(noconnect)			"HTTP connection failed."
-::util::photos::mc::Message(timeout)			"HTTP timeout inträffade."
-::util::photos::mc::Message(crcerror)			"Checksummefel inträffade. Troligt pågående underhåll av filservern."
-::util::photos::mc::Message(maintenance)		"På servern med fotofiler pågår det underhåll för närvarande."
-::util::photos::mc::Message(notfound)			"Nerladdningen avbruten pga pågående underhåll av servern med fotofiler."
-::util::photos::mc::Message(noreply)			"Server is not replying." ;# NEW
-::util::photos::mc::Message(aborted)			"Användaren har avbrutit nerladdningen."
-::util::photos::mc::Message(killed)				"Nerladdningen oväntad avbruten. Sub-processen har dött."
 
-::util::photos::mc::Detail(nohttp)				"Installera paketet TclHttp, till exempel %s."
-::util::photos::mc::Detail(noconnect)			"Troligen har du inte en internetförbindelse."
-::util::photos::mc::Detail(badhost)				"En annan möjlighet är en dålig 'host', eller en dålig 'port'."
 
-::util::photos::mc::Log(started)					"Installationen/uppdateringen av fotofiler började %s."
-::util::photos::mc::Log(finished)				"Installationen/uppdateringen av fotofiler avslutade  %s."
-::util::photos::mc::Log(destination)			"Folder för nerladdade fotofiler är '%s'."
-::util::photos::mc::Log(created:1)				"%s fil skapad."
-::util::photos::mc::Log(created:N)				"%s fil(er) skapad."
-::util::photos::mc::Log(deleted:1)				"%s fil raderad."
-::util::photos::mc::Log(deleted:N)				"%s fil(er) raderad."
-::util::photos::mc::Log(skipped:1)				"%s fil överhoppad."
-::util::photos::mc::Log(skipped:N)				"%s fil(er) överhoppad."
-::util::photos::mc::Log(updated:1)				"%s fil updaterad."
-::util::photos::mc::Log(updated:N)				"%s fil(er) updaterad."
 
 ### tip of the day #####################################################
 ::tips::mc::TipOfTheDay          "Tip of the Day" ;# NEW
@@ -481,10 +433,8 @@
 
 ::application::mc::ChessInfoDatabase		"Chess Information Data Base"
 ::application::mc::Shutdown					"Avstängning..."
-::application::mc::QuitAnyway					"Vill du avsluta?"
 ::application::mc::CancelLogout				"Avbryt utloggning"
 ::application::mc::AbortWriteOperation		"Avbryt skrivningar"
-::application::mc::UpdatesAvailable			"Uppdateringar tillgängliga"
 
 ::application::mc::WriteOperationInProgress "Skrivningar pågår: närvarande modifierar / skriver Scidb databasen '% s'."
 ::application::mc::LogoutNotPossible		"Utloggning är för tillfället inte möjligt, resultatet skulle bli en skadad databas."

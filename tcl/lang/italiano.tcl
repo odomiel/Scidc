@@ -379,59 +379,11 @@
 ::archive::mc::UnpackFile					"Estrai %s"
 
 ### player photos ######################################################
-::util::photos::mc::InstallPlayerPhotos		"Installa/Aggiorna le foto dei giocatori"
-::util::photos::mc::TimeOut						"Tempo per la connessione scaduto."
-::util::photos::mc::EnterPassword				"Password personale"
-::util::photos::mc::Download						"Download"
-::util::photos::mc::SharedInstallation			"Installazione condivisa"
-::util::photos::mc::LocalInstallation			"Installazione privata"
-::util::photos::mc::RetryLater					"Per favore riprova più tardi."
-::util::photos::mc::DownloadStillInProgress	"Il download delle foto è ancora in corso."
-::util::photos::mc::PhotoFiles					"File di foto del giocatore"
 
-::util::photos::mc::RequiresSuperuserRights	"L'installazione/aggiornamento richiede diritti di super-user.\n\nNota che l apassword non sarà accettata se il tuo utente non è nel gruppo wheel." ;# sudoers file?
-::util::photos::mc::RequiresInternetAccess	"L'installazione/aggiornamento delle foto dei giocatori richiede una connessione internet."
-::util::photos::mc::AlternativelyDownload(0)	"Alternativamente puoi scaricare le foto da %link%. Installa questi file nella directory %local%."
-::util::photos::mc::AlternativelyDownload(1)	"Alternativamente puoi scaricare questi file da %link%. Installa questi file nella cartella condivisa %shared%, o nella cartella privata %local%."
 
-::util::photos::mc::Error(nohttp)				"Non posso aprire una connessione internet perché il pacchetto TclHttp non è installato."
-::util::photos::mc::Error(busy)					"L'installazione/aggiornamento è ancora in corso."
-::util::photos::mc::Error(failed)				"Errore inaspettato: l'invocazione della sub-routine è fallita."
-::util::photos::mc::Error(passwd)				"La password è sbagliata."
-::util::photos::mc::Error(nosudo)				"Impossibile invocare il comando 'sudo' perché il tuo utente non è nel gruppo wheel."
-::util::photos::mc::Detail(nosudo)				"Per aggirare il problema puoi fare un'installazione privata, o lanciare il programma come super-user."
 
-::util::photos::mc::Message(uptodate)			"Le foto sono già aggiornate."
-::util::photos::mc::Message(finished)			"L'installazione/aggiornamento delle foto è finito."
-::util::photos::mc::Message(broken)				"La versione della libreria Tcl è corrotta."
-::util::photos::mc::Message(noperm)				"Non hai diritti di scittura nella cartella '%s'."
-::util::photos::mc::Message(missing)			"Impossibile trovare la cartella '%s'."
-::util::photos::mc::Message(httperr)			"Errore HTTP: %s"
-::util::photos::mc::Message(httpcode)			"Codice HTTP inaspettato %s."
-::util::photos::mc::Message(noconnect)			"Connessione HTTP fallita."
-::util::photos::mc::Message(timeout)			"Tempo di connessione HTTP scaduto."
-::util::photos::mc::Message(crcerror)			"Errore nel Checksum. Probabilmente il server è al momento sottoposto a manutenzione."
-::util::photos::mc::Message(maintenance)		"Il server che ospita le foto è al momento in manutenzione."
-::util::photos::mc::Message(notfound)			"Download interrotto perché il server che ospita le foto è al momento in manutenzione."
-::util::photos::mc::Message(noreply)			"Server is not replying." ;# NEW
-::util::photos::mc::Message(aborted)			"L'utente ha interrotto il download."
-::util::photos::mc::Message(killed)				"Interruzione inaspettata del download. La sub-routine è cessata."
 
-::util::photos::mc::Detail(nohttp)				"Per favore installa il pacchetto TclHttp, per esemio %s."
-::util::photos::mc::Detail(noconnect)			"Probabilmente non hai una connessione internet."
-::util::photos::mc::Detail(badhost)				"Un'altra possibilità è un cattivo host, o una cattiva porta."
 
-::util::photos::mc::Log(started)					"L'installazione/aggiornamento delle foto è cominciato a %s."
-::util::photos::mc::Log(finished)				"L'installazione/aggiornamneto delle foto è finito a %s."
-::util::photos::mc::Log(destination)			"La cartella di destinazione del download è '%s'."
-::util::photos::mc::Log(created:1)				"%s file creati."
-::util::photos::mc::Log(created:N)				"%s file(s) creati."
-::util::photos::mc::Log(deleted:1)				"%s file eliminati."
-::util::photos::mc::Log(deleted:N)				"%s file(s) eliminati."
-::util::photos::mc::Log(skipped:1)				"%s file saltati."
-::util::photos::mc::Log(skipped:N)				"%s file(s) saltati."
-::util::photos::mc::Log(updated:1)				"%s file aggiornati."
-::util::photos::mc::Log(updated:N)				"%s file(s) aggiornati."
 
 ### tip of the day #####################################################
 ::tips::mc::TipOfTheDay				"Tip of the Day" ;# NEW
@@ -481,10 +433,8 @@
 
 ::application::mc::ChessInfoDatabase		"Chess Information Data Base"
 ::application::mc::Shutdown					"Spegni..."
-::application::mc::QuitAnyway					"Uscire comunque?"
 ::application::mc::CancelLogout				"Annulla Logout"
 ::application::mc::AbortWriteOperation		"Annulla operazione di scrittura"
-::application::mc::UpdatesAvailable			"Aggiornamenti disponibili"
 
 ::application::mc::WriteOperationInProgress "Operazione di scrittura in corso: al momento Scidb sta modificando\scrivendo il database '%s'."
 ::application::mc::LogoutNotPossible		"Il logout non è possibile al momento, il risultato sarebbe un database corrotto."

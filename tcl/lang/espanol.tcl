@@ -380,59 +380,11 @@
 ::archive::mc::UnpackFile					"Descomprimir %s" ;
 
 ### player photos ######################################################
-::util::photos::mc::InstallPlayerPhotos		"Instalar/Actualizar fotos de los jugadores"
-::util::photos::mc::TimeOut						"Se acabó el tiempo de espera."
-::util::photos::mc::EnterPassword				"Contraseña personal"
-::util::photos::mc::Download						"Descarga"
-::util::photos::mc::SharedInstallation			"Instalación compartida"
-::util::photos::mc::LocalInstallation			"Instalación privada"
-::util::photos::mc::RetryLater					"Por favor, inténtelo de nuevo más tarde."
-::util::photos::mc::DownloadStillInProgress	"La descarga de los archivos de fotos aún está en curso."
-::util::photos::mc::PhotoFiles					"Archivos de fotos de jugadores"
 
-::util::photos::mc::RequiresSuperuserRights	"La instalación/actualización requiere derechos de superusuario.\n\nAdvierta que la contraseña no se aceptará si el usuario no figura en el archivo sudoers."
-::util::photos::mc::RequiresInternetAccess	"La instalación/actualización de los archivos de fotos de los jugadores requiere una conexión a Internet."
-::util::photos::mc::AlternativelyDownload(0)	"Como alternativa usted puede descargar los archivos de fotos desde %link%. Instale estos archivos en el directorio %local%."
-::util::photos::mc::AlternativelyDownload(1)	"Como alternativa usted puede descargar los archivos de fotos desde %link%. Instale estos archivos en el directorio compartido %shared%, o en su directorio privado %local%."
 
-::util::photos::mc::Error(nohttp)				"No se puede establecer una conexión a Internet debido a que no está instalado el paquete TclHttp."
-::util::photos::mc::Error(busy)					"La instalación/actualización ya está en curso."
-::util::photos::mc::Error(failed)				"Error inesperado: falló la llamada al sub-proceso."
-::util::photos::mc::Error(passwd)				"La contraseña es incorrecta."
-::util::photos::mc::Error(nosudo)				"No puede invocar el comando 'sudo' debido a que el usuario no figura en el archivo sudoers."
-::util::photos::mc::Detail(nosudo)				"Usted puede realizar una instalación privada como solución alternativa, o iniciar esta aplicación como superusuario."
 
-::util::photos::mc::Message(uptodate)			"Los archivos de fotos aún están actualizados."
-::util::photos::mc::Message(finished)			"La instalación/actualización de los archivos de fotos ha finalizado."
-::util::photos::mc::Message(broken)				"Versión corrupta de la biblioteca Tcl."
-::util::photos::mc::Message(noperm)				"Usted no tiene permisos de escritura para el directorio '%s'."
-::util::photos::mc::Message(missing)			"No se encuentra el directorio '%s'."
-::util::photos::mc::Message(httperr)			"Error HTTP: %s"
-::util::photos::mc::Message(httpcode)			"Código HTTP %s inesperado."
-::util::photos::mc::Message(noconnect)			"Falló la conexión HTTP."
-::util::photos::mc::Message(timeout)			"Se acabó el tiempo HTTP de espera."
-::util::photos::mc::Message(crcerror)			"Error de suma de chequeo. Probablemente el servidor de archivos se encuentra actualmente en modo mantenimiento."
-::util::photos::mc::Message(maintenance)		"Actualmente se encuentra en curso un mantenimiento del servidor de archivos de fotos."
-::util::photos::mc::Message(notfound)			"Descarga abortada debido a que se encuentra en curso actualmente un mantenimiento del servidor de archivos de fotos."
-::util::photos::mc::Message(noreply)			"Server is not replying." ;# NEW
-::util::photos::mc::Message(aborted)			"El usuario abortó la descarga."
-::util::photos::mc::Message(killed)				"Cese inesperado de la descarga. Terminó el sub-proceso."
 
-::util::photos::mc::Detail(nohttp)				"Por favor, instale el paquete TclHttp, por ejemplo %s."
-::util::photos::mc::Detail(noconnect)			"Probablemente usted no tiene  una conexión a Internet."
-::util::photos::mc::Detail(badhost)				"Otra posibilidad es un servidor o un puerto anómalos."
 
-::util::photos::mc::Log(started)					"Instalación/actualización de los archivos de fotos iniciada a las %s."
-::util::photos::mc::Log(finished)				"Instalación/actualización de los archivos de fotos finalizada a las %s."
-::util::photos::mc::Log(destination)			"El directorio de destino de los archivos de fotos descargados es '%s'."
-::util::photos::mc::Log(created:1)				"%s archivo) creado."
-::util::photos::mc::Log(created:N)				"%s archivos creados."
-::util::photos::mc::Log(deleted:1)				"%s archivo eliminado."
-::util::photos::mc::Log(deleted:N)				"%s archivos eliminados."
-::util::photos::mc::Log(skipped:1)				"%s archivo mantenido."
-::util::photos::mc::Log(skipped:N)				"%s archivos mantenidos."
-::util::photos::mc::Log(updated:1)				"%s archivo actualizado."
-::util::photos::mc::Log(updated:N)				"%s archivos actualizados."
 
 ### tip of the day #####################################################
 ::tips::mc::TipOfTheDay				"Tip of the Day" ;# NEW
@@ -482,10 +434,8 @@
 
 ::application::mc::ChessInfoDatabase		"Base de Datos Ajedrecística"
 ::application::mc::Shutdown					"Cierre..."
-::application::mc::QuitAnyway					"¿Desea cerrar de todos modos?"
 ::application::mc::CancelLogout				"Cancel Logout" ;# NEW
 ::application::mc::AbortWriteOperation		"Abort write operation" ;# NEW
-::application::mc::UpdatesAvailable			"Actualizaciones disponibles"
 
 ::application::mc::WriteOperationInProgress "Write operation in progress: currently Scidb is modifying/writing database '%s'." ;# NEW
 ::application::mc::LogoutNotPossible		"Logout is currently not possible, the result would be a corrupted database." ;# NEW

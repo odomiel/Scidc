@@ -386,60 +386,12 @@
 ::archive::mc::UnpackFile					"%s extrahieren"
 
 ### player photos ######################################################
-::util::photos::mc::InstallPlayerPhotos		"Spielerphotos installieren/updaten"
-::util::photos::mc::TimeOut						"Eine Zeitüberschreitung ist aufgetreten."
-::util::photos::mc::EnterPassword				"Benutzerkennwort"
-::util::photos::mc::Download						"Herunterladen"
-::util::photos::mc::SharedInstallation			"Gemeinschaftliche Installation"
-::util::photos::mc::LocalInstallation			"Private Installation"
-::util::photos::mc::RetryLater					"Bitts später wieder probieren."
-::util::photos::mc::DownloadStillInProgress	"Der Download der Photodateien ist noch im Fortgang."
-::util::photos::mc::PhotoFiles					"Spielerphotodateien"
 
-::util::photos::mc::RequiresSuperuserRights	"Die Installation bzw. die Aktualisierung erfordert Superuser-Berechtigung.\n\nBeachte: das Passwort wird nicht akzeptiert wenn der momentane Benutzer nicht in der sudoers-Datei eingetragen ist."
-::util::photos::mc::RequiresInternetAccess	"Die Installation bzw. die Aktualisierung der Photodateien erfordert eine Internetverbindung."
-::util::photos::mc::AlternativelyDownload(0)	"Alternativ können die Photodateien von %link% heruntergeladen werden. Diese werden dann im Verzeichnis %local% installiert."
-::util::photos::mc::AlternativelyDownload(1)	"Alternativ können die Photodateien von %link% heruntergeladen werden. Diese werden dann entweder im gemeinsamen Verzeichnis %shared%, oder im privaten Verzeichnis %local% installiert."
 
-::util::photos::mc::Error(nohttp)				"Eine Internetverbindung kann nicht aufgebaut werden weil das Paket TclHttp nicht installiert ist."
-::util::photos::mc::Error(busy)					"Die Installation bzw. die Aktualisierung ist bereits am laufen."
-::util::photos::mc::Error(failed)				"Unerwarteter Fehler: Der Start des Unterprozesses schlug fehl."
-::util::photos::mc::Error(passwd)				"Die Passworteingabe ist falsch."
-::util::photos::mc::Error(nosudo)				"'sudo' kann nicht ausgeführt werden weil der aktuelle Benutzer nicht in der sudoers-Datei eingetragen ist."
-::util::photos::mc::Detail(nosudo)				"Als Behelf kann eine lokale Installation vorgenommen werden, oder diese Applikation wird als Superuser gestartet."
 
-::util::photos::mc::Message(uptodate)			"Die Photodateien sind noch auf dem neuesten Stand."
-::util::photos::mc::Message(finished)			"Die Installation bzw. die Aktualisierung der Photodateien ist beendet."
-::util::photos::mc::Message(broken)				"Die Tcl-Bibliotheksversion ist nicht in Ordnung."
-::util::photos::mc::Message(noperm)				"Keine Schreibberechtigung für das Verzeichnis '%s'."
-::util::photos::mc::Message(missing)			"Das Verzeichnis '%s' kann nicht gefunden werden."
-::util::photos::mc::Message(httperr)			"HTTP-Fehler: %s"
-::util::photos::mc::Message(httpcode)			"Unerwarteter HTTP-Code %s."
-::util::photos::mc::Message(noconnect)			"Die HTTP-Verbindung schlug fehl."
-::util::photos::mc::Message(timeout)			"Eine HTTP-Zeitüberschreitung ist aufgetreten. Möglicherweise ist der Photodateienserver momentan sehr stark frequentiert."
 
-::util::photos::mc::Message(crcerror)			"Ein Prüfsummenfehler trat auf. Möglicherweise ist der Photodateienserver gerade in einer Wartung."
-::util::photos::mc::Message(maintenance)		"Der Photodateienserver unterliegt gerade einer Wartung."
-::util::photos::mc::Message(notfound)			"Der Downloadvorgang wurde abgebrochen weil der Photodateienserver gerade einer Wartung unterliegt."
-::util::photos::mc::Message(noreply)			"Der Server antwortet nicht."
-::util::photos::mc::Message(aborted)			"Der Benutzer hat den Download abgebrochen."
-::util::photos::mc::Message(killed)				"Unerwarteter Abbruch des Downloads. Der Subprozess ist verendet."
 
-::util::photos::mc::Detail(nohttp)				"Bitte das Paket TclHttp installieren; z.B. %s."
-::util::photos::mc::Detail(noconnect)			"Möglicherweise besteht zur Zeit keine Internetverbindung."
-::util::photos::mc::Detail(badhost)				"Möglich ist auch eine fehlerhafte Host- bzw. Portangabe."
 
-::util::photos::mc::Log(started)					"Die Installation bzw. die Aktualisierung der Photodateien wurde gestartet am %s."
-::util::photos::mc::Log(finished)				"Die Installation bzw. die Aktualisierung der Photodateien wurde abgeschlossen am %s."
-::util::photos::mc::Log(destination)			"Das Zielverzeichnis für den Download ist '%s'."
-::util::photos::mc::Log(created:1)				"%s Datei wurde angelegt."
-::util::photos::mc::Log(created:N)				"%s Dateien wurden angelegt."
-::util::photos::mc::Log(deleted:1)				"%s Datei wurde entfernt."
-::util::photos::mc::Log(deleted:N)				"%s Dateien wurden entfernt."
-::util::photos::mc::Log(skipped:1)				"%s Datei wurde übersprungen."
-::util::photos::mc::Log(skipped:N)				"%s Dateien wurden übersprungen."
-::util::photos::mc::Log(updated:1)				"%s Datei wurde erneuert."
-::util::photos::mc::Log(updated:N)				"%s Dateien wurden erneuert."
 
 ### tip of the day #####################################################
 ::tips::mc::TipOfTheDay				"Tip des Tages"
@@ -489,10 +441,8 @@
 
 ::application::mc::ChessInfoDatabase		"Schach-Informations-Datenbank"
 ::application::mc::Shutdown					"Schließung..."
-::application::mc::QuitAnyway					"Trotzdem schliessen?"
 ::application::mc::CancelLogout				"Logout beenden"
 ::application::mc::AbortWriteOperation		"Schreiboperation abbrechen"
-::application::mc::UpdatesAvailable			"Updates verfügbar"
 
 ::application::mc::WriteOperationInProgress "Eine Schreiboperation ist im Fortgang: zur Zeit modfiziert/schreibt Scidb die Datenbank '%s'."
 ::application::mc::LogoutNotPossible		"Ein Logout ist jetzt nicht möglich, das Resultat wäre eine korrupte Datenbank."
