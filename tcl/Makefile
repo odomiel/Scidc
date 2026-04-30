@@ -14,7 +14,6 @@ include ../Makefile.in
 
 SCRIPT = scidb$(SUFFIX)
 ARCH = arch-scidb
-UPDATE_PHOTO_FILES = update-scidb-photo-files
 
 # NOTE that the ordering is important!
 SOURCES = \
@@ -49,7 +48,6 @@ SOURCES = \
 	utils/countries.tcl \
 	utils/web.tcl \
 	utils/xcursor.tcl \
-	utils/player-photos.tcl \
 	utils/emoticons.tcl \
 	utils/clipboard.tcl \
 	utils/trash.tcl \
@@ -162,14 +160,13 @@ ifneq ($(USE_INLINE_TEXT),)
 SOURCES += contrib/tktext.tcl
 endif
 
-SCRIPTS = $(SCRIPT) $(UPDATE_PHOTO_FILES)
+SCRIPTS = $(SCRIPT)
 
 all: $(SCRIPTS)
 
 clean:
 	@echo "Clean `pwd`"
 	@rm -f $(SCRIPT)
-	@rm -f $(UPDATE_PHOTO_FILES)
 
 depend:
 	@# nothing to do
@@ -199,12 +196,10 @@ install-scripts: $(SCRIPTS)
 	@echo "Install Tcl scripts"
 	@install -m 755 -d $(BINDIR)
 	@install -m 755 -p $(SCRIPT) $(BINDIR)
-	@install -m 755 -p $(UPDATE_PHOTO_FILES) $(BINDIR)
 
 uninstall-scripts:
 	@echo "Uninstall Tcl scripts"
 	@rm -f $(BINDIR)/$(SCRIPT)
-	@rm -f $(BINDIR)/$(UPDATE_PHOTO_FILES)
 
 install-pieces:
 	@echo "Install piece sets"
@@ -581,43 +576,16 @@ uninstall-fonts:
 	   echo "SKIP - Uninstall fonts";                               \
 	fi
 
-install-photos:
-	@echo "Install player photos"
-	@install -m 755 -d $(SHAREDIR)/photos
-	@for f in `ls engines/photos/*`; do             \
-		base=`basename $$f`;                         \
-		dir=`echo $$base | cut -b 1`;                \
-		install -m 755 -d $(SHAREDIR)/photos/$$dir;  \
-		install -m 644 $$f $(SHAREDIR)/photos/$$dir; \
-	done
-
-uninstall-photos:
-	@echo "Uninstall player photos"
-	@if [ -d $(SHAREDIR) ]; then                                                         \
-		if [ -d $(SHAREDIR)/photos ]; then                                                \
-			rm -rf $(SHAREDIR)/photos;                                                     \
-		fi;                                                                               \
-		if [ "`find $(SHAREDIR) -type d -empty`" = "`ls -d $(SHAREDIR)`" ]; then          \
-			rmdir $(SHAREDIR);                                                             \
-		fi;                                                                               \
-	fi
-
 install: install-scripts install-pieces install-cursors install-flags install-localizations \
 				install-textures install-themes install-ttk-themes install-text-scripts install-images \
-				install-help install-config install-photos install-fonts
+				install-help install-config install-fonts
 
 uninstall: uninstall-scripts uninstall-pieces uninstall-cursors uninstall-flags uninstall-localizations \
 				uninstall-ttk-themes uninstall-themes uninstall-text-scripts uninstall-textures \
 				uninstall-images uninstall-help uninstall-config uninstall-fonts
 	@if [ -d $(SHAREDIR) ]; then                                                             \
-		if [ -n "$(XDGDIR)" ]; then                                                           \
-			rm -rf $(SHAREDIR)/photos;                                                         \
-		fi;                                                                                   \
 		if [ "`find $(SHAREDIR) -type d -empty`" = "`ls -d $(SHAREDIR)`" ]; then              \
 			rmdir $(SHAREDIR);                                                                 \
-		fi;                                                                                   \
-		if [ -d $(SHAREDIR)/photos ]; then                                                    \
-			echo "Type 'make uninstall-photos' if you want to uninstall all player photos";    \
 		fi;                                                                                   \
 	fi
 
@@ -628,22 +596,11 @@ $(SCRIPT): $(SOURCES)
 		-e 's/# vi:set ts=3 sw=3:/update idletasks/'        \
 		-e 's#%SHAREDIR%#$(DATADIR)#g'                      \
 		-e 's#%%ENGINESDIR%%#$(%ENGINESDIR%)#g'             \
-		-e 's#%UPDATE_PHOTO_FILES%#$(UPDATE_PHOTO_FILES)#g' \
 		-e '/^##/d'                                         \
 		-e '/^#$$/d'                                        \
 		-e '/^[ 	]*#[ 	]\+/d'                               \
 		> $(SCRIPT)
 	@chmod 0555 $(SCRIPT)
-
-$(UPDATE_PHOTO_FILES): utils/update-photos.tcl
-	@echo "Building $(UPDATE_PHOTO_FILES)"
-	@if [ -e $(UPDATE_PHOTO_FILES) ]; then rm -f $(UPDATE_PHOTO_FILES); fi
-	@cat utils/update-photos.tcl | sed                     \
-		-e 's/%PROGRAM%/tclscidb$(SUFFIX)/g'                \
-		-e 's#%SHAREDIR%#$(DATADIR)#g'                      \
-		-e 's/%UPDATE_PHOTO_FILES%/$(UPDATE_PHOTO_FILES)/g' \
-		> $(UPDATE_PHOTO_FILES)
-	@chmod 0555 $(UPDATE_PHOTO_FILES)
 
 $(ARCH): utils/archive.tcl
 	@echo "Building $(ARCH)"

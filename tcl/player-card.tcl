@@ -222,7 +222,7 @@ proc popupInfo {path info} {
 	grid columnconfigure $f {2 6} -minsize 2
 	grid rowconfigure $f [list 0 [incr row -1]] -minsize 2
 
-	set Photo [::util::photos::get $name $info]
+	set Photo {}
 	if {[string length $Photo]} {
 		tk::frame $top.lt -background $bg -borderwidth 0
 		set lbl [tk::label $top.lt.photo -background $bg -image $Photo -relief solid]
@@ -795,7 +795,7 @@ proc GetImage {info code} {
 		}
 
 		photo {
-			set img [::util::photos::get $name $info]
+			set img {}
 			if {[string length $img] > 0} { return $img }
 			if {$species eq "program"} {
 				set img $icon::80x80::engine

@@ -38,7 +38,7 @@ package require tkscidb
 
 namespace eval scidb {
 	set app		Scidb
-	set version "1.1.43 BETA"
+	set version "1.1.44 BETA"
 }
 
 
@@ -110,7 +110,6 @@ set ProgramOptions [list                                                        
 	[list "--single-process"        "Forcing a single process of $::scidb::app"               \
 	                                "(you shouldn't use this option; only for testing)"]      \
 	[list "--update-themes"         "Update themes (from shared directory)"]                  \
-	[list "--update-player-photos"  "Update/install player photos"]                           \
 	[list "--force-grab"            "Do not suppress grabs in debug mode"                     \
 	                                "(only for debugging)"]                                   \
 ]
@@ -205,34 +204,6 @@ if {[testOption help]} {
 	puts "  -display DISPLAY        Run $::scidb::app on DISPLAY"
 	puts "  -sync                   Use synchronous mode for display server"
 	exit 0
-}
-
-# TODO: test this option
-if {0 && [testOption update-player-photos]} {
-	proc inform {what args} {
-		switch $what {
-			file {
-				puts -nonewline .
-			}
-			timeout {
-				puts ""
-				puts $::util::photos::mc::TimeoutOut
-				puts $::util::photos::mc::UpdateAborted
-			}
-			error {
-				lassign $args file msg
-				puts ""
-				puts [format $::util::photos::mc::ErrorOccurred $msg]
-				puts $::util::photos::mc::UpdateAborted
-			}
-		}
-	}
-
-	lassign [::util::photos::updateFiles [namespace current]::inform] state msg
-	if {$state eq "error"} {
-		puts [format $::util::photos::mc::ErrorOccurred $msg]
-		puts $::util::photos::mc::UpdateAborted
-	}
 }
 
 unset ProgramOptions

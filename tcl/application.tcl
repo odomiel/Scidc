@@ -36,10 +36,8 @@ set MainMenu					"&Main Menu"
 
 set ChessInfoDatabase		"Chess Information Data Base"
 set Shutdown					"Shutdown..."
-set QuitAnyway					"Quit anyway?"
 set CancelLogout				"Cancel Logout"
 set AbortWriteOperation		"Abort write operation"
-set UpdatesAvailable			"Updates available"
 
 set WriteOperationInProgress "Write operation in progress: currently Scidb is modifying/writing database '%s'."
 set LogoutNotPossible		"Logout is currently not possible, the result would be a corrupted database."
@@ -95,7 +93,6 @@ array set Vars {
 	tabs:changed	0
 	exit:save		1
 	active			1
-	updates			{}
 	geometry			{}
 	need:maxsize	0
 	shutdown			0
@@ -152,7 +149,6 @@ proc open {} {
 	bind $m <<MenuWillUnpost>> [namespace code [list FinishSettings $m]]
 	bind $m <Configure> [namespace code PlaceMenues]
 	set Vars(menu:main) $m
-	set Vars(menu:updates) $nb.menu_updates
 
 	::ttk::notebook::enableTraversal $nb
 	bind $nb <<NotebookTabChanged>> [namespace code [list TabChanged $nb]]
@@ -484,14 +480,6 @@ proc shutdown {} {
 	#::widget::dialogRaise .application
 	raise .application
 
-	if {[::util::photos::busy?]} {
-		append msg $::util::photos::mc::DownloadStillInProgress "\n\n"
-		append msg $mc::QuitAnyway
-		set reply [::dialog::question -parent .application -message $msg -default no]
-		if {$reply ne "yes"} { return }
-		::util::photos::terminateUpdate
-	}
-
 	set n 0
 	set unsavedFiles [::scidb::app::get unsavedFiles]
 	if {$mergebaseName in $unsavedFiles} { incr n }
@@ -655,13 +643,6 @@ proc SmCallSaveYourself {shutdown} {
 } ;# [tk windowingsystem] eq "x11"
 
 
-proc InformAboutUpdates {item} {
-	variable Vars
-
-	lappend Vars(updates) $item
-	BuildUpdatesButton
-}
-
 
 # TODO: unused
 proc Activate {nb} {
@@ -746,103 +727,6 @@ proc FinishSettings {m} {
 		LeaveSettings $m
 	} else {
 		EnterSettings $m
-	}
-}
-
-
-proc MakeUpdateInfo {} {
-	variable Vars
-
-	if {[llength $Vars(updates)]} {
-		set Vars(updates:tooltip) "${mc::UpdatesAvailable}:"
-		foreach item $Vars(updates) {
-			switch $item {
-				photos { append Vars(updates:tooltip) \n $::util::photos::mc::PhotoFiles }
-			}
-		}
-	}
-}
-
-
-proc BuildUpdatesButton {} {
-	variable Defaults
-	variable Vars
-
-	set m $Vars(menu:updates)
-	if {[winfo exists $m]} { return }
-
-	tk::menubutton $m \
-		-borderwidth 1 \
-		-relief raised \
-		-padx 2 \
-		-pady 2 \
-		-background $Defaults(menu:background) \
-		-activebackground [::dropdownbutton::activebackground] \
-		-foreground black \
-		-activeforeground white \
-		-image $icon::16x16::softwareUpdate \
-		;
-	bind $m <<LanguageChanged>> [namespace code MakeUpdateInfo]
-	bind $m <Enter> [list set [namespace current]::Vars(menu:state) active]
-	bind $m <Leave> [list set [namespace current]::Vars(menu:state) normal]
-	bind $m <<MenuWillPost>> [namespace code [list BuildUpdatesMenu $m]]
-	bind $m <<MenuWillUnpost>> [namespace code [list FinishUpdates $m]]
-	bind $m <Configure> [namespace code PlaceMenues]
-
-	PlaceMenues
-	MakeUpdateInfo
-	tooltip::tooltip $m [namespace current]::Vars(updates:tooltip)
-}
-
-
-proc BuildUpdatesMenu {m} {
-	variable Vars
-
-	catch { destroy $m.updates }
-	::menu $m.updates
-
-	foreach item $Vars(updates) {
-		switch $item {
-			photos { set txt $::util::photos::mc::PhotoFiles }
-		}
-		$m.updates add command -label $txt -command [namespace code [list InstallUpdate $item]]
-	}
-
-	$m configure \
-		-background [::dropdownbutton::activebackground] \
-		-activebackground [::dropdownbutton::activebackground] \
-		-foreground white \
-		-activeforeground white \
-		-menu $m.updates \
-		-direction below \
-		;
-	set Vars(menu:locked) 1
-}
-
-
-proc FinishUpdates {m} {
-	variable Defaults
-	variable Vars
-
-	$m configure \
-		-background $Defaults(menu:background) \
-		-activebackground [::dropdownbutton::activebackground] \
-		-foreground black \
-		-activeforeground white \
-		;
-	set Vars(menu:locked) 0
-}
-
-
-proc InstallUpdate {item} {
-	variable Vars
-
-	::util::photos::openDialog .application
-	set i [lsearch $Vars(updates) $item]
-	set Vars(updates) [lreplace $Vars(updates) $i $i]
-
-	if {[llength $Vars(updates)] == 0} {
-		destroy $Vars(menu:updates)
 	}
 }
 
@@ -957,14 +841,6 @@ proc PlaceMenues {} {
 	}
 	$m configure -height $height
 	place $m -x $x -y 0
-
-	# place update menu
-	set m $Vars(menu:updates)
-	if {[winfo exists $m]} {
-		$m configure -height $height
-		set x [expr {$x - [winfo width $m] - 5}]
-		place $m -x $x -y 0
-	}
 }
 
 
@@ -1120,7 +996,6 @@ proc Startup2 {} {
 	after idle [namespace code [list switchTab $tab]]
 	after idle { ::tips::show .application }
 	#after idle [list ::beta::welcomeToScidb $app]
-	#::util::photos::checkForUpdate [namespace current]::InformAboutUpdates
 }
 
 

@@ -3242,10 +3242,7 @@ proc RebuildEngineList {list} {
 		} else {
 			set photoFile $engine(Logo)
 			if {![file readable $photoFile]} {
-				set photoFile [::util::photos::findPhotoFile $engine(ShortId)]
-				if {[string length $photoFile] == 0} {
-					set photoFile [::util::photos::findPhotoFile [file tail $engine(Command)]]
-				}
+				set photoFile {}
 			}
 
 			if {[string length $photoFile] && $photoFile ni $PhotoFiles} {
@@ -3902,10 +3899,7 @@ proc SetLogo {} {
 	if {[file readable $file]} {
 		set Data(Logo) $file
 	} else {
-		set file [::util::photos::findPhotoFile $logo]
-		if {[string length $file] == 0} {
-			set file [::util::photos::findPhotoFile [file tail $engine(Command)]]
-		}
+		set file {}
 	}
 
 	if {![info exists Photo($logo)] || [lindex $Photo($logo) 0] ne $file} {
