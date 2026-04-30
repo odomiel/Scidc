@@ -566,6 +566,7 @@
 ### application::information ###########################################
 ::application::information::mc::RecentlyUsed					"Zuletzt geöffnet"
 ::application::information::mc::RemoveSelectedDatabase	"Die selektierte Datenbank aus der Historie entfernen"
+::application::information::mc::ClearHistory				"Gesamte Historie löschen"
 ::application::information::mc::NewsAvailable				"Es sind aktuelle Informationen verfügbar"
 ::application::information::mc::NoInternetConnection		"Information: Scidb kann keine Verbindung zum Internet herstellen."
 

@@ -32,6 +32,7 @@ namespace eval mc {
 
 set RecentlyUsed				"Recently used"
 set RemoveSelectedDatabase	"Remove selected database from history"
+set ClearHistory				"Clear entire history"
 set NewsAvailable				"There are updated news available"
 set NoInternetConnection	"Information: Scidb cannot connect to Internet."
 
@@ -479,6 +480,16 @@ proc Mouse3Down {{nodes {}}} {
 		}
 	}
 
+	if {[llength [[namespace parent]::database::recentFiles]]} {
+		$menu add command \
+			-compound left \
+			-image $::icon::16x16::clear \
+			-label " $mc::ClearHistory" \
+			-command [namespace code ClearHistory] \
+			;
+		$menu add separator
+	}
+
 	::font::html::addChangeFontSizeToMenu info $menu \
 		[namespace code Update] [::html::minFontSize] [::html::maxFontSize] no
 
@@ -505,6 +516,14 @@ proc RemoveRecentFile {id} {
 	if {[llength $entry]} {
 		[namespace parent]::database::removeRecentFile [lindex $entry 1]
 	}
+	after idle [list $Priv(html) stimulate]
+}
+
+
+proc ClearHistory {} {
+	variable Priv
+
+	[namespace parent]::database::clearRecentFiles
 	after idle [list $Priv(html) stimulate]
 }
 

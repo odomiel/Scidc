@@ -718,6 +718,13 @@ proc removeRecentFile {file} {
 }
 
 
+proc clearRecentFiles {} {
+	variable RecentFiles
+	set RecentFiles {}
+	[namespace parent]::information::update
+}
+
+
 proc renameRecentFile {oldName newName} {
 	variable RecentFiles
 
