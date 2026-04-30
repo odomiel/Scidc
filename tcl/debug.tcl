@@ -94,8 +94,8 @@ proc buildMenu {m} {
 
 	# Stderr → log file toggle
 	set chkImg [expr {$Options(stderrToFile) \
-		? $::icon::14x14::checkYes \
-		: $::icon::14x14::checkNo}]
+		? $::theme::icon::14x14::checkYes \
+		: $::theme::icon::14x14::checkNo}]
 	$m add command \
 		-label " $mc::StderrToFile" \
 		-image $chkImg \
