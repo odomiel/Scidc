@@ -49,6 +49,7 @@ proc toggleStderr {} {
 	variable Options
 	variable LogFile
 
+	set Options(stderrToFile) [expr {!$Options(stderrToFile)}]
 	if {$Options(stderrToFile)} {
 		if {[lsearch -exact [info commands ::scidb::misc::*] ::scidb::misc::setLogFile] < 0} {
 			set Options(stderrToFile) 0
