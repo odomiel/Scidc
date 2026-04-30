@@ -93,12 +93,15 @@ proc buildMenu {m} {
 	$m add separator
 
 	# Stderr → log file toggle
-	$m add checkbutton \
+	set chkImg [expr {$Options(stderrToFile) \
+		? $::icon::14x14::checkYes \
+		: $::icon::14x14::checkNo}]
+	$m add command \
 		-label " $mc::StderrToFile" \
-		-variable [namespace current]::Options(stderrToFile) \
+		-image $chkImg \
+		-compound left \
 		-command [namespace code toggleStderr] \
 		;
-	::theme::configureCheckEntry $m
 
 	# Active log file info (shown only when active)
 	variable LogFile
