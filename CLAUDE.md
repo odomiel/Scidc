@@ -73,6 +73,16 @@ Many Tcl namespaces in the UI define `proc open {…}` as a "show this dialog" e
 
 **Rule:** Always use `::open` (fully qualified) when opening files or pipes from within any Tcl source file that is part of a namespace that also defines `proc open`. Passing a wrong first argument (e.g. a pipe command string) to the dialog `proc open` typically returns `""` without throwing an error, so `catch` alone does not protect against it.
 
+### Language files — namespace crash on missing namespace
+
+`i18n::selectLang()` iterates every line in the chosen `.tcl` lang file and calls `set [lindex $line 0] [lindex $line 1]`. If a lang file sets `::some::namespace::mc::Key` but the namespace `::some::namespace::mc` does not exist (e.g., the corresponding Tcl module was removed from the build), this throws:
+
+```
+can't set "::some::namespace::mc::Key": parent namespace doesn't exist
+```
+
+**Rule:** Whenever a namespace is removed from the build (its `.tcl` source removed from `tcl/Makefile` SOURCES), all six lang files must be edited to remove every `::that::namespace::mc::*` line — using Python binary I/O (see below). Missing this step prevents the program from starting.
+
 ### Language files — encoding warning
 
 `tcl/lang/*.tcl` files are **ISO-8859-1** encoded (registered in `tcl/lang/localization.tcl`). **Never use the Edit tool directly on these files** — it reads/writes as UTF-8 and silently corrupts all non-ASCII characters (umlauts become `\xef\xbf\xbd` replacement characters). Always use Python with binary I/O:
@@ -200,6 +210,23 @@ The **FIDE player list** is updated via the "Update FIDE List" button in the Pla
 
 The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` → calls `tcl::interrupt(exc.count())` → sets result `{%Interrupted% count}`; catches `IOException` → calls `tcl::ioError(...)` → sets result `{%IO-Error% file error msg}`. `catchException` looks for these sentinel strings in `$opts(-errorinfo)`.
 
+### Settings menu — rebuilt on every open
+
+The Settings dropdown button (`$nb.menu_main` in `application.tcl`) fires `<<MenuWillPost>>` → `BuildSettingsMenu` **every time it is opened**. `BuildSettingsMenu` destroys `$m.entries` and calls `::menu::build $m.entries` from scratch. This means:
+
+- All cascade submenus (including the Debugging submenu) are destroyed and recreated on each open.
+- Tk menu checkbutton entries with `-variable` and `-indicatoron no` (set by `::theme::configureCheckEntry`) do **not** reliably reflect the variable's current value visually after recreation — the selectimage is not updated on re-creation.
+- **Fix:** Use a `-command` entry with the image set explicitly from the variable at build time:
+  ```tcl
+  set img [expr {$State ? $::theme::icon::14x14::checkYes : $::theme::icon::14x14::checkNo}]
+  $m add command -label " $label" -image $img -compound left -command $cmd
+  ```
+- A `-command` entry does **not** auto-toggle any variable before calling the command — the command proc must toggle the state variable itself as its first action.
+
+### Icon namespace — `::theme::icon::*`
+
+The icon image variables (checkYes, checkNo, etc.) are defined **inside** `namespace eval theme {}` in `tcl/widgets/theme.tcl`. Their full paths are `::theme::icon::14x14::checkYes`, `::theme::icon::16x16::none`, etc. — **not** `::icon::14x14::checkYes`. Inside `::theme` procs, `$icon::14x14::checkNo` resolves correctly as a relative path; from any other namespace use the `::theme::icon::…` absolute path.
+
 ### Tcl dialog button API
 
 `::widget::dialogButtonAdd $dlg <name> <labelvar> <icon>` creates a `ttk::button` at `$dlg.<name>` whose text tracks the Tcl variable `<labelvar>` via `trace`. Passing a mutable `Priv(...)` variable instead of a literal `mc::*` variable allows changing button text at runtime (e.g. switching to "Downloading..." while async work runs). The button command is set separately with `$dlg.<name> configure -command ...`.
@@ -218,6 +245,8 @@ The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` 
 | `src/app/app_multi_cursor.cpp` | Multi-variant cursor, variant mapping |
 | `src/tcl/tcl_application.cpp` | Tcl command registration, `::scidb::app::load` dispatcher |
 | `src/db/db_player.cpp` | Player data parsing (`parseFideRating`, `parseDwzRating`, etc.) |
+| `tcl/debug.tcl` | Debugging submenu (under Settings): stderr→file toggle, engine log, log folder |
+| `src/tcl/tcl_misc.cpp` | Misc C++ Tcl commands incl. `::scidb::misc::setLogFile` (stderr redirect via `dup2`) |
 | `tcl/engine.tcl` | Engine UI + `engine::mc` namespace defaults (Feature/FeatureDetail/Variant) |
 | `tcl/app-database.tcl` | Database open/close/save UI logic, `openBase` proc |
 | `tcl/app-board.tcl` | Board UI, game save/replace button state logic |
@@ -234,6 +263,15 @@ The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` 
 | `src/tcl/tcl_tree.cpp` | `::scidb::tree::list` — list of open databases (must include all writable formats) |
 | `src/tcl/tcl_view.cpp` | `::scidb::view::export` and `::scidb::view::copy` commands |
 | `src/util/u_block_file.cpp/.ipp` | BlockFile: block-based game storage; SI5 uses sequential (non-aligned) layout |
+
+### Debugging menu (`tcl/debug.tcl`)
+
+A "Debugging" cascade under Settings (added post-r1531) provides:
+- **Stderr → file** toggle: `::scidb::misc::setLogFile path` (C++ command in `src/tcl/tcl_misc.cpp`) redirects OS-level FD 2 via `dup2()`, capturing both C++ `fprintf(stderr)` and Tcl `puts stderr`. Empty string restores the original. Log files are written to `~/.scidb-beta/logs/stderr-TIMESTAMP.log`. The setting persists across restarts via `::options::hookWriter`.
+- **Engine communication log**: opens the engine log window.
+- **Open log folder**: `xdg-open ~/.scidb-beta/logs/`.
+
+`::scidb::misc::setLogFile` requires a rebuilt binary — it is registered in `src/tcl/tcl_misc.cpp` via `createCommand`. If the binary is stale (built before this command was added), calling it throws `invalid command name`.
 
 ### Save button state logic (app-board.tcl)
 
@@ -276,9 +314,9 @@ Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/u
 
 The application version is defined in three places — all must be kept in sync:
 
-- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.39 BETA\""` (used by the normal build)
-- `src/tcl/tcl_misc.cpp` line 69: `# define SCIDB_VERSION "1.1.39 BETA"` (CodeBlocks IDE fallback only)
-- `tcl/exec.tcl` line 41: `set version "1.1.39 BETA"` (Tcl source)
+- `Makefile.version` line 5: `SCIDB_VERSION = -DSCIDB_VERSION="\"1.1.49 BETA\""` (used by the normal build)
+- `src/tcl/tcl_misc.cpp` line 72: `# define SCIDB_VERSION "1.1.49 BETA"` (CodeBlocks IDE fallback only)
+- `tcl/exec.tcl` line 41: `set version "1.1.49 BETA"` (Tcl source)
 
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
