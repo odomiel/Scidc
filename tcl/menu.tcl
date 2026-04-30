@@ -380,18 +380,6 @@ if {0} {
 			;
 	}
 
-	if {[::util::photos::busy?]} { set state disabled } else { set state normal }
-	lassign [::tk::UnderlineAmpersand $::util::photos::mc::InstallPlayerPhotos] text ul
-	set cmd [list ::util::photos::openDialog .application]
-	$m add command \
-		-compound left \
-		-label " $text" \
-		-underline [IncrUL $ul] \
-		-image $::icon::16x16::none \
-		-command $cmd \
-		-state $state \
-		;
-
 	if {[llength [info procs ::font::installChessBaseFonts]]} {
 		lassign [::tk::UnderlineAmpersand $mc::InstallChessBaseFonts] text ul
 		set cmd [list ::font::installChessBaseFonts .application]
