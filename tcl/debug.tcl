@@ -50,12 +50,22 @@ proc toggleStderr {} {
 	variable LogFile
 
 	if {$Options(stderrToFile)} {
+		if {[lsearch -exact [info commands ::scidb::misc::*] ::scidb::misc::setLogFile] < 0} {
+			set Options(stderrToFile) 0
+			after idle [list tk_messageBox -type ok -icon warning \
+				-title $::scidb::app \
+				-message "::scidb::misc::setLogFile nicht verfügbar.\nBitte Programm neu bauen (make)."]
+			return
+		}
 		set dir [ensureLogDir]
 		set date [clock format [clock seconds] -format "%Y%m%d-%H%M%S"]
 		set LogFile [file join $dir "stderr-$date.log"]
 		if {[catch { ::scidb::misc::setLogFile $LogFile } err]} {
 			set Options(stderrToFile) 0
 			set LogFile ""
+			after idle [list tk_messageBox -type ok -icon error \
+				-title $::scidb::app \
+				-message "Stderr-Protokollierung fehlgeschlagen:\n$err"]
 		}
 	} else {
 		catch { ::scidb::misc::setLogFile "" }
