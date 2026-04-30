@@ -154,6 +154,7 @@ SOURCES = \
 	info.tcl \
 	move.tcl \
 	game.tcl \
+	debug.tcl \
 	menu.tcl \
 	end.tcl \
 

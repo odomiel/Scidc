@@ -87,6 +87,7 @@ set OpenPlayerDictionary		"Open &Player Dictionary"
 set Engines							"&Engines"
 set PgnOptions						"Setup &PGN export options"
 set PrivatePlayerCard			"Private Player &Card"
+set Debugging						"De&bugging"
 
 set OpenFile						"Open a Scidb File"
 set NewFile							"Create a Scidb File"
@@ -319,6 +320,17 @@ if {0} {
 		-compound left \
 		;
 }
+
+	set dm [menu $m.mDebug]
+	lassign [::tk::UnderlineAmpersand $mc::Debugging] text ul
+	$m add cascade \
+		-compound left \
+		-menu $dm \
+		-label " $text" \
+		-underline [IncrUL $ul] \
+		-image $::icon::16x16::none \
+		;
+	::debug::buildMenu $dm
 
 	### tools ################################################################
 	set m [menu $menu.mTools]

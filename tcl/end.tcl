@@ -275,6 +275,7 @@ proc ::toolbar::setOptions {id options} {
 proc dialog::fsbox::setBookmarks {args} {}
 
 options::sourceFile
+debug::init
 
 # START OF MIGRATION ################################################################
 if {[catch {

@@ -297,6 +297,14 @@
 ::menu::mc::Tools								"&Werkzeuge"
 ::menu::mc::Extras							"E&xtras"
 ::menu::mc::Setup								"&Einstellungen"
+::debug::mc::Debugging                        "De&bugging"
+::debug::mc::BuildMode                        "Build: %s"
+::debug::mc::DebugBuild                       "Debug"
+::debug::mc::ReleaseBuild                     "Release"
+::debug::mc::StderrToFile                     "Stderr in Datei protokollieren"
+::debug::mc::StderrActive                     "Aktive Datei: %s"
+::debug::mc::EngineLog                        "Engine-Kommunikation öffnen..."
+::debug::mc::OpenLogFolder                    "Protokollordner öffnen"
 ::menu::mc::Layout							"La&yout"
 
 # Font Size

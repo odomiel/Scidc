@@ -64,9 +64,12 @@
 #include <expat.h>
 #include <cstring>
 #include <cctype>
+#include <cerrno>
+#include <unistd.h>
+#include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.40 BETA"
+# define SCIDB_VERSION	"1.1.41 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 
@@ -99,6 +102,7 @@ static char const* CmdMinYear					= "::scidb::misc::minYear";
 static char const* CmdNumberOfProcessors	= "::scidb::misc::numberOfProcessors";
 static char const* CmdPredPow2				= "::scidb::misc::predPow2";
 static char const* CmdRevision				= "::scidb::misc::revision";
+static char const* CmdSetLogFile				= "::scidb::misc::setLogFile";
 static char const* CmdSetModTime				= "::scidb::misc::setModTime";
 static char const* CmdSize						= "::scidb::misc::size";
 static char const* CmdSort						= "::scidb::misc::sort";
@@ -1565,6 +1569,45 @@ cmdUrl(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 }
 
 
+static int savedStderr_g = -1;
+
+static int
+cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+{
+	if (objc != 2)
+	{
+		Tcl_WrongNumArgs(ti, 1, objv, "path");
+		return TCL_ERROR;
+	}
+
+	char const* path = Tcl_GetString(objv[1]);
+
+	// Save original stderr fd on first call so we can restore later
+	if (savedStderr_g < 0)
+		savedStderr_g = ::dup(STDERR_FILENO);
+
+	if (path[0] == '\0')
+	{
+		// Restore original stderr
+		if (savedStderr_g >= 0)
+			::dup2(savedStderr_g, STDERR_FILENO);
+	}
+	else
+	{
+		int fd = ::open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd < 0)
+		{
+			Tcl_SetResult(ti, const_cast<char*>(::strerror(errno)), TCL_VOLATILE);
+			return TCL_ERROR;
+		}
+		::dup2(fd, STDERR_FILENO);
+		::close(fd);
+	}
+
+	return TCL_OK;
+}
+
+
 static int
 cmdSetModTime(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
@@ -1801,6 +1844,7 @@ init(Tcl_Interp* ti)
 	createCommand(ti, CmdNumberOfProcessors,	cmdNumberOfProcessors);
 	createCommand(ti, CmdPredPow2,				cmdPredPow2);
 	createCommand(ti, CmdRevision,				cmdRevision);
+	createCommand(ti, CmdSetLogFile,				cmdSetLogFile);
 	createCommand(ti, CmdSetModTime,				cmdSetModTime);
 	createCommand(ti, CmdSize,						cmdSize);
 	createCommand(ti, CmdSort,						tcl::misc::sort);
