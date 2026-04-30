@@ -404,18 +404,6 @@ if {0} {
 			;
 	}
 
-	lassign [::tk::UnderlineAmpersand $mc::OpenEngineLog] text ul
-	set cmd [list ::engine::openEngineLog .application]
-	if {[::engine::logIsOpen? .application]} { set state disabled } else { set state normal }
-	$m add command \
-		-compound left \
-		-label " $text..." \
-		-underline [IncrUL $ul] \
-		-image $::icon::16x16::none \
-		-command $cmd \
-		-state $state \
-		;
-
 	### font size ############################################################
 	$menu add separator
 
