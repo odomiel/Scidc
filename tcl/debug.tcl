@@ -142,10 +142,9 @@ proc WriteOptions {chan} {
 
 proc init {} {
 	variable Options
-	# Apply saved settings on startup
 	if {$Options(stderrToFile)} {
-		# Reset — do not carry over a previous session's log redirect
 		set Options(stderrToFile) 0
+		toggleStderr
 	}
 }
 
