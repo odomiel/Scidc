@@ -2813,6 +2813,16 @@ Codec::getAttributes(mstl::string const& filename,
 	if (!strm)
 		return false;
 
+	// SI5 has no file header; index entries start at byte 0 with fixed size 56
+	if (util::misc::file::suffix(filename) == "si5") {
+		numGames = static_cast<int>(strm.size() / 56);
+		type = type::Unspecific;
+		if (description)
+			description->clear();
+		strm.close();
+		return true;
+	}
+
 	char header[120];
 
 	strm.seekp(8, mstl::ios_base::beg);
