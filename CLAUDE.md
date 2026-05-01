@@ -200,11 +200,20 @@ Engine metadata (command path, UCI option profiles, supported variants) is store
 
 ### Player data — startup loading and runtime update
 
-At startup `tcl/load.tcl` calls `::scidb::app::load <type> <path>` (C++ binding in `src/tcl/tcl_application.cpp`) for each data file. Types: `ssp` (spellcheck), `fide`, `dwz`, `ecf`, `iccf`, `ips`, `wiki`, `cgdc`, `site`, `comp`. All load functions are additive/merging — calling them again at runtime is safe and updates the live in-memory player dictionary without a restart.
+At startup `tcl/load.tcl` calls `::scidb::app::load <type> <path>` (C++ binding in `src/tcl/tcl_application.cpp`) for each data file. Active types: `fide`, `dwz`, `site`, `comp`. All load functions are additive/merging — calling them again at runtime is safe and updates the live in-memory player dictionary without a restart.
 
-The **FIDE player list** is updated via the "Update FIDE List" button in the Player Dictionary dialog (`tcl/player-dict.tcl`). It runs `tcl/update-fide-players.py` (Python 3) as an async subprocess via `::open` (fully qualified — see namespace pitfall above), downloads the FIDE XML from `ratings.fide.com/download/players_list_xml.zip`, converts it to the fixed-width TXT format that `parseFideRating()` expects, writes `players_list.zip` to `$::scidb::dir::user` (`~/.scidb-beta/`), and reloads with `::scidb::app::load fide`. At startup `tcl/load.tcl` prefers the user's copy (`~/.scidb-beta/players_list.zip`) over the bundled one in SHAREDIR/data/ if it exists.
+The **"Update Player Lists" button** in the Player Dictionary dialog (`tcl/player-dict.tcl`) runs both update scripts sequentially via a queue (`Priv(update:queue)`): FIDE first, then DWZ. Each script runs as an async Python 3 subprocess opened with `::open` (fully qualified — see namespace pitfall above). After both complete, both data sources are reloaded in one pass and a single success dialog is shown.
 
-**`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female).
+- **FIDE**: `tcl/update-fide-players.py` downloads the FIDE XML from `ratings.fide.com/download/players_list_xml.zip`, converts it to fixed-width TXT format for `parseFideRating()`, and writes `players_list.zip` to `~/.scidb-beta/`. At startup `tcl/load.tcl` prefers the user's copy over the bundled SHAREDIR/data/ file if it exists.
+- **DWZ**: `tcl/update-dwz-players.py` downloads `https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip`, extracts `spieler.csv` (Latin-1 encoded), converts it to fixed-width TXT for `parseDwzRating()`, and writes `dwz-ratings.txt` to `~/.scidb-beta/`. At startup `tcl/load.tcl` prefers `~/.scidb-beta/dwz-ratings.txt` over SHAREDIR/data/ if it exists.
+
+**`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female). The `is_7bit()` filter that previously skipped ASCII-only names has been removed — all FIDE players with any ELO > 0 are now included.
+
+**`parseDwzRating` column layout** (fixed-width, Latin-1, 0-indexed): `[0:5]` VKZ/ZPS (5-char club code), `[6:10]` member number right-justified in 4 chars, `[11:19]` FIDE ID right-justified in 8 chars (`0` = none), `[20]` gender (`M`/`W`), `[22:26]` birth year, `[27:31]` DWZ rating **left-justified** in 4 chars (C++ checks `isdigit(line[27])` — a space at pos 27 skips the record), `[32:]` player name (`Last, First`). All players with DWZ > 0 are included (`m_minDWZ = 1`).
+
+**Rating minimum thresholds** (`src/db/db_player.cpp`): `Player::m_minELO` and `Player::m_minDWZ` are both set to `1` — all players with any positive rating are included. Changing these requires a C++ rebuild.
+
+**AppImage Python subprocess — `LD_LIBRARY_PATH` fix:** AppRun prepends the AppImage's bundled libs to `LD_LIBRARY_PATH` before storing the original value in `APPIMAGE_ORIG_LD`. The `_OpenPython` proc in `tcl/player-dict.tcl` restores `LD_LIBRARY_PATH` from `APPIMAGE_ORIG_LD` before forking the Python subprocess, so system Python loads its own libraries rather than the AppImage's incompatible ones. AppRun must set `export APPIMAGE_ORIG_LD="${LD_LIBRARY_PATH:-}"` **before** modifying `LD_LIBRARY_PATH`.
 
 ### Player Dictionary — Data Sources dialog
 
@@ -267,8 +276,9 @@ The icon image variables (checkYes, checkNo, etc.) are defined **inside** `names
 | `tcl/engine.tcl` | Engine UI + `engine::mc` namespace defaults (Feature/FeatureDetail/Variant) |
 | `tcl/app-database.tcl` | Database open/close/save UI logic, `openBase` proc |
 | `tcl/app-board.tcl` | Board UI, game save/replace button state logic |
-| `tcl/player-dict.tcl` | Player Dictionary dialog + FIDE update button + Data Sources dialog |
+| `tcl/player-dict.tcl` | Player Dictionary dialog + sequential FIDE+DWZ update queue + Data Sources dialog |
 | `tcl/update-fide-players.py` | Python 3 script: download FIDE XML → players_list.zip |
+| `tcl/update-dwz-players.py` | Python 3 script: download DWZ CSV v2 ZIP → dwz-ratings.txt (Latin-1 fixed-width) |
 | `tcl/engines/engines.dat` | Bundled engine definitions (source, tracked in git) |
 | `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, `::scidb::dir::*` setup |
 | `tcl/end.tcl` | Late-init procs (`keybar::tr`, etc.) |
