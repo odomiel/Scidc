@@ -2471,12 +2471,19 @@ Player::parseDwzRating(mstl::istream& stream)
 			sex::ID		sex		= sex::Unspecified;
 			db::Player*	player	= 0;
 
+			latin1.hook(line.data() + 32, line.size() - 32);
+			codec.toUtf8(latin1, name);
+
 			if (fideID)
 			{
 				Player* const* playerEntry = ::fidePlayerDict.find(fideID);
 
-				if (playerEntry)
+				if (playerEntry
+					&& (   sys::utf8::Codec::matchAscii((*playerEntry)->name(), name)
+					    || sys::utf8::Codec::matchGerman((*playerEntry)->name(), name)))
+				{
 					player = *playerEntry;
+				}
 			}
 
 			unsigned rating = ::strtoul(line.c_str() + 27, nullptr, 10);
@@ -2485,9 +2492,6 @@ Player::parseDwzRating(mstl::istream& stream)
 			{
 				if (rating < m_minDWZ)
 					continue;
-
-				latin1.hook(line.data() + 32, line.size() - 32);
-				codec.toUtf8(latin1, name);
 
 				switch (line[20])
 				{
