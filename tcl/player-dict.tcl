@@ -51,6 +51,13 @@ set UpdateFailed	"Update failed:\n%s"
 set PythonNotFound	"Python 3 is required for this function but was not found.\nPlease install Python 3."
 set ScriptNotFound	"Update script not found:\n%s"
 
+set DataSources      "Data Sources"
+set DataSourcesTitle "Player Dictionary - Data Sources"
+set FileSize         "Size"
+set FileDate         "Last modified"
+set FileNotFound     "not found"
+set WebSource        "Web source"
+
 set ChessChampion	"%sex% %mode% %age% %region% %champion% %where%"
 set Sex(f)			"Woman"
 set Sex(m)			""
@@ -483,6 +490,9 @@ proc open {parent args} {
 	set Priv(update:label) $mc::UpdateList
 	::widget::dialogButtonAdd $dlg update [namespace current]::Priv(update:label) {}
 	$dlg.update configure -command [namespace code [list UpdatePlayerData $dlg $table]]
+	::widget::dialogButtonAdd $dlg sources [namespace current]::mc::DataSources {}
+	$dlg.sources configure -command [namespace code [list ShowDataSources $dlg]]
+	$dlg.sources configure -image $::icon::16x16::info -compound left
 
 	update idletasks
 	set minsize [winfo reqwidth $dlg]
@@ -1337,6 +1347,110 @@ proc PopupMenu {table menu _ _ index _} {
 	if {![string is digit -strict $index]} { return }
 	set info [scidb::player::info $index -web 1]
 	::playercard::buildWebMenu $table $menu $info
+}
+
+
+proc ShowDataSources {dlg} {
+	set d $dlg.dataSources
+	catch { destroy $d }
+	tk::toplevel $d -class Scidb
+	wm title $d $mc::DataSourcesTitle
+	wm transient $d $dlg
+
+	set top [ttk::frame $d.top]
+	pack $top -fill both -expand yes
+
+	set bold [list [font configure TkDefaultFont -family] [font configure TkDefaultFont -size] bold]
+
+	set fide_user [file join $::scidb::dir::user players_list.zip]
+	set fide_path [expr {[file exists $fide_user] \
+		? $fide_user \
+		: [file join $::scidb::dir::data players_list.zip]}]
+
+	set sources [list \
+		[list [format $::load::mc::RatingList FIDE] $fide_path \
+			"https://ratings.fide.com/download/players_list_xml.zip"] \
+		[list [format $::load::mc::RatingList IPS]  [file join $::scidb::dir::data ips-ratings.txt] \
+			"http://www.chesstigers.de/"] \
+		[list [format $::load::mc::RatingList DWZ]  [file join $::scidb::dir::data dwz-ratings.txt] \
+			"https://www.schachbund.de/"] \
+		[list [format $::load::mc::RatingList ECF]  [file join $::scidb::dir::data ecf-ratings.txt] \
+			"https://www.ecfrating.org.uk/"] \
+		[list [format $::load::mc::RatingList ICCF] [file join $::scidb::dir::data iccf-ratings.txt] \
+			"https://www.iccf.com/"] \
+		[list $::load::mc::SpellcheckFile           [file join $::scidb::dir::data ratings_utf8.ssp.zip] \
+			""] \
+		[list "$::load::mc::SpellcheckFile (2)"     [file join $::scidb::dir::data ratings-additional.ssp] \
+			""] \
+		[list "$::load::mc::WikipediaLinks (DE)"    [file join $::scidb::dir::data wikipedia-de.txt] \
+			"https://de.wikipedia.org/"] \
+		[list "$::load::mc::WikipediaLinks (EN)"    [file join $::scidb::dir::data wikipedia-en.txt] \
+			"https://en.wikipedia.org/"] \
+		[list $::load::mc::ChessgamesComLinks       [file join $::scidb::dir::data chessgames.com.zip] \
+			"https://www.chessgames.com/"] \
+	]
+
+	set gridrow 1
+	set idx 0
+	foreach entry $sources {
+		lassign $entry label path url
+
+		ttk::label $top.name$idx -text $label -font $bold
+		grid $top.name$idx -row $gridrow -column 1 -sticky w
+		incr gridrow
+
+		if {[file exists $path]} {
+			set sz [file size $path]
+			if {$sz >= 1048576} {
+				set szStr [format "%.1f MB" [expr {$sz / 1048576.0}]]
+			} elseif {$sz >= 1024} {
+				set szStr [format "%.0f KB" [expr {$sz / 1024.0}]]
+			} else {
+				set szStr "$sz B"
+			}
+			set date [clock format [file mtime $path] -format "%Y-%m-%d"]
+			ttk::label $top.path$idx -text $path
+			ttk::label $top.info$idx \
+				-text "$mc::FileSize: $szStr   $mc::FileDate: $date" \
+				-foreground gray \
+				;
+		} else {
+			ttk::label $top.path$idx \
+				-text "$path  ($mc::FileNotFound)" \
+				-foreground red \
+				;
+			ttk::label $top.info$idx -text {}
+		}
+		grid $top.path$idx -row $gridrow -column 1 -sticky w
+		incr gridrow
+		grid $top.info$idx -row $gridrow -column 1 -sticky w
+		incr gridrow
+
+		if {$url ne ""} {
+			ttk::label $top.url$idx \
+				-text "$mc::WebSource: $url" \
+				-foreground blue \
+				-cursor hand2 \
+				;
+			bind $top.url$idx <ButtonRelease-1> [list exec xdg-open $url &]
+		} else {
+			ttk::label $top.url$idx -text {}
+		}
+		grid $top.url$idx -row $gridrow -column 1 -sticky w
+		incr gridrow
+
+		incr idx
+	}
+
+	grid columnconfigure $top {0 2} -minsize $::theme::padx
+	grid rowconfigure $top {0} -minsize $::theme::pady
+	grid rowconfigure $top $gridrow -minsize $::theme::pady
+
+	::widget::dialogButtons $d {close}
+	$d.close configure -command [list destroy $d]
+	wm resizable $d yes no
+	::util::place $d -parent $dlg -position center
+	wm deiconify $d
 }
 
 

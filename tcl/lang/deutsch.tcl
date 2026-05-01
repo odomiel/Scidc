@@ -1524,6 +1524,12 @@
 ::playerdict::mc::Mode(c)			"Fernschach-"
 ::playerdict::mc::Mode(-)			""
 ::playerdict::mc::Where				"in %country%"
+::playerdict::mc::DataSources		"Datenquellen"
+::playerdict::mc::DataSourcesTitle	"Spielerlexikon - Datenquellen"
+::playerdict::mc::FileSize			"Größe"
+::playerdict::mc::FileDate			"Zuletzt geändert"
+::playerdict::mc::FileNotFound		"nicht gefunden"
+set ::playerdict::mc::WebSource			"Webquelle"
 
 ### player-card ########################################################
 ::playercard::mc::PlayerCard					"Spielerkarteikarte"
