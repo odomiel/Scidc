@@ -1370,24 +1370,6 @@ proc ShowDataSources {dlg} {
 	set sources [list \
 		[list [format $::load::mc::RatingList FIDE] $fide_path \
 			"https://ratings.fide.com/download/players_list_xml.zip"] \
-		[list [format $::load::mc::RatingList IPS]  [file join $::scidb::dir::data ips-ratings.txt] \
-			""] \
-		[list [format $::load::mc::RatingList DWZ]  [file join $::scidb::dir::data dwz-ratings.txt] \
-			""] \
-		[list [format $::load::mc::RatingList ECF]  [file join $::scidb::dir::data ecf-ratings.txt] \
-			""] \
-		[list [format $::load::mc::RatingList ICCF] [file join $::scidb::dir::data iccf-ratings.txt] \
-			""] \
-		[list $::load::mc::SpellcheckFile           [file join $::scidb::dir::data ratings_utf8.ssp.zip] \
-			""] \
-		[list "$::load::mc::SpellcheckFile (2)"     [file join $::scidb::dir::data ratings-additional.ssp] \
-			""] \
-		[list "$::load::mc::WikipediaLinks (DE)"    [file join $::scidb::dir::data wikipedia-de.txt] \
-			""] \
-		[list "$::load::mc::WikipediaLinks (EN)"    [file join $::scidb::dir::data wikipedia-en.txt] \
-			""] \
-		[list $::load::mc::ChessgamesComLinks       [file join $::scidb::dir::data chessgames.com.zip] \
-			""] \
 	]
 
 	set gridrow 1
