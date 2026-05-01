@@ -2172,6 +2172,8 @@
 ::searchentry::mc::Erase					"Erase" ;# NEW
 ::searchentry::mc::FindNext				"Find Next" ;# NEW
 ::searchentry::mc::InteractiveSearch	"Interactive Search" ;# NEW
+::searchentry::mc::Enabled			"Enabled"
+::searchentry::mc::Disabled			"Disabled"
 
 ### languagebox ########################################################
 ::languagebox::mc::AllLanguages	"Tutte le lingue"

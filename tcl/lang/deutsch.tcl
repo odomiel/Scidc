@@ -2178,6 +2178,8 @@ set ::playerdict::mc::WebSource			"Webquelle"
 ::searchentry::mc::Erase					"Löschen"
 ::searchentry::mc::FindNext				"Suche weiter"
 ::searchentry::mc::InteractiveSearch	"Interaktive Suche"
+::searchentry::mc::Enabled			"Eingeschaltet"
+::searchentry::mc::Disabled			"Ausgeschaltet"
 
 ### languagebox ########################################################
 ::languagebox::mc::AllLanguages	"Alle Sprachen"

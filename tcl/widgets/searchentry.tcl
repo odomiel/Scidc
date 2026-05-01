@@ -44,6 +44,8 @@ namespace eval mc {
 	set Erase					"Erase"
 	set FindNext				"Find Next"
 	set InteractiveSearch	"Interactive Search"
+	set Enabled				"Enabled"
+	set Disabled				"Disabled"
 }
 
 
