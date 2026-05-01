@@ -6,7 +6,7 @@ fixed-width TXT format that Scidb's parseDwzRating() expects.
 Usage: python3 update-dwz-players.py <data_dir>
 
 Fixed-width output format (0-indexed byte positions, Latin-1 encoded):
-  [ 0: 5]  ZPS (5-char club/federation code)
+  [ 0: 5]  VKZ/ZPS (5-char club code)
   [ 5]     space
   [ 6:10]  Member number, right-justified in 4 chars
   [10]     space
@@ -28,32 +28,22 @@ import tempfile
 import zipfile
 import urllib.request
 
-DWZ_CSV_URL = "https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip"
-MIN_RATING  = 1000  # parseDwzRating applies its own minimum (default 1800)
+DWZ_CSV_URL  = "https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip"
+CSV_FILENAME = "spieler.csv"   # target file inside the ZIP
+CSV_ENCODING = "latin-1"       # DWZ export uses Latin-1
+MIN_RATING   = 1000            # parseDwzRating applies its own minimum (default 1800)
 
-REQUIRED_COLS = {"ZPS", "Mgl-Nr", "Spielername", "Geschlecht", "Geburtsjahr", "DWZ", "FIDE-ID"}
-
-
-def detect_encoding(path):
-    with open(path, "rb") as f:
-        raw = f.read(512)
-    if raw.startswith(b"\xef\xbb\xbf"):
-        return "utf-8-sig"
-    try:
-        raw.decode("utf-8")
-        return "utf-8"
-    except UnicodeDecodeError:
-        return "latin-1"
+REQUIRED_COLS = {"VKZ", "Mgl-Nr", "Spielername", "Geschlecht", "Geburtsjahr", "DWZ", "FIDE-ID"}
 
 
-def make_line(zps, nr, fide_id, gender, birth, rating, name):
-    zps_part   = zps[:5].ljust(5)
-    nr_part    = (nr or "0").rjust(4)
+def make_line(vkz, nr, fide_id, gender, birth, rating, name):
+    vkz_part   = vkz[:5].ljust(5)
+    nr_part    = (nr      or "0").rjust(4)
     fide_part  = (fide_id or "0").rjust(8)
-    gen_part   = (gender[0:1] if gender else " ")
-    birth_part = (birth or "0").rjust(4)
+    gen_part   = gender[0:1] if gender and gender[0] in ("M", "W") else " "
+    birth_part = (birth   or "0").rjust(4)
     rat_part   = rating.rjust(4)
-    return f"{zps_part} {nr_part} {fide_part} {gen_part} {birth_part} {rat_part} {name}"
+    return f"{vkz_part} {nr_part} {fide_part} {gen_part} {birth_part} {rat_part} {name}"
 
 
 def download_to_file(url, path):
@@ -76,22 +66,24 @@ def download_to_file(url, path):
 
 
 def convert_csv(csv_path, out_path):
-    enc = detect_encoding(csv_path)
-    count   = 0
-    skipped = 0
+    count    = 0
+    skipped  = 0
     tmp_path = out_path + ".tmp"
 
-    with open(csv_path, encoding=enc, newline="", errors="replace") as f, \
-         open(tmp_path, "w", encoding="latin-1", errors="replace", newline="\n") as out:
+    with open(csv_path, encoding=CSV_ENCODING, newline="", errors="replace") as f, \
+         open(tmp_path, "w", encoding=CSV_ENCODING, errors="replace", newline="\n") as out:
 
         reader = csv.DictReader(f, delimiter=",", quotechar='"')
 
         missing = REQUIRED_COLS - set(reader.fieldnames or [])
         if missing:
-            raise ValueError(f"Missing CSV columns: {', '.join(sorted(missing))}")
+            raise ValueError(
+                f"Missing CSV columns: {', '.join(sorted(missing))}\n"
+                f"Actual columns: {reader.fieldnames}"
+            )
 
         for row in reader:
-            zps    = (row.get("ZPS")         or "").strip()
+            vkz    = (row.get("VKZ")         or "").strip()
             nr     = (row.get("Mgl-Nr")      or "").strip()
             name   = (row.get("Spielername") or "").strip()
             gender = (row.get("Geschlecht")  or "").strip().upper()
@@ -99,11 +91,11 @@ def convert_csv(csv_path, out_path):
             dwz    = (row.get("DWZ")         or "").strip()
             fide   = (row.get("FIDE-ID")     or "").strip()
 
-            # validation matches conv-dwz.tcl filter
-            if len(zps) != 5:
+            # match filter from original conv-dwz.tcl
+            if len(vkz) != 5:
                 skipped += 1
                 continue
-            if not (zps[0].isdigit() or "A" <= zps[0] <= "L"):
+            if not (vkz[0].isdigit() or "A" <= vkz[0] <= "L"):
                 skipped += 1
                 continue
             if not nr or len(nr) >= 5:
@@ -112,24 +104,25 @@ def convert_csv(csv_path, out_path):
             if len(name) <= 4:
                 skipped += 1
                 continue
-            if not dwz.isdigit() or not (4 <= len(dwz) <= 4):
+            if not dwz.isdigit() or len(dwz) != 4:
                 skipped += 1
                 continue
             if int(dwz) < MIN_RATING:
                 skipped += 1
                 continue
 
-            # normalise name: ",Dr." and commas
+            # "Nachname,Vorname" -> "Nachname, Vorname"
             name = name.replace(",Dr.", " Dr").replace(",", ", ")
 
-            g = gender[0:1] if gender and gender[0] in ("M", "W") else " "
             fide_str = fide if fide.isdigit() else "0"
 
-            out.write(make_line(zps, nr, fide_str, g, birth, dwz, name) + "\n")
+            out.write(make_line(vkz, nr, fide_str, gender[0:1] if gender else " ",
+                                birth, dwz, name) + "\n")
             count += 1
 
     os.replace(tmp_path, out_path)
     print(f"Saved {count} players to {out_path} ({skipped} skipped).", flush=True)
+    return count
 
 
 def main():
@@ -142,8 +135,10 @@ def main():
         print(f"Error: not a directory: {data_dir}", file=sys.stderr)
         sys.exit(1)
 
-    tmpzip   = None
+    tmpzip     = None
     tmpcsvpath = None
+    out_path   = os.path.join(data_dir, "dwz-ratings.txt")
+
     try:
         fd, tmpzip = tempfile.mkstemp(suffix=".zip", dir=data_dir)
         os.close(fd)
@@ -151,25 +146,36 @@ def main():
 
         print("Extracting CSV...", flush=True)
         with zipfile.ZipFile(tmpzip) as zf:
-            csv_names = [n for n in zf.namelist() if n.lower().endswith(".csv")]
-            if not csv_names:
-                print("Error: no CSV file found in DWZ download.", file=sys.stderr)
-                sys.exit(1)
+            all_names = zf.namelist()
+            if CSV_FILENAME in all_names:
+                chosen = CSV_FILENAME
+            else:
+                csv_names = [n for n in all_names if n.lower().endswith(".csv")]
+                if not csv_names:
+                    print(f"Error: no CSV file in ZIP. Contents: {all_names}",
+                          file=sys.stderr)
+                    sys.exit(1)
+                chosen = csv_names[0]
+                print(f"Note: '{CSV_FILENAME}' not found, using '{chosen}'", flush=True)
+
             fd2, tmpcsvpath = tempfile.mkstemp(suffix=".csv", dir=data_dir)
             os.close(fd2)
-            with zf.open(csv_names[0]) as src, open(tmpcsvpath, "wb") as dst:
+            with zf.open(chosen) as src, open(tmpcsvpath, "wb") as dst:
                 dst.write(src.read())
 
-        out_path = os.path.join(data_dir, "dwz-ratings.txt")
-        print(f"Converting {csv_names[0]}...", flush=True)
-        convert_csv(tmpcsvpath, out_path)
+        print(f"Converting {chosen}...", flush=True)
+        count = convert_csv(tmpcsvpath, out_path)
+
+        if not os.path.exists(out_path):
+            print(f"Error: output file was not created: {out_path}", file=sys.stderr)
+            sys.exit(1)
 
     finally:
         for p in (tmpzip, tmpcsvpath):
             if p and os.path.exists(p):
                 os.unlink(p)
 
-    print("Done.", flush=True)
+    print(f"Done. {count} players saved.", flush=True)
 
 
 if __name__ == "__main__":
