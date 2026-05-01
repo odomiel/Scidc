@@ -313,7 +313,6 @@
 ::menu::mc::AssignFileTypes				"&Assign File Types"
 
 # Tools
-::menu::mc::OpenEngineDictionary			"Open &Engine &Dictionary"
 ::menu::mc::OpenPlayerDictionary			"Open &Player Dictionary"
 
 # Setup
@@ -1132,9 +1131,6 @@
 ::engine::mc::ChooseDifferentName	"Please choose a different name."
 ::engine::mc::ReservedName				"Name '%s' is reserved and cannot be used."
 ::engine::mc::ReallyDeleteProfile	"Really delete profile '%s'?"
-::engine::mc::SortName					"Sort by name"
-::engine::mc::SortElo					"Sort by Elo rating"
-::engine::mc::SortRating				"Sort by CCRL rating"
 ::engine::mc::OpenUrl					"Open URL (web browser)"
 
 ::engine::mc::AdminEngines				"&Manage Engines"
@@ -1142,8 +1138,6 @@
 ::engine::mc::ImageFiles				"Image files"
 ::engine::mc::SelectEngine				"Select Engine"
 ::engine::mc::SelectEngineLogo		"Select Engine Logo"
-::engine::mc::EngineDictionary		"Engine Dictionary"
-::engine::mc::EngineFilter				"Engine Filter"
 ::engine::mc::EngineLog					"Engine Console"
 ::engine::mc::Probing					"Probing"
 ::engine::mc::NeverUsed					"Never used"

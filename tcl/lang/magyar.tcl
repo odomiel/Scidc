@@ -315,7 +315,6 @@
 ::menu::mc::AssignFileTypes		"Assign File &Types" ;# NEW
 
 # Tools
-::menu::mc::OpenEngineDictionary	"Open Engine &Dictionary" ;# NEW
 ::menu::mc::OpenPlayerDictionary	"Open &Player Dictionary" ;# NEW
 
 # Setup
@@ -1144,9 +1143,6 @@
 ::engine::mc::ChooseDifferentName	"Kérem válasszon más nevet."
 ::engine::mc::ReservedName		"'%s' fenntartott név ezért nem használható"
 ::engine::mc::ReallyDeleteProfile	"Biztos törli a '%s' profilt?"
-::engine::mc::SortName			"Név szerinti rendezés"
-::engine::mc::SortElo			"ELO szerinti rendezés"
-::engine::mc::SortRating		"Sort by CCRL rating" ;# NEW
 ::engine::mc::OpenUrl			"Link megnyitása böngészőben"
 
 ::engine::mc::AdminEngines		"Elemző &modulok kezelése"
@@ -1154,8 +1150,6 @@
 ::engine::mc::ImageFiles		"Képfájlok"
 ::engine::mc::SelectEngine		"Elemzőmodul választása"
 ::engine::mc::SelectEngineLogo		"Logó választása az elemző modul számára"
-::engine::mc::EngineDictionary		"Engine Dictionary" ;# NEW
-::engine::mc::EngineFilter		"Elemző modul szűrő"
 ::engine::mc::EngineLog			"Elemző modul terminál"
 ::engine::mc::Probing			"Probing"  ;#NEW
 ::engine::mc::NeverUsed			"Sohasem használt"

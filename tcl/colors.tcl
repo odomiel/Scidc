@@ -204,7 +204,6 @@ array set Colors {
 	lite:encoding,normal						linen
 	lite:encoding,description				#efefef
 
-	lite:engine,selectbackground:dict	#ebf4f5
 	lite:engine,selectbackground:setup	lightgray
 	lite:engine,selectforeground:setup	black
 	lite:engine,stripes						linen
@@ -253,7 +252,6 @@ array set Colors {
 	dark:save,taglistHighlighting			#dce4e5
 	dark:save,matchlistBackground			#dce4e5
 	dark:encoding,active						#dce4e5
-	dark:engine,selectbackground:dict	#dce4e5
 	dark:default,disabledbackground		#dce4e5
 	dark:treetable,active:focus			#dce4e5
 	dark:treetable,hilite!selected		#dce4e5

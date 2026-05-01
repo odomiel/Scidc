@@ -315,7 +315,6 @@
 ::menu::mc::AssignFileTypes				"Assign File &Types"
 
 # Tools
-::menu::mc::OpenEngineDictionary			"Open Engine &Dictionary" ;# NEW
 ::menu::mc::OpenPlayerDictionary			"Open &Player Dictionary" ;# NEW
 
 # Setup
@@ -1135,9 +1134,6 @@
 ::engine::mc::ChooseDifferentName	"Por favor escoja un nombre diferente."
 ::engine::mc::ReservedName				"El nombre '%s' es reservado y no puede ser usado."
 ::engine::mc::ReallyDeleteProfile	"¿Realmente desea borrar el perfil '%s'?"
-::engine::mc::SortName					"Sort by name" ;# NEW
-::engine::mc::SortElo					"Sort by Elo rating" ;# NEW
-::engine::mc::SortRating				"Sort by CCRL rating" ;# NEW
 ::engine::mc::OpenUrl					"Open URL (web browser)" ;# NEW
 
 ::engine::mc::AdminEngines				"Administrar &Motores"
@@ -1145,8 +1141,6 @@
 ::engine::mc::ImageFiles				"Archivos de Imagen"
 ::engine::mc::SelectEngine				"Seleccionar Motor"
 ::engine::mc::SelectEngineLogo		"Elegir un logotipo para el Motor"
-::engine::mc::EngineDictionary		"Engine Dictionary" ;# NEW
-::engine::mc::EngineFilter				"Engine Filter" ;# NEW
 ::engine::mc::EngineLog					"Bitácora del Motor"
 ::engine::mc::Probing					"Penetrante"
 ::engine::mc::NeverUsed					"Nunca utilizado"

@@ -321,7 +321,6 @@
 ::menu::mc::AssignFileTypes				"&Dateitypen zuordnen"
 
 # Tools
-::menu::mc::OpenEngineDictionary			"&Motorenlexikon öffnen"
 ::menu::mc::OpenPlayerDictionary			"&Spielerlexikon öffnen"
 
 # Setup
@@ -1141,9 +1140,6 @@
 ::engine::mc::ChooseDifferentName	"Bitte einen anderen Namen wählen."
 ::engine::mc::ReservedName				"Der Name '%s' ist reserviert und kann nicht verwendet werden."
 ::engine::mc::ReallyDeleteProfile	"Profil '%s' tatsächlich löschen?"
-::engine::mc::SortName					"Nach Namen sortieren"
-::engine::mc::SortElo					"Nach Elo-Wertung sortieren"
-::engine::mc::SortRating				"Nach CCRL-Wertung sortieren"
 ::engine::mc::OpenUrl					"URL öffnen (Web-Browser)"
 
 ::engine::mc::AdminEngines				"&Motoren verwalten"
@@ -1151,8 +1147,6 @@
 ::engine::mc::ImageFiles				"Bilddateien"
 ::engine::mc::SelectEngine				"Programm auswählen"
 ::engine::mc::SelectEngineLogo		"Logo auswählen"
-::engine::mc::EngineDictionary		"Motorenlexikon"
-::engine::mc::EngineFilter				"Motorenfilter"
 ::engine::mc::EngineLog					"Motoren-Konsole"
 ::engine::mc::Probing					"Erprobung"
 ::engine::mc::NeverUsed					"Nie benutzt"

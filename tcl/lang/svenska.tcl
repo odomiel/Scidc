@@ -314,7 +314,6 @@
 ::menu::mc::AssignFileTypes			"Assign File &Types" ;# NEW
 
 # Tools
-::menu::mc::OpenEngineDictionary		"Öppna Engine &Dictionary"
 ::menu::mc::OpenPlayerDictionary		"Öppna &Player Dictionary"
 
 # Setup
@@ -1142,9 +1141,6 @@
 ::engine::mc::ChooseDifferentName	"Välj ett annat namn."
 ::engine::mc::ReservedName				"Namnet '%s' är reserverat och kan inte användas."
 ::engine::mc::ReallyDeleteProfile	"Ta bort profil '%s'?"
-::engine::mc::SortName					"Sortera på namn"
-::engine::mc::SortElo					"Sortera på Elo-rating"
-::engine::mc::SortRating				"Sortera på CCRL-rating"
 ::engine::mc::OpenUrl					"Öppna URL (webbläsare)"
 
 ::engine::mc::AdminEngines				"Hantera &motorer"
@@ -1152,8 +1148,6 @@
 ::engine::mc::ImageFiles				"Imagefiler"
 ::engine::mc::SelectEngine				"Välj motor"
 ::engine::mc::SelectEngineLogo		"Välj motor logo"
-::engine::mc::EngineDictionary		"Engine Dictionary" ;# NEW
-::engine::mc::EngineFilter				"Motorfilter"
 ::engine::mc::EngineLog					"Motorkonsol"
 ::engine::mc::Probing					"Undersöka"
 ::engine::mc::NeverUsed					"Aldrig använd"

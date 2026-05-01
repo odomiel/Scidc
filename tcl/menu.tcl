@@ -80,7 +80,6 @@ set OpenEngineLog					"Open Engine &Console"
 set AssignFileTypes				"Assign File &Types"
 
 # Tools
-set OpenEngineDictionary		"Open &Engine Dictionary"
 set OpenPlayerDictionary		"Open &Player Dictionary"
 
 # Setup
@@ -344,13 +343,6 @@ if {0} {
 		;
 	lassign [::tk::UnderlineAmpersand $mc::OpenPlayerDictionary] text ul
 	set cmd [namespace code [list ::playerdict::open .application]]
-	$m add command \
-		-label " $text..." \
-		-underline [IncrUL $ul] \
-		-command $cmd \
-		;
-	lassign [::tk::UnderlineAmpersand $mc::OpenEngineDictionary] text ul
-	set cmd [namespace code [list ::engine::showEngineDictionary .application]]
 	$m add command \
 		-label " $text..." \
 		-underline [IncrUL $ul] \
