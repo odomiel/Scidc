@@ -1479,6 +1479,7 @@ proc UpdatePlayerData {dlg table} {
 	}
 
 	set Priv(update:label) $mc::Downloading
+	set Priv(update:output) ""
 	$dlg.update configure -state disabled
 
 	if {[catch {
@@ -1498,7 +1499,7 @@ proc UpdatePlayerData {dlg table} {
 proc OnUpdateData {dlg table} {
 	variable Priv
 
-	read $Priv(update:chan)
+	append Priv(update:output) [read $Priv(update:chan)]
 
 	if {![eof $Priv(update:chan)]} { return }
 
@@ -1508,7 +1509,9 @@ proc OnUpdateData {dlg table} {
 	$dlg.update configure -state normal
 
 	if {[string length $err]} {
-		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $err]
+		set detail [string trimright $Priv(update:output)]
+		if {$detail eq ""} { set detail $err }
+		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $detail]
 		return
 	}
 
