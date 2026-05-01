@@ -10,15 +10,15 @@ Fixed-width output format (0-indexed byte positions, Latin-1 encoded):
   [ 5]     space
   [ 6:10]  Member number, right-justified in 4 chars
   [10]     space
-  [11:19]  FIDE ID, right-justified in 8 chars ('0' = none)
-  [19]     space
-  [20]     Gender: 'M' = male, 'W' = female
-  [21]     space
-  [22:26]  Birth year, right-justified in 4 chars
-  [26]     space
-  [27:31]  DWZ rating, right-justified in 4 chars
-  [31]     space
-  [32:]    Player name (Last, First), Latin-1 encoded
+  [11:20]  FIDE ID, right-justified in 9 chars ('0' = none; 9 chars supports up to 9-digit IDs)
+  [20]     space
+  [21]     Gender: 'M' = male, 'W' = female
+  [22]     space
+  [23:27]  Birth year, right-justified in 4 chars
+  [27]     space
+  [28:32]  DWZ rating, left-justified in 4 chars (pos 28 must be a digit)
+  [32]     space
+  [33:]    Player name (Last, First), Latin-1 encoded
 """
 
 import sys
@@ -39,10 +39,10 @@ REQUIRED_COLS = {"VKZ", "Mgl-Nr", "Spielername", "Geschlecht", "Geburtsjahr", "D
 def make_line(vkz, nr, fide_id, gender, birth, rating, name):
     vkz_part   = vkz[:5].ljust(5)
     nr_part    = (nr      or "0").rjust(4)
-    fide_part  = (fide_id or "0").rjust(8)
+    fide_part  = (fide_id or "0").rjust(9)  # 9 chars to support 9-digit FIDE IDs
     gen_part   = gender[0:1] if gender and gender[0] in ("M", "W") else " "
     birth_part = (birth   or "0").rjust(4)
-    rat_part   = rating[:4].ljust(4)  # left-justify so pos 27 is always a digit
+    rat_part   = rating[:4].ljust(4)  # left-justify so pos 28 is always a digit
     return f"{vkz_part} {nr_part} {fide_part} {gen_part} {birth_part} {rat_part} {name}"
 
 
@@ -98,7 +98,7 @@ def convert_csv(csv_path, out_path):
             if not (vkz[0].isdigit() or "A" <= vkz[0] <= "L"):
                 skipped += 1
                 continue
-            if not nr or len(nr) >= 5:
+            if not nr or not nr.isdigit() or int(nr) == 0 or len(nr) >= 5:
                 skipped += 1
                 continue
             if len(name) <= 4:

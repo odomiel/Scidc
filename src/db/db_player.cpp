@@ -2463,15 +2463,15 @@ Player::parseDwzRating(mstl::istream& stream)
 
 	while (stream.getline(line))
 	{
-		if (	line.size() >= 32
-			&& ::isdigit(line[27])
+		if (	line.size() >= 33
+			&& ::isdigit(line[28])
 			&& (('0' <= *line && *line <= '9') || ('A' <= *line && *line <= 'L')))
 		{
 			unsigned		fideID	= ::strtoul(line.c_str() + 11, nullptr, 10);
 			sex::ID		sex		= sex::Unspecified;
 			db::Player*	player	= 0;
 
-			latin1.hook(line.data() + 32, line.size() - 32);
+			latin1.hook(line.data() + 33, line.size() - 33);
 			codec.toUtf8(latin1, name);
 
 			if (fideID)
@@ -2486,14 +2486,14 @@ Player::parseDwzRating(mstl::istream& stream)
 				}
 			}
 
-			unsigned rating = ::strtoul(line.c_str() + 27, nullptr, 10);
+			unsigned rating = ::strtoul(line.c_str() + 28, nullptr, 10);
 
 			if (player == 0)
 			{
 				if (rating < m_minDWZ)
 					continue;
 
-				switch (line[20])
+				switch (line[21])
 				{
 					case 'M': sex = sex::Male; break;
 					case 'W': sex = sex::Female; break;
@@ -2530,7 +2530,7 @@ Player::parseDwzRating(mstl::istream& stream)
 				TRACE(++count);
 			}
 
-			unsigned yearOfBirth = ::isdigit(line[22]) ? ::strtoul(line.c_str() + 22, nullptr, 10) : 0;
+			unsigned yearOfBirth = ::isdigit(line[23]) ? ::strtoul(line.c_str() + 23, nullptr, 10) : 0;
 
 			if (yearOfBirth && player->dateOfBirth().year() == 0)
 				player->setDateOfBirth(Date(yearOfBirth));
@@ -2547,7 +2547,8 @@ Player::parseDwzRating(mstl::istream& stream)
 			player->setHighestRating(rating::DWZ, rating);
 			player->setDsbID(dsbID);
 
-			M_ASSERT(dsbID);
+			if (!dsbID)
+				continue;
 			::dsbPlayerDict[dsbID] = player;
 			TRACE(++total);
 		}
