@@ -69,8 +69,8 @@ using namespace TeXt;
 
 //#define USE_CONFLICT_MAP
 
-unsigned Player::m_minELO	= 1800;
-unsigned Player::m_minDWZ	= 1800;
+unsigned Player::m_minELO	= 1;
+unsigned Player::m_minDWZ	= 1;
 unsigned Player::m_minECF	=  110;
 unsigned Player::m_minICCF	= 1800;
 
@@ -2263,9 +2263,6 @@ Player::parseFideRating(mstl::istream& stream)
 				if (player == 0)
 				{
 					if (rating < m_minELO)
-						continue;
-
-					if (name.is_7bit())
 						continue;
 
 					standardizeNames(name);

@@ -31,7 +31,7 @@ import urllib.request
 DWZ_CSV_URL  = "https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip"
 CSV_FILENAME = "spieler.csv"   # target file inside the ZIP
 CSV_ENCODING = "latin-1"       # DWZ export uses Latin-1
-MIN_RATING   = 1000            # parseDwzRating applies its own minimum (default 1800)
+MIN_RATING   = 1               # include all players with any DWZ > 0
 
 REQUIRED_COLS = {"VKZ", "Mgl-Nr", "Spielername", "Geschlecht", "Geburtsjahr", "DWZ", "FIDE-ID"}
 
@@ -42,7 +42,7 @@ def make_line(vkz, nr, fide_id, gender, birth, rating, name):
     fide_part  = (fide_id or "0").rjust(8)
     gen_part   = gender[0:1] if gender and gender[0] in ("M", "W") else " "
     birth_part = (birth   or "0").rjust(4)
-    rat_part   = rating.rjust(4)
+    rat_part   = rating[:4].ljust(4)  # left-justify so pos 27 is always a digit
     return f"{vkz_part} {nr_part} {fide_part} {gen_part} {birth_part} {rat_part} {name}"
 
 
@@ -104,7 +104,7 @@ def convert_csv(csv_path, out_path):
             if len(name) <= 4:
                 skipped += 1
                 continue
-            if not dwz.isdigit() or len(dwz) != 4:
+            if not dwz.isdigit() or not (1 <= len(dwz) <= 4):
                 skipped += 1
                 continue
             if int(dwz) < MIN_RATING:
