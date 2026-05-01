@@ -73,6 +73,17 @@ Many Tcl namespaces in the UI define `proc open {…}` as a "show this dialog" e
 
 **Rule:** Always use `::open` (fully qualified) when opening files or pipes from within any Tcl source file that is part of a namespace that also defines `proc open`. Passing a wrong first argument (e.g. a pipe command string) to the dialog `proc open` typically returns `""` without throwing an error, so `catch` alone does not protect against it.
 
+### Removing a Tcl UI feature — complete checklist
+
+When removing a dialog or feature from the Tcl UI, check all of the following — omitting any one breaks the startup or leaves dead code:
+
+1. **`tcl/engine.tcl` / owning `.tcl` file** — remove the feature proc(s) and any `mc::` string variables that are no longer referenced.
+2. **All six lang files** (`tcl/lang/*.tcl`) — remove every `::namespace::mc::Key` line for the removed strings. Use Python binary I/O (see below). Missing entries cause startup crash if the namespace no longer exists.
+3. **Menu entry** — remove the `$m add command` block and the `mc::OpenXxx` string from `tcl/menu.tcl` (both the `set` in the mc namespace and the `lassign`/`$m add command` block in the menu-build proc).
+4. **`tcl/colors.tcl`** — remove any `lite:feature,*` and `dark:feature,*` entries. The Colors array in the owning `.tcl` file maps logical names to these theme keys; both must be removed together.
+5. **Helper procs** — procs called only by the removed feature (check with `grep -n "procName" engine.tcl` to confirm no other callers).
+6. **Unused variable declarations** (`variable Filter`, `variable DefaultFilter`, etc.) at namespace scope.
+
 ### Language files — namespace crash on missing namespace
 
 `i18n::selectLang()` iterates every line in the chosen `.tcl` lang file and calls `set [lindex $line 0] [lindex $line 1]`. If a lang file sets `::some::namespace::mc::Key` but the namespace `::some::namespace::mc` does not exist (e.g., the corresponding Tcl module was removed from the build), this throws:
@@ -195,6 +206,12 @@ The **FIDE player list** is updated via the "Update FIDE List" button in the Pla
 
 **`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female).
 
+### Player Dictionary — Data Sources dialog
+
+`ShowDataSources` in `tcl/player-dict.tcl` opens a child dialog listing each player data file with its path, size, modification date, and a clickable web source URL. The sources list has the form `{label path url}` — entries with an empty URL get no URL row. URLs are opened with `exec xdg-open $url &`.
+
+When adding a new player data type, add an entry to the `sources` list in `ShowDataSources` and a corresponding `mc::WebSource` label if the string is new.
+
 ### `::util::catchException` return-value contract
 
 `::util::catchException $cmd ?resultVar? ?optsVar?` (defined in `tcl/start.tcl`) wraps C++ Tcl commands and translates C++ exceptions:
@@ -250,7 +267,7 @@ The icon image variables (checkYes, checkNo, etc.) are defined **inside** `names
 | `tcl/engine.tcl` | Engine UI + `engine::mc` namespace defaults (Feature/FeatureDetail/Variant) |
 | `tcl/app-database.tcl` | Database open/close/save UI logic, `openBase` proc |
 | `tcl/app-board.tcl` | Board UI, game save/replace button state logic |
-| `tcl/player-dict.tcl` | Player Dictionary dialog + FIDE update button |
+| `tcl/player-dict.tcl` | Player Dictionary dialog + FIDE update button + Data Sources dialog |
 | `tcl/update-fide-players.py` | Python 3 script: download FIDE XML → players_list.zip |
 | `tcl/engines/engines.dat` | Bundled engine definitions (source, tracked in git) |
 | `tcl/start.tcl` | Startup, `SCIDB_SHAREDIR` resolution, `::scidb::dir::*` setup |
@@ -267,7 +284,7 @@ The icon image variables (checkYes, checkNo, etc.) are defined **inside** `names
 ### Debugging menu (`tcl/debug.tcl`)
 
 A "Debugging" cascade under Settings (added post-r1531) provides:
-- **Stderr → file** toggle: `::scidb::misc::setLogFile path` (C++ command in `src/tcl/tcl_misc.cpp`) redirects OS-level FD 2 via `dup2()`, capturing both C++ `fprintf(stderr)` and Tcl `puts stderr`. Empty string restores the original. Log files are written to `~/.scidb-beta/logs/stderr-TIMESTAMP.log`. The setting persists across restarts via `::options::hookWriter`.
+- **Stderr → file** toggle: `::scidb::misc::setLogFile path` (C++ command in `src/tcl/tcl_misc.cpp`) redirects OS-level FD 2 via `dup2()`, capturing both C++ `fprintf(stderr)` and Tcl `puts stderr`. Empty string restores the original. Log files are named `stderr-YYYYMMDD.log` (one file per calendar day) in `~/.scidb-beta/logs/`. The setting persists across restarts via `::options::hookWriter`.
 - **Engine communication log**: opens the engine log window.
 - **Open log folder**: `xdg-open ~/.scidb-beta/logs/`.
 
@@ -321,6 +338,8 @@ The application version is defined in three places — all must be kept in sync:
 `tcl/scidb-beta` is a generated file (assembled from `tcl/*.tcl` by `make`) — **not tracked in git**. It picks up the version from `tcl/exec.tcl` automatically when `make` runs. The binary and `tcl/scidb-beta` must carry the same version string or startup fails with "version error".
 
 **Rule:** Increment the third digit with every code change committed. Update all three source files in the same commit as the code change. CLAUDE.md changes do **not** require a version bump.
+
+The version numbers in this file's examples may lag behind the actual current version — always read the live values from `Makefile.version`.
 
 ## C++ modernisation notes (post-r1531)
 
