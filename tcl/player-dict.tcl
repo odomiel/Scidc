@@ -1446,6 +1446,38 @@ proc ShowDataSources {dlg} {
 }
 
 
+proc _OpenPython {python script userdir} {
+	# When running inside an AppImage, LD_LIBRARY_PATH is prepended with the
+	# AppImage's bundled libs. Python (a system binary) must not inherit these —
+	# it would load incompatible versions and crash.  build-appimage.sh records
+	# the pre-modification value in APPIMAGE_ORIG_LD; we restore it for the
+	# subprocess and then put the AppImage value back in the parent.
+	set had_ld [info exists ::env(LD_LIBRARY_PATH)]
+	set saved_ld [expr {$had_ld ? $::env(LD_LIBRARY_PATH) : ""}]
+
+	if {[info exists ::env(APPIMAGE_ORIG_LD)]} {
+		if {$::env(APPIMAGE_ORIG_LD) eq ""} {
+			unset -nocomplain ::env(LD_LIBRARY_PATH)
+		} else {
+			set ::env(LD_LIBRARY_PATH) $::env(APPIMAGE_ORIG_LD)
+		}
+	}
+
+	set code [catch {
+		set chan [::open "|[list $python $script $userdir] 2>&1" r]
+	} err]
+
+	if {$had_ld} {
+		set ::env(LD_LIBRARY_PATH) $saved_ld
+	} else {
+		unset -nocomplain ::env(LD_LIBRARY_PATH)
+	}
+
+	if {$code} { error $err }
+	return $chan
+}
+
+
 proc UpdatePlayerData {dlg table} {
 	variable Priv
 
@@ -1517,7 +1549,7 @@ proc RunNextUpdate {dlg table} {
 
 	if {[catch {
 		set Priv(update:chan) \
-			[::open "|[list $Priv(update:python) $script $::scidb::dir::user] 2>&1" r]
+			[_OpenPython $Priv(update:python) $script $::scidb::dir::user]
 	} err]} {
 		set Priv(update:label) $mc::UpdateList
 		$dlg.update configure -state normal

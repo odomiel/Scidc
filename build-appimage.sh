@@ -77,6 +77,7 @@ SELF=$(readlink -f "$0")
 HERE=$(dirname "$SELF")
 
 export PATH="$HERE/usr/bin:$PATH"
+export APPIMAGE_ORIG_LD="${LD_LIBRARY_PATH:-}"
 export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
 export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
 export TK_LIBRARY="$HERE/usr/lib/tk8.6"
