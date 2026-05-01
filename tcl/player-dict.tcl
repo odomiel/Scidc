@@ -43,10 +43,10 @@ set RangeOfYears			"Range of years"
 set SearchPlayerName		"Search Player Name"
 set HelpPatternMatching	"Help: Pattern Matching"
 
-set UpdateList		"Update FIDE List"
+set UpdateList		"Update Player Lists"
 set Downloading		"Downloading..."
-set UpdateConfirm	"Download the current FIDE player list (~50 MB) from ratings.fide.com and update the player dictionary?"
-set UpdateSuccess	"Player list updated successfully."
+set UpdateConfirm	"Download current player lists from ratings.fide.com (~50 MB) and dwz.svw.info and update the player dictionary?"
+set UpdateSuccess	"Player lists updated successfully."
 set UpdateFailed	"Update failed:\n%s"
 set PythonNotFound	"Python 3 is required for this function but was not found.\nPlease install Python 3."
 set ScriptNotFound	"Update script not found:\n%s"
@@ -145,6 +145,9 @@ array set Priv {
 	dialog           ""
 	update:label     ""
 	update:chan       ""
+	update:python    ""
+	update:queue     {}
+	update:output    ""
 }
 
 set History {}
@@ -1367,9 +1370,16 @@ proc ShowDataSources {dlg} {
 		? $fide_user \
 		: [file join $::scidb::dir::data players_list.zip]}]
 
+	set dwz_user [file join $::scidb::dir::user dwz-ratings.txt]
+	set dwz_path [expr {[file exists $dwz_user] \
+		? $dwz_user \
+		: [file join $::scidb::dir::data dwz-ratings.txt]}]
+
 	set sources [list \
 		[list [format $::load::mc::RatingList FIDE] $fide_path \
 			"https://ratings.fide.com/download/players_list_xml.zip"] \
+		[list [format $::load::mc::RatingList DWZ] $dwz_path \
+			"https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip"] \
 	]
 
 	set gridrow 1
@@ -1454,18 +1464,60 @@ proc UpdatePlayerData {dlg table} {
 		return
 	}
 
-	set script [file join $::scidb::dir::share scripts update-fide-players.py]
-	if {![file readable $script]} {
-		::dialog::error -parent $dlg -message [format $mc::ScriptNotFound $script]
+	set fide_script [file join $::scidb::dir::share scripts update-fide-players.py]
+	set dwz_script  [file join $::scidb::dir::share scripts update-dwz-players.py]
+
+	foreach script [list $fide_script $dwz_script] {
+		if {![file readable $script]} {
+			::dialog::error -parent $dlg -message [format $mc::ScriptNotFound $script]
+			return
+		}
+	}
+
+	set Priv(update:python) $python
+	set Priv(update:queue) [list \
+		[list fide $fide_script] \
+		[list dwz  $dwz_script]  \
+	]
+	set Priv(update:label) $mc::Downloading
+	$dlg.update configure -state disabled
+	RunNextUpdate $dlg $table
+}
+
+
+proc RunNextUpdate {dlg table} {
+	variable Priv
+
+	if {[llength $Priv(update:queue)] == 0} {
+		set Priv(update:label) $mc::UpdateList
+		$dlg.update configure -state normal
+
+		set fide_zip [file join $::scidb::dir::user players_list.zip]
+		set dwz_txt  [file join $::scidb::dir::user dwz-ratings.txt]
+
+		if {[catch {::scidb::app::load fide $fide_zip} lerr]} {
+			::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
+			return
+		}
+		if {[catch {::scidb::app::load dwz $dwz_txt} lerr]} {
+			::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
+			return
+		}
+
+		::scrolledtable::update $table "" "" [::scidb::player::count]
+		UpdateCount
+		::dialog::info -parent $dlg -message $mc::UpdateSuccess
 		return
 	}
 
-	set Priv(update:label) $mc::Downloading
+	set item [lindex $Priv(update:queue) 0]
+	set Priv(update:queue) [lrange $Priv(update:queue) 1 end]
+	lassign $item _type script
 	set Priv(update:output) ""
-	$dlg.update configure -state disabled
 
 	if {[catch {
-		set Priv(update:chan) [::open "|[list $python $script $::scidb::dir::user] 2>&1" r]
+		set Priv(update:chan) \
+			[::open "|[list $Priv(update:python) $script $::scidb::dir::user] 2>&1" r]
 	} err]} {
 		set Priv(update:label) $mc::UpdateList
 		$dlg.update configure -state normal
@@ -1487,25 +1539,17 @@ proc OnUpdateData {dlg table} {
 
 	catch {close $Priv(update:chan)} err
 	set Priv(update:chan) ""
-	set Priv(update:label) $mc::UpdateList
-	$dlg.update configure -state normal
 
 	if {[string length $err]} {
+		set Priv(update:label) $mc::UpdateList
+		$dlg.update configure -state normal
 		set detail [string trimright $Priv(update:output)]
 		if {$detail eq ""} { set detail $err }
 		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $detail]
 		return
 	}
 
-	set zippath [file join $::scidb::dir::user players_list.zip]
-	if {[catch {::scidb::app::load fide $zippath} lerr]} {
-		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
-		return
-	}
-
-	::scrolledtable::update $table "" "" [::scidb::player::count]
-	UpdateCount
-	::dialog::info -parent $dlg -message $mc::UpdateSuccess
+	RunNextUpdate $dlg $table
 }
 
 

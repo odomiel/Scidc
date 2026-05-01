@@ -180,14 +180,6 @@ load::load	[format $load::mc::Loading $load::mc::ECOFile] \
 
 if {![::process::testOption fast-load]} {
 
-# --- Load spellcheck files --------------------------------------------
-foreach file {ratings_utf8.ssp.zip ratings-additional.ssp} {
-	load::load	[format $load::mc::Loading $load::mc::SpellcheckFile] \
-					ssp \
-					[file join $scidb::dir::data $file] \
-					;
-}
-
 # --- Load engines -----------------------------------------------------
 load::load	[format $load::mc::Loading $load::mc::EngineFile] \
 				comp \
@@ -209,30 +201,20 @@ unset _fide_zip
 
 if {![::process::testOption elo-only]} {
 
-# --- Load rating lists ------------------------------------------------
-foreach rating {IPS DWZ ECF ICCF} {
-	set type [string tolower $rating]
-	load::load	[format $load::mc::Loading [format $load::mc::RatingList $rating]] \
-					$type \
-					[file join $scidb::dir::data $type-ratings.txt] \
-					;
-}
+# --- Load DWZ players -------------------------------------------------
+# Prefer user-updated list (~/.scidb-beta/dwz-ratings.txt) over bundled one
+set _dwz_user [file join $scidb::dir::user dwz-ratings.txt]
+set _dwz_path [expr {[file exists $_dwz_user]
+	? $_dwz_user
+	: [file join $scidb::dir::data dwz-ratings.txt]}]
+unset _dwz_user
+load::load	[format $load::mc::Loading [format $load::mc::RatingList DWZ]] \
+				dwz \
+				$_dwz_path \
+				;
+unset _dwz_path
 
 } ;# if elo-only
-
-# --- Load Wikipedia links ---------------------------------------------
-foreach lang {de en} {
-	load::load	[format $load::mc::Loading $load::mc::WikipediaLinks] \
-					wiki \
-					[file join $scidb::dir::data wikipedia-${lang}.txt] \
-					;
-}
-
-# --- Load chessgames.com links ----------------------------------------
-load::load	[format $load::mc::Loading $load::mc::ChessgamesComLinks] \
-				cgdc \
-				[file join $scidb::dir::data chessgames.com.zip] \
-				;
 
 # --- Load cities ------------------------------------------------------
 load::load	[format $load::mc::Loading $load::mc::Cities] \
