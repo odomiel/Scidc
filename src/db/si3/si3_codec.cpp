@@ -1326,6 +1326,7 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 		return { val >> (32 - sz), (val << sz) >> sz };
 	};
 
+	if (strm.remaining() < 56) return;
 	unsigned char buf[56];
 	strm.get(reinterpret_cast<Byte*>(buf), 56);
 	GameInfo& item = gameInfo(index);
@@ -1631,9 +1632,11 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 		uint64_t res=0; int shift=0;
 		uint8_t bval = static_cast<uint8_t>(ch);
 		while (true) {
-			res |= (static_cast<uint64_t>(bval & 0x7F) << shift);
+			if (shift < 64)
+				res |= (static_cast<uint64_t>(bval & 0x7F) << shift);
 			if (bval < 128) break;
 			shift += 7;
+			if (shift >= 64) { while (fstrm.get() >= 128) {} break; } // discard malformed varint
 			int nxt = fstrm.get();
 			if (nxt == EOF) break;
 			bval = static_cast<uint8_t>(nxt);

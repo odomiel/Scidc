@@ -1527,13 +1527,17 @@ proc RunNextUpdate {dlg table} {
 		set fide_zip [file join $::scidb::dir::user players_list.zip]
 		set dwz_txt  [file join $::scidb::dir::user dwz-ratings.txt]
 
-		if {[catch {::scidb::app::load fide $fide_zip} lerr]} {
-			::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
-			return
+		if {[file exists $fide_zip]} {
+			if {[catch {::scidb::app::load fide $fide_zip} lerr]} {
+				::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
+				return
+			}
 		}
-		if {[catch {::scidb::app::load dwz $dwz_txt} lerr]} {
-			::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
-			return
+		if {[file exists $dwz_txt]} {
+			if {[catch {::scidb::app::load dwz $dwz_txt} lerr]} {
+				::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
+				return
+			}
 		}
 
 		::scrolledtable::update $table "" "" [::scidb::player::count]

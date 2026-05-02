@@ -74,22 +74,29 @@ set layout	[file join $user layout]
 
 if {![file isdirectory $user]} {
 	set setup 1
-	file mkdir $user
-	file mkdir [file join $user log]
-	file mkdir [file join $user photos]
-	file mkdir [file join $user backup]
-	file mkdir [file join $user engines bin]
-	file mkdir [file join $user layout]
-	file mkdir [file join $user textures tile marble]
-	file mkdir [file join $user textures tile wood]
-	file mkdir [file join $user textures tile misc]
-	file mkdir [file join $user textures lite marble]
-	file mkdir [file join $user textures lite wood]
-	file mkdir [file join $user textures lite misc]
-	file mkdir [file join $user textures dark marble]
-	file mkdir [file join $user textures dark wood]
-	file mkdir [file join $user textures dark misc]
-	file copy  [file join $share themes] $user
+	if {[catch {
+		file mkdir $user
+		file mkdir [file join $user log]
+		file mkdir [file join $user photos]
+		file mkdir [file join $user backup]
+		file mkdir [file join $user engines bin]
+		file mkdir [file join $user layout]
+		file mkdir [file join $user textures tile marble]
+		file mkdir [file join $user textures tile wood]
+		file mkdir [file join $user textures tile misc]
+		file mkdir [file join $user textures lite marble]
+		file mkdir [file join $user textures lite wood]
+		file mkdir [file join $user textures lite misc]
+		file mkdir [file join $user textures dark marble]
+		file mkdir [file join $user textures dark wood]
+		file mkdir [file join $user textures dark misc]
+		file copy  [file join $share themes] $user
+	} err]} {
+		tk_messageBox -type ok -icon error \
+			-title "$::scidb::app: startup error" \
+			-message "Cannot create user directory '$user': $err"
+		exit 1
+	}
 } else {
 	set setup 0
 }

@@ -47,21 +47,31 @@ def make_line(vkz, nr, fide_id, gender, birth, rating, name):
 
 
 def download_to_file(url, path):
+    """Stream-download url in 1 MB chunks to path (atomic via .part temp file)."""
     print("Downloading DWZ player list...", flush=True)
     req = urllib.request.Request(
         url,
         headers={"User-Agent": "Scidb-chess-database/1.1 (player-list-update)"}
     )
+    tmp = path + ".part"
     downloaded = 0
-    with urllib.request.urlopen(req, timeout=120) as resp, \
-         open(path, "wb") as f:
-        while True:
-            chunk = resp.read(1 << 20)
-            if not chunk:
-                break
-            f.write(chunk)
-            downloaded += len(chunk)
-            print(f"\r  {downloaded // 1024:6d} KB", end="", flush=True)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp, \
+             open(tmp, "wb") as f:
+            while True:
+                chunk = resp.read(1 << 20)
+                if not chunk:
+                    break
+                f.write(chunk)
+                downloaded += len(chunk)
+                print(f"\r  {downloaded // 1024:6d} KB", end="", flush=True)
+        os.replace(tmp, path)
+    except Exception:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
     print(f"\r  {downloaded // 1024} KB downloaded.          ", flush=True)
 
 
