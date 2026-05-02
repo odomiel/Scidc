@@ -193,6 +193,8 @@ Engine metadata (command path, UCI option profiles, supported variants) is store
 
 **`SaveEngine` pattern:** `SaveEngine` in `tcl/engine.tcl` edits a local `engine` array then must call `lset Engines $sel [array get engine]` **inside** the `if {$sel >= 0}` block before `SaveEngineList`. Placing the `lset` outside that block means it runs even when `$sel` is invalid (e.g. `-1`), corrupting or clearing the `Engines` list which `SaveEngineList` then writes to disk. The `set failed 0` initialisation in the `Directory` case must also be **before** the inner `if {[info exists Data(Directory)]}` block — otherwise `if {$failed}` throws "no such variable" and aborts the save.
 
+**`SaveEngineList` / `unhookWriter` invariant:** `SaveEngineList` in `tcl/engine.tcl` calls `::options::unhookWriter` only in the **success** (else) branch — never on write failure. The error branch shows an error dialog and returns without unregistering the hook, so subsequent saves continue to be persisted. Moving `unhookWriter` outside the else block (e.g. after the if/else) would silently deregister the hook after a failed write, causing all future engine changes to be lost without any error.
+
 **`fsbox::isWindowsExecutable` pitfall:** On Unix, `[file executable $path]` returns true for directories. Always check `[file isfile $path]` first — opening a directory succeeds but `read` fails with "illegal operation on a directory".
 
 **Adding a new variant to engine support** requires changes in three places:
@@ -212,10 +214,12 @@ At startup `tcl/load.tcl` calls `::scidb::app::load <type> <path>` (C++ binding 
 
 The **"Update Player Lists" button** in the Player Dictionary dialog (`tcl/player-dict.tcl`) runs both update scripts sequentially via a queue (`Priv(update:queue)`): FIDE first, then DWZ. Each script runs as an async Python 3 subprocess opened with `::open` (fully qualified — see namespace pitfall above). After both complete, both data sources are reloaded in one pass and a single success dialog is shown.
 
+`RunNextUpdate` saves the type of the currently-running script in `Priv(update:type)` (`"fide"` or `"dwz"`). `OnUpdateData` (the `fileevent readable` callback) checks, after a clean exit, that the expected output file actually exists (`players_list.zip` for FIDE, `dwz-ratings.txt` for DWZ) — a script that exits 0 but produces no file triggers an error dialog and aborts the queue. This guards against silent network failures where the subprocess swallows the error.
+
 - **FIDE**: `tcl/update-fide-players.py` downloads the FIDE XML from `ratings.fide.com/download/players_list_xml.zip`, converts it to fixed-width TXT format for `parseFideRating()`, and writes `players_list.zip` to `~/.scidb-beta/`. At startup `tcl/load.tcl` prefers the user's copy over the bundled SHAREDIR/data/ file if it exists.
 - **DWZ**: `tcl/update-dwz-players.py` downloads `https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip`, extracts `spieler.csv` (Latin-1 encoded), converts it to fixed-width TXT for `parseDwzRating()`, and writes `dwz-ratings.txt` to `~/.scidb-beta/`. At startup `tcl/load.tcl` loads **only** `~/.scidb-beta/dwz-ratings.txt` — there is no bundled fallback. If the file is absent, no DWZ data is loaded. (The old bundled `SHAREDIR/data/dwz-ratings.txt` used a legacy 8-char FIDE-ID field and has been removed.) The script is looked up at runtime as `$::scidb::dir::share/scripts/update-dwz-players.py` — it must be present in `AppDir/usr/share/scidb-beta/scripts/` and `/usr/local/share/scidb-beta/scripts/` as well as `tcl/`.
 
-**`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female). The `is_7bit()` filter that previously skipped ASCII-only names has been removed — all FIDE players with any ELO > 0 are now included.
+**`parseFideRating` column layout** (fixed-width, 0-indexed): `[0:10]` FIDE ID, `[10:43]` name, `[44:48]` title code (`gm`/`im`/`fm`/`cm`/`wg`/`wm`/`wf`/`wc`), `[48:51]` federation, `[53:58]` rating (digit **must** be at position 53 — left-justify), `[64:68]` birth year, `[70]` sex (`w`=female). The C++ guard is `line.size() >= 71` (not 70) — position 70 requires at least 71 characters. The Python filter skips `rating <= 0`; the `is_7bit()` filter that previously skipped ASCII-only names has been removed — all FIDE players with any ELO > 0 are now included.
 
 **`parseDwzRating` column layout** (fixed-width, Latin-1, 0-indexed): `[0:5]` VKZ/ZPS (5-char club code), `[6:10]` member number right-justified in 4 chars, `[11:20]` FIDE ID right-justified in **9 chars** (`0` = none; 9 chars supports modern 9-digit FIDE IDs), `[21]` gender (`M`/`W`), `[23:27]` birth year, `[28:32]` DWZ rating **left-justified** in 4 chars (C++ checks `isdigit(line[28])` — a space at pos 28 skips the record), `[33:]` player name (`Last, First`). All players with DWZ > 0 are included (`m_minDWZ = 1`). Member number 0 is filtered by the Python script and skipped defensively in C++ (`if (!dsbID) continue`).
 
@@ -231,7 +235,7 @@ Note: `sys::utf8::Codec::matchAscii` and `matchGerman` both require their **seco
 
 ### Player Dictionary — Data Sources dialog
 
-`ShowDataSources` in `tcl/player-dict.tcl` opens a child dialog listing each player data file with its path, size, modification date, and a clickable web source URL. The sources list has the form `{label path url}` — entries with an empty URL get no URL row. URLs are opened with `exec xdg-open $url &`.
+`ShowDataSources` in `tcl/player-dict.tcl` opens a child dialog listing each player data file with its path, size, modification date, and a clickable web source URL. The sources list has the form `{label path url}` — entries with an empty URL get no URL row. URLs are opened with `catch [list exec xdg-open $url &]` — the `catch` is required because `xdg-open` may not be on PATH in minimal installations.
 
 When adding a new player data type, add an entry to the `sources` list in `ShowDataSources` and a corresponding `mc::WebSource` label if the string is new.
 
@@ -314,6 +318,8 @@ A "Debugging" cascade under Settings (added post-r1531) provides:
 
 `::scidb::misc::setLogFile` requires a rebuilt binary — it is registered in `src/tcl/tcl_misc.cpp` via `createCommand`. If the binary is stale (built before this command was added), calling it throws `invalid command name`.
 
+`cmdSetLogFile` saves the original stderr fd via `::dup(STDERR_FILENO)` on first call. The `dup()` return value is checked — if it returns `-1` (FD table full), the command returns `TCL_ERROR` with `strerror(errno)` rather than storing `-1` in `savedStderr_g`, which would cause `dup2(-1, STDERR_FILENO)` to silently fail on restore.
+
 ### Save button state logic (app-board.tcl)
 
 The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
@@ -335,7 +341,7 @@ make
 bash build-appimage.sh      # produces Scidb-x86_64.AppImage
 ```
 
-`build-appimage.sh` rebuilds only `AppDir/usr/bin/` and `AppDir/usr/lib/` on each run, taking binaries directly from `src/tkscidb-beta` and `tcl/scidb-beta`. `AppDir/usr/share/scidb-beta/` is **preserved as-is** — it is one of the three share directories maintained manually and must not be regenerated from `/usr/local/` on every build. Engines in `AppDir/usr/bin/` are updated from `/usr/local/games/` if present; otherwise the previously copied engine binaries are retained.
+`build-appimage.sh` rebuilds only `AppDir/usr/bin/` and `AppDir/usr/lib/` on each run, taking binaries directly from `src/tkscidb-beta` and `tcl/scidb-beta`. `AppDir/usr/share/scidb-beta/` is **preserved as-is** — it is one of the three share directories maintained manually and must not be regenerated from `/usr/local/` on every build. Engines in `AppDir/usr/bin/` are updated from `/usr/local/games/` if a binary is found there; otherwise the engine binary from the previous build is reused (rescued before `AppDir/usr/bin/` is wiped). This means engines never go missing across incremental builds.
 
 Normal system installation is unaffected: `make && sudo make install` still works as before.
 
