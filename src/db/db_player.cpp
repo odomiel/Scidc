@@ -2479,8 +2479,8 @@ Player::parseDwzRating(mstl::istream& stream)
 				Player* const* playerEntry = ::fidePlayerDict.find(fideID);
 
 				if (playerEntry
-					&& (   sys::utf8::Codec::matchAscii((*playerEntry)->name(), name)
-					    || sys::utf8::Codec::matchGerman((*playerEntry)->name(), name)))
+					&& (   sys::utf8::Codec::matchAscii(name, (*playerEntry)->name())
+					    || sys::utf8::Codec::matchGerman(name, (*playerEntry)->name())))
 				{
 					player = *playerEntry;
 				}
