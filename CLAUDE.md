@@ -316,15 +316,22 @@ The "save new game" and "replace game" buttons are enabled by `UpdateSaveState`:
 
 ## AppImage deployment
 
-The program is distributed as an AppImage built by `build-appimage.sh`. The workflow is:
+The program is distributed as an AppImage built by `build-appimage.sh`. The primary workflow requires `sudo` only once:
 
 ```bash
-make                   # build (user runs manually)
-sudo make install      # installs to /usr/local/
-bash build-appimage.sh # produces Scidb-x86_64.AppImage
+# One-time setup (first build or after make install changes):
+make && sudo make install   # populates AppDir/usr/share/scidb-beta/
+
+# Every subsequent build — no sudo needed:
+make
+bash build-appimage.sh      # produces Scidb-x86_64.AppImage
 ```
 
-`build-appimage.sh` creates `AppDir/`, copies the installed binary + shared libraries + Tcl/Tk scripts, generates `AppDir/AppRun`, and calls `appimagetool`. The generated `AppRun` sets:
+`build-appimage.sh` rebuilds only `AppDir/usr/bin/` and `AppDir/usr/lib/` on each run, taking binaries directly from `src/tkscidb-beta` and `tcl/scidb-beta`. `AppDir/usr/share/scidb-beta/` is **preserved as-is** — it is one of the three share directories maintained manually and must not be regenerated from `/usr/local/` on every build. Engines in `AppDir/usr/bin/` are updated from `/usr/local/games/` if present; otherwise the previously copied engine binaries are retained.
+
+Normal system installation is unaffected: `make && sudo make install` still works as before.
+
+The generated `AppRun` sets:
 
 ```bash
 export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
@@ -341,7 +348,7 @@ Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/u
 
 **Stale engine paths across AppImage versions:** `WriteEngineOptions` in `tcl/engine.tcl` saves the absolute engine path (e.g. `/tmp/.mount_scidb.HASH/usr/bin/stockfish-scidb`) into `~/.scidb-beta/config/engines.dat`. Each AppImage launch uses a different FUSE hash, so saved paths become invalid. The `setup()` proc's else-branch (loading from the local config file) re-resolves stale paths for bundled engines (`UserDefined == 0`) by checking whether `$engine(Command)` is executable and, if not, substituting `[file join $::scidb::dir::engines [file tail $engine(Command)]]`. This re-resolution runs only for engines where `UserDefined` is `0` — user-added engines (`UserDefined == 1`) are left as-is.
 
-`AppDir/` is rebuilt from scratch on each `build-appimage.sh` run and is **not tracked in git**. However, `AppDir/usr/share/scidb-beta/` is one of the three share directories that must stay in sync with `tcl/` and `/usr/local/share/scidb-beta/` — `build-appimage.sh` copies from `/usr/local/` (post-`sudo make install`), so keeping the system install current is sufficient.
+`AppDir/usr/bin/` and `AppDir/usr/lib/` are rebuilt on each `build-appimage.sh` run and are **not tracked in git**. `AppDir/usr/share/scidb-beta/` is preserved across builds and must be kept in sync with `tcl/` and `/usr/local/share/scidb-beta/` manually.
 
 ## Version management
 

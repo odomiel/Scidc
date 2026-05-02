@@ -1,54 +1,89 @@
 #!/bin/bash
 # =============================================================================
 # build-appimage.sh - Erstellt ein AppImage für SciDB
-# Ausführen NACH "sudo make install":
-#   cd ~/Downloads/scidb/scidb-code-r1531-trunk
-#   bash build-appimage.sh
+#
+# Voraussetzungen:
+#   1. Einmalig (nur beim ersten Mal oder nach make install-Änderungen):
+#         make && sudo make install
+#      Danach ist AppDir/usr/share/scidb-beta/ befüllt und bleibt erhalten.
+#   2. Bei jeder Änderung nur noch:
+#         make
+#         bash build-appimage.sh
+#
+# Für die normale Systeminstallation gilt weiterhin:
+#         make && sudo make install
 # =============================================================================
 
 set -e
 
 APPDIR="$(pwd)/AppDir"
 ARCH=$(uname -m)
+SRCBIN="src/tkscidb-beta"
+TCLSCRIPT="tcl/scidb-beta"
+SHAREDIR="$APPDIR/usr/share/scidb-beta"
 
 echo "=== SciDB AppImage Builder ==="
 
-# --- Schritt 1: Prüfen ob Installation vorhanden --------------------------
-if [ ! -f /usr/local/bin/tkscidb-beta ]; then
-    echo "FEHLER: /usr/local/bin/tkscidb-beta nicht gefunden!"
-    echo "Bitte zuerst 'sudo make install' ausführen."
+# --- Voraussetzungen prüfen --------------------------------------------------
+if [ ! -f "$SRCBIN" ]; then
+    echo "FEHLER: $SRCBIN nicht gefunden!"
+    echo "Bitte zuerst 'make' ausführen."
     exit 1
 fi
 
-# --- Schritt 2: AppDir-Struktur anlegen ------------------------------------
-rm -rf "$APPDIR"
-mkdir -p "$APPDIR/usr/bin"
-mkdir -p "$APPDIR/usr/lib"
-mkdir -p "$APPDIR/usr/share"
+if [ ! -f "$TCLSCRIPT" ]; then
+    echo "FEHLER: $TCLSCRIPT nicht gefunden!"
+    echo "Bitte zuerst 'make' ausführen."
+    exit 1
+fi
 
-echo "Kopiere Programmdateien..."
-cp /usr/local/bin/tkscidb-beta "$APPDIR/usr/bin/"
-cp /usr/local/bin/scidb-beta   "$APPDIR/usr/bin/"
-cp -r /usr/local/share/scidb-beta "$APPDIR/usr/share/scidb-beta"
-[ -d /usr/local/lib/scidb-beta ] && \
-    cp -r /usr/local/lib/scidb-beta "$APPDIR/usr/lib/scidb-beta"
+if [ ! -d "$SHAREDIR" ]; then
+    echo "FEHLER: $SHAREDIR nicht gefunden!"
+    echo "Beim ersten Mal bitte einmalig ausführen:"
+    echo "  make && sudo make install"
+    echo "Danach ist AppDir/usr/share/scidb-beta/ befüllt und wird bei"
+    echo "zukünftigen Builds nicht mehr angefasst."
+    exit 1
+fi
 
-echo "Kopiere Schach-Engines..."
+# --- Schritt 1: Nur bin/ und lib/ neu aufbauen; share/ bleibt erhalten -------
+echo "Aktualisiere Programmdateien..."
+
+# Engines retten, bevor bin/ geleert wird
+mkdir -p /tmp/_scidb_engine_backup
 for engine in stockfish-scidb fairy-stockfish-scidb; do
-    if [ -f "/usr/local/games/$engine" ]; then
-        cp "/usr/local/games/$engine" "$APPDIR/usr/bin/"
-        echo "  $engine"
-    else
-        echo "  WARNUNG: $engine nicht gefunden in /usr/local/games/"
-    fi
+    [ -f "$APPDIR/usr/bin/$engine" ] && \
+        cp "$APPDIR/usr/bin/$engine" /tmp/_scidb_engine_backup/ || true
 done
 
-# --- Schritt 3: Shared Libraries kopieren ----------------------------------
+rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
+mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
+
+cp "$SRCBIN"   "$APPDIR/usr/bin/tkscidb-beta"
+cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidb-beta"
+
+# --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
+echo "Kopiere Schach-Engines..."
+for engine in stockfish-scidb fairy-stockfish-scidb; do
+    # Bevorzuge aktuelle Version aus /usr/local/games, sonst gesicherter Stand
+    if [ -f "/usr/local/games/$engine" ]; then
+        cp "/usr/local/games/$engine" "$APPDIR/usr/bin/"
+        echo "  $engine (aktualisiert aus /usr/local/games)"
+    elif [ -f "/tmp/_scidb_engine_backup/$engine" ]; then
+        cp "/tmp/_scidb_engine_backup/$engine" "$APPDIR/usr/bin/"
+        echo "  $engine (aus vorherigem Build übernommen)"
+    else
+        echo "  WARNUNG: $engine nicht gefunden — Engine fehlt im AppImage"
+    fi
+done
+rm -rf /tmp/_scidb_engine_backup
+
+# --- Schritt 3: Shared Libraries kopieren ------------------------------------
 echo "Kopiere Bibliotheken..."
 
-for binary in /usr/local/bin/tkscidb-beta \
-              /usr/local/games/stockfish-scidb \
-              /usr/local/games/fairy-stockfish-scidb; do
+for binary in "$APPDIR/usr/bin/tkscidb-beta" \
+              "$APPDIR/usr/bin/stockfish-scidb" \
+              "$APPDIR/usr/bin/fairy-stockfish-scidb"; do
     [ -f "$binary" ] || continue
     ldd "$binary" | grep "=>" | awk '{print $3}' | while read lib; do
         [ -z "$lib" ] || [ ! -f "$lib" ] && continue
@@ -63,15 +98,15 @@ for binary in /usr/local/bin/tkscidb-beta \
     done
 done
 
-# Tcl/Tk Skript-Bibliotheken (echte Skripte: init.tcl usw.)
+# Tcl/Tk Skript-Bibliotheken
 for tcldir in /usr/share/tcltk/tcl8.6 /usr/share/tcltk/tk8.6 \
               /usr/lib/tcl8.6 /usr/lib/tk8.6 \
               /usr/share/tcl8.6 /usr/share/tk8.6; do
     [ -d "$tcldir" ] && cp -rL "$tcldir" "$APPDIR/usr/lib/" 2>/dev/null || true
 done
 
-# --- Schritt 4: AppRun erstellen -------------------------------------------
-cat > "$APPDIR/AppRun" << 'EOF'
+# --- Schritt 4: AppRun erstellen ---------------------------------------------
+cat > "$APPDIR/AppRun" << 'APPRUN'
 #!/bin/bash
 SELF=$(readlink -f "$0")
 HERE=$(dirname "$SELF")
@@ -87,23 +122,21 @@ export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 export SCIDB_ENGINESDIR="$HERE/usr/bin"
 
 exec "$HERE/usr/bin/tkscidb-beta" "$HERE/usr/bin/scidb-beta" "$@"
-EOF
+APPRUN
 chmod +x "$APPDIR/AppRun"
 
-# --- Schritt 5: Icon (aus freedesktop.org) ---------------------------------
+# --- Schritt 5: Icon ---------------------------------------------------------
 echo "Kopiere Icon..."
 if [ -f "freedesktop.org/scidb-128.png" ]; then
     cp "freedesktop.org/scidb-128.png" "$APPDIR/scidb-beta.png"
-    echo "  Icon: freedesktop.org/scidb-128.png"
 elif [ -f "freedesktop.org/scidb-64.png" ]; then
     cp "freedesktop.org/scidb-64.png" "$APPDIR/scidb-beta.png"
 else
-    # Fallback: Scidb-Logo aus den Programmbildern
-    find /usr/local/share/scidb-beta -name "Scidb-Logo-128.png" | \
+    find "$SHAREDIR" -name "Scidb-Logo-128.png" | \
         head -1 | xargs -I{} cp {} "$APPDIR/scidb-beta.png" 2>/dev/null || true
 fi
 
-# --- Schritt 6: Desktop-Datei ---------------------------------------------
+# --- Schritt 6: Desktop-Datei ------------------------------------------------
 cat > "$APPDIR/scidb-beta.desktop" << 'EOF'
 [Desktop Entry]
 Name=Scidb
