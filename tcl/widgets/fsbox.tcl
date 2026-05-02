@@ -942,6 +942,7 @@ proc checkPath {parent path} {
 proc isWindowsExecutable {path} {
 	global tcl_platform
 
+	if {![file isfile $path]} { return 0 }
 	if {![file executable $path]} { return 0 }
 	if {$tcl_platform(platform) eq "windows"} { return 1 }
 

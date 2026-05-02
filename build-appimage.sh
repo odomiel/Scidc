@@ -129,6 +129,7 @@ for engine in stockfish-scidb fairy-stockfish-scidb; do
     dst="$ENGINES_USER/$engine"
     # Kopieren wenn das gebündelte Binary neuer ist oder das Ziel fehlt
     if [ -f "$src" ] && { [ ! -f "$dst" ] || [ "$src" -nt "$dst" ]; }; then
+        rm -rf "$dst"   # entfernt ggf. ein Verzeichnis gleichen Namens
         cp -p "$src" "$dst"
         chmod +x "$dst"
     fi
