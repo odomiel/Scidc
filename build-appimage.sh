@@ -122,7 +122,7 @@ export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 
 # Engine-Binaries bei Bedarf ins User-Verzeichnis deployen.
 # Das Programm sucht Engines in ~/.scidb-beta/engines/ (start.tcl default).
-ENGINES_USER="$HOME/.scidb-beta/engines"
+ENGINES_USER="$HOME/.scidb-beta/engines/bin"
 mkdir -p "$ENGINES_USER"
 for engine in stockfish-scidb fairy-stockfish-scidb; do
     src="$HERE/usr/bin/$engine"

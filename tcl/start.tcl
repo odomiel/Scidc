@@ -60,7 +60,7 @@ if {$::tcl_platform(platform) eq "windows"} {
 } elseif {[info exists ::env(SCIDB_ENGINESDIR)]} {
 	set engines $::env(SCIDB_ENGINESDIR)
 } else {
-	set engines [file join $user engines]
+	set engines [file join $user engines bin]
 }
 set data		[file join $share data]
 set help		[file join $share help]
@@ -78,7 +78,7 @@ if {![file isdirectory $user]} {
 	file mkdir [file join $user log]
 	file mkdir [file join $user photos]
 	file mkdir [file join $user backup]
-	file mkdir [file join $user engines]
+	file mkdir [file join $user engines bin]
 	file mkdir [file join $user layout]
 	file mkdir [file join $user textures tile marble]
 	file mkdir [file join $user textures tile wood]
