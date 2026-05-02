@@ -2478,12 +2478,8 @@ Player::parseDwzRating(mstl::istream& stream)
 			{
 				Player* const* playerEntry = ::fidePlayerDict.find(fideID);
 
-				if (playerEntry
-					&& (   sys::utf8::Codec::matchAscii(name, (*playerEntry)->name())
-					    || sys::utf8::Codec::matchGerman(name, (*playerEntry)->name())))
-				{
+				if (playerEntry)
 					player = *playerEntry;
-				}
 			}
 
 			unsigned rating = ::strtoul(line.c_str() + 28, nullptr, 10);
