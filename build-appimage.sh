@@ -119,7 +119,20 @@ export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
 export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8.6/tcl8"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
-export SCIDB_ENGINESDIR="$HERE/usr/bin"
+
+# Engine-Binaries bei Bedarf ins User-Verzeichnis deployen.
+# Das Programm sucht Engines in ~/.scidb-beta/engines/ (start.tcl default).
+ENGINES_USER="$HOME/.scidb-beta/engines"
+mkdir -p "$ENGINES_USER"
+for engine in stockfish-scidb fairy-stockfish-scidb; do
+    src="$HERE/usr/bin/$engine"
+    dst="$ENGINES_USER/$engine"
+    # Kopieren wenn das gebündelte Binary neuer ist oder das Ziel fehlt
+    if [ -f "$src" ] && { [ ! -f "$dst" ] || [ "$src" -nt "$dst" ]; }; then
+        cp -p "$src" "$dst"
+        chmod +x "$dst"
+    fi
+done
 
 exec "$HERE/usr/bin/tkscidb-beta" "$HERE/usr/bin/scidb-beta" "$@"
 APPRUN

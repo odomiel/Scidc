@@ -51,18 +51,17 @@ if {[info exists ::env(SCIDB_SHAREDIR)]} {
 	}
 }
 
-if {$::tcl_platform(platform) eq "windows"} {
-	set engines $share/engines
-} elseif {[info exists ::env(SCIDB_ENGINESDIR)]} {
-	set engines $::env(SCIDB_ENGINESDIR)
-} else {
-	set engines "%ENGINESDIR%"
-	if {[string match ?ENGINESDIR? $engines]} { set engines "/usr/local/games" }
-}
-
 set home		[file nativename "~"]
 set exec		[file dirname $::nameofexecutable]
 set user		[file join $home .[string range [file tail $::nameofexecutable] 2 end]]
+
+if {$::tcl_platform(platform) eq "windows"} {
+	set engines [file join $share engines]
+} elseif {[info exists ::env(SCIDB_ENGINESDIR)]} {
+	set engines $::env(SCIDB_ENGINESDIR)
+} else {
+	set engines [file join $user engines]
+}
 set data		[file join $share data]
 set help		[file join $share help]
 set hyphen	[file join $share hyphen]
