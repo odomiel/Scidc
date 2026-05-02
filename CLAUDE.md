@@ -185,7 +185,15 @@ Bundled engines live in `engines/` as **pre-compiled binaries** (no source build
 
 Engine metadata (command path, UCI option profiles, supported variants) is stored in **`tcl/engines/engines.dat`** — this is the source file tracked in git. The copy under `AppDir/` is not tracked.
 
+**Engine directory layout:** Engine binaries live in `~/.scidb-beta/engines/bin/` (`$::scidb::dir::engines`). Each engine also gets a **data directory** at `~/.scidb-beta/engines/<name>/` (e.g. `~/.scidb-beta/engines/stockfish-scidb/`) created by `engine.tcl` for logs and config. These two paths must not collide — that is why binaries are in the `bin/` subdirectory. Previously they were in `/usr/local/games/`; keeping binaries and data directories in the same folder would cause `file mkdir <engine-name>` to fail because a regular file with that name already exists.
+
+**AppImage engine deployment:** `AppRun` copies bundled engine binaries from `$HERE/usr/bin/` to `~/.scidb-beta/engines/bin/` at launch (only when the bundle is newer than the deployed copy, using mtime comparison). Before copying, `rm -rf $dst` removes any stale directory entry at that path. `SCIDB_ENGINESDIR` is **not** set in AppRun — `start.tcl` defaults to `$user/engines/bin` on all non-Windows platforms.
+
 **UCI variant name mapping:** Scidb's `variant::identifier()` returns mixed-case names (e.g. `"Three-Check"`, `"Crazyhouse"`) that Fairy-Stockfish does not accept — it requires lowercase (`"3check"`, `"crazyhouse"`). The function `uciVariantName()` in `src/app/app_uci_engine.cpp` performs this mapping before sending `setoption name UCI_Variant value …`.
+
+**`SaveEngine` pattern:** `SaveEngine` in `tcl/engine.tcl` edits a local `engine` array then must call `lset Engines $sel [array get engine]` **inside** the `if {$sel >= 0}` block before `SaveEngineList`. Placing the `lset` outside that block means it runs even when `$sel` is invalid (e.g. `-1`), corrupting or clearing the `Engines` list which `SaveEngineList` then writes to disk. The `set failed 0` initialisation in the `Directory` case must also be **before** the inner `if {[info exists Data(Directory)]}` block — otherwise `if {$failed}` throws "no such variable" and aborts the save.
+
+**`fsbox::isWindowsExecutable` pitfall:** On Unix, `[file executable $path]` returns true for directories. Always check `[file isfile $path]` first — opening a directory succeeds but `read` fails with "illegal operation on a directory".
 
 **Adding a new variant to engine support** requires changes in three places:
 
@@ -339,14 +347,13 @@ export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
 export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8.6/tcl8"   # for msgcat-1.6.1.tm
 export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
-export SCIDB_ENGINESDIR="$HERE/usr/bin"
 ```
 
-Engine binaries (`stockfish-scidb`, `fairy-stockfish-scidb`) are copied from `/usr/local/games/` into `$APPDIR/usr/bin/` by `build-appimage.sh`. `tcl/start.tcl` normally sets `::scidb::dir::engines` to the build-time `%ENGINESDIR%` value (`/usr/local/games`), which is inaccessible in the AppImage. `SCIDB_ENGINESDIR` overrides this at runtime — `start.tcl` checks the env var first.
+`SCIDB_ENGINESDIR` is intentionally **not** set — `start.tcl` defaults to `$user/engines/bin` (`~/.scidb-beta/engines/bin/`), which AppRun deploys into before launching the app.
 
 **Critical:** The AppImage FUSE mount at `/tmp/.mount_xxx/` is **read-only**. Any code that writes files (downloads, caches, user data) must target `$::scidb::dir::user` (`~/.scidb-beta/`) or another writable path — never `$::scidb::dir::data` or `$::scidb::dir::share`, which resolve inside SHAREDIR.
 
-**Stale engine paths across AppImage versions:** `WriteEngineOptions` in `tcl/engine.tcl` saves the absolute engine path (e.g. `/tmp/.mount_scidb.HASH/usr/bin/stockfish-scidb`) into `~/.scidb-beta/config/engines.dat`. Each AppImage launch uses a different FUSE hash, so saved paths become invalid. The `setup()` proc's else-branch (loading from the local config file) re-resolves stale paths for bundled engines (`UserDefined == 0`) by checking whether `$engine(Command)` is executable and, if not, substituting `[file join $::scidb::dir::engines [file tail $engine(Command)]]`. This re-resolution runs only for engines where `UserDefined` is `0` — user-added engines (`UserDefined == 1`) are left as-is.
+**Stale engine paths:** `WriteEngineOptions` in `tcl/engine.tcl` saves the absolute engine path into `~/.scidb-beta/config/engines.dat`. The `setup()` proc's else-branch re-resolves stale paths for bundled engines (`UserDefined == 0`) by checking whether `$engine(Command)` is executable and, if not, substituting `[file join $::scidb::dir::engines [file tail $engine(Command)]]` — which resolves to `~/.scidb-beta/engines/bin/<name>`. User-added engines (`UserDefined == 1`) are left as-is.
 
 `AppDir/usr/bin/` and `AppDir/usr/lib/` are rebuilt on each `build-appimage.sh` run and are **not tracked in git**. `AppDir/usr/share/scidb-beta/` is preserved across builds and must be kept in sync with `tcl/` and `/usr/local/share/scidb-beta/` manually.
 
