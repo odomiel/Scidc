@@ -3064,6 +3064,7 @@ proc SaveEngine {list} {
 		}
 	}
 
+	lset Engines $sel [array get engine]
 	SaveEngineList
 	UpdateVars
 }
