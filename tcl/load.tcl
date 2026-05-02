@@ -202,17 +202,16 @@ unset _fide_zip
 if {![::process::testOption elo-only]} {
 
 # --- Load DWZ players -------------------------------------------------
-# Prefer user-updated list (~/.scidb-beta/dwz-ratings.txt) over bundled one
+# Only load user-updated list (~/.scidb-beta/dwz-ratings.txt).
+# The bundled data/dwz-ratings.txt uses a legacy format and is not loaded.
 set _dwz_user [file join $scidb::dir::user dwz-ratings.txt]
-set _dwz_path [expr {[file exists $_dwz_user]
-	? $_dwz_user
-	: [file join $scidb::dir::data dwz-ratings.txt]}]
+if {[file exists $_dwz_user]} {
+	load::load	[format $load::mc::Loading [format $load::mc::RatingList DWZ]] \
+					dwz \
+					$_dwz_user \
+					;
+}
 unset _dwz_user
-load::load	[format $load::mc::Loading [format $load::mc::RatingList DWZ]] \
-				dwz \
-				$_dwz_path \
-				;
-unset _dwz_path
 
 } ;# if elo-only
 
