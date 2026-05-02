@@ -2495,7 +2495,7 @@ Player::parseDwzRating(mstl::istream& stream)
 					case 'W': sex = sex::Female; break;
 				}
 
-				if (!(player = insertPlayer(name, 1, country::Germany, sex)))
+				if (!(player = insertPlayer(name, 1, country::Germany, sex, true)))
 					continue;
 
 				if (fideID && player->fideID() != fideID)
