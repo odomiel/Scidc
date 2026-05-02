@@ -3033,8 +3033,8 @@ proc SaveEngine {list} {
 					;# alreay set
 				}
 				Directory {
+					set failed 0
 					if {[info exists Data(Directory)] && [string length $Data(Directory)] > 0} {
-						set failed 0
 						set Data(Directory) [file normalize $Data(Directory)]
 						if {	[string length $engine(Directory)] > 0
 							&& [file isdirectory $engine(Directory)]
@@ -3062,9 +3062,10 @@ proc SaveEngine {list} {
 				}
 			}
 		}
+
+		lset Engines $sel [array get engine]
 	}
 
-	lset Engines $sel [array get engine]
 	SaveEngineList
 	UpdateVars
 }
