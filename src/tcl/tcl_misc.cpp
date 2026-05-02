@@ -69,7 +69,7 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.75 BETA"
+# define SCIDB_VERSION	"1.1.76 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 
@@ -1584,7 +1584,14 @@ cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	// Save original stderr fd on first call so we can restore later
 	if (savedStderr_g < 0)
+	{
 		savedStderr_g = ::dup(STDERR_FILENO);
+		if (savedStderr_g < 0)
+		{
+			Tcl_SetResult(ti, const_cast<char*>(::strerror(errno)), TCL_VOLATILE);
+			return TCL_ERROR;
+		}
+	}
 
 	if (path[0] == '\0')
 	{

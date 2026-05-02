@@ -3091,9 +3091,8 @@ proc SaveEngineList {} {
 	} else {
 		close $f
 		file rename -force $filename.tmp $filename
+		::options::unhookWriter [namespace current]::WriteEngineOptions engines
 	}
-
-	::options::unhookWriter [namespace current]::WriteEngineOptions engines
 }
 
 

@@ -2186,7 +2186,7 @@ Player::parseFideRating(mstl::istream& stream)
 
 	while (stream.getline(line))
 	{
-		if (line.size() >= 70)
+		if (line.size() >= 71)
 		{
 			char const* s = line.c_str();
 
@@ -2442,11 +2442,11 @@ Player::parseEcfRating(mstl::istream& stream)
 // --------------------------------
 // ZPS:		     0 -  4 (5 chars)
 // MglNr:        6 -  9 (4 chars)
-// Fide ID:     11 - 18 (8 chars)
-// Sex:         20 - 20 (1 char )
-// Birth Year:  22 - 25 (4 chars)
-// Rating:      27 - 30 (4 chars)
-// Name:        32 - end
+// Fide ID:     11 - 19 (9 chars)
+// Sex:         21 - 21 (1 char )
+// Birth Year:  23 - 26 (4 chars)
+// Rating:      28 - 31 (4 chars)
+// Name:        33 - end
 void
 Player::parseDwzRating(mstl::istream& stream)
 {

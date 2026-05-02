@@ -148,6 +148,7 @@ def main():
     tmpzip     = None
     tmpcsvpath = None
     out_path   = os.path.join(data_dir, "dwz-ratings.txt")
+    count      = 0
 
     try:
         fd, tmpzip = tempfile.mkstemp(suffix=".zip", dir=data_dir)

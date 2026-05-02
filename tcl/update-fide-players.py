@@ -128,6 +128,9 @@ def convert_streaming(xml_fobj, out_zip_path):
             birthday = int(elem.findtext("birthday") or 0)
             flag     = (elem.findtext("flag") or "").strip().lower()
 
+            if rating <= 0:
+                elem.clear()
+                continue
             lines.append(make_line(
                 fideid, name, title, country, rating, games,
                 birthday, sex == "F", "i" in flag

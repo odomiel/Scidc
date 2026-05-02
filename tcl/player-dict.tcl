@@ -1424,7 +1424,7 @@ proc ShowDataSources {dlg} {
 				-foreground blue \
 				-cursor hand2 \
 				;
-			bind $top.url$idx <ButtonRelease-1> [list exec xdg-open $url &]
+			bind $top.url$idx <ButtonRelease-1> [list catch [list exec xdg-open $url &]]
 		} else {
 			ttk::label $top.url$idx -text {}
 		}
@@ -1548,7 +1548,7 @@ proc RunNextUpdate {dlg table} {
 
 	set item [lindex $Priv(update:queue) 0]
 	set Priv(update:queue) [lrange $Priv(update:queue) 1 end]
-	lassign $item _type script
+	lassign $item Priv(update:type) script
 	set Priv(update:output) ""
 
 	if {[catch {
@@ -1581,6 +1581,20 @@ proc OnUpdateData {dlg table} {
 		$dlg.update configure -state normal
 		set detail [string trimright $Priv(update:output)]
 		if {$detail eq ""} { set detail $err }
+		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $detail]
+		return
+	}
+
+	set _expected [expr {
+		$Priv(update:type) eq "fide"
+			? [file join $::scidb::dir::user players_list.zip]
+			: [file join $::scidb::dir::user dwz-ratings.txt]
+	}]
+	if {![file exists $_expected]} {
+		set Priv(update:label) $mc::UpdateList
+		$dlg.update configure -state normal
+		set detail [string trimright $Priv(update:output)]
+		if {$detail eq ""} { set detail "no output file was created" }
 		::dialog::error -parent $dlg -message [format $mc::UpdateFailed $detail]
 		return
 	}

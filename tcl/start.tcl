@@ -102,7 +102,12 @@ if {![file isdirectory $user]} {
 }
 
 if {![file isdirectory $config]} {
-	file mkdir $config
+	if {[catch {file mkdir $config} err]} {
+		tk_messageBox -type ok -icon error \
+			-title "$::scidb::app: startup error" \
+			-message "Cannot create config directory '$config': $err"
+		exit 1
+	}
 }
 
 if {![info exists ::env(SCIDB_SHAREDIR)]} { set ::env(SCIDB_SHAREDIR) $share }
