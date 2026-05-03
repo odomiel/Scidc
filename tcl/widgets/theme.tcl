@@ -456,6 +456,25 @@ proc SetupCurrentTheme {} {
 		option add *Scrollbar.troughColor     #1e1f22
 		option add *Scrollbar.activeBackground #4c5052
 		option add *Scrollbar.highlightBackground $background
+		option add *Menu.background           $background
+		option add *Menu.foreground           $fg
+		option add *Menu.activeBackground     $selectbg
+		option add *Menu.activeForeground     $selectfg
+		option add *Menu.disabledForeground   #606060
+		option add *Menu.selectColor          $fg
+		option add *Menubutton.background     $background
+		option add *Menubutton.foreground     $fg
+		option add *Menubutton.activeBackground #4c5052
+		option add *Menubutton.activeForeground $fg
+		option add *Text.background           #3c3f41
+		option add *Text.foreground           $fg
+		option add *Text.selectBackground     $selectbg
+		option add *Text.selectForeground     $selectfg
+		option add *Text.inactiveselectBackground #4c5052
+		option add *Listbox.background        #3c3f41
+		option add *Listbox.foreground        $fg
+		option add *Listbox.selectBackground  $selectbg
+		option add *Listbox.selectForeground  $selectfg
 	}
 
 	# probe actual frame background (after option DB is set so dark themes report correctly)

@@ -1413,8 +1413,10 @@ proc UpdateColunnWidths {table} {
 proc ThemeChanged {table} {
 	variable ${table}::Vars
 
+	set bg [ttk::style lookup [::theme::currentTheme] -background]
+	set fg [ttk::style lookup [::theme::currentTheme] -foreground]
 	foreach id $Vars(columns) {
-		$table.t column configure $id -background [ttk::style lookup [::theme::currentTheme] -background]
+		$table.t column configure $id -background $bg -textcolor $fg
 	}
 
 	after idle [namespace code [list GenerateTableMinSizeEvent $table]]
