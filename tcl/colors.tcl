@@ -338,13 +338,13 @@ array set Colors {
 	night:database,selected					#2a3a2a
 
 	night:information,html:hover			#3c3f41
-	night:information,html:color			#2b2b2b
+	night:information,html:color			#cccccc
 	night:information,html:header			#e5c07b
-	night:information,html:link				#e5c07b
+	night:information,html:link				#7eb8f7
 	night:information,html:visited			#c678dd
 	night:information,html:menu				#2a3a2a
 	night:information,background:news		#8b2020
-	night:information,background:html		#1e3560
+	night:information,background:html		#252526
 
 	night:tree,background					#2b2b2b
 	night:tree,emphasize					#3a3c3a

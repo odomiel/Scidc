@@ -328,7 +328,7 @@ proc configureBackground {w} {
 proc notebookBorderwidth {} {
 	switch [currentTheme] {
 		alt { return 1 }
-		clam - clearlooks - scidblue { return 2 }
+		clam - clearlooks - scidblue - darkmode { return 2 }
 	}
 	set result [ttk::style lookup TNotebook -borderwidth]
 	if {[string is integer -strict $result]} { return $result }
@@ -374,12 +374,22 @@ proc SetupCurrentTheme {} {
 	variable strongTtk
 	variable Settings
 
+	# For darkmode, force strongTtk so all classic Tk widgets get dark background
+	if {[currentTheme] eq "darkmode"} {
+		set strongTtk true
+	} else {
+		set strongTtk false
+	}
+
 	# 1. Makes a correction of read-only state color. Read-Only does not mean disabled!
 	set fbg {}
 	switch "_[currentTheme]" {
 		_alt		{ set fbg [list readonly white disabled [ttk::style lookup [currentTheme] -background]] }
 		_clam		{ set fbg [list \
 									readonly white \
+									{readonly focus} [::ttk::style lookup [currentTheme] -selectbackground]] }
+		_darkmode	{ set fbg [list \
+									readonly #45494a \
 									{readonly focus} [::ttk::style lookup [currentTheme] -selectbackground]] }
 		_default	{ set fbg [list readonly white disabled [ttk::style lookup [currentTheme] -background]] }
 	}
@@ -394,14 +404,11 @@ proc SetupCurrentTheme {} {
 	# adjust padding of arrows in spinbox (the default padding is quite ugly)
 	switch "_[currentTheme]" {
 		_alt - _clam - _default { ttk::style configure TSpinbox -padding {2 0 2 0} }
-		_clearlooks - _scidblue { ttk::style configure TSpinbox -padding {2 0 2 0} }
+		_clearlooks - _scidblue - _darkmode { ttk::style configure TSpinbox -padding {2 0 2 0} }
 	}
 
-	# get current settings
+	# get TTK background color
 	set background [::ttk::style lookup [currentTheme] -background]
-	set f [tk::frame .__hopefully_unique_widget_id__[clock milliseconds]]
-	set Settings(tk:background) [$f cget -background]
-	destroy $f
 
 	# 2a. Provide a left aligned button.
 	ttk::style configure aligned.TButton -anchor w -width -9
@@ -412,9 +419,7 @@ proc SetupCurrentTheme {} {
 	ttk::style configure active.Horizontal.TScale -troughcolor [GetActiveTroughColor]
 	ttk::style configure active.Vertical.TScale -troughcolor [GetActiveTroughColor]
 
-	# 4. Set theme options
-#	option add *Frame.background $Settings(tk:background)
-#	option add *Button.background $background
+	# 4. Set theme options — strongTtk options first so the probe frame below picks up the right bg
 	option add *Spinbox.selectBackground [::ttk::style lookup [currentTheme] -selectbackground]
 	option add *Spinbox.disabledBackground $background
 	option add *Entry.selectBackground [::ttk::style lookup [currentTheme] -selectbackground]
@@ -422,18 +427,41 @@ proc SetupCurrentTheme {} {
 	option add *Scale.background $background
 	option add *Scale.troughColor [GetTroughColor]
 	option add *Listbox.disabledForeground [::ttk::style lookup [currentTheme] -foreground disabled]
-#	option add *Listbox.selectBackground [::ttk::style lookup [currentTheme] -selectbackground]
-#	option add *Listbox.selectForeground [::ttk::style lookup [currentTheme] -selectforeground]
-#	option add *Panedwindow.background [GetTroughColor]
 
 	if {$strongTtk} {
-		option add *Frame.background $background
-		option add *Toplevel.background $background
-		option add *Dialog.background $background
-		option add *Label.background $background
-		option add *Canvas.background $background
-		option add *Notebook.background $background
+		set fg        [::ttk::style lookup [currentTheme] -foreground]
+		set selectbg  [::ttk::style lookup [currentTheme] -selectbackground]
+		set selectfg  [::ttk::style lookup [currentTheme] -selectforeground]
+		option add *Frame.background       $background
+		option add *Toplevel.background    $background
+		option add *Dialog.background      $background
+		option add *Label.background       $background
+		option add *Canvas.background      $background
+		option add *Notebook.background    $background
+		option add *Button.background      $background
+		option add *Button.foreground      $fg
+		option add *Button.activeBackground #4c5052
+		option add *Button.activeForeground $fg
+		option add *Button.disabledForeground #606060
+		option add *Button.highlightBackground $background
+		option add *Checkbutton.background    $background
+		option add *Checkbutton.foreground    $fg
+		option add *Checkbutton.activeBackground $background
+		option add *Checkbutton.activeForeground $fg
+		option add *Radiobutton.background    $background
+		option add *Radiobutton.foreground    $fg
+		option add *Radiobutton.activeBackground $background
+		option add *Radiobutton.activeForeground $fg
+		option add *Scrollbar.background      $background
+		option add *Scrollbar.troughColor     #1e1f22
+		option add *Scrollbar.activeBackground #4c5052
+		option add *Scrollbar.highlightBackground $background
 	}
+
+	# probe actual frame background (after option DB is set so dark themes report correctly)
+	set f [tk::frame .__hopefully_unique_widget_id__[clock milliseconds]]
+	set Settings(tk:background) [$f cget -background]
+	destroy $f
 }
 
 
