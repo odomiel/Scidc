@@ -840,7 +840,7 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 
 		set xdgmime [auto_execok xdg-mime]
 
-		foreach filetype {scidb scid3 scid4 chessbase chessbasedos pgn gzpgn} {
+		foreach filetype {scidb scid3 scid4 scid5 chessbase chessbasedos pgn gzpgn} {
 			set cmd [list $xdgmime query default application/x-chess-$filetype]
 			set dfltApp ""
 			catch { set dfltApp [exec {*}$cmd] }
@@ -861,6 +861,7 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 				scidb {.sci .scv} ScidbBases
 				scid4 {.si4} ScidBases
 				scid3 {.si3} ScidBases
+				scid5 {.si5} ScidBases
 				chessbase {.cbh .cbf} ChessBaseBases
 				pgn {.pgn} PGNFiles
 				gzpgn {.pgn.gz} PGNFilesCompressed} {
@@ -914,7 +915,7 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 
 		set mimetypes {}
 		if {$Action_ eq "ok"} {
-			foreach filetype {scidb scid4 scid3 chessbase pgn gzpgn} {
+			foreach filetype {scidb scid4 scid3 scid5 chessbase pgn gzpgn} {
 				if {!$default($filetype) && $Assign_($filetype)} {
 					lappend mimetypes application/x-chess-$filetype
 					if {$filetype eq "chessbase"} { lappend mimetypes application/x-chess-chessbasedos }
