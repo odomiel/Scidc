@@ -939,7 +939,7 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 						}
 					}
 				}
-				catch { update-mime-database $xdg_data_home/mime }
+				catch { exec $update_mime_database $xdg_data_home/mime }
 			}
 			set failed {}
 			set success {}
