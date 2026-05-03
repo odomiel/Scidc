@@ -227,6 +227,8 @@ The **"Update Player Lists" button** in the Player Dictionary dialog (`tcl/playe
 
 **`insertPlayer` name deduplication pitfall:** `newPlayer()` (called by all `insertPlayer` overloads) normalises the ASCII form of the name (umlauts → ASCII, e.g. "Müller" → "Muller") and looks it up in `::playerLookup`. Without `forceNewPlayer=true`, a DWZ "Müller, Hans" with no FIDE ID would silently merge with an already-loaded FIDE "Mueller, Hans". Always pass `forceNewPlayer=true` when loading a secondary source that should not deduplicate against a primary source.
 
+**`findMatches` / `insert()` deduplication — pointer identity:** The `insert()` helper in `db_player.cpp` uses **pointer equality** (`lhs == rhs`) to deduplicate results in `findMatches`. The same `Player*` can appear multiple times in `playerList` (once under the UTF-8 key, once under the ASCII transliteration) — pointer equality collapses those correctly. Two *different* `Player*` objects with identical name/sex/federation (e.g. a FIDE entry and a separate DWZ `forceNewPlayer` entry for the same person) are treated as distinct and both returned. Do **not** change `equal()` back to value-based comparison — that would collapse these distinct entries and show only one autocomplete result for duplicate names.
+
 Note: `sys::utf8::Codec::matchAscii` and `matchGerman` both require their **second** argument to be 7-bit ASCII (`M_REQUIRE(ascii.is_7bit())`). DWZ names may contain Latin-1 umlauts; pass them as the **first** (utf8) argument and the FIDE name (transliterated ASCII) as the second if name comparison is ever needed.
 
 **Rating minimum thresholds** (`src/db/db_player.cpp`): `Player::m_minELO` and `Player::m_minDWZ` are both set to `1` — all players with any positive rating are included. Changing these requires a C++ rebuild.
@@ -303,6 +305,7 @@ The icon image variables (checkYes, checkNo, etc.) are defined **inside** `names
 | `tcl/load.tcl` | ECO/data file loading at startup |
 | `tcl/widgets/fsbox.tcl` | Custom file-selection dialog (open/save) |
 | `tcl/widgets/misc.tcl` | `dialogButtons`, `dialogButtonAdd`, `buttonSetText` (textvar tracing) |
+| `tcl/save-replace.tcl` | Save/replace game dialog; `UpdateMatchList` calls `::scidb::db::match` for player/event/site autocomplete |
 | `tcl/export.tcl` | Export dialog (`DoExport`); handles scid/scidb/pgn/html/pdf/tex output |
 | `tcl/dialogs/fileselectionbox.tcl` | File-type filtering and display in file-open/save dialogs |
 | `src/tcl/tcl_tree.cpp` | `::scidb::tree::list` — list of open databases (must include all writable formats) |
