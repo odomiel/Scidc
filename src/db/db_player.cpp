@@ -187,9 +187,7 @@ alloc(mstl::string& dst, mstl::string const& src)
 static bool
 equal(Player const* lhs, Player const* rhs)
 {
-	return	lhs->name() == rhs->name()
-			&& lhs->sex() == rhs->sex()
-			&& lhs->federation() == rhs->federation();
+	return lhs == rhs;
 }
 
 
