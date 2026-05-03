@@ -101,6 +101,13 @@ if {![file isdirectory $user]} {
 	set setup 0
 }
 
+# AppRun creates ~/.scidb-beta/engines/bin/ before first launch, so the user
+# directory exists but options.dat has never been written.  Treat this as a
+# first run so the language-selection dialog is shown.
+if {$setup == 0 && ![file exists [file join $config options.dat]]} {
+	set setup 1
+}
+
 if {![file isdirectory $config]} {
 	if {[catch {file mkdir $config} err]} {
 		tk_messageBox -type ok -icon error \
