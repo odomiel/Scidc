@@ -1046,12 +1046,15 @@ proc makeLayoutMenu {twm menu {w ""}} {
 			;
 
 		$menu add separator
-		$menu add checkbutton \
+		set img_ [expr {[string is true $Options($myID:docking:showall)] \
+			? $::theme::icon::14x14::checkYes \
+			: $::theme::icon::14x14::checkNo}]
+		$menu add command \
 			-label " $mc::ShowAllDockingPoints" \
-			-variable [namespace current]::Options($myID:docking:showall) \
+			-image $img_ \
+			-compound left \
 			-command [namespace code [list ShowAllDockingPoints $twm $myID]] \
 			;
-		::theme::configureCheckEntry $menu
 
 		menu $menu.size
 		$menu add cascade \
@@ -1715,6 +1718,7 @@ proc WriteLayout {twm id name layoutVariant} {
 
 proc ShowAllDockingPoints {twm id} {
 	variable Options
+	set Options($id:docking:showall) [expr {[string is true $Options($id:docking:showall)] ? 0 : 1}]
 	$twm showall $Options($id:docking:showall)
 }
 
