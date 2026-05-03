@@ -35,6 +35,7 @@ set CustomStyleMenu				"Scidb's Style Menu"
 set DefaultStyleMenu				"Default Style Menu"
 set OrdinaryMonitor				"Ordinary Monitor"
 set HighQualityMonitor			"High Quality Monitor"
+set NightMode					"Night Mode (Dark)"
 set RestartRequired				"A restart of the application is required before this change can be applied everyplace."
 
 set AllScidbFiles					"All Scidb files"
@@ -237,14 +238,27 @@ proc build {menu} {
 		-variable ::colors::Scheme \
 		-value dark \
 		;
-	if {$ColorScheme_ ne "dark"} { $m entryconfigure [$m index end] -command $cmd }
+	if {$ColorScheme_ ne "dark"} {
+		$m entryconfigure [$m index end] -command [namespace code [list SwitchColorScheme dark $cmd]]
+	}
 	::theme::configureRadioEntry $m
 	$m add radiobutton \
 		-label $mc::HighQualityMonitor \
 		-variable ::colors::Scheme \
 		-value lite \
 		;
-	if {$ColorScheme_ ne "lite"} { $m entryconfigure [$m index end] -command $cmd }
+	if {$ColorScheme_ ne "lite"} {
+		$m entryconfigure [$m index end] -command [namespace code [list SwitchColorScheme lite $cmd]]
+	}
+	::theme::configureRadioEntry $m
+	$m add radiobutton \
+		-label $mc::NightMode \
+		-variable ::colors::Scheme \
+		-value night \
+		;
+	if {$ColorScheme_ ne "night"} {
+		$m entryconfigure [$m index end] -command [namespace code [list SwitchColorScheme night $cmd]]
+	}
 	::theme::configureRadioEntry $m
 
 	### toolbars #############################################################
@@ -1074,6 +1088,18 @@ proc Progress {cmd w {value 0}} {
 }
 
 } ;# namespace archive
+
+
+proc SwitchColorScheme {scheme restartCmd} {
+	set ::colors::Scheme $scheme
+	if {$scheme eq "night"} {
+		set ::menu::Theme darkmode
+	} elseif {$::menu::Theme eq "darkmode"} {
+		set ::menu::Theme clam
+	}
+	uplevel #0 $restartCmd
+}
+
 } ;# namespace menu
 
 # vi:set ts=3 sw=3:

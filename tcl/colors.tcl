@@ -302,6 +302,216 @@ array set Colors {
 	dark:default,foreground:gray			#777777
 }
 
+# night scheme — true dark mode (dark backgrounds, light text)
+array set Colors {
+	night:pgn,background					#2b2b2b
+	night:pgn,foreground:main				#bbbbbb
+	night:pgn,foreground:variation			#7b9cd6
+	night:pgn,foreground:bracket			#7b9cd6
+	night:pgn,foreground:numbering			#c792ea
+	night:pgn,foreground:nag				#f07178
+	night:pgn,foreground:nagtext			#e06c75
+	night:pgn,foreground:comment			#98c379
+	night:pgn,foreground:info				#d19a66
+	night:pgn,foreground:result				#bbbbbb
+	night:pgn,foreground:illegal			#f07178
+	night:pgn,foreground:marks				#c792ea
+	night:pgn,foreground:empty				#666666
+	night:pgn,foreground:opening			#bbbbbb
+	night:pgn,background:current			#3a3a2a
+	night:pgn,background:nextmove			#2a3a2a
+	night:pgn,background:merge				#3c3f41
+	night:pgn,hilite:comment				#d19a66
+	night:pgn,hilite:info					#f07178
+	night:pgn,hilite:move					#3c3f41
+
+	night:analysis,background				#2b2b2b
+	night:analysis,info:background			#313438
+	night:analysis,info:foreground			#98c379
+	night:analysis,best:foreground			#98c379
+	night:analysis,error:foreground			#f07178
+	night:analysis,active:background		#313438
+	night:analysis,layout:background		#2a3a2a
+
+	night:layout,background					#1e4980
+
+	night:database,selected					#2a3a2a
+
+	night:information,html:hover			#3c3f41
+	night:information,html:color			#2b2b2b
+	night:information,html:header			#e5c07b
+	night:information,html:link				#e5c07b
+	night:information,html:visited			#c678dd
+	night:information,html:menu				#2a3a2a
+	night:information,background:news		#8b2020
+	night:information,background:html		#1e3560
+
+	night:tree,background					#2b2b2b
+	night:tree,emphasize					#3a3c3a
+	night:tree,stripes						#313438
+	night:tree,ratio:color					#98c379
+	night:tree,score:color					#f07178
+	night:tree,draws:color					#98c379
+	night:tree,progress:color				#f07178
+	night:tree,progress:finished			#4caf50
+	night:tree,result:mono:white			#eeeeee
+	night:tree,result:mono:black			#888888
+	night:tree,result:mono:remis			#666666
+	night:tree,result:color:white			#e06c75
+	night:tree,result:color:black			#98c379
+	night:tree,result:color:remis			#888888
+
+	night:variation,background				#2b2b2b
+	night:variation,emphasize				#3a3c3a
+	night:variation,stripes					#313438
+
+	night:board,modifiedForeground			#eeeeee
+	night:board,modifiedBackground			#6b3020
+	night:board,fixedBackground				#3a3830
+
+	night:browser,background:header		#313438
+	night:browser,background:hilite		#214283
+	night:browser,background:modified		#3a3c3a
+	night:browser,foreground:hilite		#eeeeee
+
+	night:overview,background:normal		#313438
+	night:overview,background:modified		#3a3c3a
+
+	night:crosstable,background				#2b2b2b
+	night:crosstable,highlighted			#313438
+	night:crosstable,mark					#2a3a2a
+
+	night:export,shadow						#555555
+	night:export,text						#666666
+
+	night:import,background					#313438
+	night:import,background:select			#2a3a2a
+	night:import,background:hilite			#3a3c3a
+
+	night:switcher,background				#313438
+	night:switcher,selected:background		#2a3a2a
+	night:switcher,modified:foreground		#f07178
+	night:switcher,normal:background		#3c3f41
+	night:switcher,normal:foreground		#bbbbbb
+	night:switcher,hidden:background		#313438
+	night:switcher,hidden:foreground		#bbbbbb
+	night:switcher,emph:foreground			#98c379
+	night:switcher,drop:background			#2d4a3e
+	night:switcher,prop:background			#3d5a26
+
+	night:fsbox,menu:headerbackground		#2a3a2a
+	night:fsbox,menu:headerforeground		#bbbbbb
+	night:fsbox,drop:background				#3c3f41
+	night:fsbox,selectionbackground		#313438
+	night:fsbox,selectionforeground		#bbbbbb
+	night:fsbox,inactivebackground			#2b2b2b
+	night:fsbox,inactiveforeground			#888888
+	night:fsbox,activebackground			#313438
+	night:fsbox,activeforeground			#bbbbbb
+	night:fsbox,emphasizebackground		#3a3a2a
+
+	night:gamebar,background:normal		#3c3f41
+	night:gamebar,foreground:normal		#bbbbbb
+	night:gamebar,background:selected		#313438
+	night:gamebar,background:emphasize		#3a3c3a
+	night:gamebar,background:active		#4c5052
+	night:gamebar,background:darker		#222222
+	night:gamebar,background:shadow		#232325
+	night:gamebar,background:lighter		#4c5052
+	night:gamebar,background:hilite		#214283
+	night:gamebar,foreground:hilite		#eeeeee
+	night:gamebar,background:hilite2		#214283
+	night:gamebar,foreground:hilite2		#eeeeee
+	night:gamebar,foreground:elo			#7b9cd6
+
+	night:scrolledtable,background			#2b2b2b
+	night:scrolledtable,stripes				#313438
+	night:scrolledtable,highlight			#3c3f41
+	night:scrolledtable,separatorcolor		#555555
+
+	night:tlistbox,background				#2b2b2b
+	night:tlistbox,foreground				#bbbbbb
+	night:tlistbox,selectbackground		#214283
+	night:tlistbox,selectforeground		#eeeeee
+	night:tlistbox,disabledbackground		#313438
+	night:tlistbox,disabledforeground		#888888
+	night:tlistbox,highlightbackground		#214283
+	night:tlistbox,highlightforeground		#eeeeee
+	night:tlistbox,dropbackground			#313438
+	night:tlistbox,dropforeground			#bbbbbb
+
+	night:treetable,background				#2b2b2b
+	night:treetable,disabledforeground		#666666
+
+	night:help,foreground:gray				#666666
+	night:help,foreground:litegray			#555555
+	night:help,background:gray				#313438
+	night:help,background:emphasize		#3a3a2a
+
+	night:table,background					#2b2b2b
+	night:table,foreground					#bbbbbb
+	night:table,selectionbackground		#214283
+	night:table,selectionforeground		#eeeeee
+	night:table,disabledforeground			#666666
+	night:table,activebackground			#3c3f41
+	night:table,labelforeground				#bbbbbb
+	night:table,labelbackground				#3c3f41
+
+	night:save,number						#f07178
+	night:save,frequency					#98c379
+	night:save,title						#98c379
+	night:save,federation					#7b9cd6
+	night:save,score						#98c379
+	night:save,ratingType					#7b9cd6
+	night:save,date							#7b9cd6
+	night:save,eventDate					#7b9cd6
+	night:save,eventCountry					#7b9cd6
+	night:save,taglistOutline				#555555
+	night:save,taglistBackground			#2b2b2b
+	night:save,taglistHighlighting			#313438
+	night:save,taglistCurrent				#7b9cd6
+	night:save,matchlistBackground			#313438
+	night:save,matchlistHeaderForeground	#888888
+	night:save,matchlistHeaderBackground	#3c3f41
+
+	night:encoding,selection				#2a3a2a
+	night:encoding,active					#313438
+	night:encoding,normal					#3a3c3a
+	night:encoding,description				#313438
+
+	night:engine,selectbackground:setup	#4c5052
+	night:engine,selectforeground:setup	#bbbbbb
+	night:engine,stripes					#3a3c3a
+
+	night:default,disabledbackground		#313438
+	night:default,disabledforeground		#888888
+	night:default,foreground:gray			#555555
+
+	night:treetable,selected:focus			#214283
+	night:treetable,selected!focus			#313438
+	night:treetable,active:focus			#313438
+	night:treetable,hilite!selected		#313438
+
+	night:gamehistory,selected:focus		#313438
+	night:gamehistory,selected:hilite		#313438
+	night:gamehistory,selected!focus		#2b2b2b
+	night:gamehistory,hilite				#313438
+
+	night:playerdict,stripes				#3a3c3a
+
+	night:varslider,background				#2a3a2a
+	night:varslider,hilite					#223a22
+
+	night:comment,label:altered				#888888
+	night:comment,label:foreground			#eeeeee
+
+	night:eco,stripes						#3a3c3a
+
+	night:layout-manager:normal				#bbbbbb
+	night:layout-manager:current			#98c379
+	night:layout-manager:changed			#f07178
+}
+
 set Scheme dark
 
 proc lookup {color} {

@@ -268,6 +268,7 @@
 ::menu::mc::DefaultStyleMenu				"Default Style Menu"
 ::menu::mc::OrdinaryMonitor				"Ordinary Monitor"
 ::menu::mc::HighQualityMonitor			"High Quality Monitor"
+::menu::mc::NightMode					"Night Mode (Dark)"
 ::menu::mc::RestartRequired				"A restart of the application is required before this change can be applied everyplace."
 
 ::menu::mc::AllScidbFiles					"All Scidb files"

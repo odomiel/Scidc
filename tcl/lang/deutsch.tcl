@@ -268,6 +268,7 @@
 ::menu::mc::DefaultStyleMenu				"Standard-Menüstil"
 ::menu::mc::OrdinaryMonitor				"Gewöhnlicher Monitor"
 ::menu::mc::HighQualityMonitor			"Hochwertiger Monitor"
+::menu::mc::NightMode					"Nachtmodus (Dunkel)"
 ::menu::mc::RestartRequired				"Ein Neustart dieser Applikation ist erforderlich bevor diese Änderung durchgehend angewendet werden kann."
 
 ::menu::mc::AllScidbFiles					"Alle Scidb Dateien"

@@ -468,6 +468,11 @@ set scidb::revision [::scidb::misc::revision]
 splash::print "$load::mc::Startup..."
 mc::setup
 font::useLanguage $mc::langID
+if {$::colors::Scheme eq "night"} {
+	set ::menu::Theme darkmode
+} elseif {$::menu::Theme eq "darkmode"} {
+	set ::menu::Theme clam
+}
 theme::setTheme $menu::Theme
 menu::setup
 board::setup
