@@ -2186,7 +2186,7 @@ Player::parseFideRating(mstl::istream& stream)
 
 	while (stream.getline(line))
 	{
-		if (line.size() >= 71)
+		if (line.size() >= 70)
 		{
 			char const* s = line.c_str();
 
@@ -2210,7 +2210,7 @@ Player::parseFideRating(mstl::istream& stream)
 
 				unsigned			fideID	= ::strtoul(s, nullptr, 10);
 				country::Code	country	= country::fromString(federation);
-				sex::ID			sex		= s[70] == 'w' ? sex::Female : sex::Male;
+				sex::ID			sex		= (line.size() > 70 && s[70] == 'w') ? sex::Female : sex::Male;
 				unsigned			titles	= 0;
 
 				for (t = s + 44; *t && *t != ' '; ++t)
