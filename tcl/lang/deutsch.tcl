@@ -301,7 +301,7 @@
 ::debug::mc::BuildMode                        "Build: %s"
 ::debug::mc::DebugBuild                       "Debug"
 ::debug::mc::ReleaseBuild                     "Release"
-::debug::mc::StderrToFile                     "Stderr in Datei protokollieren"
+::debug::mc::StderrToFile                     "Log aktivieren"
 ::debug::mc::StderrActive                     "Aktive Datei: %s"
 ::debug::mc::EngineLog                        "Engine-Kommunikation öffnen..."
 ::debug::mc::OpenLogFolder                    "Protokollordner öffnen"
