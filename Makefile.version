@@ -2,7 +2,7 @@
 
 # Scidb version:
 #-----------------------------------------------------------------------
-SCIDB_VERSION	= -DSCIDB_VERSION="\"1.1.76 BETA\""
+SCIDB_VERSION	= -DSCIDB_VERSION="\"1.1.77 BETA\""
 SCIDB_REVISION	= -DSCIDB_REVISION="\"1493\""
 
 # End of Makefile

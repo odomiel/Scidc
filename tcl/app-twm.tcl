@@ -1049,7 +1049,7 @@ proc makeLayoutMenu {twm menu {w ""}} {
 		$menu add checkbutton \
 			-label " $mc::ShowAllDockingPoints" \
 			-variable [namespace parent]::Options($myID:docking:showall) \
-			-command [namespace code [list ShowAllDockingPoints $twm]] \
+			-command [namespace code [list ShowAllDockingPoints $twm $myID]] \
 			;
 		::theme::configureCheckEntry $menu
 
@@ -1713,7 +1713,7 @@ proc WriteLayout {twm id name layoutVariant} {
 }
 
 
-proc ShowAllDockingPoints {twm} {
+proc ShowAllDockingPoints {twm id} {
 	variable Options
 	$twm showall $Options($id:docking:showall)
 }
