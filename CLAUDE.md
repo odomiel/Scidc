@@ -256,6 +256,29 @@ When adding a new player data type, add an entry to the `sources` list in `ShowD
 
 The C++ side: `safeCall` in `src/tcl/tcl_base.cpp` catches `InterruptException` → calls `tcl::interrupt(exc.count())` → sets result `{%Interrupted% count}`; catches `IOException` → calls `tcl::ioError(...)` → sets result `{%IO-Error% file error msg}`. `catchException` looks for these sentinel strings in `$opts(-errorinfo)`.
 
+### Color scheme and TTK theme system
+
+Scidb has two orthogonal theming layers that must be kept in sync:
+
+**1. Color scheme** (`::colors::Scheme`, persisted in options): controls custom-widget colors via `::colors::lookup`. Three values:
+- `dark` — "Ordinary Monitor" (default): slightly muted blues, still light backgrounds
+- `lite` — "High Quality Monitor": cooler/higher-contrast light backgrounds
+- `night` — "Night Mode": true dark backgrounds (`#2b2b2b`) with light text
+
+All color definitions live in `tcl/colors.tcl` as `array set Colors { scheme:key value … }`. The fallback chain in `lookup` is: `$Scheme:key` → `lite:key` → the key as-is. Adding a new scheme requires one `array set Colors { night:… }` block for every key defined in the lite section.
+
+**2. TTK theme** (`::menu::Theme`, persisted in options): controls Ttk widget rendering. Names: `alt`, `clam`, `clearlooks`, `scidblue`, `default`, `darkmode`. TTK theme files (`tcl/themes/ttk/*.tcl`) are sourced at startup from `SHAREDIR/themes/ttk/` (see `tcl/load.tcl` line ~315). A new `.tcl` file dropped in that directory is auto-loaded — no Makefile changes needed, but the file must be copied to all three share directories.
+
+**Coupling `night` ↔ `darkmode`:**
+- `tcl/menu.tcl` `SwitchColorScheme`: when user selects Night Mode, sets both `::colors::Scheme = night` and `::menu::Theme = darkmode`; when switching away from night, resets `::menu::Theme` to `clam`.
+- `tcl/end.tcl` (before `theme::setTheme`): enforces the coupling at startup in case stale saved prefs disagree.
+
+**`strongTtk` for dark mode:** Plain `tk::frame`, `tk::button`, `tk::label` etc. are not styled by TTK — they use the Tk option database. `theme.tcl::SetupCurrentTheme` sets `strongTtk = true` automatically when `currentTheme eq "darkmode"`, which triggers `option add *Frame.background`, `*Button.background`, etc. for all classic Tk widgets. This must be done **before** the probe-frame `[$f cget -background]` call so `Settings(tk:background)` captures the dark value.
+
+**Color scheme change requires restart:** Colors are baked into widgets at creation time. The menu shows a "restart required" info dialog when the scheme changes. TTK theme changes take effect immediately (via `<<ThemeChanged>>`), but custom-colored widgets (canvas, Text) don't hot-update.
+
+**HTML info panel colors:** `information,html:color` is the HTML body *text* color (not background). In `lite`/`dark` mode it is `white` (text on dark-blue panel background). In `night` mode it must also be light (`#cccccc`). Setting it to a dark value makes body text invisible on the dark background.
+
 ### Settings menu — rebuilt on every open
 
 The Settings dropdown button (`$nb.menu_main` in `application.tcl`) fires `<<MenuWillPost>>` → `BuildSettingsMenu` **every time it is opened**. `BuildSettingsMenu` destroys `$m.entries` and calls `::menu::build $m.entries` from scratch. This means:
@@ -291,6 +314,9 @@ The icon image variables (checkYes, checkNo, etc.) are defined **inside** `names
 | `src/app/app_multi_cursor.cpp` | Multi-variant cursor, variant mapping |
 | `src/tcl/tcl_application.cpp` | Tcl command registration, `::scidb::app::load` dispatcher |
 | `src/db/db_player.cpp` | Player data parsing (`parseFideRating`, `parseDwzRating`, etc.) |
+| `tcl/colors.tcl` | Color scheme definitions (`lite:`/`dark:`/`night:` keys); `::colors::lookup` |
+| `tcl/widgets/theme.tcl` | TTK theme application, `SetupCurrentTheme`, `strongTtk` option-DB setup |
+| `tcl/themes/ttk/darkmode.tcl` | Dark mode TTK theme (derived from clam; auto-loaded from SHAREDIR at startup) |
 | `tcl/debug.tcl` | Debugging submenu (under Settings): stderr→file toggle, engine log, log folder |
 | `src/tcl/tcl_misc.cpp` | Misc C++ Tcl commands incl. `::scidb::misc::setLogFile` (stderr redirect via `dup2`) |
 | `tcl/engine.tcl` | Engine UI + `engine::mc` namespace defaults (Feature/FeatureDetail/Variant) |
