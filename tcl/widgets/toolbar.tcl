@@ -3368,6 +3368,27 @@ proc ArrayEqual {lhs rhs} {
 
 proc Tr {tok} { return [mc [namespace current]::mc::$tok] }
 
+
+proc ApplyTheme {toolbar} {
+	variable Specs
+	set bg [::theme::getColor background]
+	set Specs(frame:background) $bg
+	$toolbar configure -background $bg
+	catch { $toolbar.widgets configure -background $bg }
+	if {[info exists Specs(children:$toolbar)]} {
+		foreach w $Specs(children:$toolbar) {
+			if {![winfo exists $w]} { continue }
+			set cls [winfo class $w]
+			if {$cls in {Button DropdownButton Frame ToolbarSeparator}} {
+				catch { $w configure -background $bg }
+			}
+		}
+	}
+}
+
+bind Toolbar      <<ThemeChanged>> [namespace code [list ApplyTheme %W]]
+bind ToolbarFrame <<ThemeChanged>> { catch { %W configure -background [::theme::getColor background] } }
+
 namespace eval icon {
 namespace eval 8x16 {
 

@@ -475,6 +475,9 @@ proc SetupCurrentTheme {} {
 		option add *Listbox.foreground        $fg
 		option add *Listbox.selectBackground  $selectbg
 		option add *Listbox.selectForeground  $selectfg
+		option add *Toolbar.background        $background
+		option add *ToolbarFrame.background   $background
+		option add *ToolbarHandle.background  $background
 	}
 
 	# probe actual frame background (after option DB is set so dark themes report correctly)
