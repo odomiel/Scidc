@@ -542,6 +542,18 @@ proc lookupColor {color} {
 	variable ColorLookup
 
 	if {[info exists ColorLookup($color)]} { return $ColorLookup($color) }
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		switch -- $color {
+			darkblue  { return #6fa8dc }
+			blue      { return #88b4e7 }
+			darkred   { return #e06c75 }
+			red       { return #ff7878 }
+			darkgreen { return #98c379 }
+			magenta4  { return #c678dd }
+			black     { return #cccccc }
+			#68480a   { return #d4aa70 }
+		}
+	}
 	return $color
 }
 
@@ -1417,6 +1429,7 @@ proc ThemeChanged {table} {
 	set fg [ttk::style lookup [::theme::currentTheme] -foreground]
 	foreach id $Vars(columns) {
 		$table.t column configure $id -background $bg -textcolor $fg
+		SetForeground $table $id
 	}
 
 	after idle [namespace code [list GenerateTableMinSizeEvent $table]]
