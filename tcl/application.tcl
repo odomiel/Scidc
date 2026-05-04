@@ -147,6 +147,7 @@ proc open {} {
 	bind $m <Leave> [namespace code [list LeaveSettings $m]]
 	bind $m <<MenuWillPost>> [namespace code [list BuildSettingsMenu $m]]
 	bind $m <<MenuWillUnpost>> [namespace code [list FinishSettings $m]]
+	bind $m <<ThemeChanged>> [namespace code [list SetMainMenuButtonNormalState $m]]
 	bind $m <Configure> [namespace code PlaceMenues]
 	set Vars(menu:main) $m
 
@@ -668,6 +669,27 @@ proc Deactivate {nb} {
 }	
 
 
+proc MainMenuNormalArrow {} {
+	if {[::theme::currentTheme] eq "darkmode"} {
+		return $icon::16x12::downArrow(white)
+	}
+	return $icon::16x12::downArrow(black)
+}
+
+
+proc SetMainMenuButtonNormalState {m} {
+	variable Defaults
+	if {[::theme::currentTheme] eq "darkmode"} {
+		set bg [::ttk::style lookup darkmode -background]
+		set fg [::ttk::style lookup darkmode -foreground]
+	} else {
+		set bg $Defaults(menu:background)
+		set fg black
+	}
+	$m configure -background $bg -foreground $fg -image [MainMenuNormalArrow]
+}
+
+
 proc EnterSettings {w} {
 	variable Vars
 
@@ -685,7 +707,7 @@ proc LeaveSettings {w} {
 	set Vars(menu:state) normal
 
 	if {!$Vars(menu:locked)} {
-		$w configure -state normal -image $icon::16x12::downArrow(black)
+		$w configure -state normal -image [MainMenuNormalArrow]
 	}
 }
 
@@ -711,16 +733,13 @@ proc BuildSettingsMenu {m} {
 
 
 proc FinishSettings {m} {
-	variable Defaults
 	variable Vars
 
 	$m configure \
-		-background $Defaults(menu:background) \
 		-activebackground [::dropdownbutton::activebackground] \
-		-foreground black \
 		-activeforeground white \
-		-image $icon::16x12::downArrow(black) \
 		;
+	SetMainMenuButtonNormalState $m
 	set Vars(menu:locked) 0
 
 	if {$Vars(menu:state) eq "normal"} {

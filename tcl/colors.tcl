@@ -67,6 +67,7 @@ array set Colors {
 	lite:information,html:link				yellow
 	lite:information,html:visited			#ffb432
 	lite:information,html:menu				#ffdd76
+	lite:information,html:bases			black
 	lite:information,background:news		orange
 	lite:information,background:html		#014b72
 
@@ -343,6 +344,7 @@ array set Colors {
 	night:information,html:link				#7eb8f7
 	night:information,html:visited			#c678dd
 	night:information,html:menu				#2a3a2a
+	night:information,html:bases			#cccccc
 	night:information,background:news		#8b2020
 	night:information,background:html		#252526
 

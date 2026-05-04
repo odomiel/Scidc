@@ -130,6 +130,7 @@ proc activate {w flag} {
 	set color-visited	[::colors::lookup information,html:visited]
 	set color-color	[::colors::lookup information,html:color]
 	set color-menu		[::colors::lookup information,html:menu]
+	set color-bases	[::colors::lookup information,html:bases]
 
 	set html $Priv(html)
 	set width [winfo width $w]
@@ -225,7 +226,7 @@ proc activate {w flag} {
 	append css "h2       { font-size:22px; color:${color-header}; }\n"
 	append css "td.h1    { font-size:22px; color:${color-header}; padding-top:20px; }\n"
 	append css "td.h2    { font-size:22px; color:${color-header}; padding-top:5px; }\n"
-	append css "td.bases { font-size:16px; color:black; background-color:${color-menu}; }\n"
+	append css "td.bases { font-size:16px; color:${color-bases}; background-color:${color-menu}; }\n"
 	append css "td.bases { padding-left:7px; padding-right:7px; }\n"
 	append css "td.left  { padding-right:15px; }\n"
 	append css "td.right { border-left: solid 1px white; padding-left:15px; }\n"
