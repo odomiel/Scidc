@@ -149,6 +149,7 @@ proc open {} {
 	bind $m <<MenuWillUnpost>> [namespace code [list FinishSettings $m]]
 	bind $m <<ThemeChanged>> [namespace code [list SetMainMenuButtonNormalState $m]]
 	bind $m <Configure> [namespace code PlaceMenues]
+	SetMainMenuButtonNormalState $m
 	set Vars(menu:main) $m
 
 	::ttk::notebook::enableTraversal $nb
