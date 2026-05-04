@@ -285,6 +285,22 @@ array set GameFlags {}
 variable ratings {Elo DWZ ECF IPS USCF ICCF Rapid Rating Any}
 
 
+proc ColumnForeground {color} {
+	if {$::colors::Scheme ne "night"} { return $color }
+	switch -- $color {
+		darkblue	{ return #6fa8dc }
+		blue		{ return #88b4e7 }
+		darkred		{ return #e06c75 }
+		red			{ return #ff7878 }
+		darkgreen	{ return #98c379 }
+		black		{ return #cccccc }
+		magenta4	{ return #c678dd }
+		#68480a		{ return #d4aa70 }
+		default		{ return $color }
+	}
+}
+
+
 proc build {path getViewCmd {visibleColumns {}} {args {}}} {
 	variable Defaults
 	variable Columns
@@ -538,7 +554,7 @@ proc build {path getViewCmd {visibleColumns {}} {args {}}} {
 		lappend opts -removable $removable
 		lappend opts -ellipsis $ellipsis
 		lappend opts -visible $visible
-		lappend opts -foreground $color
+		lappend opts -foreground [ColumnForeground $color]
 		lappend opts -menu $menu
 		lappend opts -image $ivar
 		lappend opts -textvar $fvar

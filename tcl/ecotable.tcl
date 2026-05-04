@@ -141,7 +141,7 @@ proc build {parent args} {
 		-removable 0 \
 		-ellipsis 0 \
 		-visible 1 \
-		-foreground darkgreen \
+		-foreground [::gamestable::ColumnForeground darkgreen] \
 		-textvar ::gamestable::mc::F_Eco \
 		;
 	lappend columns eco $col2

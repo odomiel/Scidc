@@ -148,7 +148,7 @@ proc build {path getViewCmd {visibleColumns {}} {args {}}} {
 		lappend opts -removable $removable
 		lappend opts -ellipsis $ellipsis
 		lappend opts -visible $visible
-		lappend opts -foreground $color
+		lappend opts -foreground [::gamestable::ColumnForeground $color]
 		lappend opts -menu $menu
 		lappend opts -image $ivar
 		lappend opts -textvar $fvar
