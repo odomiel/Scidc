@@ -164,6 +164,8 @@ proc build {path columns args} {
 		lappend (columns) $id
 	}
 
+	::table::ThemeChanged $tb
+
 	::bind $tb <<TableFill>>					 [namespace code [list TableFill $tb %d]]
 	::bind $tb <<TableRebuild>>				 [namespace code [list TableRebuild $tb]]
 	::bind $tb <<TableResized>>				 [namespace code [list TableResized $tb %d]]

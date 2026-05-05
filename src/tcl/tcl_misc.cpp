@@ -69,7 +69,7 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"1.1.94 BETA"
+# define SCIDB_VERSION	"1.1.95 BETA"
 # define SCIDB_REVISION	"978"
 #endif
 
