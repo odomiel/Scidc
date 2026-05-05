@@ -101,6 +101,27 @@ array set ColorLookup {
 #	activebackground			#d4d8d9
 #	activebackground			#ffdc9d
 
+proc UpdateColorLookup {} {
+	variable ColorLookup
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		array set ColorLookup {
+			darkblue  #6fa8dc
+			blue      #88b4e7
+			darkred   #e06c75
+			red       #ff7878
+			darkgreen #98c379
+			magenta4  #c678dd
+			#68480a   #d4aa70
+		}
+		set ColorLookup(black) #cccccc
+	} else {
+		foreach key {darkblue blue darkred red darkgreen magenta4 black} {
+			unset -nocomplain ColorLookup($key)
+		}
+		unset -nocomplain "ColorLookup(#68480a)"
+	}
+}
+
 array set Defaults {
 	-width                  0
 	-borderwidth				1
@@ -166,6 +187,8 @@ proc table {args} {
 	variable KeyFitColumns
 	variable KeyOptimizeColumns
 	variable KeySqueezeColumns
+
+	UpdateColorLookup
 
 	set parent [lindex $args 0]
 	set table [tk::frame $parent]
@@ -1425,6 +1448,7 @@ proc UpdateColunnWidths {table} {
 proc ThemeChanged {table} {
 	variable ${table}::Vars
 
+	UpdateColorLookup
 	set bg [ttk::style lookup [::theme::currentTheme] -background]
 	set fg [ttk::style lookup [::theme::currentTheme] -foreground]
 	foreach id $Vars(columns) {
