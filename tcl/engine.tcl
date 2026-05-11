@@ -705,9 +705,9 @@ proc openEngineLog {parent} {
 		-setgrid 1 \
 		-state disabled \
 		;
-	$top.text tag configure error -foreground darkred
-	$top.text tag configure in -foreground darkgreen
-	$top.text tag configure out -foreground black
+	$top.text tag configure error -foreground [::colors::lookup darkred]
+	$top.text tag configure in -foreground [::colors::lookup darkgreen]
+	$top.text tag configure out -foreground [::colors::lookup black]
 	::scidb::engine::log open [namespace current]::Log $top.text
 	ttk::scrollbar $top.hsb -orient horizontal -command [list $top.text xview]
 	ttk::scrollbar $top.vsb -orient vertical -command [list ::widget::textLineScroll $top.text]

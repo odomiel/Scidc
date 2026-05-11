@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Projekt
 - Chess-Datenbank-App: ~102k LOC C++, ~92k LOC Tcl/Tk
 - 3-Tier-Architektur: C++ DB-Layer → C++ App-Layer → Tcl/Tk UI
+- Keine Test-Suite – Testing ist manuell
 
 ---
 
@@ -13,26 +14,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `./configure` überschreibt `Makefile.in` – persistente Änderungen müssen **auch in `configure`** gemacht werden
 - **Versionsnummer** bei jedem Code-Commit in 3 Dateien synchron erhöhen:
   - `Makefile.version`
-  - `src/tcl/tcl_misc.cpp`
-  - `tcl/exec.tcl`
+  - `src/tcl/tcl_misc.cpp` (CODEBLOCKS-Block, Zeile ~72)
+  - `tcl/exec.tcl` (Zeile ~41)
 - Standard: **C++14** (`-std=c++14`), keine C++17-Features
 
 ---
 
 ## Tcl UI – kritische Fallen
-- **Individuelle `.tcl`-Dateien** bearbeiten, niemals `tcl/scidb-beta` (generiert)
+
+### Bundle-Synchronisation
+- **Individuelle `.tcl`-Dateien** bearbeiten (Git-Quelle)
+- Da `make` nicht aufgerufen wird, müssen beide Bundles **immer manuell mitgepflegt** werden:
+  - `tcl/scidb-beta` – genutzt von `./run-scidb.sh`
+  - `AppDir/usr/bin/scidb-beta` – genutzt vom AppImage
+- Bundle-Zeilen entsprechen den Source-Zeilen (gleiche Zeilennummern, verifizieren vor Edit)
+- Version in beiden Bundles (Zeile 41: `set version "..."`) ebenfalls anpassen
+
+### Weitere Fallen
 - `proc open` shadowing: In Namespaces mit eigenem `proc open` immer **`::open`** für Datei-Öffnungen nutzen
-- **`tcl/lang/*.tcl` sind ISO-8859-1** – niemals direkt mit Edit-Tool bearbeiten, sondern mit Python Binary-I/O
+- **`tcl/lang/deutsch.tcl` und `tcl/lang/english.tcl` sind ISO-8859-1** – nicht direkt mit Edit-Tool bearbeiten, sondern mit Python Binary-I/O. Die anderen 4 Sprachdateien (espanol, italiano, magyar, svenska) sind UTF-8.
 - Beim Entfernen eines Features alle 6 Sprachdateien bereinigen – sonst Startup-Crash
 
 ---
 
-## 3 Share-Verzeichnisse – alle synchron halten
+## 2 Share-Verzeichnisse für Ressourcen – synchron halten
 | Pfad | Zweck |
 |------|-------|
-| `tcl/` | Git-Quelle |
-| `AppDir/usr/share/scidb-beta/` | AppImage / `./run-scidb.sh` |
+| `AppDir/usr/share/scidb-beta/` | AppImage / `./run-scidb.sh` (via `SCIDB_SHAREDIR`) |
 | `/usr/local/share/scidb-beta/` | System-Install (braucht `sudo`) |
+
+`tcl/` ist die Git-Quelle für die Bundles, enthält aber keine installierten Ressourcen.
+
+---
+
+## C++ Module
+| Verzeichnis | Zweck |
+|-------------|-------|
+| `src/db/` | Datenbank-Layer: Codecs, Boards, Spiele, ECO, Annotationen |
+| `src/app/` | App-Layer: Engine-Verwaltung, Views, Datei-I/O |
+| `src/tcl/` | C++/Tcl-Bridge: 38 `tcl_*.cpp`-Dateien, je Bereich ein File |
+| `src/tk/` | Custom Tk-Widget-Bindings |
+| `src/util/` | Utilities: Strings, HTML, zlib, CRC32 |
+| `src/sys/` | System: UTF-8, VFS, File-I/O |
+| `src/mstl/` | Math/STL-Erweiterungen |
+
+Die Bridge (`src/tcl/`) ist kein Auto-Binding – jede exponierte Funktion ist explizit als C-Wrapper codiert. Tcl-Commands: `::scidb::db::*`, `::scidb::game::*`, `::scidb::misc::*` etc.
 
 ---
 
@@ -42,11 +68,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## Tcl Startup-Sequenz
+1. **`exec.tcl`** – Prüft Version-Match C++ ↔ Tcl, startet Remote-Single-Process-Guard
+2. **`start.tcl`** – Initialisiert `::scidb::dir::*` (share, user, config, layout), legt `~/.scidb-beta/` an
+3. **`load.tcl`** – Splash-Screen, lazy-lädt ECO, Themes, Engines
+4. **`end.tcl`** – Finalisiert UI, registriert Options-Write-Callbacks, aktiviert Event-Handler
+
+Options werden vor der UI gelesen (`::options::sourceFile`) und nach Programmende via Callbacks geschrieben:
+```tcl
+proc WriteOptions {chan} { ::options::writeItem $chan MyVar }
+::options::hookWriter WriteOptions
+```
+
+---
+
 ## Dark Mode / Theming
+
+### Architektur
 - 2 unabhängige Layer: **Color Scheme** (`lite`/`dark`/`night`) + **TTK Theme**
-- `night` ↔ `darkmode` sind gekoppelt
+- `night` ↔ `darkmode`-Theme sind gekoppelt; `darkmode` aktiviert `strongTtk` → alle classic-Tk-Widgets bekommen dunklen Hintergrund via Option-Datenbank
 - `*Menu.background` muss im `strongTtk`-Block gesetzt sein (classic Tk, nicht TTK)
-- `table::ColorLookup` wird **nicht** automatisch aktualisiert – `ThemeChanged` muss `-textcolor` explizit setzen
+
+### `::colors::lookup` – der zentrale Mechanismus
+```tcl
+# colors.tcl:
+proc lookup {color} {
+    if {[info exists Colors($Scheme:$color)]} { return $Colors($Scheme:$color) }
+    if {[info exists Colors(lite:$color)]}    { return $Colors(lite:$color) }
+    return $color   # ← gibt unbekannte Farben UNVERÄNDERT zurück!
+}
+```
+- X11-Farbnamen wie `darkblue`, `black` werden bei unbekanntem Scheme 1:1 zurückgegeben
+- Für Night-Mode-Sichtbarkeit müssen `night:darkblue`, `night:black` etc. in `colors.tcl` eingetragen werden
+- **Hardcoded `-foreground black`** in Tag-/Widget-Konfigurationen → auf dunklem Hintergrund unsichtbar; durch `[::colors::lookup ...]` ersetzen
+
+### `end.tcl` überschreibt `table::lookupColor`
+```tcl
+# end.tcl Zeile ~126:
+proc table::lookupColor {color} { return [::colors::lookup $color] }
+```
+Alle früheren `UpdateColorLookup`/`ColumnForeground`-Mechanismen in `table.tcl` sind dadurch wirkungslos. Fix: Farben direkt in `colors.tcl` Colors-Array eintragen.
+
+### PGN-Widget Tag-Farben
+- `pgn-setup.tcl::configureText` setzt alle Tag-Farben – wird bei Theme-Wechsel via `refresh` erneut aufgerufen
+- Tag-Farb-Keys: `pgn,foreground:main`, `pgn,foreground:comment` etc. (in `colors.tcl` als `night:pgn,...`)
+- Browser-Kontext: `main`-Tag erhält keine explizite Vordergrundfarbe → fällt auf Widget-Default zurück
 
 ---
 
@@ -71,3 +137,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidb-beta/`
 - `build-appimage.sh` preserviert `AppDir/usr/share/` – **nicht** aus `/usr/local/` regenerieren
 - Engines werden via `AppRun` nach `~/.scidb-beta/engines/bin/` deployt
+- `run-scidb.sh` läuft direkt aus dem Source-Tree (kein FUSE): `src/tkscidb-beta tcl/scidb-beta`

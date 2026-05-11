@@ -259,6 +259,7 @@ proc fsbox {w type args} {
 	array set opts [array get Colors]
 
 	array set opts $args
+	if {$opts(-background) eq "white"} { set opts(-background) [lookupColor table,background] }
 	if {$opts(-multiple)} { set opts(-selectmode) extended } else { set opts(-selectmode) single }
 
 	foreach option {	selectionbackground selectionforeground font multiple savemode
@@ -1275,12 +1276,15 @@ proc ThemeChanged {w} {
 	set activebg [ttk::style lookup $::ttk::currentTheme -activebackground]
 	if {[llength $activebg]== 0} { set activebg [$w cget -background] }
 
+	set listbg [lookupColor table,background]
 	foreach n {bookmark file} {
 		set t $Vars(widget:list:$n)
+		$t configure -background $listbg
 		foreach id [$t column list] {
 			$t column configure $id -background [GetHeaderBackground $w]
 		}
 	}
+	set Vars(bookmark:background) $listbg
 
 	$Vars(widget:panedwindow) configure -background $background
 }
@@ -2596,7 +2600,7 @@ proc Build {w path args} {
 	set Vars(bookmark:target:id) {}
 	set Vars(bookmark:target:folder) ""
 	set Vars(bookmark:target:path) ""
-	set Vars(bookmark:background) white
+	set Vars(bookmark:background) [lookupColor table,background]
 	set yscrollcmd [list [namespace parent]::SbSet $sb]
 
 	treectrl $t {*}[array get opts] \
@@ -2662,7 +2666,7 @@ proc Build {w path args} {
 	$t style layout $s elemSel -union {elemTxt} -iexpand nsew
 	$t style layout $s elemBrd -iexpand xy -detach yes
 
-	$t element create elemDiv rect -fill black -height 1
+	$t element create elemDiv rect -fill [lookupColor black] -height 1
 	$t style create styLine
 	$t style elements styLine {elemDiv}
 	$t style layout styLine elemDiv -pady {3 2} -padx {4 4} -iexpand x -expand ns
@@ -3082,9 +3086,10 @@ proc HandleDropEvent {w action types actions {x -1} {y -1}} {
 		}
 
 		leave {
-			if {$Vars(bookmark:background) ne "white"}  {
-				$Vars(widget:list:bookmark) configure -background white
-				set Vars(bookmark:background) white
+			set nbg [lookupColor table,background]
+			if {$Vars(bookmark:background) ne $nbg}  {
+				$Vars(widget:list:bookmark) configure -background $nbg
+				set Vars(bookmark:background) $nbg
 			}
 		}
 
@@ -3146,9 +3151,10 @@ proc HandleDropEvent {w action types actions {x -1} {y -1}} {
 						$w $Vars(bookmark:target:path) $action $actions]
 				}
 			}
-			if {$Vars(bookmark:background) ne "white"}  {
-				$Vars(widget:list:bookmark) configure -background white
-				set Vars(bookmark:background) white
+			set nbg [lookupColor table,background]
+			if {$Vars(bookmark:background) ne $nbg}  {
+				$Vars(widget:list:bookmark) configure -background $nbg
+				set Vars(bookmark:background) $nbg
 			}
 		}
 	}

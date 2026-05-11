@@ -305,7 +305,7 @@ proc buildText {path context {forceSbSet 0}} {
 
 	set bd [expr {$context eq "editor" ? 0 : 1}]
 	set pgn [tk::text $f.pgn \
-		-foreground black \
+		-foreground [::colors::lookup pgn,foreground:main] \
 		-yscrollcommand $yscrollcmd \
 		-takefocus 0 \
 		-exportselection no \
@@ -378,7 +378,7 @@ proc configureText {path {fontContext ""}} {
 		$w tag configure m:info      -foreground [::colors::lookup $Colors(foreground:info)]
 
 		$w tag configure circled    -font [list {Scidb Circled} [::font::currentFontSize $fontContext]]
-		$w tag configure circled    -foreground #008b00
+		$w tag configure circled    -foreground [::colors::lookup $Colors(foreground:comment)]
 
 		$w tag configure h:next    -indentbackground 1 \
 										   -background [::colors::lookup $Colors(background:nextmove)]
@@ -388,7 +388,7 @@ proc configureText {path {fontContext ""}} {
 		$w tag configure h:nag     -indentbackground 1 -background [::colors::lookup $Colors(hilite:move)]
 		$w tag configure h:mark    -indentbackground 1 -background [::colors::lookup $Colors(hilite:move)]
 
-		$w tag configure h:next    -foreground black
+		$w tag configure h:next    -foreground [::colors::lookup $Colors(foreground:main)]
 		$w tag configure h:comment -foreground [::colors::lookup $Colors(hilite:comment)]
 		$w tag configure h:info    -foreground [::colors::lookup $Colors(hilite:info)]
 
@@ -404,9 +404,9 @@ proc configureText {path {fontContext ""}} {
 			-indentbackground 1 \
 			-background [::colors::lookup $Colors(background:nextmove)] \
 			;
-		$w tag configure h:move -foreground black -background [::colors::lookup $Colors(hilite:move)]
+		$w tag configure h:move -foreground [::colors::lookup $Colors(foreground:main)] -background [::colors::lookup $Colors(hilite:move)]
 		$w tag configure h:curr \
-			-foreground black \
+			-foreground [::colors::lookup $Colors(foreground:main)] \
 			-background [::colors::lookup $Colors(background:current)] \
 			;
 	}

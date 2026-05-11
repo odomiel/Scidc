@@ -47,11 +47,12 @@ set Games			"Games"
 proc Build {w args} {
 	set myList {}
 
-	set parent [::scrolledframe $w -fill both -background white -borderwidth 0 -wheelunits 1 {*}$args]
+	set gbg [::colors::lookup table,background]
+	set parent [::scrolledframe $w -fill both -background $gbg -borderwidth 0 -wheelunits 1 {*}$args]
 	set f $parent.f
 	set t $f.t
 
-	::tk::frame $f -background white -borderwidth 0 {*}$args -takefocus 0
+	::tk::frame $f -background $gbg -borderwidth 0 {*}$args -takefocus 0
 	bind $f <Configure> [list $parent fit] ;# help the scrolled window
 	grid $f
 	grid anchor $parent center
@@ -67,27 +68,28 @@ proc Build {w args} {
 		-showlines no         \
 		-selectmode single    \
 		-font TkTextFont      \
-		-background white     \
+		-background [::colors::lookup table,background] \
 		;
 	::scrolledframe::bindMouseWheel $parent $t
 	$t state define hilite
 	$t column create -tags game
-	$t element create elemHdr text -font TkHeadingFont -lines 1 -fill darkred
+	$t element create elemHdr text -font TkHeadingFont -lines 1 -fill [::table::lookupColor darkred]
 	set specialfont [list [list $::font::figurine(text:normal) 9812 9823]]
-	$t element create elemTxt text -lines 1 -specialfont $specialfont
+	$t element create elemTxt text -lines 1 -specialfont $specialfont \
+		-fill [::table::lookupColor black]
 	$t element create elemSel rect -fill [list                          \
 		[::colors::lookup gamehistory,selected:focus]  {selected focus}  \
 		[::colors::lookup gamehistory,selected:hilite] {selected hilite} \
 		[::colors::lookup gamehistory,selected!focus]  {selected !focus} \
 		[::colors::lookup gamehistory,hilite]          {hilite}          \
 	]
-	$t element create elemBrd border          \
-		-filled no                             \
-		-relief raised                         \
-		-thickness 1                           \
-		-background {#e5e5e5 {selected} {} {}} \
+	$t element create elemBrd border                                         \
+		-filled no                                                            \
+		-relief raised                                                        \
+		-thickness 1                                                          \
+		-background [list [::colors::lookup gamehistory,selected:focus] {selected} {} {}] \
 		;
-	$t element create elemDiv rect -fill black -height 1
+	$t element create elemDiv rect -fill [::table::lookupColor black] -height 1
 
 	$t notify install <Item-enter>
 	$t notify install <Item-leave>

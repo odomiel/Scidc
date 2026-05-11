@@ -38,7 +38,7 @@ package require tkscidb
 
 namespace eval scidb {
 	set app		Scidb
-	set version "1.1.95 BETA"
+	set version "1.1.104 BETA"
 }
 
 

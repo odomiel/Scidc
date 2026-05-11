@@ -97,6 +97,7 @@ array set Colors {
 	lite:browser,background:header		#ebf4f5
 	lite:browser,background:hilite		cornflowerblue
 	lite:browser,background:modified		linen
+	lite:browser,foreground:header		black
 	lite:browser,foreground:hilite		white
 
 	lite:overview,background:normal		#ebf4f5
@@ -374,6 +375,7 @@ array set Colors {
 	night:browser,background:header		#313438
 	night:browser,background:hilite		#214283
 	night:browser,background:modified		#3a3c3a
+	night:browser,foreground:header		#cccccc
 	night:browser,foreground:hilite		#eeeeee
 
 	night:overview,background:normal		#313438
@@ -512,6 +514,17 @@ array set Colors {
 	night:layout-manager:normal				#bbbbbb
 	night:layout-manager:current			#98c379
 	night:layout-manager:changed			#f07178
+
+	night:darkblue							#6fa8dc
+	night:steelblue4						#6fa8dc
+	night:blue								#88b4e7
+	night:darkred							#e06c75
+	night:red								#ff7878
+	night:darkgreen							#98c379
+	night:black								#cccccc
+	night:magenta4							#c678dd
+	night:#68480a							#d4aa70
+	night:#dce4e5							#313438
 }
 
 set Scheme dark

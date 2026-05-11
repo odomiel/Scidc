@@ -82,6 +82,7 @@ array set Options {
 	background:header		browser,background:header
 	background:hilite		browser,background:hilite
 	background:modified	browser,background:modified
+	foreground:header		browser,foreground:header
 	foreground:hilite		browser,foreground:hilite
 }
 
@@ -220,6 +221,7 @@ proc open {parent base variant info view index {fen {}}} {
 	set w $rt.header
 	tk::text $w \
 		-background [::colors::lookup $Options(background:header)] \
+		-foreground [::colors::lookup $Options(foreground:header)] \
 		-height 3 \
 		-width 0 \
 		-state readonly \
@@ -884,6 +886,7 @@ proc SetupControlButtons {position} {
 
 proc UpdateHeader {position} {
 	variable ${position}::Vars
+	variable Options
 
 	set text $Vars(header)
 	$text delete 1.0 end
@@ -960,6 +963,11 @@ proc UpdateHeader {position} {
 		}
 	}
 
+	foreach item {event white black} {
+		$text tag configure $item \
+			-foreground [::colors::lookup $Options(foreground:header)] \
+			;
+	}
 	update idletasks ;# makes -displaylines working
 	$text configure -height [$text count -displaylines 1.0 end]
 }
@@ -1012,7 +1020,7 @@ proc LeaveItem {position item {force no}} {
 	if {!$Vars(locked)} {
 		$Vars(header) tag configure $item \
 			-background [::colors::lookup $Options(background:header)] \
-			-foreground black \
+			-foreground [::colors::lookup $Options(foreground:header)] \
 			;
 	}
 }
@@ -1676,6 +1684,7 @@ proc ReloadGame {parent position} {
 	foreach item {event white black} {
 		$Vars(header) tag configure $item \
 			-background [::colors::lookup $Options(background:header)] \
+			-foreground [::colors::lookup $Options(foreground:header)] \
 			;
 	}
 	::scidb::game::refresh $position -immediate

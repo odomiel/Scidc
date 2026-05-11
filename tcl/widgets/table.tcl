@@ -1455,6 +1455,7 @@ proc ThemeChanged {table} {
 		$table.t column configure $id -background $bg -textcolor $fg
 		SetForeground $table $id
 	}
+	SetBackground $table
 
 	after idle [namespace code [list GenerateTableMinSizeEvent $table]]
 }

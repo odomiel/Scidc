@@ -250,7 +250,7 @@ proc build {parent number patternNumber} {
 	catch { $tmove configure -state readonly }
 	$tmove tag configure figurine -font $::font::figurine(text:normal)
 	$tmove tag configure center -justify center
-	$tmove tag configure stopped -foreground darkred
+	$tmove tag configure stopped -foreground [::colors::lookup darkred]
 	pack $tmove -padx 2 -pady 2
 
 	set time [tk::frame $info.time -background $bg -borderwidth 1 -relief raised -takefocus 0]
@@ -722,7 +722,7 @@ proc SetOrdering {tree} {
 	variable GlobalOptions
 
 	if {$Options(engine:bestFirst) || $Options(engine:singlePV)} {
-		set Vars(best:1) black
+		set Vars(best:1) [::colors::lookup black]
 	} else {
 		set Vars(best:1) [::colors::lookup $GlobalOptions(best:foreground)]
 	}
@@ -738,9 +738,10 @@ proc SetOrdering {tree} {
 	}
 
 	if {$Options(engine:bestFirst)} {
+		set fg [::colors::lookup black]
 		foreach i {0 1 2 3 4 5 6 7} {
-			$tree item element configure Line$i Eval  elemTextSym -fill black
-			$tree item element configure Line$i Value elemTextFig -fill black
+			$tree item element configure Line$i Eval  elemTextSym -fill $fg
+			$tree item element configure Line$i Value elemTextFig -fill $fg
 		}
 	}
 }
@@ -757,10 +758,11 @@ proc EngineLock {tree} {
 
 
 proc ClearLines {tree args} {
+	set fg [::colors::lookup black]
 	foreach i $args {
-		$tree item element configure Line$i Eval  elemTextSym -text "" -fill black
-		$tree item element configure Line$i Value elemTextFig -text "" -fill black
-		$tree item element configure Line$i Moves elemTextFig -text "" -fill black
+		$tree item element configure Line$i Eval  elemTextSym -text "" -fill $fg
+		$tree item element configure Line$i Value elemTextFig -text "" -fill $fg
+		$tree item element configure Line$i Moves elemTextFig -text "" -fill $fg
 	}
 }
 

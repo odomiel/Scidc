@@ -107,7 +107,7 @@ proc build {parent selectcmd} {
 		$t state define current
 
 		$t element create elemMov text -lines 1
-		$t element create elemNum text -lines 1 -fill darkred
+		$t element create elemNum text -lines 1 -fill [::table::lookupColor darkred]
 		$t element create elemRec rect
 
 		set s [$t style create styNum]

@@ -119,9 +119,10 @@ array set MoveInfoPGN {
 proc build {top width height} {
 	variable Vars
 
-	set main  [::tk::multiwindow $top.main -borderwidth 0 -background white]
-	set games [::tk::multiwindow $main.games -borderwidth 0 -background white]
-	set logo  [::tk::frame $main.logo -borderwidth 0 -background white -cursor left_ptr]
+	set bg [::colors::lookup table,background]
+	set main  [::tk::multiwindow $top.main -borderwidth 0 -background $bg]
+	set games [::tk::multiwindow $main.games -borderwidth 0 -background $bg]
+	set logo  [::tk::frame $main.logo -borderwidth 0 -background $bg -cursor left_ptr]
 	set hist  [::game::history $main.hist -cursor left_ptr]
 
 	pack $top -fill both -expand yes
@@ -136,21 +137,21 @@ proc build {top width height} {
 	# logo pane --------------------------------------------------------------------------------
 	$main paneconfigure $logo -sticky ""
 
-	tk::label $logo.icon -image $::icon::64x64::logo -background white
+	tk::label $logo.icon -image $::icon::64x64::logo -background $bg
 	tk::label $logo.logo \
 		-text "Scidb" \
-		-foreground steelblue4 \
+		-foreground [::colors::lookup steelblue4] \
 		-font [list {Final Frontier} 26] \
-		-background white \
+		-background $bg \
 		;
 	grid $logo.icon -row 1 -column 1
 	grid $logo.logo -row 2 -column 1
 
 	# games pane -------------------------------------------------------------------------------
-	set edit [::tk::frame $games.edit -borderwidth 0]
+	set edit [::tk::frame $games.edit -borderwidth 0 -background $bg]
 	pack $edit -expand yes -fill both
 	bind $edit <Configure> [namespace code { Configure %h }]
-	set panes [::tk::multiwindow $edit.panes -borderwidth 0 -background white]
+	set panes [::tk::multiwindow $edit.panes -borderwidth 0 -background $bg]
 	set gamebar [::gamebar::gamebar $edit.gamebar]
 
 	grid $gamebar -row 1 -column 1 -sticky nsew

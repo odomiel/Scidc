@@ -369,15 +369,21 @@ proc Collect {twm what args} {
 
 proc SetupTheme {twm} {
 	variable ${twm}::Vars
+	variable Options
+	variable Defaults
 
 	ttk::style configure twm.TLabel -background [ttk::style lookup TNotebook.Tab -background]
 	ttk::style configure twm.TNotebook -borderwidth 0
 #	ttk::style configure twm.TNotebook.Tab -font $Vars(header:font)
 	ttk::style configure twm.TNotebook.Tab -padding {2 2}
 	ttk::style configure twm.TButton -padding {1 1 0 0} -relief raised
-	ttk::style map twm.TButton -relief [list {!disabled pressed} sunken] 
+	ttk::style map twm.TButton -relief [list {!disabled pressed} sunken]
 	ttk::style layout twm.TButton \
 		{ Button.border -children { Button.padding -children { Button.label } } }
+
+	set tabfg [ttk::style lookup TNotebook.Tab -foreground]
+	set Options(header:tab:foreground) \
+		[expr {[string length $tabfg] ? $tabfg : $Defaults(header:tab:foreground)}]
 
 	if {[::scidb::tk::twm exists $twm]} {
 		if {[string length [set background $Vars(panedwindow:background)]] == 0} {
@@ -390,15 +396,12 @@ proc SetupTheme {twm} {
 				}
 			}
 		}
+		after idle [list $twm refresh]
 	}
 
 #	set background [ttk::style lookup $::ttk::currentTheme -background]
 #	ttk::style map twm.TNotebook.Tab -background [list active $background selected $background]
 	set Vars(theme) $::ttk::currentTheme
-
-	if {[info exists Vars(theme)] && $Vars(theme) ne $::ttk::currentTheme} {
-		$twm refresh
-	}
 }
 
 

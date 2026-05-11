@@ -436,6 +436,7 @@ proc SetupCurrentTheme {} {
 		option add *Toplevel.background    $background
 		option add *Dialog.background      $background
 		option add *Label.background       $background
+		option add *Label.foreground       $fg
 		option add *Canvas.background      $background
 		option add *Notebook.background    $background
 		option add *Button.background      $background
@@ -475,6 +476,7 @@ proc SetupCurrentTheme {} {
 		option add *Listbox.foreground        $fg
 		option add *Listbox.selectBackground  $selectbg
 		option add *Listbox.selectForeground  $selectfg
+		option add *TreeCtrl.foreground       $fg
 		option add *Toolbar.background        $background
 		option add *ToolbarFrame.background   $background
 		option add *ToolbarHandle.background  $background
