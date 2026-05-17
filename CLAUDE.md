@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ---
 
 ## Build & Versionierung
+- **CRITICAL: Jede Codeänderung sofort committen** – niemals mehrere Änderungen ohne Commit ansammeln
 - **Niemals `make` aufrufen** – User baut manuell
 - `./configure` überschreibt `Makefile.in` – persistente Änderungen müssen **auch in `configure`** gemacht werden
 - **Versionsnummer** bei jedem Code-Commit in 3 Dateien synchron erhöhen:
@@ -32,12 +33,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Weitere Fallen
 - `proc open` shadowing: In Namespaces mit eigenem `proc open` immer **`::open`** für Datei-Öffnungen nutzen
-- **`tcl/lang/deutsch.tcl` und `tcl/lang/english.tcl` sind ISO-8859-1** – nicht direkt mit Edit-Tool bearbeiten, sondern mit Python Binary-I/O. Die anderen 4 Sprachdateien (espanol, italiano, magyar, svenska) sind UTF-8.
+- **Alle 6 `tcl/lang/*.tcl` sind ISO-8859-1** – niemals direkt mit dem Edit-Tool bearbeiten, immer Python Binary-I/O verwenden
 - Beim Entfernen eines Features alle 6 Sprachdateien bereinigen – sonst Startup-Crash
+
+### TWM SetupTheme – Timing-Falle
+`SetupTheme` wird beim TWM-Erstellen UND bei `<<ThemeChanged>>` aufgerufen. Das `after idle [$twm refresh]` darf **nur** bei echten Theme-Wechseln geplant werden. Korrekte Reihenfolge:
+```tcl
+if {[::scidb::tk::twm exists $twm]} {
+    # ... Hintergründe setzen ...
+    if {[info exists Vars(theme)] && $Vars(theme) ne $::ttk::currentTheme} {
+        after idle [list $twm refresh]   ; # nur bei Theme-Wechsel
+    }
+}
+set Vars(theme) $::ttk::currentTheme    ; # NACH dem Vergleich setzen
+```
+Bedingungslos geplantes `after idle` feuert während `perform()` via `update idletasks` in `database::build` → reentrant `perform()` → `M_ASSERT(!exists())` → Startup-Fehler „TWM load failed: 26".
 
 ---
 
-## 2 Share-Verzeichnisse für Ressourcen – synchron halten
+## 3 Share-Verzeichnisse für Ressourcen – synchron halten
 | Pfad | Zweck |
 |------|-------|
 | `AppDir/usr/share/scidb-beta/` | AppImage / `./run-scidb.sh` (via `SCIDB_SHAREDIR`) |
