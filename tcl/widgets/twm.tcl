@@ -396,7 +396,9 @@ proc SetupTheme {twm} {
 				}
 			}
 		}
-		after idle [list $twm refresh]
+		if {[info exists Vars(theme)] && $Vars(theme) ne $::ttk::currentTheme} {
+			after idle [list $twm refresh]
+		}
 	}
 
 #	set background [ttk::style lookup $::ttk::currentTheme -background]

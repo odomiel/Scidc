@@ -1563,7 +1563,7 @@ Perform(ClientData clientData)
 {
 	Node* root = static_cast<Node*>(clientData);
 
-	if (root->exists())
+	if (root->exists() && !root->isLocked())
 		root->perform();
 }
 
@@ -2434,6 +2434,9 @@ Node::Node(Node const& node)
 
 Node::~Node()
 {
+	if (isRoot())
+		Tcl_CancelIdleCall(Perform, this);
+
 	if (!isRoot() && exists())
 		::fprintf(stderr, "window '%s' is not withdrawn\n", id());
 
