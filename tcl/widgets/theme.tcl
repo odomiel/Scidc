@@ -482,6 +482,16 @@ proc SetupCurrentTheme {} {
 		option add *Toolbar.background        $background
 		option add *ToolbarFrame.background   $background
 		option add *ToolbarHandle.background  $background
+		option add *Entry.background          #3c3f41
+		option add *Entry.foreground          $fg
+		option add *Entry.readonlyBackground  #45494a
+		option add *Spinbox.background        #3c3f41
+		option add *Spinbox.foreground        $fg
+		option add *Spinbox.readonlyBackground #45494a
+		option add *TEntry.background         #3c3f41
+		option add *TEntry.foreground         $fg
+		option add *TSpinbox.foreground       $fg
+		option add *TCombobox.foreground      $fg
 	}
 
 	# probe actual frame background (after option DB is set so dark themes report correctly)

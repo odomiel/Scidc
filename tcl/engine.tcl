@@ -247,8 +247,12 @@ proc openAdmininstration {parent} {
 	### Tab: Setup ########################################################
 	set setup [ttk::frame $nb.setup -takefocus 0 -borderwidth 0]
 	$nb add $setup -sticky nsew -text $mc::Information -padding {5 5}
-#	lappend labelOptions -borderwidth 1 -relief raised -background [::theme::getToplevelBackground]
-	lappend labelOptions -borderwidth 1 -relief raised -background #f2f2f2
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set labelBg #3c3f41
+	} else {
+		set labelBg #f2f2f2
+	}
+	lappend labelOptions -borderwidth 1 -relief raised -background $labelBg
 
 	ttk::label			$setup.lname -text $mc::Name
 	ttk::entry			$setup.ename -textvar [namespace current]::Data(Name)
@@ -1503,8 +1507,13 @@ proc DiscardChanges {list} {
 proc ShowFeatures {list features variants} {
 	variable Priv
 
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set bodyStyle "background-color: #2b2b2b; color: #bbbbbb;"
+	} else {
+		set bodyStyle "background-color: #ffdd76;"
+	}
 	append html "<html>"
-	append html "<head><style type='text/css'>body { background-color: #ffdd76; }</style></head>"
+	append html "<head><style type='text/css'>body { $bodyStyle }</style></head>"
 	append html "<body>"
 
 	if {"standard" ni $variants} {
