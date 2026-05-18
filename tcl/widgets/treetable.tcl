@@ -179,7 +179,7 @@ proc WidgetProc {t command args} {
 			array unset opts -tags
 			array unset opts -tag
 			if {[llength $opts(-fill)] == 0} {
-				set opts(-fill) [list black enabled \
+				set opts(-fill) [list [::colors::lookup treetable,foreground] enabled \
 					[::colors::lookup $Vars(disabledforeground)] !enabled]
 			}
 			set args [array get opts]

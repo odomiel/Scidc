@@ -166,6 +166,7 @@ array set Colors {
 	lite:tlistbox,dropforeground			black
 
 	lite:treetable,background				white
+	lite:treetable,foreground				black
 	lite:treetable,disabledforeground	#999999
 
 	lite:help,foreground:gray				#999999
@@ -412,7 +413,7 @@ array set Colors {
 	night:fsbox,inactiveforeground			#888888
 	night:fsbox,activebackground			#313438
 	night:fsbox,activeforeground			#bbbbbb
-	night:fsbox,emphasizebackground		#3a3a2a
+	night:fsbox,emphasizebackground		#333333
 
 	night:gamebar,background:normal		#3c3f41
 	night:gamebar,foreground:normal		#bbbbbb
@@ -445,6 +446,7 @@ array set Colors {
 	night:tlistbox,dropforeground			#bbbbbb
 
 	night:treetable,background				#2b2b2b
+	night:treetable,foreground				#bbbbbb
 	night:treetable,disabledforeground		#666666
 
 	night:help,foreground:gray				#666666
