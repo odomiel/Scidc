@@ -128,6 +128,27 @@ Alle früheren `UpdateColorLookup`/`ColumnForeground`-Mechanismen in `table.tcl`
 - Tag-Farb-Keys: `pgn,foreground:main`, `pgn,foreground:comment` etc. (in `colors.tcl` als `night:pgn,...`)
 - Browser-Kontext: `main`-Tag erhält keine explizite Vordergrundfarbe → fällt auf Widget-Default zurück
 
+### `strongTtk`-Block in `theme.tcl` – was fehlt schmerzt
+Der Block in `SetupTheme` überschreibt globale Defaults. Globale Defaults (außerhalb des Blocks) setzen `*Entry.background white`, `*TEntry.background white` etc. hartkodiert. Fehlende Überschreibungen im `strongTtk`-Block → Eingabefelder bleiben weiß im Night-Mode. Der Block muss abdecken:
+- `*Entry.*`, `*Spinbox.*` (classic Tk)
+- `*TEntry.*`, `*TSpinbox.*`, `*TCombobox.*` (TTK)
+
+### TkTreeCtrl – Item-Textfarbe (Default-State)
+`-fill`-Listen für `text`-Elemente enthalten nur State-spezifische Einträge (selected, hilite). Ohne expliziten Default-Eintrag verwendet TkTreeCtrl intern schwarz → unsichtbar im Night-Mode. **Immer** am Ende der Fill-Liste anfügen:
+```tcl
+-fill [list \
+    [lookupColor key:selected] {selected focus} \
+    ... \
+    [lookupColor widget,foreground] {}  ;# ← Default für Normalzustand
+]
+```
+Spaltenköpfe brauchen zusätzlich `-textcolor [lookupColor widget,foreground]` beim `column create` und in `ThemeChanged` mit `$t column configure $id -textcolor $fg`.
+
+### `html::Build` – Hintergrund-CSS-Reihenfolge
+Der Default-Background-Fallback muss **vor** dem CSS-Preamble-Block stehen, damit `html { background: #2b2b2b; }` in den User-Stylesheet injiziert wird. Ist er danach, bekommt der Tkhtml-Widget keine CSS-Background-Regel – der Tk-Frame ist dunkel, aber die HTML-Renderingfläche bleibt weiß.
+
+`html::SetupCSS` fügt `body { color: #bbbbbb; }` im Night-Mode ein – gilt für alle html-Widgets ohne explizites Color-CSS (About-Dialog, Tip-of-the-Day etc.).
+
 ---
 
 ## Engines
