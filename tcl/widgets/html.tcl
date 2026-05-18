@@ -273,7 +273,15 @@ proc Build {w args} {
 	array set opts $args
 	set preamble ""
 
-	if {[string length $opts(-background)] || [string length $opts(-background)]} {
+	if {[string length $opts(-background)] == 0} {
+		if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+			set opts(-background) #2b2b2b
+		} else {
+			set opts(-background) white
+		}
+	}
+
+	if {[string length $opts(-background)] || [string length $opts(-backgroundimage)]} {
 		append preamble "html {"
 		if {[string length $opts(-background)]} {
 			append preamble "background: $opts(-background);\n"
@@ -285,14 +293,6 @@ proc Build {w args} {
 		append script $preamble
 		append script $opts(-css)
 		set opts(-css) $script
-	}
-
-	if {[string length $opts(-background)] == 0} {
-		if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
-			set opts(-background) #2b2b2b
-		} else {
-			set opts(-background) white
-		}
 	}
 	if {[string length $opts(-imagecmd)] == 0} { set opts(-imagecmd) [namespace code GetImage] }
 
