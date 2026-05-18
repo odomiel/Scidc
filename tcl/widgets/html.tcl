@@ -850,7 +850,11 @@ proc SetupCSS {w} {
 
 	append css $Priv(preamble)
 	append css $Priv(css)
-	append css "\nbody { font-size: ${Priv(fontsize)}pt; }"
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		append css "\nbody { font-size: ${Priv(fontsize)}pt; color: #bbbbbb; }"
+	} else {
+		append css "\nbody { font-size: ${Priv(fontsize)}pt; }"
+	}
 	if {$Priv(textalign) ne "left"} {
 		append css "\np { text-align: $Priv(textalign); }"
 		append css "\nli { text-align: $Priv(textalign); }"
