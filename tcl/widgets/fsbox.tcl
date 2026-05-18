@@ -1277,12 +1277,14 @@ proc ThemeChanged {w} {
 	if {[llength $activebg]== 0} { set activebg [$w cget -background] }
 
 	set listbg [lookupColor table,background]
+	set emphbg [lookupColor $Vars(emphasizebackground)]
 	foreach n {bookmark file} {
 		set t $Vars(widget:list:$n)
 		$t configure -background $listbg
 		foreach id [$t column list] {
 			$t column configure $id -background [GetHeaderBackground $w]
 		}
+		catch {$t column configure size -itembackground $emphbg}
 	}
 	set Vars(bookmark:background) $listbg
 

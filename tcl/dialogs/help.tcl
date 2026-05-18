@@ -1562,6 +1562,15 @@ proc ImportHandler {parentid uri} {
 	set id "$parentid.[format %.4d [incr _StyleCount]]"
 	set handler [namespace code [list ImportHandler $id]]
 	$Priv(html) style -id $id.9999 -importcmd $handler $content
+
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set nightUri [file join [file dirname $uri] "night-[file tail $uri]"]
+		catch {
+			set nightContent [::file::read [FullPath $nightUri] -encoding utf-8]
+			set nightId "$parentid.[format %.4d [incr _StyleCount]]"
+			$Priv(html) style -id $nightId.9999 -importcmd $handler $nightContent
+		}
+	}
 }
 
 
