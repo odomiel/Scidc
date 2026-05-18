@@ -127,6 +127,7 @@ array set Colors {
 
 	lite:fsbox,menu:headerbackground		#ffdd76
 	lite:fsbox,menu:headerforeground		black
+	lite:fsbox,foreground					black
 	lite:fsbox,drop:background				LemonChiffon
 	lite:fsbox,selectionbackground		#ebf4f5
 	lite:fsbox,selectionforeground		black
@@ -406,6 +407,7 @@ array set Colors {
 
 	night:fsbox,menu:headerbackground		#2a3a2a
 	night:fsbox,menu:headerforeground		#bbbbbb
+	night:fsbox,foreground					#bbbbbb
 	night:fsbox,drop:background				#3c3f41
 	night:fsbox,selectionbackground		#313438
 	night:fsbox,selectionforeground		#bbbbbb

@@ -1278,11 +1278,12 @@ proc ThemeChanged {w} {
 
 	set listbg [lookupColor table,background]
 	set emphbg [lookupColor $Vars(emphasizebackground)]
+	set hdrfg  [lookupColor fsbox,foreground]
 	foreach n {bookmark file} {
 		set t $Vars(widget:list:$n)
 		$t configure -background $listbg
 		foreach id [$t column list] {
-			$t column configure $id -background [GetHeaderBackground $w]
+			$t column configure $id -background [GetHeaderBackground $w] -textcolor $hdrfg
 		}
 		catch {$t column configure size -itembackground $emphbg}
 	}
@@ -2643,6 +2644,7 @@ proc Build {w path args} {
 			[lookupColor $Vars(selectionforeground)] {selected hilite} \
 			[lookupColor $Vars(inactiveforeground)]  {selected !focus} \
 			[lookupColor $Vars(activeforeground)]    {hilite}          \
+			[lookupColor fsbox,foreground]           {}                \
 		]                                                             \
 		-lines 1                                                      \
 		;
@@ -2668,7 +2670,7 @@ proc Build {w path args} {
 	$t style layout $s elemSel -union {elemTxt} -iexpand nsew
 	$t style layout $s elemBrd -iexpand xy -detach yes
 
-	$t element create elemDiv rect -fill [lookupColor black] -height 1
+	$t element create elemDiv rect -fill [lookupColor fsbox,foreground] -height 1
 	$t style create styLine
 	$t style elements styLine {elemDiv}
 	$t style layout styLine elemDiv -pady {3 2} -padx {4 4} -iexpand x -expand ns
@@ -3566,6 +3568,7 @@ proc DetailedLayout {w} {
 
 	$t column create                          \
 		-background $background                \
+		-textcolor [lookupColor fsbox,foreground] \
 		-text [Tr Name]                        \
 		-tags name                             \
 		-minwidth [expr {10*$Vars(charwidth)}] \
@@ -3583,6 +3586,7 @@ proc DetailedLayout {w} {
 		set bg [lookupColor $Vars(emphasizebackground)]
 		$t column create                         \
 			-background $background               \
+			-textcolor [lookupColor fsbox,foreground] \
 			-itembackground $bg                   \
 			-text [Tr Size]                       \
 			-tags size                            \
@@ -3601,6 +3605,7 @@ proc DetailedLayout {w} {
 	}
 	$t column create                          \
 		-background $background                \
+		-textcolor [lookupColor fsbox,foreground] \
 		-text [Tr Modified]                    \
 		-tags modified                         \
 		-width [expr {18*$Vars(charwidth)}]    \
@@ -3619,7 +3624,8 @@ proc DetailedLayout {w} {
 			[lookupColor $Vars(selectionforeground)] {selected focus}  \
 			[lookupColor $Vars(selectionforeground)] {selected hilite} \
 			[lookupColor $Vars(inactiveforeground)]  {selected !focus} \
-			[lookupColor $Vars(activeforeground)] {hilite}             \
+			[lookupColor $Vars(activeforeground)]    {hilite}          \
+			[lookupColor fsbox,foreground]           {}                \
 		]                                                             \
 		-lines 1                                                      \
 		;
@@ -3629,6 +3635,7 @@ proc DetailedLayout {w} {
 			[lookupColor $Vars(selectionforeground)] {selected hilite} \
 			[lookupColor $Vars(inactiveforeground)]  {selected !focus} \
 			[lookupColor $Vars(activeforeground)]    {hilite}          \
+			[lookupColor fsbox,foreground]           {}                \
 		]                                                             \
 		-lines 1                                                      \
 		;
@@ -3638,6 +3645,7 @@ proc DetailedLayout {w} {
 			[lookupColor $Vars(selectionforeground)] {selected hilite} \
 			[lookupColor $Vars(inactiveforeground)]  {selected !focus} \
 			[lookupColor $Vars(activeforeground)]    {hilite}          \
+			[lookupColor fsbox,foreground]           {}                \
 		]                                                             \
 		-datatype time                                                \
 		-format [Tr TimeFormat]                                       \
@@ -3783,6 +3791,7 @@ proc ListLayout {w} {
 			[lookupColor $Vars(selectionforeground)] {selected hilite} \
 			[lookupColor $Vars(inactiveforeground)]  {selected !focus} \
 			[lookupColor $Vars(activeforeground)]    {hilite}          \
+			[lookupColor fsbox,foreground]           {}                \
 		]                                                             \
 		-lines 1                                                      \
 		;
@@ -3792,7 +3801,7 @@ proc ListLayout {w} {
 			[lookupColor $Vars(selectionbackground)] {selected hilite} \
 			[lookupColor $Vars(inactivebackground)] {selected !focus}  \
 			[lookupColor $Vars(activebackground)] {hilite}             \
-		] 
+		]
 	$t element create elemBrd border          \
 		-filled no                             \
 		-relief raised                         \
