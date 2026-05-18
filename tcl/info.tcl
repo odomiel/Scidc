@@ -282,6 +282,15 @@ proc BuildContributionsFrame {w} {
 
 	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
 		set bg #2b2b2b
+		append css {
+			div.box {
+				background:	#2c2f33;
+				border:		1px solid #555555;
+			}
+			hr {
+				border-top:	solid 1px #555555;
+			}
+		}
 	} else {
 		set bg lightgoldenrod
 	}
