@@ -83,7 +83,7 @@ proc hyphenate {lang content} {
 	if {[string length $patternFilename]} {
 #		if {$lang eq "de"} {
 #			# don't use German eszet:
-#			set content [string map {"ß" "ss"} $content]
+#			set content [string map {"ï¿½" "ss"} $content]
 #		}
 		set content [::scidb::misc::html hyphenate $patternFilename $dictFilenames $content]
 	}
@@ -136,15 +136,26 @@ proc formatUrl {url} {
 
 
 proc defaultCSS {monoFamilies textFamilies {hoverColor none}} {
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set bodyColor    #bbbbbb
+		set linkColor    #5894c9
+		set visitedColor #9070a0
+		set invalidColor #888888
+	} else {
+		set bodyColor    black
+		set linkColor    blue2
+		set visitedColor purple
+		set invalidColor black
+	}
 	append css \n
-	append css ":link    { color: blue2; text-decoration: none; }" \n
-	append css ":visited { color: purple; text-decoration: none; }" \n
-	append css ":user    { color: blue2; text-decoration: none; }   /* http link */" \n
-	append css ":user2   { color: purple; text-decoration: none; }  /* http visited */" \n
-	append css ":user3   { color: black; text-decoration: none; }   /* invalid link */" \n
+	append css ":link    { color: $linkColor; text-decoration: none; }" \n
+	append css ":visited { color: $visitedColor; text-decoration: none; }" \n
+	append css ":user    { color: $linkColor; text-decoration: none; }   /* http link */" \n
+	append css ":user2   { color: $visitedColor; text-decoration: none; }  /* http visited */" \n
+	append css ":user3   { color: $invalidColor; text-decoration: none; }   /* invalid link */" \n
 	append css ":hover   { text-decoration: underline; background: $hoverColor; }" \n
 	append css ".match   { background: yellow; color: black; }" \n
-	append css "body     { color: black; }\n"
+	append css "body     { color: $bodyColor; }\n"
 	append css [monoStyle $monoFamilies] \n
 	append css [textStyle $textFamilies] \n
 	return $css
@@ -276,7 +287,13 @@ proc Build {w args} {
 		set opts(-css) $script
 	}
 
-	if {[string length $opts(-background)] == 0} { set opts(-background) white }
+	if {[string length $opts(-background)] == 0} {
+		if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+			set opts(-background) #2b2b2b
+		} else {
+			set opts(-background) white
+		}
+	}
 	if {[string length $opts(-imagecmd)] == 0} { set opts(-imagecmd) [namespace code GetImage] }
 
 	set options {}
@@ -477,6 +494,20 @@ proc ImportHandler {w parentid uri} {
 		set id "$parentid.[format %.4d $Priv(styleCount)]"
 		set handler [namespace code [list ImportHandler $w]]
 		$w style -id $id.9999 -importcmd $handler -urlcmd [namespace code [list UrlHandler $w]] $contents
+
+		if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+			set nightFile [file join [file dirname $file] "night-[file tail $file]"]
+			if {[file readable $nightFile]} {
+				set fd [::open $nightFile r]
+				chan configure $fd -encoding utf-8
+				set nightContents [::read $fd]
+				close $fd
+				incr Priv(styleCount)
+				set nightId "$parentid.[format %.4d $Priv(styleCount)]"
+				$w style -id $nightId.9999 -importcmd $handler \
+					-urlcmd [namespace code [list UrlHandler $w]] $nightContents
+			}
+		}
 	}
 }
 

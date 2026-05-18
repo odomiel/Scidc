@@ -477,6 +477,8 @@ proc SetupCurrentTheme {} {
 		option add *Listbox.selectBackground  $selectbg
 		option add *Listbox.selectForeground  $selectfg
 		option add *TreeCtrl.foreground       $fg
+		option add *Message.background        $background
+		option add *Message.foreground        $fg
 		option add *Toolbar.background        $background
 		option add *ToolbarFrame.background   $background
 		option add *ToolbarHandle.background  $background

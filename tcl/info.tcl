@@ -139,19 +139,27 @@ proc DisplayAbout {w} {
 	array set font [font actual TkTextFont]
 	set fam $font(-family)
 
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set tableColor #88aabb
+		set accentColor #cc8844
+	} else {
+		set tableColor steelblue4
+		set accentColor brown
+	}
+
 	$w parse "
 		<link/>
-		<table border='0' style='font-family: Final Frontier, $fam; font-size: 16pt;' color='steelblue4'>
+		<table border='0' style='font-family: Final Frontier, $fam; font-size: 16pt;' color='$tableColor'>
 			<tr>
 				<td><img src='Scidb-Logo-128'/></td>
 				<td width='30px'></td>
 				<td align='center'>
-					<font style='font-size: 48pt;'><font color='brown'>S</font>cidb</font><br/>
+					<font style='font-size: 48pt;'><font color='$accentColor'>S</font>cidb</font><br/>
 					is a
-					<font color='brown'>C</font>hess
-					<font color='brown'>I</font>nformation
-					<font color='brown'>D</font>ata
-					<font color='brown'>B</font>ase
+					<font color='$accentColor'>C</font>hess
+					<font color='$accentColor'>I</font>nformation
+					<font color='$accentColor'>D</font>ata
+					<font color='$accentColor'>B</font>ase
 				<td>
 			</tr>
 		</table>
@@ -187,9 +195,16 @@ proc A_NodeHandler {node} {
 
 
 proc LinkHandler {w node} {
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set linkColor    #5894c9
+		set visitedColor #9070a0
+	} else {
+		set linkColor    blue2
+		set visitedColor purple
+	}
 	$w style -id user "
-		:link    { color: blue2; text-decoration: none; }
-		:visited { color: purple; text-decoration: none; }
+		:link    { color: $linkColor; text-decoration: none; }
+		:visited { color: $visitedColor; text-decoration: none; }
 		:hover   { text-decoration: underline; }
 	"
 }
@@ -265,8 +280,13 @@ proc BuildContributionsFrame {w} {
 		}
 	}
 
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set bg #2b2b2b
+	} else {
+		set bg lightgoldenrod
+	}
 	::html $w.t \
-		-background lightgoldenrod \
+		-background $bg \
 		-imagecmd [namespace code GetImage] \
 		-center yes \
 		-fittowidth yes \
@@ -544,8 +564,15 @@ proc BuildSystemFrame {w} {
 		set identity "<cannot determine identifier>"
 	}
 
+	if {[info exists ::colors::Scheme] && $::colors::Scheme eq "night"} {
+		set frameBg #2b2b2b
+		set labelBg #3c3f41
+	} else {
+		set frameBg white
+		set labelBg lightgray
+	}
 	# TODO: use a label for the first line (ensures minimum width)
-	set f [tk::frame $w.f -background white -relief sunken -borderwidth 1]
+	set f [tk::frame $w.f -background $frameBg -relief sunken -borderwidth 1]
 	set t [tk::text $f.t \
 		-cursor left_ptr \
 		-width 0 -height [expr {6 + [llength $total]}] \
@@ -554,9 +581,9 @@ proc BuildSystemFrame {w} {
 		-borderwidth 0 \
 	]
 	ttk::setCursor $t standard
-	set l1 [tk::label $f.l1 -image [GetOSImage Linux  ] -background lightgray]
-	set l2 [tk::label $f.l2 -image [GetOSImage Windows] -background lightgray]
-	set l3 [tk::label $f.l3 -image [GetOSImage Apple  ] -background lightgray]
+	set l1 [tk::label $f.l1 -image [GetOSImage Linux  ] -background $labelBg]
+	set l2 [tk::label $f.l2 -image [GetOSImage Windows] -background $labelBg]
+	set l3 [tk::label $f.l3 -image [GetOSImage Apple  ] -background $labelBg]
 	pack $f -fill both -expand true
 	grid $l1 -row 0 -column 0 -sticky nswe
 	grid $l2 -row 1 -column 0 -sticky nswe

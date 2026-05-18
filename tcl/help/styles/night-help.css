@@ -1,0 +1,60 @@
+/* Dark mode overrides for help.css */
+
+body { background-color: #2b2b2b; color: #bbbbbb; }
+
+a:link    { color: #5894c9; }
+a:visited { color: #9070a0; }
+
+h1 { background-color: #2a3a4a; color: #ccddee; }
+h2 { background-color: #2a3a4a; color: #ccddee; }
+h3 { background-color: #2a3a4a; color: #ccddee; }
+h4 { background-color: #2a3a4a; color: #ccddee; }
+
+h1.title { background-color: #1a3a5a; color: #aaccee; }
+
+div.title {
+	color:          #aaccee;
+	background:     #1a3a5a;
+	border:         1px solid #2a4a6a;
+}
+
+div.box {
+	background:     #2c2f33;
+	border:         1px solid #555555;
+}
+
+div.verb {
+	background:     #2c2f33;
+	border:         1px solid #555555;
+}
+
+div.annotation {
+	background:     #3a3a1a;
+	border:         1px solid #555555;
+}
+
+span.NEW     { color: #44aa44; }
+span.comment { color: #44aa44; }
+span.keyword { color: #cc5555; }
+
+table.standard { background: #2c2f33; }
+
+tr.stripes { background: #303840; }
+
+kbd.key {
+	border-color: #555555 #444444 #444444 #555555;
+	background:   #333333;
+	color:        #cccccc;
+}
+
+span.button {
+	border-color: #555555 #444444 #444444 #555555;
+	background:   #333333;
+	color:        #cccccc;
+}
+
+.menuitem { background: #2a3050; color: #bbbbbb; }
+
+td.t { border-top-color: #555555; }
+
+/* vi:set ts=3 sw=3: */
