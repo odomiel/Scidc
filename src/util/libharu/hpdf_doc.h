@@ -5,7 +5,6 @@
  *
  * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
  * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
- * Copyright (c) 2011-2013 Gregor Cramer
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -22,7 +21,6 @@
 
 #define HPDF_SIG_BYTES 0x41504446L
 
-#include "hpdf_config.h"
 #include "hpdf_catalog.h"
 #include "hpdf_image.h"
 #include "hpdf_pages.h"
@@ -33,11 +31,11 @@
 extern "C" {
 #endif
 
+#define HPDF_VER_DEFAULT  HPDF_VER_13
+
 #if LIBHPDF_HAVE_FONTCONFIG_H
 struct _FcConfig;
 #endif
-
-#define HPDF_VER_DEFAULT  HPDF_VER_12
 
 typedef struct _HPDF_Doc_Rec {
     HPDF_UINT32     sig_bytes;
@@ -79,6 +77,10 @@ typedef struct _HPDF_Doc_Rec {
 
     /* buffer for saving into memory stream */
     HPDF_Stream       stream;
+
+    /* PDF/A conformance */
+    HPDF_PDFAType     pdfa_type;
+    HPDF_List         xmp_extensions;
 
 #if LIBHPDF_HAVE_FONTCONFIG_H
     struct _FcConfig *fc_config;
@@ -151,7 +153,7 @@ HPDF_Doc_RegisterEncoder  (HPDF_Doc       pdf,
 
 
 
-/*----- encryptio------------------------------------------------------------*/
+/*----- encryption ----------------------------------------------------------*/
 
 HPDF_STATUS
 HPDF_Doc_SetEncryptOn (HPDF_Doc  pdf);
@@ -169,4 +171,3 @@ HPDF_Doc_PrepareEncryption (HPDF_Doc  pdf);
 #endif /* __cplusplus */
 
 #endif /* _HPDF_DOC_H */
-

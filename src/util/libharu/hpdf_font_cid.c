@@ -553,6 +553,7 @@ CIDFontType2_BeforeWrite_Func  (HPDF_Dict obj)
         ret += HPDF_Dict_AddName (descriptor, "Type", "FontDescriptor");
         ret += HPDF_Dict_AddNumber (descriptor, "Ascent", def->ascent);
         ret += HPDF_Dict_AddNumber (descriptor, "Descent", def->descent);
+        ret += HPDF_Dict_AddNumber (descriptor, "CapHeight", def->cap_height);
         ret += HPDF_Dict_AddNumber (descriptor, "Flags", def->flags);
 
         array = HPDF_Box_Array_New (obj->mmgr, def->font_bbox);
@@ -621,10 +622,10 @@ TextWidth  (HPDF_Font         font,
 
         if (btype == HPDF_BYTE_TYPE_LEAD) {
             code <<= 8;
-            code += (HPDF_UINT16)*text;
+            code = (HPDF_UINT16)(code + *text);
         }
 
-        if (btype != HPDF_BYTE_TYPE_TRIAL) {
+        if (btype != HPDF_BYTE_TYPE_TRAIL) {
             if (attr->writing_mode == HPDF_WMODE_HORIZONTAL) {
                 if (attr->fontdef->type == HPDF_FONTDEF_TYPE_CID) {
                     /* cid-based font */
@@ -676,9 +677,7 @@ MeasureText  (HPDF_Font          font,
     HPDF_UINT tmp_len = 0;
     HPDF_UINT i;
     HPDF_FontAttr attr = (HPDF_FontAttr)font->attr;
-#ifdef USE_CHECk_JWW_LINE_HEAD
-    HPDF_ByteType last_btype = HPDF_BYTE_TYPE_TRIAL;
-#endif
+    //HPDF_ByteType last_btype = HPDF_BYTE_TYPE_TRAIL;
     HPDF_Encoder encoder = attr->encoder;
     HPDF_ParseText_Rec  parse_state;
     HPDF_INT dw2;
@@ -706,7 +705,7 @@ MeasureText  (HPDF_Font          font,
 
         if (btype == HPDF_BYTE_TYPE_LEAD) {
             code <<= 8;
-            code += (HPDF_UINT16)b2;
+            code = (HPDF_UINT16)(code + b2);
         }
 
         if (!wordwrap) {
@@ -725,11 +724,9 @@ MeasureText  (HPDF_Font          font,
                 tmp_len = i + 1;
                 if (real_width)
                     *real_width = w;
-            }
-#ifdef USE_CHECk_JWW_LINE_HEAD
-//Commenting this out fixes problem with HPDF_Text_Rect() splitting the words
-			else {
-            if (last_btype == HPDF_BYTE_TYPE_TRIAL ||
+            } /* else
+			//Commenting this out fixes problem with HPDF_Text_Rect() splitting the words
+            if (last_btype == HPDF_BYTE_TYPE_TRAIL ||
                     (btype == HPDF_BYTE_TYPE_LEAD &&
                     last_btype == HPDF_BYTE_TYPE_SINGLE)) {
                 if (!HPDF_Encoder_CheckJWWLineHead(encoder, code)) {
@@ -737,15 +734,14 @@ MeasureText  (HPDF_Font          font,
                     if (real_width)
                         *real_width = w;
                 }
-            }
-#endif
+            }*/
         }
 
         if (HPDF_IS_WHITE_SPACE(b)) {
             w += word_space;
         }
 
-        if (btype != HPDF_BYTE_TYPE_TRIAL) {
+        if (btype != HPDF_BYTE_TYPE_TRAIL) {
             if (attr->writing_mode == HPDF_WMODE_HORIZONTAL) {
                 if (attr->fontdef->type == HPDF_FONTDEF_TYPE_CID) {
                     /* cid-based font */
@@ -771,12 +767,13 @@ MeasureText  (HPDF_Font          font,
         if (w > width || b == 0x0A)
             return tmp_len;
 
-#ifdef USE_CHECk_JWW_LINE_HEAD
+        /*
         if (HPDF_IS_WHITE_SPACE(b))
-            last_btype = HPDF_BYTE_TYPE_TRIAL;
+            last_btype = HPDF_BYTE_TYPE_TRAIL;
         else
             last_btype = btype;
-#endif
+        */
+
     }
 
     /* all of text can be put in the specified width */
@@ -785,6 +782,7 @@ MeasureText  (HPDF_Font          font,
 
     return len;
 }
+
 
 
 static char*
@@ -816,7 +814,7 @@ UINT16ToHex  (char        *s,
      * least, that crashes Mac OSX Preview).
      */
     if (width == 2) {
-        c = (char)(b[0] >> 4);
+        c = b[0] >> 4;
         if (c <= 9)
             c += 0x30;
         else

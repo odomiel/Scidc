@@ -21,13 +21,12 @@
 #include "hpdf.h"
 
 static const HPDF_Point INIT_POS = {0, 0};
-static const HPDF_DashMode INIT_MODE = {{0, 0, 0, 0, 0, 0, 0, 0}, 0, 0};
+static const HPDF_DashMode INIT_MODE = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0, 0.0f};
 
 
 static HPDF_STATUS
 InternalWriteText  (HPDF_PageAttr    attr,
-                    const char      *text,
-						  HPDF_INT         len);
+                    const char      *text);
 
 
 static HPDF_STATUS
@@ -175,17 +174,17 @@ HPDF_Page_SetMiterLimit  (HPDF_Page  page,
 
 /* d */
 HPDF_EXPORT(HPDF_STATUS)
-HPDF_Page_SetDash  (HPDF_Page           page,
-                    const HPDF_UINT16  *dash_ptn,
-                    HPDF_UINT           num_param,
-                    HPDF_UINT           phase)
+HPDF_Page_SetDash  (HPDF_Page        page,
+                    const HPDF_REAL *dash_ptn,
+                    HPDF_UINT        num_param,
+                    HPDF_REAL        phase)
 {
     HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_PAGE_DESCRIPTION |
                     HPDF_GMODE_TEXT_OBJECT);
     char buf[HPDF_TMP_BUF_SIZ];
     char *pbuf = buf;
     char *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
-    const HPDF_UINT16 *pdash_ptn = dash_ptn;
+    const HPDF_REAL *pdash_ptn = dash_ptn;
     HPDF_PageAttr attr;
     HPDF_UINT i;
 
@@ -194,17 +193,11 @@ HPDF_Page_SetDash  (HPDF_Page           page,
     if (ret != HPDF_OK)
         return ret;
 
-    if (num_param != 1 && (num_param / 2) * 2 != num_param)
-        return HPDF_RaiseError (page->error, HPDF_PAGE_INVALID_PARAM_COUNT,
-                num_param);
-
     if (num_param == 0 && phase > 0)
-        return HPDF_RaiseError (page->error, HPDF_PAGE_OUT_OF_RANGE,
-                phase);
+        return HPDF_RaiseError (page->error, HPDF_PAGE_OUT_OF_RANGE, 0);
 
     if (!dash_ptn && num_param > 0)
-        return HPDF_RaiseError (page->error, HPDF_INVALID_PARAMETER,
-                phase);
+        return HPDF_RaiseError (page->error, HPDF_INVALID_PARAMETER, 0);
 
     HPDF_MemSet (buf, 0, HPDF_TMP_BUF_SIZ);
     *pbuf++ = '[';
@@ -213,7 +206,7 @@ HPDF_Page_SetDash  (HPDF_Page           page,
         if (*pdash_ptn == 0 || *pdash_ptn > HPDF_MAX_DASH_PATTERN)
             return HPDF_RaiseError (page->error, HPDF_PAGE_OUT_OF_RANGE, 0);
 
-        pbuf = HPDF_IToA (pbuf, *pdash_ptn, eptr);
+        pbuf = HPDF_FToA (pbuf, *pdash_ptn, eptr);
         *pbuf++ = ' ';
         pdash_ptn++;
     }
@@ -221,7 +214,7 @@ HPDF_Page_SetDash  (HPDF_Page           page,
     *pbuf++ = ']';
     *pbuf++ = ' ';
 
-    pbuf = HPDF_IToA (pbuf, phase, eptr);
+    pbuf = HPDF_FToA (pbuf, phase, eptr);
     HPDF_StrCpy (pbuf, " d\012", eptr);
 
     attr = (HPDF_PageAttr)page->attr;
@@ -307,12 +300,43 @@ HPDF_Page_SetExtGState  (HPDF_Page        page,
     if (HPDF_Stream_WriteStr (attr->stream, " gs\012") != HPDF_OK)
         return HPDF_CheckError (page->error);
 
-    /* change objct class to read only. */
+    /* change object class to read only. */
     ext_gstate->header.obj_class = (HPDF_OSUBCLASS_EXT_GSTATE_R | HPDF_OCLASS_DICT);
 
     return ret;
 }
 
+/* sh */
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_SetShading  (HPDF_Page    page,
+                       HPDF_Shading shading)
+{
+    HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_PAGE_DESCRIPTION);
+    HPDF_PageAttr attr;
+    const char *local_name;
+
+    HPDF_PTRACE ((" HPDF_Page_SetShading\n"));
+
+    if (ret != HPDF_OK)
+        return ret;
+
+    if (page->mmgr != shading->mmgr)
+        return HPDF_RaiseError (page->error, HPDF_INVALID_OBJECT, 0);
+
+    attr = (HPDF_PageAttr)page->attr;
+    local_name = HPDF_Page_GetShadingName (page, shading);
+
+    if (!local_name)
+        return HPDF_CheckError (page->error);
+
+    if (HPDF_Stream_WriteEscapeName (attr->stream, local_name) != HPDF_OK)
+        return HPDF_CheckError (page->error);
+
+    if (HPDF_Stream_WriteStr (attr->stream, " sh\012") != HPDF_OK)
+        return HPDF_CheckError (page->error);
+
+    return ret;
+}
 
 /*--- Special graphic state operator --------------------------------------*/
 
@@ -415,13 +439,17 @@ HPDF_Page_Concat  (HPDF_Page         page,
         return HPDF_CheckError (page->error);
 
     tm = attr->gstate->trans_matrix;
-
+    /*
+    | ta tb 0 |   | a b |   | ta*a+tb*c   ta*b+tb*d   |
+    | tc td 0 | x | c d | = | tc*a+td*c   tc*b+td*d   |
+    | tx ty 1 |   | x y |   | tx*a+ty*c+x tx*b+ty*d+y |
+    */
     attr->gstate->trans_matrix.a = tm.a * a + tm.b * c;
     attr->gstate->trans_matrix.b = tm.a * b + tm.b * d;
     attr->gstate->trans_matrix.c = tm.c * a + tm.d * c;
     attr->gstate->trans_matrix.d = tm.c * b + tm.d * d;
-    attr->gstate->trans_matrix.x = tm.x + x * tm.a + y * tm.c;
-    attr->gstate->trans_matrix.y = tm.y + x * tm.b + y * tm.d;
+    attr->gstate->trans_matrix.x = tm.x * a + tm.y * c + x;
+    attr->gstate->trans_matrix.y = tm.x * b + tm.y * d + y;
 
     return ret;
 }
@@ -1418,8 +1446,7 @@ HPDF_Page_MoveToNextLine  (HPDF_Page  page)
 /* Tj */
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_Page_ShowText  (HPDF_Page    page,
-                     const char  *text,
-							HPDF_INT     len)
+                     const char  *text)
 {
     HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_TEXT_OBJECT);
     HPDF_PageAttr attr;
@@ -1427,9 +1454,7 @@ HPDF_Page_ShowText  (HPDF_Page    page,
 
     HPDF_PTRACE ((" HPDF_Page_ShowText\n"));
 
-	if (len < 0)
-        len = HPDF_StrLen (text, HPDF_LIMIT_MAX_STRING_LEN);
-    if (ret != HPDF_OK || text == NULL || len == 0)
+    if (ret != HPDF_OK || text == NULL || text[0] == 0)
         return ret;
 
     attr = (HPDF_PageAttr)page->attr;
@@ -1438,11 +1463,11 @@ HPDF_Page_ShowText  (HPDF_Page    page,
     if (!attr->gstate->font)
         return HPDF_RaiseError (page->error, HPDF_PAGE_FONT_NOT_FOUND, 0);
 
-    tw = HPDF_Page_TextWidth (page, text, len);
+    tw = HPDF_Page_TextWidth (page, text);
     if (!tw)
         return ret;
 
-    if (InternalWriteText (attr, text, len) != HPDF_OK)
+    if (InternalWriteText (attr, text) != HPDF_OK)
         return HPDF_CheckError (page->error);
 
     if (HPDF_Stream_WriteStr (attr->stream, " Tj\012") != HPDF_OK)
@@ -1464,8 +1489,7 @@ HPDF_Page_ShowText  (HPDF_Page    page,
 /* ' */
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_Page_ShowTextNextLine  (HPDF_Page    page,
-                             const char  *text,
-									  HPDF_INT     len)
+                             const char  *text)
 {
     HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_TEXT_OBJECT);
     HPDF_PageAttr attr;
@@ -1482,18 +1506,16 @@ HPDF_Page_ShowTextNextLine  (HPDF_Page    page,
     if (!attr->gstate->font)
         return HPDF_RaiseError (page->error, HPDF_PAGE_FONT_NOT_FOUND, 0);
 
-    if (len < 0)
-        len = HPDF_StrLen (text, HPDF_LIMIT_MAX_STRING_LEN);
-    if (text == NULL || len == 0)
+    if (text == NULL || text[0] == 0)
         return HPDF_Page_MoveToNextLine(page);
 
-    if (InternalWriteText (attr, text, len) != HPDF_OK)
+    if (InternalWriteText (attr, text) != HPDF_OK)
         return HPDF_CheckError (page->error);
 
     if (HPDF_Stream_WriteStr (attr->stream, " \'\012") != HPDF_OK)
         return HPDF_CheckError (page->error);
 
-    tw = HPDF_Page_TextWidth (page, text, len);
+    tw = HPDF_Page_TextWidth (page, text);
 
     /* calculate the reference point of text */
     attr->text_matrix.x -= attr->gstate->text_leading * attr->text_matrix.c;
@@ -1518,8 +1540,7 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_Page_ShowTextNextLineEx  (HPDF_Page    page,
                                HPDF_REAL    word_space,
                                HPDF_REAL    char_space,
-                               const char  *text,
-                               HPDF_INT     len)
+                               const char  *text)
 {
     HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_TEXT_OBJECT);
     HPDF_PageAttr attr;
@@ -1545,9 +1566,7 @@ HPDF_Page_ShowTextNextLineEx  (HPDF_Page    page,
     if (!attr->gstate->font)
         return HPDF_RaiseError (page->error, HPDF_PAGE_FONT_NOT_FOUND, 0);
 
-    if (len < 0)
-        len = HPDF_StrLen (text, HPDF_LIMIT_MAX_STRING_LEN);
-    if (text == NULL || len == 0)
+    if (text == NULL || text[0] == 0)
         return HPDF_Page_MoveToNextLine(page);
 
     HPDF_MemSet (buf, 0, HPDF_TMP_BUF_SIZ);
@@ -1556,10 +1575,10 @@ HPDF_Page_ShowTextNextLineEx  (HPDF_Page    page,
     pbuf = HPDF_FToA (pbuf, char_space, eptr);
     *pbuf = ' ';
 
-    if (InternalWriteText (attr, buf, len) != HPDF_OK)
+    if (InternalWriteText (attr, buf) != HPDF_OK)
         return HPDF_CheckError (page->error);
 
-    if (InternalWriteText (attr, text, len) != HPDF_OK)
+    if (InternalWriteText (attr, text) != HPDF_OK)
         return HPDF_CheckError (page->error);
 
     if (HPDF_Stream_WriteStr (attr->stream, " \"\012") != HPDF_OK)
@@ -1568,7 +1587,7 @@ HPDF_Page_ShowTextNextLineEx  (HPDF_Page    page,
     attr->gstate->word_space = word_space;
     attr->gstate->char_space = char_space;
 
-    tw = HPDF_Page_TextWidth (page, text, len);
+    tw = HPDF_Page_TextWidth (page, text);
 
     /* calculate the reference point of text */
     attr->text_matrix.x += attr->gstate->text_leading * attr->text_matrix.b;
@@ -2281,6 +2300,7 @@ InternalArc  (HPDF_Page    page,
         pbuf = HPDF_FToA (pbuf, (HPDF_REAL)x0, eptr);
         *pbuf++ = ' ';
         pbuf = HPDF_FToA (pbuf, (HPDF_REAL)y0, eptr);
+
 	if (attr->gmode == HPDF_GMODE_PATH_OBJECT)
 	  pbuf = (char *)HPDF_StrCpy (pbuf, " l\012", eptr);
 	else
@@ -2337,8 +2357,7 @@ HPDF_Page_DrawImage  (HPDF_Page    page,
 
 static HPDF_STATUS
 InternalWriteText  (HPDF_PageAttr      attr,
-                    const char        *text,
-                    HPDF_INT           len)
+                    const char        *text)
 {
     HPDF_FontAttr font_attr = (HPDF_FontAttr)attr->gstate->font->attr;
     HPDF_STATUS ret;
@@ -2347,32 +2366,33 @@ InternalWriteText  (HPDF_PageAttr      attr,
 
     if (font_attr->type == HPDF_FONT_TYPE0_TT ||
             font_attr->type == HPDF_FONT_TYPE0_CID) {
+        HPDF_Encoder encoder;
+	HPDF_UINT len;
+
         if ((ret = HPDF_Stream_WriteStr (attr->stream, "<")) != HPDF_OK)
             return ret;
 
-        HPDF_Encoder encoder = font_attr->encoder;
-
-        if (len < 0)
-            len = HPDF_StrLen (text, HPDF_LIMIT_MAX_STRING_LEN);
+        encoder = font_attr->encoder;
+        len = HPDF_StrLen (text, HPDF_LIMIT_MAX_STRING_LEN);
 
         if (encoder->encode_text_fn == NULL) {
-            if ((ret = HPDF_Stream_WriteBinary (attr->stream, (HPDF_BYTE *)text,
-                            len, NULL))
-            != HPDF_OK)
-                return ret;
+	    if ((ret = HPDF_Stream_WriteBinary (attr->stream, (HPDF_BYTE *)text,
+						len, NULL))
+		!= HPDF_OK)
+	        return ret;
         } else {
-            char *encoded;
-            HPDF_UINT length;
+	    char *encoded;
+	    HPDF_UINT length;
 
-            encoded = (encoder->encode_text_fn)(encoder, text, len, &length);
+	    encoded = (encoder->encode_text_fn)(encoder, text, len, &length);
 
-            ret = HPDF_Stream_WriteBinary (attr->stream, (HPDF_BYTE *)encoded,
-                           length, NULL);
+	    ret = HPDF_Stream_WriteBinary (attr->stream, (HPDF_BYTE *)encoded,
+					   length, NULL);
 
-            free(encoded);
+	    free(encoded);
 
-            if (ret != HPDF_OK)
-                    return ret;
+	    if (ret != HPDF_OK)
+                return ret;
         }
 
         return HPDF_Stream_WriteStr (attr->stream, ">");
@@ -2413,8 +2433,7 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_Page_TextOut  (HPDF_Page    page,
                     HPDF_REAL    xpos,
                     HPDF_REAL    ypos,
-                    const char  *text,
-                    HPDF_INT     len)
+                    const char  *text)
 {
     HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_TEXT_OBJECT);
     HPDF_REAL x;
@@ -2431,7 +2450,7 @@ HPDF_Page_TextOut  (HPDF_Page    page,
     if ((ret = HPDF_Page_MoveTextPos (page, x, y)) != HPDF_OK)
         return ret;
 
-    return  HPDF_Page_ShowText (page, text, len);
+    return  HPDF_Page_ShowText (page, text);
 }
 
 
@@ -2566,7 +2585,7 @@ HPDF_Page_TextRect  (HPDF_Page            page,
                     HPDF_Encoder_SetParseText (encoder, &state, (HPDF_BYTE *)tmp_ptr, tmp_len);
                     while (*tmp_ptr) {
                         HPDF_ByteType btype = HPDF_Encoder_ByteType (encoder, &state);
-                        if (btype != HPDF_BYTE_TYPE_TRIAL)
+                        if (btype != HPDF_BYTE_TYPE_TRAIL)
                             num_char++;
                         i++;
                         if (i >= tmp_len)
@@ -2665,7 +2684,7 @@ InternalShowTextNextLine  (HPDF_Page    page,
     if ((ret = HPDF_Stream_WriteStr (attr->stream, " \'\012")) != HPDF_OK)
         return ret;
 
-    tw = HPDF_Page_TextWidth (page, text, len);
+    tw = HPDF_Page_TextWidth (page, text);
 
     /* calculate the reference point of text */
     attr->text_matrix.x -= attr->gstate->text_leading * attr->text_matrix.c;
@@ -2811,4 +2830,101 @@ HPDF_Page_SetSlideShow  (HPDF_Page            page,
 Fail:
     HPDF_Dict_Free (dict);
     return HPDF_Error_GetCode (page->error);
+}
+
+
+/*
+ *  This function is contributed by Finn Arildsen.
+ */
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_New_Content_Stream  (HPDF_Page page,
+                               HPDF_Dict* new_stream)
+{
+    /* Call this function to start a new content stream on a page. The
+       handle is returned to new_stream.
+       new_stream can later be used on other pages as a shared content stream;
+       insert using HPDF_Page_Insert_Shared_Content_Stream */
+
+    HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_PAGE_DESCRIPTION |
+                    HPDF_GMODE_TEXT_OBJECT);
+    HPDF_PageAttr attr;
+    HPDF_UINT filter;
+    HPDF_Array contents_array;
+
+    HPDF_PTRACE((" HPDF_Page_New_Content_Stream\n"));
+
+    attr = (HPDF_PageAttr)page->attr;
+    filter = attr->contents->filter;
+
+    /* check if there is already an array of contents */
+    contents_array = (HPDF_Array) HPDF_Dict_GetItem(page,"Contents", HPDF_OCLASS_ARRAY);
+    if (!contents_array) {	
+        HPDF_Error_Reset (page->error);
+        /* no contents_array already -- create one
+           and replace current single contents item */
+        contents_array = HPDF_Array_New(page->mmgr);
+        if (!contents_array)
+            return HPDF_Error_GetCode (page->error);
+        ret += HPDF_Array_Add(contents_array,attr->contents);
+        ret += HPDF_Dict_Add (page, "Contents", contents_array);
+    }
+
+    /* create new contents stream and add it to the page's contents array */
+    attr->contents = HPDF_DictStream_New (page->mmgr, attr->xref);
+    attr->contents->filter = filter;
+    attr->stream = attr->contents->stream;
+
+    if (!attr->contents)
+        return HPDF_Error_GetCode (page->error);
+
+    ret += HPDF_Array_Add (contents_array,attr->contents);
+
+    /* return the value of the new stream, so that 
+       the application can use it as a shared contents stream */
+    if (ret == HPDF_OK && new_stream != NULL)
+        *new_stream = attr->contents;
+
+    return ret;
+}
+
+
+/*
+ *  This function is contributed by Finn Arildsen.
+ */
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_Insert_Shared_Content_Stream  (HPDF_Page page,
+                               HPDF_Dict shared_stream)
+{
+    /* Call this function to insert a previously (with HPDF_New_Content_Stream) created content stream
+       as a shared content stream on this page */
+
+    HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_PAGE_DESCRIPTION |
+                    HPDF_GMODE_TEXT_OBJECT);
+    HPDF_Array contents_array;
+
+    HPDF_PTRACE((" HPDF_Page_Insert_Shared_Content_Stream\n"));
+
+    /* check if there is already an array of contents */
+    contents_array = (HPDF_Array) HPDF_Dict_GetItem(page,"Contents", HPDF_OCLASS_ARRAY);
+    if (!contents_array) {	
+        HPDF_PageAttr attr;
+        HPDF_Error_Reset (page->error);
+        /* no contents_array already -- create one
+           and replace current single contents item */
+        contents_array = HPDF_Array_New(page->mmgr);
+        if (!contents_array)
+            return HPDF_Error_GetCode (page->error);
+        attr = (HPDF_PageAttr)page->attr;
+        ret += HPDF_Array_Add(contents_array,attr->contents);
+        ret += HPDF_Dict_Add (page, "Contents", contents_array);
+    }
+
+    ret += HPDF_Array_Add (contents_array,shared_stream);
+
+    /* Continue with a new stream */
+    ret += HPDF_Page_New_Content_Stream (page, NULL);
+
+    return ret;
 }

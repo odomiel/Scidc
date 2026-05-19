@@ -34,6 +34,7 @@ SRC_C = \
 	hpdf_catalog.c \
 	hpdf_destination.c \
 	hpdf_dict.c \
+	hpdf_direct.c \
 	hpdf_doc.c \
 	hpdf_doc_png.c \
 	hpdf_encoder.c \
@@ -78,6 +79,7 @@ SRC_C = \
 	hpdf_pages.c \
 	hpdf_pdfa.c \
 	hpdf_real.c \
+	hpdf_shading.c \
 	hpdf_streams.c \
 	hpdf_string.c \
 	hpdf_u3d.c \

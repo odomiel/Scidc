@@ -619,7 +619,6 @@ static const HPDF_CID_Width Dotum_W_ARRAY[] = {
 };
 
 
-#if 0 // UNUSED
 static const HPDF_CID_Width BatangChe_W_ARRAY[] = {
     {1, 500},
     {2, 500},
@@ -1211,7 +1210,6 @@ static const HPDF_CID_Width Batang_W_ARRAY[] = {
     {8188, 791},
     {0xFFFF, 0}
 };
-#endif /* UNUSED */
 
 
 /*---------------------------------------------------------------------------*/
@@ -1355,7 +1353,7 @@ BatangChe_Init  (HPDF_FontDef   fontdef)
                 HPDF_FONT_SERIF;
     fontdef->italic_angle = 0;
     fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, DotumChe_W_ARRAY)) !=
+    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, BatangChe_W_ARRAY)) !=
                 HPDF_OK) {
         return ret;
     }
@@ -1416,7 +1414,7 @@ Batang_Init  (HPDF_FontDef   fontdef)
     fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_SERIF;
     fontdef->italic_angle = 0;
     fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, Dotum_W_ARRAY)) !=
+    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, Batang_W_ARRAY)) !=
                 HPDF_OK) {
         return ret;
     }
