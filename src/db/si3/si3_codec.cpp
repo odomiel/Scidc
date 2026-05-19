@@ -1564,11 +1564,6 @@ Codec::writeNamebasesSi5(mstl::string const& filename)
 			fstrm.write(s, len);
 		};
 
-		m_playerList->update(namebase(Namebase::Player), *m_codec);
-		m_eventList ->update(namebase(Namebase::Event ), *m_codec);
-		m_siteList  ->update(namebase(Namebase::Site  ), *m_codec);
-		m_roundList ->update(namebase(Namebase::Round ), *m_codec);
-
 		// Write in ID order (si5 IDs are sequential)
 		Namebase& pBase = namebase(Namebase::Player);
 		mstl::vector<mstl::string> players(pBase.size());
