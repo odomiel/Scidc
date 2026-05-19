@@ -1564,34 +1564,37 @@ Codec::writeNamebasesSi5(mstl::string const& filename)
 			fstrm.write(s, len);
 		};
 
-		// Write in ID order (si5 IDs are sequential)
-		Namebase& pBase = namebase(Namebase::Player);
-		mstl::vector<mstl::string> players(pBase.size());
-		for (unsigned i = 0; i < pBase.size(); ++i)
-			players[pBase.playerAt(i)->id()] = pBase.playerAt(i)->name();
-		for (unsigned i = 0; i < players.size(); ++i)
-			writeEntry(players[i], 0);
+		// Write all entries in file-position (ID) order.
+		// origN = number of file positions when the database was opened, covering both
+		// canonical entries and alias positions (duplicate names).  The NameList m_lookup
+		// handles aliases; entries added after opening have IDs >= origN and come from
+		// the namebase directly.
+		auto writeNamebase = [&](Namebase& base, NameList* list, uint8_t type) {
+			unsigned origN = list->size();   // original file-position count incl. aliases
+			unsigned maxId = origN > 0 ? origN - 1 : 0;
+			for (unsigned i = 0; i < base.size(); ++i) {
+				unsigned id = base.entryAt(i)->id();
+				if (id > maxId) maxId = id;
+			}
+			mstl::vector<mstl::string> names(maxId + 1);
+			// Fill original positions via NameList (canonical + alias)
+			for (unsigned fp = 0; fp < origN; ++fp)
+				if (list->hasId(fp))
+					names[fp] = list->lookup(fp)->entry->name();
+			// Fill new entries (IDs >= origN) from namebase
+			for (unsigned i = 0; i < base.size(); ++i) {
+				unsigned id = base.entryAt(i)->id();
+				if (id >= origN)
+					names[id] = base.entryAt(i)->name();
+			}
+			for (unsigned i = 0; i <= maxId; ++i)
+				writeEntry(names[i], type);
+		};
 
-		Namebase& eBase = namebase(Namebase::Event);
-		mstl::vector<mstl::string> events(eBase.size());
-		for (unsigned i = 0; i < eBase.size(); ++i)
-			events[eBase.eventAt(i)->id()] = eBase.eventAt(i)->name();
-		for (unsigned i = 0; i < events.size(); ++i)
-			writeEntry(events[i], 1);
-
-		Namebase& sBase = namebase(Namebase::Site);
-		mstl::vector<mstl::string> sites(sBase.size());
-		for (unsigned i = 0; i < sBase.size(); ++i)
-			sites[sBase.siteAt(i)->id()] = sBase.siteAt(i)->name();
-		for (unsigned i = 0; i < sites.size(); ++i)
-			writeEntry(sites[i], 2);
-
-		Namebase& rBase = namebase(Namebase::Round);
-		mstl::vector<mstl::string> rounds(rBase.size());
-		for (unsigned i = 0; i < rBase.size(); ++i)
-			rounds[rBase.entryAt(i)->id()] = rBase.entryAt(i)->name();
-		for (unsigned i = 0; i < rounds.size(); ++i)
-			writeEntry(rounds[i], 3);
+		writeNamebase(namebase(Namebase::Player), m_playerList.get(), 0);
+		writeNamebase(namebase(Namebase::Event),  m_eventList.get(),  1);
+		writeNamebase(namebase(Namebase::Site),   m_siteList.get(),   2);
+		writeNamebase(namebase(Namebase::Round),  m_roundList.get(),  3);
 
 		fstrm.flush();
 		sys::file::rename(tempname, filename, true);
