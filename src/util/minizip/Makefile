@@ -17,13 +17,21 @@ include ../../../Makefile.in
 INCLUDE	= -I. $(ZLIB_INC)
 OPTIMIZE	= -O2 -fomit-frame-pointer
 C_DEBUG	= -DNDEBUG
-DEFINES	= -D_USE_MMAP # -DNOCRYPT -DNOUNCRYPT
+DEFINES	= -DHAVE_ZLIB -DMZ_ZIP_NO_CRYPTO
 CFLAGS	= $(OPTIMIZE) $(C_DEBUG) $(SYS_CFLAGS) $(DEFINES)
 
 SRC_C = \
-	ioapi.c \
-	unzip.c \
-	zip.c \
+	mz_crypt.c \
+	mz_os.c \
+	mz_os_posix.c \
+	mz_strm.c \
+	mz_strm_buf.c \
+	mz_strm_mem.c \
+	mz_strm_os_posix.c \
+	mz_strm_split.c \
+	mz_strm_zlib.c \
+	mz_zip.c \
+	mz_zip_rw.c \
 
 SRC	= $(SRC_C)
 OBJS	= $(SRC_C:.c=.o)

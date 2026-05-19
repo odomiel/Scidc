@@ -28,7 +28,8 @@
 
 #include <zzip/zzip.h>
 #include <zlib.h>
-#include <zip.h>
+#include "mz_zip_rw.h"
+#include "mz.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -275,25 +276,14 @@ openNewFile(void* cookie, char const* filename, mstl::ios_base::openmode mode)
 		}
 	}
 
-	::zip_fileinfo info;
-	info.dosDate = 0;
-	util::misc::time::tm tm;
-	getCurrentTime(tm);
-	info.tmz_date.tm_sec  = tm.sec;
-	info.tmz_date.tm_min  = tm.min;
-	info.tmz_date.tm_hour = tm.hour;
-	info.tmz_date.tm_mday = tm.mday;
-	info.tmz_date.tm_mon  = tm.mon;
-	info.tmz_date.tm_year = tm.year;
+	::mz_zip_file file_info;
+	::memset(&file_info, 0, sizeof(file_info));
+	file_info.filename           = fname;
+	file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
+	file_info.modified_date      = ::time(NULL);
 
-	int rc = ::zipOpenNewFileInZip(	HANDLE,
-												fname,
-												&info,
-												0, 0, 0, 0, 0,
-												Z_DEFLATED,
-												Z_DEFAULT_COMPRESSION);
-
-	return rc == ZIP_OK;
+	int32_t rc = ::mz_zip_writer_entry_open(HANDLE, &file_info);
+	return rc == MZ_OK;
 }
 
 
@@ -318,9 +308,9 @@ close(void* cookie)
 {
 	M_ASSERT(HANDLE);
 
-	::zipCloseFileInZip(HANDLE);
-	int rc = ::zipClose(HANDLE, 0) == ZIP_OK ? 0 : -1;
-	HANDLE = 0;
+	::mz_zip_writer_entry_close(HANDLE);
+	int rc = ::mz_zip_writer_close(HANDLE) == MZ_OK ? 0 : -1;
+	::mz_zip_writer_delete(&HANDLE);
 	return rc;
 }
 
@@ -329,7 +319,8 @@ static __ssize_t
 write(void* cookie, char const* buf, size_t len)
 {
 	M_ASSERT(IS_WRITEABLE);
-	return ::zipWriteInFileInZip(HANDLE, buf, len) == ZIP_OK ? len : 0;
+	int32_t written = ::mz_zip_writer_entry_write(HANDLE, buf, (int32_t)len);
+	return written >= 0 ? (__ssize_t)written : 0;
 }
 
 } // namespace zip
@@ -624,16 +615,23 @@ ZStream::open(char const* filename, Type type, Mode mode)
 			break;
 
 		case Zip:
-			HANDLE = ::zipOpen(
-								filename,
-								mode & mstl::ios_base::app ? APPEND_STATUS_ADDINZIP : APPEND_STATUS_CREATE);
-
-			if (!HANDLE)
-				return setstate(failbit);
+			{
+				void* writer = ::mz_zip_writer_create();
+				if (!writer)
+					return setstate(failbit);
+				::mz_zip_writer_set_compress_level(writer, MZ_COMPRESS_LEVEL_DEFAULT);
+				uint8_t append = (mode & mstl::ios_base::app) ? 1 : 0;
+				if (::mz_zip_writer_open_file(writer, filename, 0, append) != MZ_OK)
+				{
+					::mz_zip_writer_delete(&writer);
+					return setstate(failbit);
+				}
+				HANDLE = writer;
+			}
 
 			if (!zip::openNewFile(cookie, filename, mode))
 			{
-				::zipClose(HANDLE, 0);
+				::mz_zip_writer_delete(&HANDLE);
 				return setstate(failbit);
 			}
 
@@ -641,7 +639,7 @@ ZStream::open(char const* filename, Type type, Mode mode)
 			m_fp = ::fopencookie(cookie, fmode, ::m_zip);
 
 			if (!m_fp)
-				::zipClose(HANDLE, 0);
+				::mz_zip_writer_delete(&HANDLE);
 			break;
 	}
 

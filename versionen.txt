@@ -32,7 +32,7 @@ libfam             –       (nicht installiert; optional, Fallback: inotify)
 
 GEBÜNDELTE BIBLIOTHEKEN (im Quellcode, keine externe Abhängigkeit)
 -------------------------------------------------------------------
-minizip            src/util/minizip/         ZIP-Archive
+minizip-ng         src/util/minizip/         ZIP-Archive            4.2.1
 libharu            src/util/libharu/         PDF-Erzeugung          2.4.6
 libTeXt            src/util/libTeXt/         TeX-Textverarbeitung
 universalchardet   src/util/universalchardet/ Zeichensatz-Erkennung
