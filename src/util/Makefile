@@ -438,5 +438,7 @@ u_zstream.o: ./zzip/_config.h
 u_zstream.o: ./zzip/stdint.h
 u_zstream.o: zlib/zlib.h
 u_zstream.o: zlib/zconf.h
-u_zstream.o: minizip/mz_zip_rw.h
 u_zstream.o: minizip/mz.h
+u_zstream.o: minizip/mz_strm.h
+u_zstream.o: minizip/mz_zip.h
+u_zstream.o: minizip/mz_zip_rw.h
