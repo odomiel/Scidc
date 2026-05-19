@@ -387,12 +387,12 @@ proc fsbox {w type args} {
 	}
 
 	::tk::AmpWidget ttk::label $top.lbl_filetype -text [Tr FilesType]
-	ttk::tcombobox $top.ent_filetype         \
-		-state readonly                       \
-		-format "%1 (%2)"                     \
-		-padding 1                            \
-		-background table,background          \
-		-foreground fsbox,foreground          \
+	ttk::tcombobox $top.ent_filetype                  \
+		-state readonly                                \
+		-format "%1 (%2)"                             \
+		-padding 1                                    \
+		-background [lookupColor table,background]    \
+		-foreground [lookupColor fsbox,foreground]    \
 		;
 	bind $top.ent_filetype <<ComboboxSelected>> [namespace code [list SelectFileTypes $w %W]]
 	bind $top.lbl_filetype <<AltUnderlined>> [list ::ttk::combobox::Post $top.ent_filetype]
