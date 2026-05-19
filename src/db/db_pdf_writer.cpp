@@ -167,11 +167,14 @@ PdfWriter::writeMove(Move const& move,
 		while (*s)
 		{
 			unsigned len = ::sys::utf8::charLength(s);
+			char buf[8];
 
 			if (len > 1)
 			{
 				setFont(Move_Figurine_MainLine);
-				HPDF_Page_ShowText(m_page, s, len);
+				memcpy(buf, s, len);
+				buf[len] = '\0';
+				HPDF_Page_ShowText(m_page, buf);
 				s += len;
 			}
 			else
@@ -182,7 +185,10 @@ PdfWriter::writeMove(Move const& move,
 					++t;
 
 				setFont(Move_Text_MainLine);
-				HPDF_Page_ShowText(m_page, s, t - s);
+				unsigned n = t - s;
+				memcpy(buf, s, n);
+				buf[n] = '\0';
+				HPDF_Page_ShowText(m_page, buf);
 				s = t;
 			}
 		}
@@ -191,7 +197,7 @@ PdfWriter::writeMove(Move const& move,
 	{
 		move.printSAN(str, protocol::Standard, encoding::Latin1);
 		setFont(Move_Text_Variation);
-		HPDF_Page_ShowText(m_page, str, str.size());
+		HPDF_Page_ShowText(m_page, str.c_str());
 	}
 }
 
