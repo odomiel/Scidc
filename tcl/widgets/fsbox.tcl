@@ -387,10 +387,12 @@ proc fsbox {w type args} {
 	}
 
 	::tk::AmpWidget ttk::label $top.lbl_filetype -text [Tr FilesType]
-	ttk::tcombobox $top.ent_filetype  \
-		-state readonly                \
-		-format "%1 (%2)"              \
-		-padding 1                     \
+	ttk::tcombobox $top.ent_filetype         \
+		-state readonly                       \
+		-format "%1 (%2)"                     \
+		-padding 1                            \
+		-background table,background          \
+		-foreground fsbox,foreground          \
 		;
 	bind $top.ent_filetype <<ComboboxSelected>> [namespace code [list SelectFileTypes $w %W]]
 	bind $top.lbl_filetype <<AltUnderlined>> [list ::ttk::combobox::Post $top.ent_filetype]
@@ -1290,6 +1292,17 @@ proc ThemeChanged {w} {
 	set Vars(bookmark:background) $listbg
 
 	$Vars(widget:panedwindow) configure -background $background
+
+	# Update filetype combobox popup colors
+	set cb $Vars(widget:filetypes:combobox)
+	set popbg [lookupColor table,background]
+	set popfg [lookupColor fsbox,foreground]
+	$cb.popdown.l configure -background $popbg
+	set t $cb.popdown.l.__tlistbox__
+	$t configure -foreground $popfg
+	foreach id [$t column list] {
+		$t column configure $id -itembackground $popbg
+	}
 }
 
 
