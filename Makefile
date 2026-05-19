@@ -28,7 +28,8 @@ all: Makefile.in check-mtime
 		/home/* ) make="make";; \
 		* ) make="sudo make";;  \
 	esac;                      \
-	echo "Now type \"$$make install\" for installation."
+	echo "Now type \"$$make install\" for installation."; \
+	echo "Alternatively, run \"./build-appimage.sh\" to create a portable AppImage."
 
 check-mtime:
 	@if [ Makefile.in -ot configure ]; then                    \

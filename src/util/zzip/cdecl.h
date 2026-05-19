@@ -1,6 +1,11 @@
-#ifndef __ZZIP_INTERNAL_HINTS_H
-#define __ZZIP_INTERNAL_HINTS_H
+#ifndef __ZZIP_CDECL_H
+#define __ZZIP_CDECL_H
 #include <zzip/conf.h>
+
+#ifdef ZZIP_HAVE_ANSIDECL_H
+/* get originals from GCC */
+#include <ansidecl.h>
+#endif
 
 #ifndef ZZIP_GNUC_ATLEAST
 #if defined __GNUC__ && defined __GNUC_MINOR__
@@ -12,17 +17,11 @@
 #endif
 #endif
 
-#ifndef ZZIP_GNUC_EXTENSION
-#if ZZIP_GNUC_ATLEAST(2, 8)
-#define ZZIP_GNUC_EXTENSION __extension__
-#else
-#define ZZIP_GNUC_EXTENSION
-#endif
-#endif
-
 /* func has no side effects, return value depends only on params and globals */
 #ifndef ZZIP_GNUC_PURE
-#if ZZIP_GNUC_ATLEAST(2, 8)
+#ifdef ATTRIBUTE_PURE
+#define ZZIP_GNUC_PURE ATTRIBUTE_PURE
+#elif ZZIP_GNUC_ATLEAST(2, 8)
 #define ZZIP_GNUC_PURE __attribute__((__pure__))
 #else
 #define ZZIP_GNUC_PURE
@@ -30,17 +29,21 @@
 #endif
 
 /* func has no side effects, return value depends only on params */
-#ifndef ZZIP_GNUC_CONST
-#if ZZIP_GNUC_ATLEAST(2, 4)
-#define ZZIP_GNUC_CONST __attribute__((__const__))
+#ifndef ZZIP_GNUC_PURE_CONST
+#ifdef ATTRIBUTE_PURE_CONST
+#define ZZIP_GNUC_PURE_CONST ATTRIBUTE_CONST
+#elif ZZIP_GNUC_ATLEAST(2, 4)
+#define ZZIP_GNUC_PURE_CONST __attribute__((__const__))
 #else
-#define ZZIP_GNUC_CONST
+#define ZZIP_GNUC_PURE_CONST
 #endif
 #endif
 
 /* typename / variable / function possibly unused */
 #ifndef ZZIP_GNUC_UNUSED
-#if ZZIP_GNUC_ATLEAST(2, 4)
+#ifdef ATTRIBUTE_UNUSED
+#define ZZIP_GNUC_UNUSED ATTRIBUTE_UNUSED
+#elif ZZIP_GNUC_ATLEAST(2, 4)
 #define ZZIP_GNUC_UNUSED __attribute__((__unused__))
 #else
 #define ZZIP_GNUC_UNUSED
@@ -49,7 +52,9 @@
 
 /* obvious. btw, a noreturn-func should return void */
 #ifndef ZZIP_GNUC_NORETURN
-#if ZZIP_GNUC_ATLEAST(2, 5)
+#ifdef ATTRIBUTE_NORETURN
+#define ZZIP_GNUC_NORETURN ATTRIBUTE_NORETURN
+#elif ZZIP_GNUC_ATLEAST(2, 5)
 #define ZZIP_GNUC_NORETURN __attribute__((__noreturn__))
 #else
 #define ZZIP_GNUC_NORETURN
@@ -58,7 +63,9 @@
 
 /* omit function from profiling with -finstrument-functions */
 #ifndef ZZIP_GNUC_NO_INSTRUMENT
-#if ZZIP_GNUC_ATLEAST(2, 4)
+#ifdef ATTRIBUTE_NO_INSTRUMENT
+#define ZZIO_GNUC_NO_INSTRUMENT ATTRIBUTE_NO_INSTRUMENT
+#elif ZZIP_GNUC_ATLEAST(2, 4)
 #define ZZIP_GNUC_NO_INSTRUMENT __attribute__((__no_instrument_function__))
 #else
 #define ZZIP_GNUC_NO_INSTRUMENT
@@ -67,55 +74,23 @@
 
 /* all pointer args must not be null, and allow optimiztons based on the fact*/
 #ifndef ZZIP_GNUC_NONNULL
-#if ZZIP_GNUC_ATLEAST(3, 1)
-#define ZZIP_GNUC_NONNULL __attribute__((nonnull))
+#ifdef ATTRIBUTE_NONNULL
+#define ZZIP_GNUC_NONNULL(_X_) ATTRIBUTE_NONNULL(_X_)
+#elif ZZIP_GNUC_ATLEAST(3, 1)
+#define ZZIP_GNUC_NONNULL(_X_) __attribute__((__nonnull__(_X_)))
 #else
-#define ZZIP_GNUC_NONNULL
-#endif
-#endif
-
-/* the function can not throw - the libc function are usually nothrow */
-#ifndef ZZIP_GNUC_NOTHROW
-#if ZZIP_GNUC_ATLEAST(3, 2)
-#define ZZIP_GNUC_NOTHROW __attribute__((nothrow))
-#else
-#define ZZIP_GNUC_NOTHROW
+#define ZZIP_GNUC_NONNULL(_X_)
 #endif
 #endif
 
 /* typename / function / variable is obsolete but still listed in headers */
 #ifndef ZZIP_GNUC_DEPRECATED
-#if ZZIP_GNUC_ATLEAST(3, 1)
+#ifdef ATTRIBUTE_DEPRECATED
+#define ZZIP_GNUC_DEPRECATED ATTRIBUTE_DEPRECATED
+#elif ZZIP_GNUC_ATLEAST(3, 1)
 #define ZZIP_GNUC_DEPRECATED __attribute__((deprecated))
 #else
 #define ZZIP_GNUC_DEPRECATED
-#endif
-#endif
-
-/* resolve references to this function during pre-linking the library */
-#ifndef ZZIP_GNUC_LIB_PROTECTED
-#if ZZIP_GNUC_ATLEAST(3, 1)
-#define ZZIP_GNUC_LIB_PROTECTED __attribute__((visiblity("protected")))
-#else
-#define ZZIP_GNUC_LIB_PROTECTED
-#endif
-#endif
-
-/* func shall only be usable within the same lib (so, no entry in lib symtab)*/
-#ifndef ZZIP_GNUC_LIB_PRIVATE
-#if ZZIP_GNUC_ATLEAST(3, 1)
-#define ZZIP_GNUC_LIB_PRIVATE __attribute__((visiblity("hidden")))
-#else
-#define ZZIP_GNUC_LIB_PRIVATE
-#endif
-#endif
-
-/* ... and not even passed as a function pointer reference to outside the lib*/
-#ifndef ZZIP_GNUC_LIB_INTERNAL
-#if ZZIP_GNUC_ATLEAST(3, 1)
-#define ZZIP_GNUC_LIB_INTERNAL __attribute__((visiblity("internal")))
-#else
-#define ZZIP_GNUC_LIB_INTERNAL
 #endif
 #endif
 
@@ -136,7 +111,9 @@
 #endif
 
 #ifndef ZZIP_GNUC_PRINTF
-#if ZZIP_GNUC_ATLEAST(2, 4)
+#ifdef ATTRBIUTE_PRINTF
+#define ZZIP_GNUC_PRINTF(_S_, _X_) ATTRIBUTE_PRINTF(_S_, _X_)
+#elif ZZIP_GNUC_ATLEAST(2, 4)
 #define ZZIP_GNUC_PRINTF(_S_, _X_) __attribute__((__printf__(_S_, _X_)))
 #else
 #define ZZIP_GNUC_PRINTF(_S_, _X_)
@@ -144,7 +121,9 @@
 #endif
 
 #ifndef ZZIP_GNUC_PACKED
-#ifdef __GNUC__
+#ifdef ATTRIBUTE_PACKED
+#define ZZIP_GNUC_PACKED ATTRIBUTE_PACKED
+#elif defined __GNUC__
 #define ZZIP_GNUC_PACKED __attribute__((packed))
 #else
 #define ZZIP_GNUC_PACKED

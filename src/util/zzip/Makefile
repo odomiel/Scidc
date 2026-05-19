@@ -24,13 +24,13 @@ CFLAGS	+= $(OPTIMIZE) $(C_DEBUG) $(SYS_CFLAGS) $(DEFINES)
 ALL_INCLUDE	= $(INCLUDE) $(ZLIB_INC)
 
 SRC_C = \
-	zzip-dir.c \
-	zzip-err.c \
-	zzip-file.c \
-	zzip-info.c \
-	zzip-io.c \
-	zzip-stat.c \
-	zzip-zip.c \
+	dir.c \
+	err.c \
+	file.c \
+	info.c \
+	plugin.c \
+	stat.c \
+	zip.c \
 
 SRC	= $(SRC_C)
 OBJS	= $(SRC_C:.c=.o)
@@ -61,61 +61,65 @@ $(LIB).a: $(OBJS)
 # vi:set ts=3 sw=3:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
-zzip-dir.o: ../zzip/zzip.h
-zzip-dir.o: ../zzip/plugin.h
-zzip-dir.o: ../zzip/lib.h
-zzip-dir.o: ../zzip/conf.h
-zzip-dir.o: ../zzip/_config.h
-zzip-dir.o: ../zzip/stdint.h
-zzip-dir.o: ../zzip/file.h
-zzip-dir.o: __dirent.h
-zzip-err.o: ../zzip/zzip.h
-zzip-err.o: ../zzip/plugin.h
-zzip-err.o: ../zzip/lib.h
-zzip-err.o: ../zzip/conf.h
-zzip-err.o: ../zzip/_config.h
-zzip-err.o: ../zzip/stdint.h
-zzip-err.o: ../zzip/file.h
-zzip-file.o: ../zzip/zzip.h
-zzip-file.o: ../zzip/plugin.h
-zzip-file.o: ../zzip/lib.h
-zzip-file.o: ../zzip/conf.h
-zzip-file.o: ../zzip/_config.h
-zzip-file.o: ../zzip/stdint.h
-zzip-file.o: ../zzip/file.h
-zzip-file.o: ../zzip/format.h
-zzip-file.o: ../zzip/__debug.h
-zzip-file.o: __hints.h
-zzip-info.o: ../zzip/zzip.h
-zzip-info.o: ../zzip/plugin.h
-zzip-info.o: ../zzip/lib.h
-zzip-info.o: ../zzip/conf.h
-zzip-info.o: ../zzip/_config.h
-zzip-info.o: ../zzip/stdint.h
-zzip-info.o: ../zzip/file.h
-zzip-info.o: ../zzip/format.h
-zzip-io.o: ../zzip/zzip.h
-zzip-io.o: ../zzip/plugin.h
-zzip-io.o: ../zzip/lib.h
-zzip-io.o: ../zzip/conf.h
-zzip-io.o: ../zzip/_config.h
-zzip-io.o: ../zzip/stdint.h
-zzip-io.o: ../zzip/file.h
-zzip-io.o: ../zzip/format.h
-zzip-stat.o: ../zzip/zzip.h
-zzip-stat.o: ../zzip/plugin.h
-zzip-stat.o: ../zzip/lib.h
-zzip-stat.o: ../zzip/conf.h
-zzip-stat.o: ../zzip/_config.h
-zzip-stat.o: ../zzip/stdint.h
-zzip-zip.o: ../zzip/zzip.h
-zzip-zip.o: ../zzip/plugin.h
-zzip-zip.o: ../zzip/lib.h
-zzip-zip.o: ../zzip/conf.h
-zzip-zip.o: ../zzip/_config.h
-zzip-zip.o: ../zzip/stdint.h
-zzip-zip.o: ../zzip/file.h
-zzip-zip.o: ../zzip/format.h
-zzip-zip.o: __mmap.h
-zzip-zip.o: __debug.h
-zzip-zip.o: __hints.h
+dir.o: ../zzip/zzip.h
+dir.o: ../zzip/types.h
+dir.o: ../zzip/plugin.h
+dir.o: ../zzip/lib.h
+dir.o: ../zzip/conf.h
+dir.o: ../zzip/_config.h
+dir.o: ../zzip/stdint.h
+dir.o: ../zzip/file.h
+dir.o: __dirent.h
+err.o: ../zzip/zzip.h
+err.o: ../zzip/types.h
+err.o: ../zzip/lib.h
+err.o: ../zzip/conf.h
+err.o: ../zzip/_config.h
+err.o: ../zzip/stdint.h
+file.o: ../zzip/zzip.h
+file.o: ../zzip/types.h
+file.o: ../zzip/plugin.h
+file.o: ../zzip/lib.h
+file.o: ../zzip/conf.h
+file.o: ../zzip/_config.h
+file.o: ../zzip/stdint.h
+file.o: ../zzip/file.h
+file.o: ../zzip/format.h
+file.o: ../zzip/__debug.h
+file.o: __hints.h
+info.o: ../zzip/zzip.h
+info.o: ../zzip/types.h
+info.o: ../zzip/lib.h
+info.o: ../zzip/conf.h
+info.o: ../zzip/_config.h
+info.o: ../zzip/stdint.h
+info.o: ../zzip/file.h
+info.o: ../zzip/format.h
+plugin.o: ../zzip/zzip.h
+plugin.o: ../zzip/types.h
+plugin.o: ../zzip/plugin.h
+plugin.o: ../zzip/lib.h
+plugin.o: ../zzip/conf.h
+plugin.o: ../zzip/_config.h
+plugin.o: ../zzip/stdint.h
+plugin.o: ../zzip/file.h
+plugin.o: ../zzip/format.h
+stat.o: ../zzip/zzip.h
+stat.o: ../zzip/types.h
+stat.o: ../zzip/plugin.h
+stat.o: ../zzip/lib.h
+stat.o: ../zzip/conf.h
+stat.o: ../zzip/_config.h
+stat.o: ../zzip/stdint.h
+zip.o: ../zzip/zzip.h
+zip.o: ../zzip/types.h
+zip.o: ../zzip/plugin.h
+zip.o: ../zzip/lib.h
+zip.o: ../zzip/conf.h
+zip.o: ../zzip/_config.h
+zip.o: ../zzip/stdint.h
+zip.o: ../zzip/file.h
+zip.o: ../zzip/format.h
+zip.o: __mmap.h
+zip.o: __debug.h
+zip.o: __hints.h
