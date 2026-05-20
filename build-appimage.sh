@@ -91,6 +91,8 @@ cp -L  "$TCLTKDIR/lib/libtcl8.6.so" "$APPDIR/usr/lib/"
 cp -L  "$TCLTKDIR/lib/libtk8.6.so"  "$APPDIR/usr/lib/"
 cp -rL "$TCLTKDIR/lib/tcl8.6"       "$APPDIR/usr/lib/"
 cp -rL "$TCLTKDIR/lib/tk8.6"        "$APPDIR/usr/lib/"
+# Tcl-Module (msgcat, http, …): Source-Build legt diese unter lib/tcl8/{ver}/
+cp -rL "$TCLTKDIR/lib/tcl8"         "$APPDIR/usr/lib/"
 
 # --- Schritt 3b: Weitere Shared Libraries via ldd ----------------------------
 echo "Kopiere weitere Bibliotheken..."
@@ -125,7 +127,7 @@ export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
 export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
 export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidb-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
-export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8.6/tcl8"
+export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidb-beta"
 
 # Engine-Binaries bei Bedarf ins User-Verzeichnis deployen.
