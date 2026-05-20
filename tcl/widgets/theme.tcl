@@ -396,9 +396,7 @@ proc SetupCurrentTheme {} {
 	if {[llength $fbg]} {
 		ttk::style map TCombobox -fieldbackground $fbg
 		ttk::style map TEntry -fieldbackground $fbg
-		if {[info tclversion] >= "8.6"} {
-			ttk::style map TSpinbox -fieldbackground $fbg
-		}
+		ttk::style map TSpinbox -fieldbackground $fbg
 	}
 
 	# adjust padding of arrows in spinbox (the default padding is quite ugly)
@@ -1100,22 +1098,7 @@ proc spinbox::AutoScan {w} {
 
 namespace eval ttk {
 
-if {[info tclversion] < "8.6"} {
-
-	proc spinbox {args} { ::spinbox {*}$args }
-
-	# we don't like text selection while an arrow is pressed
-	bind Spinbox <1> {+
-		switch -exact [%W identify %x %y] {
-			buttonup - buttondown {
-				%W selection clear
-			}
-		}
-	}
-
-} else {
-
-	namespace eval spinbox {
+namespace eval spinbox {
 
 	# - ttk::spinbox takes the focus in state "readonly"; this is misplaced!
 	# - we don't like text selection while an arrow is pressed
@@ -1171,8 +1154,6 @@ if {[info tclversion] < "8.6"} {
 	}
 
 	} ;# namespace spinbox
-
-} ;# [info tclversion] >= "8.6"
 
 
 namespace eval entry {

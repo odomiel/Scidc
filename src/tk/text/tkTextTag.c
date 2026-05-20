@@ -34,18 +34,6 @@
 #endif
 
 /*
- * Support of tk8.5.
- */
-#ifdef CONST
-# undef CONST
-#endif
-#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 5
-# define CONST
-#else
-# define CONST const
-#endif
-
-/*
  * The 'TkWrapMode' enum in tkText.h is used to define a type for the -wrap
  * option of tags in a Text widget. These values are used as indices into the
  * string table below. Tags are allowed an empty wrap value, but the widget as

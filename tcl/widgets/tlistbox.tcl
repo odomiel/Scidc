@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.5
+package require Tk 8.6
 package require tktreectrl 2.2
 package provide tlistbox 1.0
 

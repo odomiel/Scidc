@@ -1772,15 +1772,7 @@ proc PopdownLanguages {dlg} {
 		}
 	}
 
-	if {[info tclversion] >= "8.6"} {
-		set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
-	} else {
-		 switch -- [tk windowingsystem] {
-			x11	{ set borderwidth 1 }
-			win32	{ set borderwidth 1 }
-			aqua	{ set borderwidth 0 }
-		 }
-	}
+	set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
 
 	$popdown configure -borderwidth $borderwidth -relief solid
 
@@ -1795,9 +1787,7 @@ proc PopdownLanguages {dlg} {
 		-disabledforeground grey60 \
 		-disabledbackground white \
 		;
-	if {[info tclversion] >= "8.6"} {
-		lappend listopts -style ComboboxPopdownFrame
-	}
+	lappend listopts -style ComboboxPopdownFrame
 
 	set lb [::tlistbox $popdown.l {*}$listopts]
 

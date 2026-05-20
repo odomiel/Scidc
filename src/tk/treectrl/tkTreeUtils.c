@@ -27,12 +27,7 @@
 #include "tkMacOSXInt.h"
 static PixPatHandle gPenPat = NULL;
 
-/* TkRegion changed from RgnHandle to HIShapeRef in 8.4.17/8.5.0 */
-#if (TK_MAJOR_VERSION == 8) && (TK_MINOR_VERSION >= 5)
 # define MAC_OSX_HISHAPE 1
-#elif (TK_MAJOR_VERSION == 8) && (TK_MINOR_VERSION == 4) && (TK_RELEASE_SERIAL >= 17)
-# define MAC_OSX_HISHAPE 1
-#endif
 
 #endif /* MAC_TK_CARBON */
 
@@ -1157,30 +1152,6 @@ Tree_FillRegion(
 	FillRgn(dc, (HRGN) rgn, brush);
 	DeleteObject(brush);
 	TkWinReleaseDrawableDC(drawable, dc, &dcState);
-#elif defined(MAC_OSX_TK) && (TK_MINOR_VERSION == 4) && (TK_RELEASE_SERIAL < 15)
-	/* Not needed as of 8.4.15 / 8.5a7 */
-	MacDrawable *macWin = (MacDrawable *) drawable;
-	CGrafPtr saveWorld;
-	GDHandle saveDevice;
-	GWorldPtr destPort;
-	RGBColor macColor;
-
-	destPort = TkMacOSXGetDrawablePort(drawable);
-	if (gPenPat == NULL)
-		gPenPat = NewPixPat();
-	if (TkSetMacColor(gc->foreground, &macColor) == true)
-		MakeRGBPat(gPenPat, &macColor);
-	display->request++;
-	GetGWorld(&saveWorld, &saveDevice);
-	SetGWorld(destPort, NULL);
-	TkMacOSXSetUpClippingRgn(drawable);
-	TkMacOSXSetUpGraphicsPort(gc, destPort);
-	OffsetRgn((RgnHandle) rgn, macWin->xOff, macWin->yOff);
-	ShowPen(); /* seemed to work without this */
-	FillCRgn((RgnHandle) rgn, gPenPat);
-	HidePen(); /* seemed to work without this */
-	OffsetRgn((RgnHandle) rgn, -macWin->xOff, -macWin->yOff);
-	SetGWorld(saveWorld, saveDevice);
 #else
 	XRectangle box;
 
@@ -1608,21 +1579,8 @@ Tree_DrawBitmap(
 	Tk_FreeGC(tree->display, gc);
 }
 
-/*
- * TIP #116 altered Tk_PhotoPutBlock API to add interp arg.
- * We need to remove that for compiling with 8.4.
- */
-#if (TK_MAJOR_VERSION == 8) && (TK_MINOR_VERSION < 5)
-#define TK_PHOTOPUTBLOCK(interp, hdl, blk, x, y, w, h, cr) \
-		Tk_PhotoPutBlock(hdl, blk, x, y, w, h, cr)
-#define TK_PHOTOPUTZOOMEDBLOCK(interp, hdl, blk, x, y, w, h, \
-				zx, zy, sx, sy, cr) \
-		Tk_PhotoPutZoomedBlock(hdl, blk, x, y, w, h, \
-				zx, zy, sx, sy, cr)
-#else
 #define TK_PHOTOPUTBLOCK		Tk_PhotoPutBlock
 #define TK_PHOTOPUTZOOMEDBLOCK	Tk_PhotoPutZoomedBlock
-#endif
 
 /*
  *----------------------------------------------------------------------

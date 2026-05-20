@@ -30,21 +30,8 @@
 #include <Cocoa/Cocoa.h>
 #endif
 
-/*
- * TIP #116 altered Tk_PhotoPutBlock API to add interp arg.
- * We need to remove that for compiling with 8.4.
- */
-#if (TK_MAJOR_VERSION == 8) && (TK_MINOR_VERSION < 5)
-#define TK_PHOTOPUTBLOCK(interp, hdl, blk, x, y, w, h, cr) \
-				Tk_PhotoPutBlock(hdl, blk, x, y, w, h, cr)
-#define TK_PHOTOPUTZOOMEDBLOCK(interp, hdl, blk, x, y, w, h, \
-								zx, zy, sx, sy, cr) \
-				Tk_PhotoPutZoomedBlock(hdl, blk, x, y, w, h, \
-								zx, zy, sx, sy, cr)
-#else
 #define TK_PHOTOPUTBLOCK		Tk_PhotoPutBlock
 #define TK_PHOTOPUTZOOMEDBLOCK	Tk_PhotoPutZoomedBlock
-#endif
 
 /* This structure is used for reference-counted images. */
 typedef struct TreeImageRef {
@@ -4464,11 +4451,7 @@ Treectrl_Init(
 	)
 {
 #ifdef USE_TCL_STUBS
-# ifdef USE_TTK
-	static CONST char *tcl_version = "8.5";
-# else
-	static CONST char *tcl_version = "8.4";
-# endif
+	static CONST char *tcl_version = "8.6";
 #endif
 
 #ifdef USE_TCL_STUBS
@@ -4477,11 +4460,7 @@ Treectrl_Init(
 	}
 #endif
 #ifdef USE_TK_STUBS
-#if (TK_MAJOR_VERSION == 8) && (TK_MINOR_VERSION < 5)
-	if (Tk_InitStubs(interp, (char*)tcl_version, 0) == NULL) {
-#else
 	if (Tk_InitStubs(interp, tcl_version, 0) == NULL) {
-#endif
 		return TCL_ERROR;
 	}
 #endif

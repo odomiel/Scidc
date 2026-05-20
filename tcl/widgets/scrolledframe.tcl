@@ -26,7 +26,7 @@
 
 ::util::source scrolled-frame
 
-package require Tk 8.5
+package require Tk 8.6
 package require Ttk
 
 proc scrolledframe {path args} {

@@ -34,7 +34,7 @@
 # define chmod	_chmod
 #endif
 
-#if !TCL_PREREQ(8,5)
+#if !TCL_PREREQ(8,6)
 # error  "unsupported TCL version"
 #endif
 
@@ -113,13 +113,7 @@ sys::file::size(char const* filename)
 	Tcl_DecrRefCount(pathObj);
 
 	if (ret != -1)
-	{
-#if !TCL_PREREQ(8,6)
-		size = buf->st_size;
-#else
 		size = long(Tcl_GetSizeFromStat(buf));
-#endif
-	}
 
 	::ckfree(reinterpret_cast<char*>(buf));
 	return size;
@@ -139,13 +133,7 @@ sys::file::changed(char const* filename, uint32_t& time)
 	Tcl_DecrRefCount(pathObj);
 
 	if (ret != -1)
-	{
-#if !TCL_PREREQ(8,6)
-		time = buf->st_ctime;
-#else
 		time = Tcl_GetChangeTimeFromStat(buf);
-#endif
-	}
 
 	::ckfree(reinterpret_cast<char*>(buf));
 	return ret != -1;

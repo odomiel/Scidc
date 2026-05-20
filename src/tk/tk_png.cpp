@@ -2412,15 +2412,9 @@ PNGDecode(Tcl_Interp* interp, PNGImage* pPNG, Tcl_Obj* pObjFmt,
 	 */
 
 #ifndef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#if ((TCL_MAJOR_VERSION > 8) || \
-	((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 5)))
 	if (Tk_PhotoExpand(interp, imageHandle, destX + pPNG -> mBlock.width,
 			destY + pPNG -> mBlock.height) == TCL_ERROR)
 		return TCL_ERROR;
-#else
-	Tk_PhotoExpand(imageHandle, destX + pPNG -> mBlock.width,
-		destY + pPNG -> mBlock.height);
-#endif
 #endif /* !USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 	/*
@@ -2548,16 +2542,10 @@ PNGDecode(Tcl_Interp* interp, PNGImage* pPNG, Tcl_Obj* pObjFmt,
 	/* Copy the decoded image block into the Tk photo image */
 
 #ifndef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#if ((TCL_MAJOR_VERSION > 8) || \
-	((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 5)))
 	if (Tk_PhotoPutBlock(interp, imageHandle, &pPNG -> mBlock, destX, destY,
 			pPNG -> mBlock.width, pPNG -> mBlock.height,
 			TK_PHOTO_COMPOSITE_SET) == TCL_ERROR)
 		return TCL_ERROR;
-#else
-	Tk_PhotoPutBlock(imageHandle, &pPNG -> mBlock, destX, destY,
-		pPNG -> mBlock.width, pPNG -> mBlock.height, TK_PHOTO_COMPOSITE_SET);
-#endif
 #endif /* !USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 	return TCL_OK;
@@ -2737,12 +2725,7 @@ StringReadPNG(Tcl_Interp *interp, Tcl_Obj *pObjData, Tcl_Obj *pObjFmt,
 extern Tk_PhotoImageFormat tkImgFmtPNG;
 
 #ifndef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#if ((TCL_MAJOR_VERSION > 8) || \
-	((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 5)))
-#define	TKPNG_REQUIRE "8.5"
-#else
-#define	TKPNG_REQUIRE "8.3"
-#endif
+#define	TKPNG_REQUIRE "8.6"
 #endif /* !USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 /*

@@ -19,7 +19,7 @@
 ::util::source combo-search-box
 
 package require Ttk
-package require Tk 8.5
+package require Tk 8.6
 if {[catch { package require tkpng }]} { package require Img }
 package require tooltip
 

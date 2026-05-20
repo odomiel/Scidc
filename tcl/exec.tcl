@@ -30,15 +30,15 @@
 #! The next line restarts using tkscidb: \
 exec "`dirname "$0"`"/tk`basename $0` "$0" ${1+"$@"}
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.6
+package require Tk  8.6
 package require Ttk
 package require tkscidb
 
 
 namespace eval scidb {
 	set app		Scidb
-	set version "1.1.120 BETA"
+	set version "1.1.121 BETA"
 }
 
 
@@ -51,9 +51,7 @@ if {[llength $nameofexecutable] == 0} {
 		catch { set nameofexecutable [exec readlink /proc/[pid]/exe] }
 	}
 	if {[llength $nameofexecutable] == 0} {
-		# broken Tk library, e.g. 8.6b2
-		append msg "You've installed a broken Tcl/Tk library (version [info patchlevel]). "
-		append msg "Please change the version (8.5.6 is recommended)."
+		append msg "You've installed a broken Tcl/Tk library (version [info patchlevel])."
 		tk_messageBox -type ok -icon error -title "$scidb::app: broken library" -message $msg
 		exit 1
 	}
@@ -75,15 +73,6 @@ if {[::scidb::misc::version] ne $scidb::version} {
 	exit 1
 }
 
-
-if {[info patchlevel] eq "8.5.10"} {
-	# broken Tk library (e.g. Ubuntu 11.10)
-	append msg "You've installed a broken Tk library (patch level [info patchlevel]). "
-	append msg "Some crashes may occur with this Tk library.\n\n"
-	append msg "It is recommended to use a different patch level of this library."
-	append msg "(Version 8.5.6 is recommended.)"
-	tk_messageBox -type ok -icon error -title "$scidb::app: broken library" -message $msg
-}
 
 
 namespace eval process {

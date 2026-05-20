@@ -27,7 +27,7 @@ exec tclsh "$0" "$@"
 # (at your option) any later version.
 # ======================================================================
 
-package require Tcl 8.5
+package require Tcl 8.6
 
 if {$argc != 1} {
 	puts stderr "Usage: [info script] <contents-file>"

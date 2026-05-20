@@ -59,19 +59,7 @@
 #endif
 
 /*
- * Support of tk8.5.
- */
-#ifdef CONST
-# undef CONST
-#endif
-#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 5
-# define CONST
-#else
-# define CONST const
-#endif
-
-/*
- * Support of tk8.6/8.5.
+ * Support of tk8.6.
  */
 #ifndef DEF_TEXT_INACTIVE_SELECT_FG_COLOR
 # if defined(MAC_OSX_TK)

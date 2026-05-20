@@ -27,18 +27,6 @@
 #endif
 
 /*
- * Support of tk8.5.
- */
-#ifdef CONST
-# undef CONST
-#endif
-#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 5
-# define CONST
-#else
-# define CONST const
-#endif
-
-/*
  * The following structure is the official type record for the embedded window
  * geometry manager:
  */

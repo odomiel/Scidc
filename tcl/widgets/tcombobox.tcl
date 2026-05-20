@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.5
+package require Tk 8.6
 package require Ttk
 package require tlistbox
 package provide tcombobox 1.0
@@ -107,9 +107,7 @@ proc Build {w args} {
 	if {[tk windowingsystem] eq "aqua"} {
 		set listopts(-borderwidth) 0
 	}
-	if {[info tclversion] >= "8.6"} {
-		set listopts(-style) ComboboxPopdownFrame
-	}
+	set listopts(-style) ComboboxPopdownFrame
 	if {[llength $opts(-column)] > 0 && [llength $opts(-showcolumns)] == 0} {
 		set opts(-showcolumns) [list $opts(-column)]
 	}
@@ -796,17 +794,9 @@ proc ConfigureListbox {cb} {
 	}
 	set padding [lindex $padding 0]
 
-	if {[info tclversion] >= "8.6"} {
-		set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
-		if {[llength $borderwidth] == 0} {
-			set borderwidth 1
-		}
-	} else {
-		 switch -- [tk windowingsystem] {
-			x11	{ set borderwidth 1 }
-			win32	{ set borderwidth 1 }
-			aqua	{ set borderwidth 0 }
-		 }
+	set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
+	if {[llength $borderwidth] == 0} {
+		set borderwidth 1
 	}
 
 	$popdown.l configure -minwidth [expr {[winfo width $cb] - 2*$padding - 2*$borderwidth}]

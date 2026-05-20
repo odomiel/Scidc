@@ -76,13 +76,7 @@ LoadFile(
     char const **symbols,
     void **funcs)
 {
-    /* Keep backward compatibility to 8.5 */
-# if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 5
-    return Tcl_FSLoadFile(interp, pathPtr, symbols[0], symbols[1],
-	    (void *) &funcs[0], (void *) &funcs[1], handle, NULL);
-# else
     return Tcl_LoadFile(interp, pathPtr, symbols, TCL_LOAD_GLOBAL, funcs, handle);
-# endif
 }
 
 static void

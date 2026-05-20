@@ -74,7 +74,6 @@ proc formatDouble {v {prec 2}} {
 proc formatSpinboxDouble {v} {
 	variable Pattern
 
-	if {[info tclversion] < "8.6"} { return $v }
 	return [string map [list . $Pattern(decimalPoint)] $v]
 }
 
