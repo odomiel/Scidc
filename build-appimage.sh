@@ -17,6 +17,7 @@
 set -e
 
 APPDIR="$(pwd)/AppDir"
+TCLTKDIR="$(pwd)/deps/tcltk"
 ARCH=$(uname -m)
 SRCBIN="src/tkscidb-beta"
 TCLSCRIPT="tcl/scidb-beta"
@@ -43,6 +44,12 @@ if [ ! -d "$SHAREDIR" ]; then
     echo "  make && sudo make install"
     echo "Danach ist AppDir/usr/share/scidb-beta/ befüllt und wird bei"
     echo "zukünftigen Builds nicht mehr angefasst."
+    exit 1
+fi
+
+if [ ! -f "$TCLTKDIR/lib/libtcl8.6.so" ] || [ ! -f "$TCLTKDIR/lib/libtk8.6.so" ]; then
+    echo "FEHLER: Tcl/Tk 8.6.18 nicht gefunden in $TCLTKDIR"
+    echo "Bitte zuerst ausführen: bash build-tcltk.sh"
     exit 1
 fi
 
@@ -78,8 +85,15 @@ for engine in stockfish-scidb fairy-stockfish-scidb; do
 done
 rm -rf /tmp/_scidb_engine_backup
 
-# --- Schritt 3: Shared Libraries kopieren ------------------------------------
-echo "Kopiere Bibliotheken..."
+# --- Schritt 3a: Tcl/Tk 8.6.18 aus lokalem Build ----------------------------
+echo "Kopiere Tcl/Tk 8.6.18..."
+cp -L  "$TCLTKDIR/lib/libtcl8.6.so" "$APPDIR/usr/lib/"
+cp -L  "$TCLTKDIR/lib/libtk8.6.so"  "$APPDIR/usr/lib/"
+cp -rL "$TCLTKDIR/lib/tcl8.6"       "$APPDIR/usr/lib/"
+cp -rL "$TCLTKDIR/lib/tk8.6"        "$APPDIR/usr/lib/"
+
+# --- Schritt 3b: Weitere Shared Libraries via ldd ----------------------------
+echo "Kopiere weitere Bibliotheken..."
 
 for binary in "$APPDIR/usr/bin/tkscidb-beta" \
               "$APPDIR/usr/bin/stockfish-scidb" \
@@ -89,20 +103,14 @@ for binary in "$APPDIR/usr/bin/tkscidb-beta" \
         [ -z "$lib" ] || [ ! -f "$lib" ] && continue
         name=$(basename "$lib")
         case "$name" in
-            libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|libutil.so*|ld-linux*.so*|libgcc_s.so*)
+            libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|libutil.so*|ld-linux*.so*|libgcc_s.so*|\
+            libtcl8.6.so|libtk8.6.so)
                 ;;
             *)
                 cp -L "$lib" "$APPDIR/usr/lib/" 2>/dev/null && echo "  $name" || true
                 ;;
         esac
     done
-done
-
-# Tcl/Tk Skript-Bibliotheken
-for tcldir in /usr/share/tcltk/tcl8.6 /usr/share/tcltk/tk8.6 \
-              /usr/lib/tcl8.6 /usr/lib/tk8.6 \
-              /usr/share/tcl8.6 /usr/share/tk8.6; do
-    [ -d "$tcldir" ] && cp -rL "$tcldir" "$APPDIR/usr/lib/" 2>/dev/null || true
 done
 
 # --- Schritt 4: AppRun erstellen ---------------------------------------------
