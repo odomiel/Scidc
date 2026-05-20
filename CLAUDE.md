@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Projekt
 - Chess-Datenbank-App: ~102k LOC C++, ~92k LOC Tcl/Tk
 - 3-Tier-Architektur: C++ DB-Layer → C++ App-Layer → Tcl/Tk UI
+- Mindestanforderung: **Tcl/Tk 8.6** (8.5-Kompatibilitätscode entfernt)
 - Keine Test-Suite – Testing ist manuell
 
 ---
@@ -25,11 +26,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Bundle-Synchronisation
 - **Individuelle `.tcl`-Dateien** bearbeiten (Git-Quelle)
-- Da `make` nicht aufgerufen wird, müssen beide Bundles **immer manuell mitgepflegt** werden:
-  - `tcl/scidb-beta` – genutzt von `./run-scidb.sh`
-  - `AppDir/usr/bin/scidb-beta` – genutzt vom AppImage
+- Da `make` nicht aufgerufen wird, muss das Bundle **immer manuell mitgepflegt** werden:
+  - `tcl/scidb-beta` – genutzt von `./run-scidb.sh` **und** Quelle für AppImage
+  - `AppDir/usr/bin/scidb-beta` wird automatisch von `build-appimage.sh` aus `tcl/scidb-beta` kopiert – **nicht** separat bearbeiten
 - Bundle-Zeilen entsprechen den Source-Zeilen (gleiche Zeilennummern, verifizieren vor Edit)
-- Version in beiden Bundles (Zeile 41: `set version "..."`) ebenfalls anpassen
+- Version in `tcl/scidb-beta` (Zeile 41: `set version "..."`) ebenfalls anpassen
 
 ### Weitere Fallen
 - `proc open` shadowing: In Namespaces mit eigenem `proc open` immer **`::open`** für Datei-Öffnungen nutzen
@@ -79,6 +80,23 @@ Die Bridge (`src/tcl/`) ist kein Auto-Binding – jede exponierte Funktion ist e
 ## Datenbank-Codecs
 - SI3/SI4/SI5 via `si3::Codec`, SCI nativ, CBH/CBF read-only
 - **SI5-Schreiben**: Nachträglich implementiert – mehrere kritische Stellen in Codec, `tcl_tree.cpp`, `db_common.ipp`, `app-database.tcl`, `export.tcl`
+
+### SI5 vs. SI3/SI4 – NameList/Namebase ID-Falle (kritisch)
+
+`NameList` (`src/db/si3/si3_name_list.*`) ist für SI3/SI4 entworfen, wo Namebase-Einträge **alphabetisch sortiert** gespeichert sind. Für SI5 sind Einträge in **Einfüge-Reihenfolge** (file positions), daher gilt:
+
+| | SI3/SI4 | SI5 |
+|---|---|---|
+| Namebase-ID | = sorted list position | = Dateiposition (Einfüge-Reihenfolge) |
+| Namebase-ID == NameList-ID? | **Ja** | **Nein** |
+
+Daraus folgen drei konkrete Regeln für SI5-Write-Pfade:
+
+1. **`NameList::update()` niemals aus SI5-Write-Pfaden aufrufen.** `update()` setzt `m_usedIdSet`-Bits mit Namebase-Entry-IDs zurück, trackt aber sorted-list IDs → Datenverfälschung → Assertion-Fehler in `adjustListSize()`.
+
+2. **Vektorgröße in `writeNamebasesSi5` von `NameList::size()` ableiten, nicht von `namebase.size()`.** `NameList::size()` = `m_maxId` = max. Dateiposition + 1 und deckt auch Alias-Positionen (duplizierte Namen) ab. `namebase.size()` = Anzahl unique Einträge; wenn deren IDs > unique count sind (durch Aliases), gibt es Out-of-Bounds.
+
+3. **Neue Einträge (IDs ≥ `NameList::size()`)** werden nicht in `m_lookup` aufgenommen; sie müssen direkt aus der Namebase geholt werden. Alias-Positionen (< `NameList::size()`) via `NameList::lookup(fp)` auflösen.
 
 ---
 
@@ -168,8 +186,36 @@ Der Default-Background-Fallback muss **vor** dem CSS-Preamble-Block stehen, dami
 
 ---
 
+## Minizip-ng 4.2.1 (`src/util/minizip/`)
+Ersetzt den klassischen minizip 1.01e – API ist **vollständig verschieden**.
+- Build-Flags: `-DHAVE_ZLIB -DZLIB_COMPAT -DMZ_ZIP_NO_CRYPTO`
+  - `ZLIB_COMPAT`: ohne dieses Flag inkludiert `mz_crypt.c` `zlib-ng.h` statt `zlib.h`
+  - `MZ_ZIP_NO_CRYPTO`: schließt SHA-Hash in `mz_zip_rw.c` aus
+- AES-Verschlüsselung nicht gebündelt – alle `#include "mz_strm_wzaes.h"` mit `#ifdef HAVE_WZAES` schützen
+- Include-Reihenfolge in Konsumenten: `mz.h` → `mz_strm.h` → `mz_zip.h` → `mz_zip_rw.h`
+- Schreib-API: `mz_zip_writer_create → open_file → entry_open → entry_write (gibt bytes zurück, nicht MZ_OK) → entry_close → close → delete`
+
+---
+
 ## AppImage
-- FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidb-beta/`
+
+### Build-Workflow (einmalig / nach Bedarf)
+```bash
+# 1. Tcl/Tk 8.6.18 lokal bauen (einmalig; überspringt sich selbst wenn aktuell):
+bash build-tcltk.sh        # → deps/tcltk/
+
+# 2. AppDir/usr/share/ befüllen (einmalig; bleibt bei späteren Builds erhalten):
+make && sudo make install   # installiert nach AppDir/usr/share/scidb-beta/
+
+# 3. Normale Entwicklungsiteration:
+make
+bash build-appimage.sh     # → Scidb-x86_64.AppImage
+```
+
+### Wichtige Details
+- `build-appimage.sh` kopiert `tcl/scidb-beta` → `AppDir/usr/bin/scidb-beta` (nicht separate Pflege nötig)
 - `build-appimage.sh` preserviert `AppDir/usr/share/` – **nicht** aus `/usr/local/` regenerieren
+- Tcl/Tk-Module (msgcat etc.) liegen im Source-Build unter `deps/tcltk/lib/tcl8/{ver}/` (nicht `lib/tcl8.6/tcl8/` wie bei Ubuntu-Paketen); `AppRun` setzt `TCL8_6_TM_PATH` entsprechend
+- FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidb-beta/`
 - Engines werden via `AppRun` nach `~/.scidb-beta/engines/bin/` deployt
 - `run-scidb.sh` läuft direkt aus dem Source-Tree (kein FUSE): `src/tkscidb-beta tcl/scidb-beta`
