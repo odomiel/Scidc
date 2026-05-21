@@ -40,7 +40,7 @@ set Information	"Info"
 array set colors {
 	warning	darkgreen
 	error		darkred
-	info		black
+	info		log,foreground
 }
 
 variable Log .application.log
@@ -256,6 +256,24 @@ proc SetTitle {} {
 }
 
 
+proc ConfigureColors {} {
+	variable Log
+	variable colors
+
+	if {![winfo exists $Log]} return
+	set t $Log.top.text
+	$t configure \
+		-background [::colors::lookup log,background] \
+		-foreground [::colors::lookup log,foreground]
+	$t tag configure Warning   -foreground [::colors::lookup $colors(warning)]
+	$t tag configure Error     -foreground [::colors::lookup $colors(error)]
+	$t tag configure Info      -foreground [::colors::lookup $colors(info)]
+	$t tag configure Callee    -foreground [::colors::lookup log,callee:foreground]
+	$t tag configure hyperlink -underline on -foreground [::colors::lookup log,link:foreground]
+	$t tag configure link      -foreground [::colors::lookup log,link:foreground]
+}
+
+
 proc Open {} {
 	variable Priv
 	variable Log
@@ -285,16 +303,12 @@ proc Open {} {
 	grid $top.ybar -row 0 -column 1 -sticky nsew
 	grid rowconfigure $top 0 -weight 1
 	grid columnconfigure $top 0 -weight 1
-	$log tag configure Warning -foreground $colors(warning)
-	$log tag configure Error -foreground $colors(error)
-	$log tag configure Info -foreground $colors(info)
-	$log tag configure Callee -foreground #88681a
-	$log tag configure hyperlink -underline on -foreground blue
-	$log tag configure link -foreground blue
+	ConfigureColors
 	widget::dialogButtons $Log {clear close} -default close -icons no
 	$Log.close configure -command [list wm withdraw $Log]
 	$Log.clear configure -command [namespace code Clear]
 	bind $Log <<LanguageChanged>> [namespace code SetTitle]
+	bind $Log <<ThemeChanged>> [namespace code ConfigureColors]
 	SetTitle
 	wm minsize $Log 50 5
 	set Priv(visibility) VisibilityFullyObscured

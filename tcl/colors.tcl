@@ -450,6 +450,16 @@ array set Colors {
 	night:darkgreen							#98c379
 	night:darkred							#e06c75
 
+	lite:log,background					white
+	lite:log,foreground					black
+	lite:log,callee:foreground			#88681a
+	lite:log,link:foreground				blue
+
+	night:log,background					#2b2b2b
+	night:log,foreground					#bbbbbb
+	night:log,callee:foreground			#c8a060
+	night:log,link:foreground				#6a9fd8
+
 	night:treetable,background				#2b2b2b
 	night:treetable,foreground				#bbbbbb
 	night:treetable,disabledforeground		#666666
