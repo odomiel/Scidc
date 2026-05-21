@@ -274,6 +274,12 @@ proc ConfigureColors {} {
 	$t tag configure Callee    -foreground [::colors::lookup log,callee:foreground]
 	$t tag configure hyperlink -underline on -foreground [::colors::lookup log,link:foreground]
 	$t tag configure link      -foreground [::colors::lookup log,link:foreground]
+	if {[winfo exists $Log.__buttons]} {
+		$Log.__buttons configure -background $bg
+		foreach w [winfo children $Log.__buttons] {
+			if {[winfo class $w] eq "Frame"} { $w configure -background $bg }
+		}
+	}
 }
 
 
