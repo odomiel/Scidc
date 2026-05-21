@@ -261,9 +261,12 @@ proc ConfigureColors {} {
 	variable colors
 
 	if {![winfo exists $Log]} return
+	set bg [::colors::lookup log,background]
+	$Log configure -background $bg
+	$Log.top configure -background $bg
 	set t $Log.top.text
 	$t configure \
-		-background [::colors::lookup log,background] \
+		-background $bg \
 		-foreground [::colors::lookup log,foreground]
 	$t tag configure Warning   -foreground [::colors::lookup $colors(warning)]
 	$t tag configure Error     -foreground [::colors::lookup $colors(error)]
@@ -282,7 +285,7 @@ proc Open {} {
 	tk::toplevel $Log -class $::scidb::app
 	wm withdraw $Log
 	wm protocol $Log WM_DELETE_WINDOW [list wm withdraw $Log]
-	set top [ttk::frame $Log.top]
+	set top [tk::frame $Log.top]
 	pack $top -fill both -expand yes -padx $::theme::padx -pady $::theme::pady
 	set log [tk::text $top.text \
 		-wrap none \
