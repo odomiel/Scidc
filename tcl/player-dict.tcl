@@ -1421,7 +1421,7 @@ proc ShowDataSources {dlg} {
 		if {$url ne ""} {
 			ttk::label $top.url$idx \
 				-text "$mc::WebSource: $url" \
-				-foreground blue \
+				-foreground [::colors::lookup blue] \
 				-cursor hand2 \
 				;
 			bind $top.url$idx <ButtonRelease-1> [list catch [list exec xdg-open $url &]]
