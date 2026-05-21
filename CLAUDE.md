@@ -134,12 +134,26 @@ proc lookup {color} {
 - Für Night-Mode-Sichtbarkeit müssen `night:darkblue`, `night:black` etc. in `colors.tcl` eingetragen werden
 - **Hardcoded `-foreground black`** in Tag-/Widget-Konfigurationen → auf dunklem Hintergrund unsichtbar; durch `[::colors::lookup ...]` ersetzen
 
-### `end.tcl` überschreibt `table::lookupColor`
+### `end.tcl` überschreibt `table::lookupColor` und `tlistbox::lookupColor`
 ```tcl
-# end.tcl Zeile ~126:
-proc table::lookupColor {color} { return [::colors::lookup $color] }
+# end.tcl:
+proc table::lookupColor   {color} { return [::colors::lookup $color] }
+proc tlistbox::lookupColor {color} { return [::colors::lookup $color] }
 ```
 Alle früheren `UpdateColorLookup`/`ColumnForeground`-Mechanismen in `table.tcl` sind dadurch wirkungslos. Fix: Farben direkt in `colors.tcl` Colors-Array eintragen.
+
+Für `tlistbox`-basierte Dropdowns (z.B. `countrybox`, `languagebox`) gilt:
+- Default-Background-Schlüssel ist `tlistbox,background` (in `colors.tcl` als `night:tlistbox,background #2b2b2b`)
+- Hardcodierte `-foreground darkgreen`/`darkred` in `addcol`-Aufrufen: `night:darkgreen`/`night:darkred` in `colors.tcl` eintragen, dann löst `tlistbox::lookupColor` sie korrekt auf
+
+### tcombobox – `-background` darf nicht an `::ttk::combobox` übergeben werden
+`ttk::tcombobox` (`tcl/widgets/tcombobox.tcl`) erzeugt intern einen `::ttk::combobox` und ein `tlistbox`-Popup. Der `-background`-Wert (`tlistbox,background`) ist ein Farbschlüssel – er darf **nicht** in `cbopts` an `::ttk::combobox` übergeben werden (TTK akzeptiert keine Schlüsselnamen). Er fließt ausschließlich über `listopts(-background)` ins Popup. Canvas-Hintergründe immer über `::tlistbox::lookupColor` auflösen.
+
+### Dialoge die vor `SetupTheme` erzeugt werden
+`SetupTheme` läuft in `load.tcl`. Dialoge die beim ersten Log-Eintrag (noch während des Theme-Ladens) lazy erzeugt werden, erhalten **keine** Option-DB-Hintergründe:
+- `tk::toplevel` und `tk::frame` → `configure -background [::colors::lookup ...]` explizit setzen
+- `ttk::frame` akzeptiert kein `-background` direkt → stattdessen `tk::frame` verwenden
+- Eine `ConfigureColors`-Prozedur anlegen, die in `Open` **und** via `bind $dlg <<ThemeChanged>>` aufgerufen wird
 
 ### PGN-Widget Tag-Farben
 - `pgn-setup.tcl::configureText` setzt alle Tag-Farben – wird bei Theme-Wechsel via `refresh` erneut aufgerufen
