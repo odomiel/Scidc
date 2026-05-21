@@ -134,7 +134,7 @@ proc Build {w args} {
 	set cbopts {}
 	foreach key {	-class -cursor -style -takefocus -exportselection -justify
 						-height -postcommand -state -textvariable -values -width
-						-background -validate -validatecommand -invalidcommand} {
+						-validate -validatecommand -invalidcommand} {
 		if {[info exists opts($key)]} {
 			lappend cbopts $key $opts($key)
 		}
