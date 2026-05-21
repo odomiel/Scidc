@@ -298,7 +298,7 @@ proc WidgetProc {w command args} {
 			} elseif {[info exists opts(-background)]} {
 				$w.__image__ configure -background [::tlistbox::lookupColor $opts(-background)]
 			} elseif {[info exists opts(-state)]} {
-				$w.__image__ configure -background [$w.__combobox__ cget -background]
+				$w.__image__ configure -background [::tlistbox::lookupColor tlistbox,background]
 			}
 			foreach opt {-maxwidth -minwidth -width -height} {
 				if {[info exists opts($opt)]} {
