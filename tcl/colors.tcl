@@ -447,6 +447,9 @@ array set Colors {
 	night:tlistbox,dropbackground			#313438
 	night:tlistbox,dropforeground			#bbbbbb
 
+	night:darkgreen							#98c379
+	night:darkred							#e06c75
+
 	night:treetable,background				#2b2b2b
 	night:treetable,foreground				#bbbbbb
 	night:treetable,disabledforeground		#666666

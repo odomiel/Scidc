@@ -49,7 +49,7 @@ proc Build {w args} {
 	variable Priv
 
 	array set opts {
-		-background			white
+		-background			tlistbox,background
 		-state				normal
 		-justify				left
 		-listjustify		{}
@@ -144,7 +144,7 @@ proc Build {w args} {
 	::ttk::combobox $w {*}$cbopts
 	bind $w <<PasteSelection>> {+ %W forgeticon }	;# global binding is not working
 
-	tk::canvas $w.__image__ -borderwidth 0 -background $listopts(-background) -takefocus 0
+	tk::canvas $w.__image__ -borderwidth 0 -background [::tlistbox::lookupColor $listopts(-background)] -takefocus 0
 	ttk::bindMouseWheel $w.__image__ [list ttk::combobox::Scroll $w]
 	foreach {ev c} {	ButtonPress-1 ""
 							Shift-ButtonPress-1 "s"
@@ -296,7 +296,7 @@ proc WidgetProc {w command args} {
 				set bg [::ttk::style lookup $::ttk::currentTheme -background]
 				$w.__image__ configure -background $bg
 			} elseif {[info exists opts(-background)]} {
-				$w.__image__ configure -background $opts(-background)
+				$w.__image__ configure -background [::tlistbox::lookupColor $opts(-background)]
 			} elseif {[info exists opts(-state)]} {
 				$w.__image__ configure -background [$w.__combobox__ cget -background]
 			}
