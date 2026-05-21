@@ -130,9 +130,9 @@ proc lookup {color} {
     return $color   # ← gibt unbekannte Farben UNVERÄNDERT zurück!
 }
 ```
-- X11-Farbnamen wie `darkblue`, `black` werden bei unbekanntem Scheme 1:1 zurückgegeben
-- Für Night-Mode-Sichtbarkeit müssen `night:darkblue`, `night:black` etc. in `colors.tcl` eingetragen werden
-- **Hardcoded `-foreground black`** in Tag-/Widget-Konfigurationen → auf dunklem Hintergrund unsichtbar; durch `[::colors::lookup ...]` ersetzen
+- X11-Farbnamen wie `darkblue`, `black`, `blue`, `gray`, `red` werden bei unbekanntem Scheme 1:1 zurückgegeben
+- Für Night-Mode-Sichtbarkeit müssen `night:darkblue`, `night:black`, `night:blue` etc. in `colors.tcl` eingetragen werden (bereits vorhanden: `night:blue #88b4e7`, `night:darkblue #6fa8dc`)
+- **Jede hardcodierte Farbe** in `-foreground`/`-background`-Optionen → durch `[::colors::lookup <farbe>]` ersetzen
 
 ### `end.tcl` überschreibt `table::lookupColor` und `tlistbox::lookupColor`
 ```tcl
@@ -148,6 +148,22 @@ Für `tlistbox`-basierte Dropdowns (z.B. `countrybox`, `languagebox`) gilt:
 
 ### tcombobox – `-background` darf nicht an `::ttk::combobox` übergeben werden
 `ttk::tcombobox` (`tcl/widgets/tcombobox.tcl`) erzeugt intern einen `::ttk::combobox` und ein `tlistbox`-Popup. Der `-background`-Wert (`tlistbox,background`) ist ein Farbschlüssel – er darf **nicht** in `cbopts` an `::ttk::combobox` übergeben werden (TTK akzeptiert keine Schlüsselnamen). Er fließt ausschließlich über `listopts(-background)` ins Popup. Canvas-Hintergründe immer über `::tlistbox::lookupColor` auflösen.
+
+### `dialogButtons __buttons`-Frame – immer explizit einfärben
+`widget::dialogButtons` (`tcl/widgets/misc.tcl`) erzeugt intern:
+```tcl
+tk::frame $dlg.__buttons -class Dialog   # ← kein Option-DB-Dark-Background!
+```
+Dieser Frame erbt **nicht** den dunklen Hintergrund aus dem `strongTtk`-Block (der `Dialog`-Class greift im Option-DB-Pfad nicht). Daher muss **jede** `ConfigureColors`-Prozedur die `$dlg.__buttons` abdeckt:
+```tcl
+if {[winfo exists $dlg.__buttons]} {
+    $dlg.__buttons configure -background $bg
+    foreach w [winfo children $dlg.__buttons] {
+        if {[winfo class $w] eq "Frame"} { $w configure -background $bg }
+    }
+}
+```
+Gilt unabhängig davon ob der Dialog vor oder nach `SetupTheme` erstellt wird.
 
 ### Dialoge die vor `SetupTheme` erzeugt werden
 `SetupTheme` läuft in `load.tcl`. Dialoge die beim ersten Log-Eintrag (noch während des Theme-Ladens) lazy erzeugt werden, erhalten **keine** Option-DB-Hintergründe:
@@ -208,6 +224,18 @@ Ersetzt den klassischen minizip 1.01e – API ist **vollständig verschieden**.
 - AES-Verschlüsselung nicht gebündelt – alle `#include "mz_strm_wzaes.h"` mit `#ifdef HAVE_WZAES` schützen
 - Include-Reihenfolge in Konsumenten: `mz.h` → `mz_strm.h` → `mz_zip.h` → `mz_zip_rw.h`
 - Schreib-API: `mz_zip_writer_create → open_file → entry_open → entry_write (gibt bytes zurück, nicht MZ_OK) → entry_close → close → delete`
+
+---
+
+## Hilfe-System (`tcl/help/`)
+
+- Hilfetexte als `.txt`-Quellen → per `make_html.tcl` zu `.html` konvertiert
+- Inhaltsverzeichnis: `tcl/help/de/Contents.dat` (und je Sprache analog)
+- Sprachen: `de/` (vollständigste), `en/`, `es/`, `it/`, `hu/`, `sv/`
+
+**Stand der Dokumentation** (analysiert 2026-05-21):
+- **13 Einträge in `Contents.dat` ohne .txt-Quelldatei** (geplant aber nie geschrieben): Listenfenster (Partienliste, Spielerliste, Orteliste, Veranstaltungsliste, Kommentatorenliste), Fenster (Partietext, Partienhistorie, Schachbrett, Zugbaum, Zugbaumpartienliste, Kreuztabelle), Dialoge (Partienimport, Datenbankenexport)
+- **Features komplett ohne Hilfeeintrag**: Spielerlexikon (`player-dict.tcl`), Engine-Verwaltung (`engine.tcl`), PGN-Export-Einstellungen (`pgn-setup.tcl`), Datenbank-Zusammenführen (`merge.tcl`), Spieler-Steckbrief (`player-card.tcl`)
 
 ---
 
