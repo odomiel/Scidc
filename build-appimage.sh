@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# build-appimage.sh - Erstellt ein AppImage für SciDB
+# build-appimage.sh - Erstellt ein AppImage für SciDC
 #
 # Voraussetzungen:
 #   1. Einmalig (nur beim ersten Mal oder nach make install-Änderungen):
@@ -23,7 +23,7 @@ SRCBIN="src/tkscidc-beta"
 TCLSCRIPT="tcl/scidc-beta"
 SHAREDIR="$APPDIR/usr/share/scidc-beta"
 
-echo "=== SciDB AppImage Builder ==="
+echo "=== SciDC AppImage Builder ==="
 
 # --- Voraussetzungen prüfen --------------------------------------------------
 if [ ! -f "$SRCBIN" ]; then
@@ -163,7 +163,7 @@ fi
 # --- Schritt 6: Desktop-Datei ------------------------------------------------
 cat > "$APPDIR/scidc-beta.desktop" << 'EOF'
 [Desktop Entry]
-Name=Scidb
+Name=Scidc
 Comment=Chess Database
 Exec=scidc-beta
 Icon=scidc-beta
@@ -188,8 +188,8 @@ else
     TOOL="./$APPIMAGETOOL_FILE"
 fi
 
-ARCH="$ARCH" "$TOOL" "$APPDIR" "Scidb-${ARCH}.AppImage"
+ARCH="$ARCH" "$TOOL" "$APPDIR" "Scidc-${ARCH}.AppImage"
 
 echo ""
 echo "=== Fertig! ==="
-echo "Starten mit: ./Scidb-${ARCH}.AppImage"
+echo "Starten mit: ./Scidc-${ARCH}.AppImage"
