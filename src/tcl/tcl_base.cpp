@@ -1332,11 +1332,11 @@ tcl::init(Tcl_Interp* ti)
 
 	for (unsigned i = 0; i < U_NUMBER_OF(m_value); ++i)
 		tcl::incrRef(::m_value[i] = tcl::newObj(i));
-	tcl::incrRef(::m_blocked = tcl::newObj("scidb::intern::blocked"));
-	tcl::incrRef(::m_postponed = tcl::newObj("scidb::intern::postponed"));
-	tcl::incrRef(::m_loopLevel = tcl::newObj("scidb::intern::looplevel"));
-	tcl::incrRef(::m_errMessage = tcl::newObj("scidb::intern::errmsg"));
-	tcl::incrRef(::m_errResult = tcl::newObj("scidb::intern::errresult"));
+	tcl::incrRef(::m_blocked = tcl::newObj("scidc::intern::blocked"));
+	tcl::incrRef(::m_postponed = tcl::newObj("scidc::intern::postponed"));
+	tcl::incrRef(::m_loopLevel = tcl::newObj("scidc::intern::looplevel"));
+	tcl::incrRef(::m_errMessage = tcl::newObj("scidc::intern::errmsg"));
+	tcl::incrRef(::m_errResult = tcl::newObj("scidc::intern::errresult"));
 
 	Tcl_ObjSetVar2(ti, m_blocked, nullptr, m_value[0], TCL_GLOBAL_ONLY);
 	Tcl_ObjSetVar2(ti, m_postponed, nullptr, m_value[0], TCL_GLOBAL_ONLY);
