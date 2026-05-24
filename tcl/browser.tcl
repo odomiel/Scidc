@@ -640,7 +640,7 @@ proc ConfigureButtons {position} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$Vars(control:backward) configure -state $state
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$Vars(control:forward) configure -state $state
 	}
@@ -742,7 +742,7 @@ proc GotoGame(first) {parent position} {
 proc GotoGame(last) {parent position} {
 	variable ${position}::Vars
 
-	set index [expr {[scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)] - 1}]
+	set index [expr {[scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)] - 1}]
 
 	if {$Vars(index) < $index} {
 		set Vars(index) $index
@@ -767,7 +767,7 @@ proc NextGame {parent position {step 0}} {
 	variable Priv
 
 	if {$Vars(index) == -1} { return }
-	set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+	set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 	set number $Vars(number)
 	set index [expr {$Vars(index) + $step}]
 	if {$index < 0 || $index == $count} { return }
@@ -981,7 +981,7 @@ proc ShowEvent {position} {
 
 	set index [expr {$Vars(number) - 1}]
 
-	set info [scidb::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
+	set info [scidc::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
 	::eventtable::popupInfo $Vars(header) $info
 }
 
@@ -1045,7 +1045,7 @@ proc ShowPlayerInfo {position side} {
 	set variant $Vars(variant)
 	set index [expr {$Vars(number) - 1}]
 
-	set info [scidb::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
+	set info [scidc::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
 	::playercard::popupInfo $Vars(header) $info
 }
 
@@ -1445,14 +1445,14 @@ proc PopupMenu {parent board position {what ""}} {
 
 		switch $what {
 			white - black {
-				set info [scidb::db::fetch \
+				set info [scidc::db::fetch \
 					${what}PlayerInfo $index $Vars(base) $Vars(variant) -card -ratings {Any Any}]
 				::playertable::popupMenu \
 					$menu $Vars(base) $Vars(variant) $info [list [expr {$Vars(number) - 1}] $what]
 			}
 
 			event {
-				set info [scidb::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
+				set info [scidc::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
 				::eventtable::popupMenu $dlg $menu $Vars(base) $Vars(variant) 0 $index game
 			}
 		}
@@ -1462,7 +1462,7 @@ proc PopupMenu {parent board position {what ""}} {
 	}
 
 	if {!$Vars(closed)} {
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 
 		if {$Vars(index) == -1} { set state disabled } else { set state normal }
 		$menu add command \

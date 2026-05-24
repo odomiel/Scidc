@@ -1630,7 +1630,7 @@ proc EmptyClipbase {parent} {
 
 proc SaveChanges {parent {base ""}} {
 	set parent [winfo toplevel $parent]
-	if {[string length $base] == 0} { set base [scidb::db::get name] }
+	if {[string length $base] == 0} { set base [scidc::db::get name] }
 
 	wm withdraw [set dlg [tk::toplevel $parent.save -class Dialog]]
 	pack [set top [ttk::frame $dlg.top]] -fill both
@@ -1690,7 +1690,7 @@ proc DoSaveChanges {parent base} {
 		::dialog::error -parent $parent -message $msg
 	} else {
 		set encoding [expr {[::export::testUTF8Flag] ? "utf-8" : "iso8859-1"}]
-		set cmd [list scidb::db::savePGN $base $encoding [::export::getPgnFlags]]
+		set cmd [list scidc::db::savePGN $base $encoding [::export::getPgnFlags]]
 		set options [list -message $mc::FileSaveChanges]
 		set result [::progress::start $parent $cmd {} $options]
 		CheckSaveState $base

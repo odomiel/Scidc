@@ -115,7 +115,7 @@ if {[tk windowingsystem] eq "x11"} {
 
 
 proc dialog::messagebox::tokenize {msg} {
-	return [scidb::misc::xml tokenize [append expr <xml> $msg </xml>]]
+	return [scidc::misc::xml tokenize [append expr <xml> $msg </xml>]]
 }
 
 proc fsbox::dirIsEmpty {dir} { return [::scidc::misc::dirEmpty? $dir] }
@@ -461,7 +461,7 @@ if {$::application::board::Options(promoted:mark) eq "1"} {
 }
 # END OF MIGRATION ##################################################################
 
-set scidb::revision [::scidc::misc::revision]
+set scidc::revision [::scidc::misc::revision]
 
 # --- Initalization ----------------------------------------------------
 

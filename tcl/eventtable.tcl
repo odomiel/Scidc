@@ -489,7 +489,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count events $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count events $base $variant $view] - $start)}]
 
 	if {![info exists Vars($base:$variant:index)]} {
 		set Vars($base:$variant:index) -1
@@ -670,7 +670,7 @@ proc ShowInfo {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [scidb::db::get eventInfo $index $view $base $variant -card]
+	set info [scidc::db::get eventInfo $index $view $base $variant -card]
 	popupInfo $path $info
 }
 

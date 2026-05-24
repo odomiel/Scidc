@@ -710,7 +710,7 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 	variable _promoted $Drop(piece)
 	set Drop(piece) " "
 
-	if {[scidb::pos::promotion? $sq1 $sq2 $allowIllegalMove]} {
+	if {[scidc::pos::promotion? $sq1 $sq2 $allowIllegalMove]} {
 		catch { destroy $board.popup_promotion }
 		set color [string index [::board::diagram::piece $board $sq1] 0]
 		set variant [::scidc::game::query Variant?]

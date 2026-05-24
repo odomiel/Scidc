@@ -3212,7 +3212,7 @@ proc DoExport {parent dlg file} {
 	set file [file normalize $file]
 
 	if {	([file exists $file] && ![file writable $file])
-		|| ([scidb::db::get open? $file] && [::scidc::db::get readonly? $file])} {
+		|| ([scidc::db::get open? $file] && [::scidc::db::get readonly? $file])} {
 		return [::dialog::error \
 			-parent $dlg \
 			-message [format $mc::DatabaseIsReadonly [::util::databaseName $file]] \

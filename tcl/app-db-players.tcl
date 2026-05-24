@@ -332,7 +332,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::playertable::selectedPlayer $Vars(frame:player) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get playerIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get playerKey $base $variant $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get playerKey $base $variant $index]
 		}
 	}
 

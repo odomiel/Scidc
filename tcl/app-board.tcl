@@ -818,12 +818,12 @@ proc LoadGame(base) {w incr} {
 proc LoadGame(all) {w position base variant view number incr} {
 	variable Vars
 
-	set numGames [scidb::view::count games $base $variant $view]
+	set numGames [scidc::view::count games $base $variant $view]
 	if {$numGames == 0} { return }
 
 	if {$view >= 0} {
 		set prevNumber $number
-		set number [scidb::game::view $position $incr]
+		set number [scidc::game::view $position $incr]
 		if {$number == -1} {
 			set number [::scidc::db::get gameNumber $base $variant 0 $view]
 			if {$prevNumber == $number} {
@@ -2032,7 +2032,7 @@ proc UpdateGameButtonState(list) {position} {
 		lassign $Vars(current:game) position base variant view number
 		if {[::scidc::db::get open? $base $variant]} {
 			if {[::scidc::view::open? games $base $variant $view]} {
-				if {[scidb::view::count games $base $variant $view] > 1} {
+				if {[scidc::view::count games $base $variant $view] > 1} {
 					if {[::scidc::game::view $position next] >= 0} {
 						array set state { next normal last normal }
 						set state(random) normal
@@ -2058,7 +2058,7 @@ proc UpdateGameButtonState(base) {base variant} {
 	if {$Vars(load:method) eq "list"} { return }
 
 	set position [::scidc::game::current]
-	set numGames [scidb::view::count games $base $variant 0]
+	set numGames [scidc::view::count games $base $variant 0]
 	array set state { random disabled prev disabled next disabled first disabled last disabled }
 
 	if {$numGames > 0} {

@@ -38182,13 +38182,13 @@ proc emoticons {} {
 
 proc lookupCode {emotion} {
 	if {![string is alpha -strict $emotion]} { return $emotion }
-	return [scidb::misc::emoticons code $emotion]
+	return [scidc::misc::emoticons code $emotion]
 }
 
 
 proc lookupEmotion {code} {
 	if {[string is alpha -strict $code]} { return $code }
-	return [scidb::misc::emoticons parse $code]
+	return [scidc::misc::emoticons parse $code]
 }
 
 
@@ -55817,7 +55817,7 @@ proc exportGame {parent {position -1}} {
 
 	set mainVariant [::util::toMainVariant $variant]
 	foreach side {white black} {
-		set info [scidb::db::fetch ${side}PlayerInfo $index $base $mainVariant]
+		set info [scidc::db::fetch ${side}PlayerInfo $index $base $mainVariant]
 		set $side [lindex [split [lindex $info 0] ","] 0]
 	}
 	if {[string length $white] && [string length $black]} {
@@ -57715,7 +57715,7 @@ proc GetEventInfo {id} {
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }
-	return [scidb::db::fetch eventInfo $index $base $variant -card]
+	return [scidc::db::fetch eventInfo $index $base $variant -card]
 }
 
 
@@ -57724,7 +57724,7 @@ proc GetEventName {id} {
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }
-	set name [scidb::db::fetch eventName $index $base $variant]
+	set name [scidc::db::fetch eventName $index $base $variant]
 	if {$name eq "?" || $name eq "-"} { set name "" }
 	return $name
 }
@@ -57782,13 +57782,13 @@ proc VisitURL {gamebar id} {
 
 proc GetPlayerInfo {id side} {
 	lassign [GetSource $id] base variant index
-	return [scidb::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
+	return [scidc::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
 }
 
 
 proc GetPlayerName {id side} {
 	lassign [GetSource $id] base variant index
-	return [scidb::db::fetch ${side}PlayerName $index $base $variant]
+	return [scidc::db::fetch ${side}PlayerName $index $base $variant]
 }
 
 
@@ -82019,7 +82019,7 @@ proc PrepareImages {path count} {
 	set width $Vars(acvsize)
 	set height [expr {$s + 4}]
 	set border [image create photo -width $width -height $height]
-	scidb::tk::image border $border -width 1 -type $type
+	scidc::tk::image border $border -width 1 -type $type
 
 	if {!$Options(transparent) && [llength $Vars(crosshand)] == 0} {
 		set Vars(crosshand) [image create photo -width $width -height $height]
@@ -82072,7 +82072,7 @@ proc TableFill {path args} {
 		return [clear $path]
 	}
 
-	set last [expr {min($last, [scidb::view::count games $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count games $base $variant $view] - $start)}]
 	set ratings [list $Options(rating:1) $Options(rating:2)]
 	set gray [::scrolledtable::visible? $path deleted]
 	set delIdx [columnIndex deleted]
@@ -82716,7 +82716,7 @@ proc SortColumn {path id dir {rating {}}} {
 	set see 0
 	set selection [::scrolledtable::selection $path]
 	if {$selection >= 0} {
-		set number [expr {[lindex [scidb::db::get gameInfo $selection $view $base $variant] 0] - 1}]
+		set number [expr {[lindex [scidc::db::get gameInfo $selection $view $base $variant] 0] - 1}]
 		if {[::scrolledtable::selectionIsVisible? $path]} { set see 1 }
 	}
 	switch $dir {
@@ -82777,7 +82777,7 @@ proc PopupMenu {path menu base variant index column} {
 	if {[string length $base] == 0} { return }
 
 	set view [{*}$Vars(viewcmd) $base $variant]
-	if {[scidb::view::count games $base $variant $view] == 0} { return }
+	if {[scidc::view::count games $base $variant $view] == 0} { return }
 	set Vars(menu) $menu
 
 	if {$index ne "outside"} {
@@ -83781,7 +83781,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count players $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count players $base $variant $view] - $start)}]
 	set ratings [list $Options(rating1:type) $Options(rating2:type)]
 
 	if {![info exists Vars($base:$variant:index)]} {
@@ -83790,7 +83790,7 @@ proc TableFill {path args} {
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get playerInfo $index $view $base $variant \
+		set line [scidc::db::get playerInfo $index $view $base $variant \
 			-ratings $ratings \
 			-federation $Options(federation) \
 			-usebase $Options(use-player-base) \
@@ -84022,7 +84022,7 @@ proc ShowInfo {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [scidb::db::get playerInfo $index $view $base $variant -card -ratings {Any Any}]
+	set info [scidc::db::get playerInfo $index $view $base $variant -card -ratings {Any Any}]
 	::playercard::popupInfo $path $info
 }
 
@@ -84039,9 +84039,9 @@ proc PopupMenu {table menu base variant index column} {
 	if {![string is digit $index]} { return }
 
 	set view  [{*}$Vars(viewcmd) $base $variant]
-	set info  [scidb::db::get playerInfo $index $view $base $variant -info]
+	set info  [scidc::db::get playerInfo $index $view $base $variant -info]
 
-	set playerIndex [scidb::db::get playerIndex $index $view $base $variant]
+	set playerIndex [scidc::db::get playerIndex $index $view $base $variant]
 	popupMenu $menu $base $variant $info $playerIndex
 
 	$menu add separator
@@ -84576,7 +84576,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count events $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count events $base $variant $view] - $start)}]
 
 	if {![info exists Vars($base:$variant:index)]} {
 		set Vars($base:$variant:index) -1
@@ -84757,7 +84757,7 @@ proc ShowInfo {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [scidb::db::get eventInfo $index $view $base $variant -card]
+	set info [scidc::db::get eventInfo $index $view $base $variant -card]
 	popupInfo $path $info
 }
 
@@ -85235,7 +85235,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count sites $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count sites $base $variant $view] - $start)}]
 
 	if {![info exists Vars($base:$variant:index)]} {
 		set Vars($base:$variant:index) -1
@@ -103316,12 +103316,12 @@ proc TableFill {table args} {
 
 	lassign [lindex $args 0] table _ _ start first last columns
 
-	set last [expr {min($last, [scidb::player::count] - $start)}]
+	set last [expr {min($last, [scidc::player::count] - $start)}]
 	set ratings [list $Options(rating1:type) $Options(rating2:type)]
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::player::info $index \
+		set line [scidc::player::info $index \
 			-ratings $ratings \
 			-organization $Options(organization) \
 			;
@@ -103445,7 +103445,7 @@ proc TableSelected {table index} {
 
 	if {[string length $Priv(receiver)]} {
 		set ratings [list $Options(rating1:type) $Options(rating2:type)]
-		{*}$Priv(receiver) [scidb::player::info $index -ratings $ratings]
+		{*}$Priv(receiver) [scidc::player::info $index -ratings $ratings]
 	} else {
 		::scrolledtable::select $table none 
 	}
@@ -103464,7 +103464,7 @@ proc TableVisit {table data} {
 	}
 
 	set tip ""
-	set info [scidb::player::info [::scrolledtable::rowToIndex $table $row]]
+	set info [scidc::player::info [::scrolledtable::rowToIndex $table $row]]
 		#-titleyear 1 \
 		#-trophyflags $Priv(trophy:flags) \
 		#-alltrophies 1
@@ -103654,7 +103654,7 @@ proc Refresh {table} {
 
 proc PopupMenu {table menu _ _ index _} {
 	if {![string is digit -strict $index]} { return }
-	set info [scidb::player::info $index -web 1]
+	set info [scidc::player::info $index -web 1]
 	::playercard::buildWebMenu $table $menu $info
 }
 
@@ -106372,12 +106372,12 @@ proc LoadGame(base) {w incr} {
 proc LoadGame(all) {w position base variant view number incr} {
 	variable Vars
 
-	set numGames [scidb::view::count games $base $variant $view]
+	set numGames [scidc::view::count games $base $variant $view]
 	if {$numGames == 0} { return }
 
 	if {$view >= 0} {
 		set prevNumber $number
-		set number [scidb::game::view $position $incr]
+		set number [scidc::game::view $position $incr]
 		if {$number == -1} {
 			set number [::scidc::db::get gameNumber $base $variant 0 $view]
 			if {$prevNumber == $number} {
@@ -107563,7 +107563,7 @@ proc UpdateGameButtonState(list) {position} {
 		lassign $Vars(current:game) position base variant view number
 		if {[::scidc::db::get open? $base $variant]} {
 			if {[::scidc::view::open? games $base $variant $view]} {
-				if {[scidb::view::count games $base $variant $view] > 1} {
+				if {[scidc::view::count games $base $variant $view] > 1} {
 					if {[::scidc::game::view $position next] >= 0} {
 						array set state { next normal last normal }
 						set state(random) normal
@@ -107589,7 +107589,7 @@ proc UpdateGameButtonState(base) {base variant} {
 	if {$Vars(load:method) eq "list"} { return }
 
 	set position [::scidc::game::current]
-	set numGames [scidb::view::count games $base $variant 0]
+	set numGames [scidc::view::count games $base $variant 0]
 	array set state { random disabled prev disabled next disabled first disabled last disabled }
 
 	if {$numGames > 0} {
@@ -109423,7 +109423,7 @@ proc EmptyClipbase {parent} {
 
 proc SaveChanges {parent {base ""}} {
 	set parent [winfo toplevel $parent]
-	if {[string length $base] == 0} { set base [scidb::db::get name] }
+	if {[string length $base] == 0} { set base [scidc::db::get name] }
 
 	wm withdraw [set dlg [tk::toplevel $parent.save -class Dialog]]
 	pack [set top [ttk::frame $dlg.top]] -fill both
@@ -109483,7 +109483,7 @@ proc DoSaveChanges {parent base} {
 		::dialog::error -parent $parent -message $msg
 	} else {
 		set encoding [expr {[::export::testUTF8Flag] ? "utf-8" : "iso8859-1"}]
-		set cmd [list scidb::db::savePGN $base $encoding [::export::getPgnFlags]]
+		set cmd [list scidc::db::savePGN $base $encoding [::export::getPgnFlags]]
 		set options [list -message $mc::FileSaveChanges]
 		set result [::progress::start $parent $cmd {} $options]
 		CheckSaveState $base
@@ -116341,12 +116341,12 @@ proc TableFill {path args} {
 	lassign [lindex $args 0] table base variant start first last columns
 	if {![info exists Vars($base:$variant:view)]} { return }
 	set view $Vars($base:$variant:view)
-	set last [expr {min($last, [scidb::view::count annotators $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count annotators $base $variant $view] - $start)}]
 	set state !deleted
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get annotator $index $view]
+		set line [scidc::db::get annotator $index $view]
 		set text {}
 		set k -1
 		foreach id $columns {
@@ -116380,7 +116380,7 @@ proc TableSelected {path index} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set annotator [scidb::db::get annotator $index $view]
+	set annotator [scidc::db::get annotator $index $view]
 	set Vars($base:$variant:annotator) [lindex $annotator 0]
 	TableSearch $path $base $variant $view
 	::widget::busyCursor off
@@ -116734,7 +116734,7 @@ proc ShowBoard {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set idn [lindex [scidb::db::get position $index $view] 0]
+	set idn [lindex [scidc::db::get position $index $view] 0]
 
 	activate [winfo parent $path] [::scrolledtable::indexToRow $table $index]
 	::scrolledtable::focus $table
@@ -116906,11 +116906,11 @@ proc TableFill {path args} {
 	lassign [lindex $args 0] table base variant start first last columns
 	if {![info exists Vars($base:$variant:view)]} { return }
 	set view $Vars($base:$variant:view)
-	set last [expr {min($last, [scidb::view::count positions $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count positions $base $variant $view] - $start)}]
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get position $index $view]
+		set line [scidc::db::get position $index $view]
 		set text {}
 
 		foreach id {position backRank frequency} value $line {
@@ -116954,7 +116954,7 @@ proc TableSelected {path index} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set position [scidb::db::get position $index $view]
+	set position [scidc::db::get position $index $view]
 	set Vars($base:$variant:position) [lindex $position 0]
 	TableSearch $path $base $variant $view
 	::widget::busyCursor off
@@ -117869,7 +117869,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::playertable::selectedPlayer $Vars(frame:player) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get playerIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get playerKey $base $variant $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get playerKey $base $variant $index]
 		}
 	}
 
@@ -118360,7 +118360,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::eventtable::selectedEvent $Vars(frame:event) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get eventIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get eventKey $base $variant event $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get eventKey $base $variant event $index]
 		}
 	}
 
@@ -118787,7 +118787,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::sitetable::selectedSite $Vars(frame:site) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get siteIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get siteKey $base $variant site $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get siteKey $base $variant site $index]
 		}
 	}
 
@@ -137211,7 +137211,7 @@ proc DoExport {parent dlg file} {
 	set file [file normalize $file]
 
 	if {	([file exists $file] && ![file writable $file])
-		|| ([scidb::db::get open? $file] && [::scidc::db::get readonly? $file])} {
+		|| ([scidc::db::get open? $file] && [::scidc::db::get readonly? $file])} {
 		return [::dialog::error \
 			-parent $dlg \
 			-message [format $mc::DatabaseIsReadonly [::util::databaseName $file]] \
@@ -138642,7 +138642,7 @@ proc SetFigurines {position} {
 	}
 	set font [$w cget -font]
 	set bold [list [list [font configure $font -family] [font configure $font -size] bold]]
-	set Priv($position:sets) [scidb::misc::sort \
+	set Priv($position:sets) [scidc::misc::sort \
 		-index 1 -order [::mc::sortOrderTable] $Priv($position:sets)]
 	set value [list en [::encoding::languageName en] [string map {" " ""}  $::figurines::langSet(en)]]
 	set Priv($position:sets) [linsert $Priv($position:sets) 0 $value]
@@ -140249,7 +140249,7 @@ proc ConfigureButtons {position} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$Vars(control:backward) configure -state $state
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$Vars(control:forward) configure -state $state
 	}
@@ -140351,7 +140351,7 @@ proc GotoGame(first) {parent position} {
 proc GotoGame(last) {parent position} {
 	variable ${position}::Vars
 
-	set index [expr {[scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)] - 1}]
+	set index [expr {[scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)] - 1}]
 
 	if {$Vars(index) < $index} {
 		set Vars(index) $index
@@ -140376,7 +140376,7 @@ proc NextGame {parent position {step 0}} {
 	variable Priv
 
 	if {$Vars(index) == -1} { return }
-	set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+	set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 	set number $Vars(number)
 	set index [expr {$Vars(index) + $step}]
 	if {$index < 0 || $index == $count} { return }
@@ -140590,7 +140590,7 @@ proc ShowEvent {position} {
 
 	set index [expr {$Vars(number) - 1}]
 
-	set info [scidb::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
+	set info [scidc::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
 	::eventtable::popupInfo $Vars(header) $info
 }
 
@@ -140654,7 +140654,7 @@ proc ShowPlayerInfo {position side} {
 	set variant $Vars(variant)
 	set index [expr {$Vars(number) - 1}]
 
-	set info [scidb::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
+	set info [scidc::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
 	::playercard::popupInfo $Vars(header) $info
 }
 
@@ -141051,14 +141051,14 @@ proc PopupMenu {parent board position {what ""}} {
 
 		switch $what {
 			white - black {
-				set info [scidb::db::fetch \
+				set info [scidc::db::fetch \
 					${what}PlayerInfo $index $Vars(base) $Vars(variant) -card -ratings {Any Any}]
 				::playertable::popupMenu \
 					$menu $Vars(base) $Vars(variant) $info [list [expr {$Vars(number) - 1}] $what]
 			}
 
 			event {
-				set info [scidb::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
+				set info [scidc::db::fetch eventInfo $index $Vars(base) $Vars(variant) -card]
 				::eventtable::popupMenu $dlg $menu $Vars(base) $Vars(variant) 0 $index game
 			}
 		}
@@ -141068,7 +141068,7 @@ proc PopupMenu {parent board position {what ""}} {
 	}
 
 	if {!$Vars(closed)} {
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 
 		if {$Vars(index) == -1} { set state disabled } else { set state normal }
 		$menu add command \
@@ -141671,7 +141671,7 @@ proc ConfigureButtons {nb} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$dlg.previous configure -state $state
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$dlg.next configure -state $state
 	}
@@ -141766,7 +141766,7 @@ proc GotoGame(first) {nb} {
 proc GotoGame(last) {nb} {
 	variable ${nb}::Vars
 
-	set index [expr {[scidb::view::count games $base $variant $Vars(view)] - 1}]
+	set index [expr {[scidc::view::count games $base $variant $Vars(view)] - 1}]
 
 	if {$Vars(index) < $index} {
 		set Vars(index) $index
@@ -142048,7 +142048,7 @@ if {0} { ;# TODO not working because we did not load this game, we've used ::sci
 		;
 	if {$Vars(index) >= 0} {
 		$menu add separator
-		set count [scidb::view::count games $base $variant $view]
+		set count [scidc::view::count games $base $variant $view]
 		if {$count <= 1 || $Vars(index) == 0} { set state disabled } else { set state normal }
 		$menu add command \
 			-label " $::browser::mc::GotoGame(prev)" \
@@ -144640,7 +144640,7 @@ proc SetupBoard {cmd} {
 
 		mirror {
 			set Vars(fen) [::scidc::board::transposeFen $Vars(fen) $Options(fen:format)]
-			set Vars(fen) [scidb::board::normalizeFen $Vars(fen) $Options(fen:format)]
+			set Vars(fen) [scidc::board::normalizeFen $Vars(fen) $Options(fen:format)]
 			set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 			set promoted [lindex [::scidc::board::analyseFen $Vars(fen)] 11]
 			::board::diagram::update $Vars(board) $Vars(pos) $promoted
@@ -144817,7 +144817,7 @@ proc Update {} {
 			} elseif {$Options(fen:format) eq "xfen"} {
 				lappend pieces $piece
 			} else {
-				lappend pieces [scidb::board::nearest $Vars(pos) $piece]
+				lappend pieces [scidc::board::nearest $Vars(pos) $piece]
 			}
 		}
 	}
@@ -146361,7 +146361,7 @@ proc ConfigureButtons {dlg} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$dlg.previous configure -state $state
-		set count [scidb::view::count events $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count events $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$dlg.next configure -state $state
 	}
@@ -148763,7 +148763,7 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 	variable _promoted $Drop(piece)
 	set Drop(piece) " "
 
-	if {[scidb::pos::promotion? $sq1 $sq2 $allowIllegalMove]} {
+	if {[scidc::pos::promotion? $sq1 $sq2 $allowIllegalMove]} {
 		catch { destroy $board.popup_promotion }
 		set color [string index [::board::diagram::piece $board $sq1] 0]
 		set variant [::scidc::game::query Variant?]
@@ -151639,7 +151639,7 @@ if {[tk windowingsystem] eq "x11"} {
 
 
 proc dialog::messagebox::tokenize {msg} {
-	return [scidb::misc::xml tokenize [append expr <xml> $msg </xml>]]
+	return [scidc::misc::xml tokenize [append expr <xml> $msg </xml>]]
 }
 
 proc fsbox::dirIsEmpty {dir} { return [::scidc::misc::dirEmpty? $dir] }
@@ -151975,7 +151975,7 @@ if {$::application::board::Options(promoted:mark) eq "1"} {
 	set ::application::board::Options(promoted:mark) none
 }
 
-set scidb::revision [::scidc::misc::revision]
+set scidc::revision [::scidc::misc::revision]
 
 
 splash::print "$load::mc::Startup..."

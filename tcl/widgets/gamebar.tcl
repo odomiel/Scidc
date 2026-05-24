@@ -817,7 +817,7 @@ proc exportGame {parent {position -1}} {
 
 	set mainVariant [::util::toMainVariant $variant]
 	foreach side {white black} {
-		set info [scidb::db::fetch ${side}PlayerInfo $index $base $mainVariant]
+		set info [scidc::db::fetch ${side}PlayerInfo $index $base $mainVariant]
 		set $side [lindex [split [lindex $info 0] ","] 0]
 	}
 	if {[string length $white] && [string length $black]} {
@@ -2748,7 +2748,7 @@ proc GetEventInfo {id} {
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }
-	return [scidb::db::fetch eventInfo $index $base $variant -card]
+	return [scidc::db::fetch eventInfo $index $base $variant -card]
 }
 
 
@@ -2757,7 +2757,7 @@ proc GetEventName {id} {
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }
-	set name [scidb::db::fetch eventName $index $base $variant]
+	set name [scidc::db::fetch eventName $index $base $variant]
 	if {$name eq "?" || $name eq "-"} { set name "" }
 	return $name
 }
@@ -2815,13 +2815,13 @@ proc VisitURL {gamebar id} {
 
 proc GetPlayerInfo {id side} {
 	lassign [GetSource $id] base variant index
-	return [scidb::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
+	return [scidc::db::fetch ${side}PlayerInfo $index $base $variant -card -ratings {Any Any}]
 }
 
 
 proc GetPlayerName {id side} {
 	lassign [GetSource $id] base variant index
-	return [scidb::db::fetch ${side}PlayerName $index $base $variant]
+	return [scidc::db::fetch ${side}PlayerName $index $base $variant]
 }
 
 

@@ -368,12 +368,12 @@ proc TableFill {path args} {
 	lassign [lindex $args 0] table base variant start first last columns
 	if {![info exists Vars($base:$variant:view)]} { return }
 	set view $Vars($base:$variant:view)
-	set last [expr {min($last, [scidb::view::count annotators $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count annotators $base $variant $view] - $start)}]
 	set state !deleted
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get annotator $index $view]
+		set line [scidc::db::get annotator $index $view]
 		set text {}
 		set k -1
 		foreach id $columns {
@@ -407,7 +407,7 @@ proc TableSelected {path index} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set annotator [scidb::db::get annotator $index $view]
+	set annotator [scidc::db::get annotator $index $view]
 	set Vars($base:$variant:annotator) [lindex $annotator 0]
 	TableSearch $path $base $variant $view
 	::widget::busyCursor off

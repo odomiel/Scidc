@@ -1041,7 +1041,7 @@ proc PrepareImages {path count} {
 	set width $Vars(acvsize)
 	set height [expr {$s + 4}]
 	set border [image create photo -width $width -height $height]
-	scidb::tk::image border $border -width 1 -type $type
+	scidc::tk::image border $border -width 1 -type $type
 
 	if {!$Options(transparent) && [llength $Vars(crosshand)] == 0} {
 		set Vars(crosshand) [image create photo -width $width -height $height]
@@ -1095,7 +1095,7 @@ proc TableFill {path args} {
 		return [clear $path]
 	}
 
-	set last [expr {min($last, [scidb::view::count games $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count games $base $variant $view] - $start)}]
 	set ratings [list $Options(rating:1) $Options(rating:2)]
 	set gray [::scrolledtable::visible? $path deleted]
 	set delIdx [columnIndex deleted]
@@ -1748,7 +1748,7 @@ proc SortColumn {path id dir {rating {}}} {
 	set see 0
 	set selection [::scrolledtable::selection $path]
 	if {$selection >= 0} {
-		set number [expr {[lindex [scidb::db::get gameInfo $selection $view $base $variant] 0] - 1}]
+		set number [expr {[lindex [scidc::db::get gameInfo $selection $view $base $variant] 0] - 1}]
 		if {[::scrolledtable::selectionIsVisible? $path]} { set see 1 }
 	}
 	switch $dir {
@@ -1809,7 +1809,7 @@ proc PopupMenu {path menu base variant index column} {
 	if {[string length $base] == 0} { return }
 
 	set view [{*}$Vars(viewcmd) $base $variant]
-	if {[scidb::view::count games $base $variant $view] == 0} { return }
+	if {[scidc::view::count games $base $variant $view] == 0} { return }
 	set Vars(menu) $menu
 
 	if {$index ne "outside"} {

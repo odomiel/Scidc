@@ -335,7 +335,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::eventtable::selectedEvent $Vars(frame:event) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get eventIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get eventKey $base $variant event $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get eventKey $base $variant event $index]
 		}
 	}
 

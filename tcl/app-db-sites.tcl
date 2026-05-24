@@ -271,7 +271,7 @@ proc Search {path base variant view {selected -1}} {
 		set selected [::sitetable::selectedSite $Vars(frame:site) $base $variant]
 		if {$selected >= 0} {
 			set index [::scidc::db::get siteIndex $selected $view $base $variant]
-			set Vars($base:$variant:selected:key) [scidb::db::get siteKey $base $variant site $index]
+			set Vars($base:$variant:selected:key) [scidc::db::get siteKey $base $variant site $index]
 		}
 	}
 

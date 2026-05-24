@@ -223,7 +223,7 @@ proc ShowBoard {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set idn [lindex [scidb::db::get position $index $view] 0]
+	set idn [lindex [scidc::db::get position $index $view] 0]
 
 	activate [winfo parent $path] [::scrolledtable::indexToRow $table $index]
 	::scrolledtable::focus $table
@@ -397,11 +397,11 @@ proc TableFill {path args} {
 	lassign [lindex $args 0] table base variant start first last columns
 	if {![info exists Vars($base:$variant:view)]} { return }
 	set view $Vars($base:$variant:view)
-	set last [expr {min($last, [scidb::view::count positions $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count positions $base $variant $view] - $start)}]
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get position $index $view]
+		set line [scidc::db::get position $index $view]
 		set text {}
 
 		foreach id {position backRank frequency} value $line {
@@ -445,7 +445,7 @@ proc TableSelected {path index} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view $Vars($base:$variant:view)
-	set position [scidb::db::get position $index $view]
+	set position [scidc::db::get position $index $view]
 	set Vars($base:$variant:position) [lindex $position 0]
 	TableSearch $path $base $variant $view
 	::widget::busyCursor off

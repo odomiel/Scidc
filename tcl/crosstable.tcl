@@ -857,7 +857,7 @@ proc ConfigureButtons {dlg} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$dlg.previous configure -state $state
-		set count [scidb::view::count events $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count events $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$dlg.next configure -state $state
 	}

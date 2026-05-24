@@ -580,7 +580,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count players $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count players $base $variant $view] - $start)}]
 	set ratings [list $Options(rating1:type) $Options(rating2:type)]
 
 	if {![info exists Vars($base:$variant:index)]} {
@@ -589,7 +589,7 @@ proc TableFill {path args} {
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::db::get playerInfo $index $view $base $variant \
+		set line [scidc::db::get playerInfo $index $view $base $variant \
 			-ratings $ratings \
 			-federation $Options(federation) \
 			-usebase $Options(use-player-base) \
@@ -822,7 +822,7 @@ proc ShowInfo {path x y} {
 	set base [::scrolledtable::base $table]
 	set variant [::scrolledtable::variant $table]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [scidb::db::get playerInfo $index $view $base $variant -card -ratings {Any Any}]
+	set info [scidc::db::get playerInfo $index $view $base $variant -card -ratings {Any Any}]
 	::playercard::popupInfo $path $info
 }
 
@@ -839,9 +839,9 @@ proc PopupMenu {table menu base variant index column} {
 	if {![string is digit $index]} { return }
 
 	set view  [{*}$Vars(viewcmd) $base $variant]
-	set info  [scidb::db::get playerInfo $index $view $base $variant -info]
+	set info  [scidc::db::get playerInfo $index $view $base $variant -info]
 
-	set playerIndex [scidb::db::get playerIndex $index $view $base $variant]
+	set playerIndex [scidc::db::get playerIndex $index $view $base $variant]
 	popupMenu $menu $base $variant $info $playerIndex
 
 	$menu add separator

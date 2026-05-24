@@ -96,13 +96,13 @@ proc emoticons {} {
 
 proc lookupCode {emotion} {
 	if {![string is alpha -strict $emotion]} { return $emotion }
-	return [scidb::misc::emoticons code $emotion]
+	return [scidc::misc::emoticons code $emotion]
 }
 
 
 proc lookupEmotion {code} {
 	if {[string is alpha -strict $code]} { return $code }
-	return [scidb::misc::emoticons parse $code]
+	return [scidc::misc::emoticons parse $code]
 }
 
 

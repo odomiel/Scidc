@@ -1275,7 +1275,7 @@ proc SetupBoard {cmd} {
 
 		mirror {
 			set Vars(fen) [::scidc::board::transposeFen $Vars(fen) $Options(fen:format)]
-			set Vars(fen) [scidb::board::normalizeFen $Vars(fen) $Options(fen:format)]
+			set Vars(fen) [scidc::board::normalizeFen $Vars(fen) $Options(fen:format)]
 			set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 			set promoted [lindex [::scidc::board::analyseFen $Vars(fen)] 11]
 			::board::diagram::update $Vars(board) $Vars(pos) $promoted
@@ -1452,7 +1452,7 @@ proc Update {} {
 			} elseif {$Options(fen:format) eq "xfen"} {
 				lappend pieces $piece
 			} else {
-				lappend pieces [scidb::board::nearest $Vars(pos) $piece]
+				lappend pieces [scidc::board::nearest $Vars(pos) $piece]
 			}
 		}
 	}

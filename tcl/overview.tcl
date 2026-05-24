@@ -185,7 +185,7 @@ proc ConfigureButtons {nb} {
 	} else {
 		if {$Vars(index) == 0} { set state disabled } else { set state normal }
 		$dlg.previous configure -state $state
-		set count [scidb::view::count games $Vars(base) $Vars(variant) $Vars(view)]
+		set count [scidc::view::count games $Vars(base) $Vars(variant) $Vars(view)]
 		if {$Vars(index) + 1 == $count} { set state disabled } else { set state normal }
 		$dlg.next configure -state $state
 	}
@@ -280,7 +280,7 @@ proc GotoGame(first) {nb} {
 proc GotoGame(last) {nb} {
 	variable ${nb}::Vars
 
-	set index [expr {[scidb::view::count games $base $variant $Vars(view)] - 1}]
+	set index [expr {[scidc::view::count games $base $variant $Vars(view)] - 1}]
 
 	if {$Vars(index) < $index} {
 		set Vars(index) $index
@@ -562,7 +562,7 @@ if {0} { ;# TODO not working because we did not load this game, we've used ::sci
 		;
 	if {$Vars(index) >= 0} {
 		$menu add separator
-		set count [scidb::view::count games $base $variant $view]
+		set count [scidc::view::count games $base $variant $view]
 		if {$count <= 1 || $Vars(index) == 0} { set state disabled } else { set state normal }
 		$menu add command \
 			-label " $::browser::mc::GotoGame(prev)" \

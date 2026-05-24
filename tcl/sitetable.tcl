@@ -399,7 +399,7 @@ proc TableFill {path args} {
 
 	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set last [expr {min($last, [scidb::view::count sites $base $variant $view] - $start)}]
+	set last [expr {min($last, [scidc::view::count sites $base $variant $view] - $start)}]
 
 	if {![info exists Vars($base:$variant:index)]} {
 		set Vars($base:$variant:index) -1

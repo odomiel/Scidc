@@ -1010,12 +1010,12 @@ proc TableFill {table args} {
 
 	lassign [lindex $args 0] table _ _ start first last columns
 
-	set last [expr {min($last, [scidb::player::count] - $start)}]
+	set last [expr {min($last, [scidc::player::count] - $start)}]
 	set ratings [list $Options(rating1:type) $Options(rating2:type)]
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [scidb::player::info $index \
+		set line [scidc::player::info $index \
 			-ratings $ratings \
 			-organization $Options(organization) \
 			;
@@ -1139,7 +1139,7 @@ proc TableSelected {table index} {
 
 	if {[string length $Priv(receiver)]} {
 		set ratings [list $Options(rating1:type) $Options(rating2:type)]
-		{*}$Priv(receiver) [scidb::player::info $index -ratings $ratings]
+		{*}$Priv(receiver) [scidc::player::info $index -ratings $ratings]
 	} else {
 		::scrolledtable::select $table none 
 	}
@@ -1158,7 +1158,7 @@ proc TableVisit {table data} {
 	}
 
 	set tip ""
-	set info [scidb::player::info [::scrolledtable::rowToIndex $table $row]]
+	set info [scidc::player::info [::scrolledtable::rowToIndex $table $row]]
 		#-titleyear 1 \
 		#-trophyflags $Priv(trophy:flags) \
 		#-alltrophies 1
@@ -1348,7 +1348,7 @@ proc Refresh {table} {
 
 proc PopupMenu {table menu _ _ index _} {
 	if {![string is digit -strict $index]} { return }
-	set info [scidb::player::info $index -web 1]
+	set info [scidc::player::info $index -web 1]
 	::playercard::buildWebMenu $table $menu $info
 }
 

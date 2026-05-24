@@ -878,7 +878,7 @@ proc SetFigurines {position} {
 	}
 	set font [$w cget -font]
 	set bold [list [list [font configure $font -family] [font configure $font -size] bold]]
-	set Priv($position:sets) [scidb::misc::sort \
+	set Priv($position:sets) [scidc::misc::sort \
 		-index 1 -order [::mc::sortOrderTable] $Priv($position:sets)]
 	set value [list en [::encoding::languageName en] [string map {" " ""}  $::figurines::langSet(en)]]
 	set Priv($position:sets) [linsert $Priv($position:sets) 0 $value]
