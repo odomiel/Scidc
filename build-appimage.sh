@@ -56,6 +56,9 @@ fi
 # --- Schritt 1: Nur bin/ und lib/ neu aufbauen; share/ bleibt erhalten -------
 echo "Aktualisiere Programmdateien..."
 
+# Sprachdateien aus dem Source-Tree synchronisieren
+cp tcl/lang/*.tcl "$SHAREDIR/lang/"
+
 # Engines retten, bevor bin/ geleert wird
 mkdir -p /tmp/_scidc_engine_backup
 for engine in stockfish-scidc fairy-stockfish-scidc; do
