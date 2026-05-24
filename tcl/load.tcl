@@ -144,7 +144,7 @@ proc writeLog {} {
 
 
 proc write {} {
-	set chan [open [file join $scidb::dir::config load.tcl] w]
+	set chan [open [file join $scidc::dir::config load.tcl] w]
 	fconfigure $chan -encoding utf-8
 
 	foreach name [info vars ::load::mc::*] {
@@ -163,8 +163,8 @@ proc write {} {
 } ;# namespace load
 
 
-if {[file readable [file join $scidb::dir::config load.tcl]]} {
-	catch { source -encoding utf-8 [file join $scidb::dir::config load.tcl] }
+if {[file readable [file join $scidc::dir::config load.tcl]]} {
+	catch { source -encoding utf-8 [file join $scidc::dir::config load.tcl] }
 }
 
 
@@ -175,7 +175,7 @@ if {[file readable [file join $scidb::dir::config load.tcl]]} {
 # --- Load ECO file ----------------------------------------------------
 load::load	[format $load::mc::Loading $load::mc::ECOFile] \
 				eco \
-				[file join $scidb::dir::data eco.bin] \
+				[file join $scidc::dir::data eco.bin] \
 				;
 
 if {![::process::testOption fast-load]} {
@@ -183,15 +183,15 @@ if {![::process::testOption fast-load]} {
 # --- Load engines -----------------------------------------------------
 load::load	[format $load::mc::Loading $load::mc::EngineFile] \
 				comp \
-				[file join $scidb::dir::data engines.txt] \
+				[file join $scidc::dir::data engines.txt] \
 				;
 
 # --- Load FIDE players ------------------------------------------------
 # Prefer user-updated list (~/.scidc-beta/players_list.zip) over bundled one
-set _fide_user_zip [file join $scidb::dir::user players_list.zip]
+set _fide_user_zip [file join $scidc::dir::user players_list.zip]
 set _fide_zip [expr {[file exists $_fide_user_zip]
 	? $_fide_user_zip
-	: [file join $scidb::dir::data players_list.zip]}]
+	: [file join $scidc::dir::data players_list.zip]}]
 unset _fide_user_zip
 load::load	[format $load::mc::Loading [format $load::mc::RatingList FIDE]] \
 				fide \
@@ -204,7 +204,7 @@ if {![::process::testOption elo-only]} {
 # --- Load DWZ players -------------------------------------------------
 # Only load user-updated list (~/.scidc-beta/dwz-ratings.txt).
 # The bundled data/dwz-ratings.txt uses a legacy format and is not loaded.
-set _dwz_user [file join $scidb::dir::user dwz-ratings.txt]
+set _dwz_user [file join $scidc::dir::user dwz-ratings.txt]
 if {[file exists $_dwz_user]} {
 	load::load	[format $load::mc::Loading [format $load::mc::RatingList DWZ]] \
 					dwz \
@@ -218,13 +218,13 @@ unset _dwz_user
 # --- Load cities ------------------------------------------------------
 load::load	[format $load::mc::Loading $load::mc::Cities] \
 				site \
-				[file join $scidb::dir::data cities.txt] \
+				[file join $scidc::dir::data cities.txt] \
 				;
 
 } ;# if fast-load
 
 # --- Load localization file -------------------------------------------
-set file [file join $scidb::dir::share lang localization.tcl]
+set file [file join $scidc::dir::share lang localization.tcl]
 if {[file readable $file]} {
 	load::source $file -message [format $load::mc::Loading $load::mc::LocalizationFile] -encoding utf-8
 }

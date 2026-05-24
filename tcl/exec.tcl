@@ -52,24 +52,24 @@ if {[llength $nameofexecutable] == 0} {
 	}
 	if {[llength $nameofexecutable] == 0} {
 		append msg "You've installed a broken Tcl/Tk library (version [info patchlevel])."
-		tk_messageBox -type ok -icon error -title "$scidb::app: broken library" -message $msg
+		tk_messageBox -type ok -icon error -title "$scidc::app: broken library" -message $msg
 		exit 1
 	}
 }
 set nameofexecutable [file normalize $nameofexecutable]
 
 
-if {[::scidc::misc::version] ne $scidb::version} {
+if {[::scidc::misc::version] ne $scidc::version} {
 	wm withdraw .
 	if {$tcl_platform(platform) eq "windows"} {
-		append msg "This is $scidb::app version [::scidc::misc::version], but the scidb.gui "
-		append msg "data file has the version number $scidb::version."
+		append msg "This is $scidc::app version [::scidc::misc::version], but the scidb.gui "
+		append msg "data file has the version number $scidc::version."
 	} else {
-		append msg "This is $scidb::app version '$scidb::version', but the "
+		append msg "This is $scidc::app version '$scidc::version', but the "
 		append msg "[file tail $nameofexecutable] program it uses is "
 		append msg "version '[::scidc::misc::version]'."
 	}
-	tk_messageBox -type ok -icon error -title "$scidb::app: version error" -message $msg
+	tk_messageBox -type ok -icon error -title "$scidc::app: version error" -message $msg
 	exit 1
 }
 

@@ -52,24 +52,24 @@ if {[llength $nameofexecutable] == 0} {
 	}
 	if {[llength $nameofexecutable] == 0} {
 		append msg "You've installed a broken Tcl/Tk library (version [info patchlevel])."
-		tk_messageBox -type ok -icon error -title "$scidb::app: broken library" -message $msg
+		tk_messageBox -type ok -icon error -title "$scidc::app: broken library" -message $msg
 		exit 1
 	}
 }
 set nameofexecutable [file normalize $nameofexecutable]
 
 
-if {[::scidc::misc::version] ne $scidb::version} {
+if {[::scidc::misc::version] ne $scidc::version} {
 	wm withdraw .
 	if {$tcl_platform(platform) eq "windows"} {
-		append msg "This is $scidb::app version [::scidc::misc::version], but the scidb.gui "
-		append msg "data file has the version number $scidb::version."
+		append msg "This is $scidc::app version [::scidc::misc::version], but the scidb.gui "
+		append msg "data file has the version number $scidc::version."
 	} else {
-		append msg "This is $scidb::app version '$scidb::version', but the "
+		append msg "This is $scidc::app version '$scidc::version', but the "
 		append msg "[file tail $nameofexecutable] program it uses is "
 		append msg "version '[::scidc::misc::version]'."
 	}
-	tk_messageBox -type ok -icon error -title "$scidb::app: version error" -message $msg
+	tk_messageBox -type ok -icon error -title "$scidc::app: version error" -message $msg
 	exit 1
 }
 
@@ -970,7 +970,7 @@ if {[::process::testOption recover-options]} {
 
 namespace eval mc {}
 
-tk appname $scidb::app
+tk appname $scidc::app
 
 tk::toplevel .application -class $::scidc::app
 ::scidc::tk::wm startup .
@@ -19216,7 +19216,7 @@ proc writeLog {} {
 
 
 proc write {} {
-	set chan [open [file join $scidb::dir::config load.tcl] w]
+	set chan [open [file join $scidc::dir::config load.tcl] w]
 	fconfigure $chan -encoding utf-8
 
 	foreach name [info vars ::load::mc::*] {
@@ -19235,8 +19235,8 @@ proc write {} {
 } ;# namespace load
 
 
-if {[file readable [file join $scidb::dir::config load.tcl]]} {
-	catch { source -encoding utf-8 [file join $scidb::dir::config load.tcl] }
+if {[file readable [file join $scidc::dir::config load.tcl]]} {
+	catch { source -encoding utf-8 [file join $scidc::dir::config load.tcl] }
 }
 
 
@@ -19245,20 +19245,20 @@ if {[file readable [file join $scidb::dir::config load.tcl]]} {
 
 load::load	[format $load::mc::Loading $load::mc::ECOFile] \
 				eco \
-				[file join $scidb::dir::data eco.bin] \
+				[file join $scidc::dir::data eco.bin] \
 				;
 
 if {![::process::testOption fast-load]} {
 
 load::load	[format $load::mc::Loading $load::mc::EngineFile] \
 				comp \
-				[file join $scidb::dir::data engines.txt] \
+				[file join $scidc::dir::data engines.txt] \
 				;
 
-set _fide_user_zip [file join $scidb::dir::user players_list.zip]
+set _fide_user_zip [file join $scidc::dir::user players_list.zip]
 set _fide_zip [expr {[file exists $_fide_user_zip]
 	? $_fide_user_zip
-	: [file join $scidb::dir::data players_list.zip]}]
+	: [file join $scidc::dir::data players_list.zip]}]
 unset _fide_user_zip
 load::load	[format $load::mc::Loading [format $load::mc::RatingList FIDE]] \
 				fide \
@@ -19268,7 +19268,7 @@ unset _fide_zip
 
 if {![::process::testOption elo-only]} {
 
-set _dwz_user [file join $scidb::dir::user dwz-ratings.txt]
+set _dwz_user [file join $scidc::dir::user dwz-ratings.txt]
 if {[file exists $_dwz_user]} {
 	load::load	[format $load::mc::Loading [format $load::mc::RatingList DWZ]] \
 					dwz \
@@ -19281,12 +19281,12 @@ unset _dwz_user
 
 load::load	[format $load::mc::Loading $load::mc::Cities] \
 				site \
-				[file join $scidb::dir::data cities.txt] \
+				[file join $scidc::dir::data cities.txt] \
 				;
 
 } ;# if fast-load
 
-set file [file join $scidb::dir::share lang localization.tcl]
+set file [file join $scidc::dir::share lang localization.tcl]
 if {[file readable $file]} {
 	load::source $file -message [format $load::mc::Loading $load::mc::LocalizationFile] -encoding utf-8
 }
@@ -65500,7 +65500,7 @@ namespace eval organizationbox {
 namespace import ::tcl::mathfunc::max
 
 set organizations {FIDE DSB ECF ICCF}
-#set organizations {FIDE DSB ECF ACF ICCF Scidb}
+#set organizations {FIDE DSB ECF ACF ICCF Scidc}
 
 
 proc Build {w args} {
@@ -135380,7 +135380,7 @@ proc SearchDiagramStyles {} {
 	set diagramStyles {}
 	set DiagramStyles {}
 	set DiagramSizes {}
-	set path [file join $scidb::dir::share pdf sets]
+	set path [file join $scidc::dir::share pdf sets]
 
 	foreach sub1 [glob -directory $path -nocomplain -types d *] {
 		foreach sub2 [glob -directory $sub1 -nocomplain -types d *] {
@@ -150549,7 +150549,7 @@ set PGNArchives					"PGN archives"
 set Language						"&Language"
 set Toolbars						"&Toolbars"
 set ShowLog							"&Show Log"
-set AboutScidb						"(broken-placeholder)"
+set AboutScidb						"&About Scidc"
 set TipOfTheDay					"Tip of the &Day"
 set Fullscreen						"&Full-Screen"
 set LeaveFullscreen				"Leave &Full-Screen"
@@ -151961,10 +151961,10 @@ if {[catch {
 	exit 1
 }
 
-if {$scidb::revision < 701} {
+if {$scidc::revision < 701} {
 	if {$board::currentTheme eq {Blue Theme|1354018040763|yellow.color|gregor}} {
 		set board::currentTheme Default
-	} elseif {$scidb::revision > 83 && $board::currentTheme eq "Default"} {
+	} elseif {$scidc::revision > 83 && $board::currentTheme eq "Default"} {
 		set board::currentTheme {Primus|1368794511290|yellow.color|gregor}
 	}
 }

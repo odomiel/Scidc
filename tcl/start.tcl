@@ -347,7 +347,7 @@ if {[::process::testOption recover-options]} {
 
 namespace eval mc {}
 
-tk appname $scidb::app
+tk appname $scidc::app
 
 tk::toplevel .application -class $::scidc::app
 ::scidc::tk::wm startup .
