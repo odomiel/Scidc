@@ -52,12 +52,12 @@ void
 tk::init(Tcl_Interp* ti)
 {
 	Tcl_Eval(ti, "namespace eval ::scidb {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::tk {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::tk {}");
 
 	fixes_init(ti);
 	selection_init(ti);
 	x11_init(ti);
-	session_manager_init(ti, "::scidb::tk::sm");
+	session_manager_init(ti, "::scidc::tk::sm");
 	miscInit(ti);
 	window_manager_init(ti);
 	twm_init(ti);

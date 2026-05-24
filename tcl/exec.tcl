@@ -27,17 +27,17 @@
 
 #! The "\" at the end of the comment line below is necessary! It means
 #! that the "exec" line is a comment to Tcl/Tk, but not to /bin/sh.
-#! The next line restarts using tkscidb: \
+#! The next line restarts using tkscidc: \
 exec "`dirname "$0"`"/tk`basename $0` "$0" ${1+"$@"}
 
 package require Tcl 8.6
 package require Tk  8.6
 package require Ttk
-package require tkscidb
+package require tkscidc
 
 
-namespace eval scidb {
-	set app		Scidb
+namespace eval scidc {
+	set app		Scidc
 	set version "1.1.126 BETA"
 }
 
@@ -59,15 +59,15 @@ if {[llength $nameofexecutable] == 0} {
 set nameofexecutable [file normalize $nameofexecutable]
 
 
-if {[::scidb::misc::version] ne $scidb::version} {
+if {[::scidc::misc::version] ne $scidb::version} {
 	wm withdraw .
 	if {$tcl_platform(platform) eq "windows"} {
-		append msg "This is $scidb::app version [::scidb::misc::version], but the scidb.gui "
+		append msg "This is $scidb::app version [::scidc::misc::version], but the scidb.gui "
 		append msg "data file has the version number $scidb::version."
 	} else {
 		append msg "This is $scidb::app version '$scidb::version', but the "
 		append msg "[file tail $nameofexecutable] program it uses is "
-		append msg "version '[::scidb::misc::version]'."
+		append msg "version '[::scidc::misc::version]'."
 	}
 	tk_messageBox -type ok -icon error -title "$scidb::app: version error" -message $msg
 	exit 1
@@ -88,7 +88,7 @@ set ProgramOptions [list                                                        
 	[list "--re-open"               "Re-open databases from last session"]                    \
 	[list "--fast-load"             "Do only load the mandatory files at startup"]            \
 	[list "--first-time"            "Delete option file and recovery files at startup"        \
-	                                "(starting $::scidb::app as it would be the first time)"] \
+	                                "(starting $::scidc::app as it would be the first time)"] \
 	[list "--recover-options"       "Recover option files deleted with last '--first-time'"]  \
 	[list "--elo-only"              "Do not load rating files except ELO rating"]             \
 	[list "--print-recovery-files"  "Print recovery files from last session and exit"]        \
@@ -96,7 +96,7 @@ set ProgramOptions [list                                                        
 	[list "--dont-recover-files"    "Do not recover unsaved games from last session"]         \
 	[list "--recover-old-files"     "Recover games from older sessions"                       \
 	                                "(will skip games from last session)"]                    \
-	[list "--single-process"        "Forcing a single process of $::scidb::app"               \
+	[list "--single-process"        "Forcing a single process of $::scidc::app"               \
 	                                "(you shouldn't use this option; only for testing)"]      \
 	[list "--update-themes"         "Update themes (from shared directory)"]                  \
 	[list "--force-grab"            "Do not suppress grabs in debug mode"                     \
@@ -150,7 +150,7 @@ proc ParseArgs {} {
 		}
 	}
 
-	if {[::scidb::misc::debug?]} {
+	if {[::scidc::misc::debug?]} {
 		set Options(single-process) 1
 	}
 
@@ -161,7 +161,7 @@ ParseArgs
 
 
 if {[testOption help]} {
-	puts "$::scidb::app version $::scidb::version"
+	puts "$::scidc::app version $::scidc::version"
 	puts ""
 	puts "Usage: $::argv0 \[options ...] \[database ...]"
 	puts ""
@@ -190,7 +190,7 @@ if {[testOption help]} {
 	puts ""
 	puts "Options recognised by GUI (Tk) library:"
 	puts "  -geometry GEOMETRY      Use GEOMETRY for initial geometry"
-	puts "  -display DISPLAY        Run $::scidb::app on DISPLAY"
+	puts "  -display DISPLAY        Run $::scidc::app on DISPLAY"
 	puts "  -sync                   Use synchronous mode for display server"
 	exit 0
 }
@@ -216,13 +216,13 @@ array set Vars {
 
 
 proc blocked? {} {
-	return $::scidb::intern::blocked
+	return $::scidc::intern::blocked
 }
 
 
 proc pending? {} {
 	variable Vars
-	return [expr {!$::scidb::intern::blocked && !$Vars(busy) && $::scidb::intern::postponed}]
+	return [expr {!$::scidc::intern::blocked && !$Vars(busy) && $::scidc::intern::postponed}]
 }
 
 
@@ -232,7 +232,7 @@ proc busyOperation {cmd} {
 	incr Vars(busy)
 	set code [catch {uplevel 1 $cmd} result options]
 	incr Vars(busy) -1
-	if {$::scidb::intern::postponed} {
+	if {$::scidc::intern::postponed} {
 		after idle [namespace code update]
 	}
 	if {$code == 0} {
@@ -268,14 +268,14 @@ proc requestOpenBases {pathList} {
 	variable Vars
 
 	if {[llength $pathList]} {
-		if {$::scidb::intern::blocked} {
+		if {$::scidc::intern::blocked} {
 			foreach path $pathList {
 				if {![info exists Vars(infoBox:$path)]} {
-					set ::scidb::intern::postponed 1
+					set ::scidc::intern::postponed 1
 					lappend Vars(pending) $path
 					set msg [format $mc::PostponedMessage $path]
 					set Vars(infoBox:$path) \
-						[::dialog::info -buttons {} -title $::scidb::app -message $msg -topmost yes]
+						[::dialog::info -buttons {} -title $::scidc::app -message $msg -topmost yes]
 				}
 			}
 		} else {
@@ -301,7 +301,7 @@ proc Update {} {
 
 	set files $Vars(pending)
 	set Vars(pending) {}
-	set ::scidb::intern::postponed 0
+	set ::scidc::intern::postponed 0
 	openBases $files
 }
 
@@ -343,9 +343,9 @@ proc IncomingOffered {chan} {
 
 
 #proc Vwait {varname} {
-#	set ::scidb::intern::blocked 1
+#	set ::scidc::intern::blocked 1
 #	set code [catch {uplevel 1 [list ::remote::VwaitOrig $varname]} res]
-#	set ::scidb::intern::blocked 0
+#	set ::scidc::intern::blocked 0
 #
 #	after idle ::remote::update
 #	return -code $code $res
@@ -360,7 +360,7 @@ if {	![::process::testOption single-process]
 	&& ![::process::testOption print-recovery-files]} {
 
 	# Pick a port number based on the name of the main script executing
-	set port [expr {1024 + [::scidb::misc::crc32 [file normalize $::argv0]] % 30000}]
+	set port [expr {1024 + [::scidc::misc::crc32 [file normalize $::argv0]] % 30000}]
 
 	if {[catch {socket -server [namespace code Incoming] -myaddr localhost $port} err]} {
 		lassign $::errorCode cls name

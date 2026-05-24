@@ -9041,7 +9041,7 @@ void
 tk::twm_init(Tcl_Interp* ti)
 {
 	Tcl_PkgProvide(ti, "tktwm", "1.0");
-	tcl::createCommand(ti, "::scidb::tk::twm", cmdTwm);
+	tcl::createCommand(ti, "::scidc::tk::twm", cmdTwm);
 }
 
 // vi:set ts=3 sw=3:

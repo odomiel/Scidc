@@ -143,7 +143,7 @@ tk::miscInit(Tcl_Interp* ti)
 	initKeymapInfo(ti);
 #endif
 
-	tcl::createCommand(ti, "::scidb::tk::misc", tkMisc);
+	tcl::createCommand(ti, "::scidc::tk::misc", tkMisc);
 }
 
 // vi:set ts=3 sw=3:

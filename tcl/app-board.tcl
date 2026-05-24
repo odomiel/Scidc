@@ -377,7 +377,7 @@ proc build {w width height} {
 	bind <<Undo>>					[namespace parent]::pgn::undo
 	bind <<Redo>>					[namespace parent]::pgn::redo
 	bind <BackSpace>				[namespace parent]::pgn::undoLastMove
-	bind <Delete>					[list ::scidb::game::strip truncate]
+	bind <Delete>					[list ::scidc::game::strip truncate]
 	bind <ButtonPress-3>			[namespace code { PopupMenu %W }]
 	bind <<LanguageChanged>>	[namespace code LanguageChanged]
 	bind <F1>						[list ::help::open .application]
@@ -423,10 +423,10 @@ proc build {w width height} {
 	ConfigureBoard $canv
 	SetupToolbar
 
-	::scidb::db::subscribe gameSwitch [namespace current]::GameSwitched
-	::scidb::db::subscribe gameClose [namespace current]::GameClosed
-	::scidb::db::subscribe databaseSwitch [namespace current]::DatabaseSwitched
-	::scidb::db::subscribe dbInfo [namespace current]::UpdateInfo
+	::scidc::db::subscribe gameSwitch [namespace current]::GameSwitched
+	::scidc::db::subscribe gameClose [namespace current]::GameClosed
+	::scidc::db::subscribe databaseSwitch [namespace current]::DatabaseSwitched
+	::scidc::db::subscribe dbInfo [namespace current]::UpdateInfo
 }
 
 
@@ -489,10 +489,10 @@ proc goto {step} {
 	set Vars(select-var-is-pending) 0
 	::variation::hide
 	::move::cancelVariation
-	::scidb::game::go -1 $step
+	::scidc::game::go -1 $step
 
 	if {$Vars(autoplay)} {
-		if {[::scidb::game::position -1 atEnd?]} {
+		if {[::scidc::game::position -1 atEnd?]} {
 			ToggleAutoPlay
 		} else {
 			variable ::browser::Options
@@ -514,7 +514,7 @@ proc deselectInHandPiece {} {
 proc finishDrop {} {
 	variable Vars
 
-	set color [::scidb::game::query stm]
+	set color [::scidc::game::query stm]
 	::board::holding::finishDrop $Vars(holding:[string index $color 0])
 }
 
@@ -558,7 +558,7 @@ proc toggleShowMarkers {flag} {
 	variable board
 
 	if {[[namespace parent]::pgn::showMarkers]} {
-		::scidb::game::go current
+		::scidc::game::go current
 	} else {
 		::board::diagram::clearMarks $board
 	}
@@ -703,7 +703,7 @@ proc Goto {step} {
 	if {	$step == +1
 		&& !$Vars(select-var-is-pending)
 		&& ([::variation::use?] || $Options(variations:arrows))
-		&& [llength [set vars [::scidb::pos::nextMoves]]] > 1} {
+		&& [llength [set vars [::scidc::pos::nextMoves]]] > 1} {
 		set rvars [list {*}[lrange $vars 1 end] [lindex $vars 0]]
 		if {$Options(variations:arrows)} {
 			# draw main line last, a variation should not overlap the main line
@@ -741,7 +741,7 @@ proc ShowAnnotation {} {
 	variable Options
 
 	set text ""
-	lassign [::scidb::game::query annotation] prf inf suf
+	lassign [::scidc::game::query annotation] prf inf suf
 
 	foreach list {prf inf suf} {
 		foreach nag [set $list] {
@@ -769,9 +769,9 @@ proc ShowAnnotation {} {
 proc SelectAlternative {index} {
 	variable Options
 
-	if {$index >= 0 && $index <= [::scidb::game::count variations]} {
-		if {$index > 0} { ::scidb::game::go variation [expr {$index - 1}] }
-		::scidb::game::go +1
+	if {$index >= 0 && $index <= [::scidc::game::count variations]} {
+		if {$index > 0} { ::scidc::game::go variation [expr {$index - 1}] }
+		::scidc::game::go +1
 		if {$Options(show:annotation)} { ShowAnnotation }
 	}
 }
@@ -797,14 +797,14 @@ proc LoadGame(list) {w incr} {
 
 proc LoadGame(base) {w incr} {
 #	::widget::busyCursor on
-	set position [::scidb::game::current]
-	lassign [::scidb::game::link? $position] base variant index
+	set position [::scidc::game::current]
+	lassign [::scidc::game::link? $position] base variant index
 	set variant [::util::toMainVariant $variant]
-	set currentBase [::scidb::db::get name]
-	set currentVariant [::scidb::app::variant]
+	set currentBase [::scidc::db::get name]
+	set currentVariant [::scidc::app::variant]
 
 	if {$index >= 0 && $currentBase eq $base && $currentVariant eq $variant} {
-		set number [::scidb::db::get gameNumber $base $variant $index -1]
+		set number [::scidc::db::get gameNumber $base $variant $index -1]
 	} else {
 		set number -1
 	}
@@ -825,9 +825,9 @@ proc LoadGame(all) {w position base variant view number incr} {
 		set prevNumber $number
 		set number [scidb::game::view $position $incr]
 		if {$number == -1} {
-			set number [::scidb::db::get gameNumber $base $variant 0 $view]
+			set number [::scidc::db::get gameNumber $base $variant 0 $view]
 			if {$prevNumber == $number} {
-				set number [::scidb::db::get gameNumber $base $variant [expr {$numGames - 1}] $view]
+				set number [::scidc::db::get gameNumber $base $variant [expr {$numGames - 1}] $view]
 			}
 			return [LoadFirstLastGame $w $base $variant $view $number $incr]
 		}
@@ -838,7 +838,7 @@ proc LoadGame(all) {w position base variant view number incr} {
 			} elseif {$number == -1} {
 				set index [expr {min($numGames - 1, int(rand()*$numGames))}]
 			} else {
-				set index [::scidb::db::get gameIndex $number $view $base $variant]
+				set index [::scidc::db::get gameIndex $number $view $base $variant]
 				do { set i [expr {min($numGames - 1, int(rand()*$numGames))}] } while {$i == $index}
 				set index $i
 			}
@@ -849,7 +849,7 @@ proc LoadGame(all) {w position base variant view number incr} {
 			}
 		} else {
 			if {$numGames <= 1} { return }
-			set index [::scidb::db::get gameIndex $number $view $base $variant]
+			set index [::scidc::db::get gameIndex $number $view $base $variant]
 			if {$index == -1} { return }
 
 			switch $incr {
@@ -861,12 +861,12 @@ proc LoadGame(all) {w position base variant view number incr} {
 
 			if {$index < 0 || $numGames <= $index} {
 				if {$index < 0} { set index [expr {$numGames - 1}] } else { set index 0 }
-				set number [::scidb::db::get gameNumber $base $variant $index $view]
+				set number [::scidc::db::get gameNumber $base $variant $index $view]
 				return [LoadFirstLastGame $w $base $variant $view $number $incr]
 			}
 		}
 
-		set number [::scidb::db::get gameNumber $base $variant $index $view]
+		set number [::scidc::db::get gameNumber $base $variant $index $view]
 	}
 
 	return [LoadGame(single) $w $base $variant $view $number]
@@ -874,8 +874,8 @@ proc LoadGame(all) {w position base variant view number incr} {
 
 
 proc LoadGame(single) {w base variant view number} {
-	if {[::scidb::tree::isRefBase? $base] && $view == [::scidb::tree::view]} {
-		set fen [::scidb::tree::position]
+	if {[::scidc::tree::isRefBase? $base] && $view == [::scidc::tree::view]} {
+		set fen [::scidc::tree::position]
 	} else {
 		set fen ""
 	}
@@ -903,11 +903,11 @@ proc SwitchView {view} {
 
 		switch $view {
 			list {
-				UpdateGameButtonState(list) [::scidb::game::current]
+				UpdateGameButtonState(list) [::scidc::game::current]
 				::toolbar::childconfigure $Vars(game:view) -image $::icon::toolbarList
 			}
 			base {
-				UpdateGameButtonState(base) [::scidb::db::get name] [::scidb::app::variant]
+				UpdateGameButtonState(base) [::scidc::db::get name] [::scidc::app::variant]
 				::toolbar::childconfigure $Vars(game:view) -image $::icon::toolbarDatabase
 			}
 		}
@@ -1040,7 +1040,7 @@ proc PopupMenu {w} {
 			-command [list ::application::pgn::Shuffle $variant] \
 			;
 	}
-	if {[::scidb::game::query variant?] eq "Normal"} {
+	if {[::scidc::game::query variant?] eq "Normal"} {
 		$pos add separator
 		::setup::setupPositionMenu ::application::pgn $pos
 	}
@@ -1063,7 +1063,7 @@ proc PopupMenu {w} {
 		-command [namespace code [list SetStartPosition $Vars(widget:frame)]] \
 		;
 	
-	if {![::application::pgn::empty?] && ![::scidb::game::query over]} {
+	if {![::application::pgn::empty?] && ![::scidc::game::query over]} {
 		$m add separator
 
 		$m add command \
@@ -1164,7 +1164,7 @@ proc PopupMenu {w} {
 			;
 		::theme::configureRadioEntry $timeout
 	}
-	if {[::scidb::game::query variant?] in {Crazyhouse}} {
+	if {[::scidc::game::query variant?] in {Crazyhouse}} {
 		menu $m.promo
 		$m add cascade \
 			-menu $m.promo \
@@ -1188,7 +1188,7 @@ proc PopupMenu {w} {
 
 
 proc InsertNullMove {} {
-	if {![::application::pgn::empty?] && ![::scidb::game::query over]} {
+	if {![::application::pgn::empty?] && ![::scidc::game::query over]} {
 		::move::addMove dialog --
 	}
 }
@@ -1319,7 +1319,7 @@ proc DrawMaterialValues {canv} {
 
 	if {$Vars(layout) eq "Normal" || $Vars(layout) eq "ThreeCheck"} {
 		if {$layout(material-values)} {
-			set material [::scidb::game::material]
+			set material [::scidc::game::material]
 			if {[string equal $material $Vars(material)]} { return }
 
 			$canv delete material
@@ -1347,7 +1347,7 @@ proc DrawMaterialValues {canv} {
 			set Vars(material) {}
 		}
 	} else {
-		lassign [::scidb::pos::inHand?] matw matb
+		lassign [::scidc::pos::inHand?] matw matb
 		::board::holding::update $Vars(holding:w) $matw
 		::board::holding::update $Vars(holding:b) $matb
 	}
@@ -1357,7 +1357,7 @@ proc DrawMaterialValues {canv} {
 proc DrawChecks {canv} {
 	variable Vars
 
-	lassign [::scidb::pos::checks] w b
+	lassign [::scidc::pos::checks] w b
 	$canv itemconfigure checks -state hidden
 
 	for {set i 1} {$i <= $w} {incr i} {
@@ -1764,8 +1764,8 @@ proc BuildBoard {canv} {
 		catch { image delete [namespace current]::Stm(black) }
 		image create photo [namespace current]::Stm(white) -width $Dim(stm) -height $Dim(stm)
 		image create photo [namespace current]::Stm(black) -width $Dim(stm) -height $Dim(stm)
-		::scidb::tk::image copy $stmWhite [namespace current]::Stm(white)
-		::scidb::tk::image copy $stmBlack [namespace current]::Stm(black)
+		::scidc::tk::image copy $stmWhite [namespace current]::Stm(white)
+		::scidc::tk::image copy $stmBlack [namespace current]::Stm(black)
 		$canv create image 0 0 -image [namespace current]::Stm(black) -tags {stm stmb} -anchor nw
 		$canv create image 0 0 -image [namespace current]::Stm(white) -tags {stm stmw} -anchor nw
 	}
@@ -1845,7 +1845,7 @@ proc UpdateSideToMove {canv} {
 	variable Vars
 
 	if {$layout(side-to-move)} {
-		if {[::scidb::game::ply] % 2} { set color b } else { set color w }
+		if {[::scidc::game::ply] % 2} { set color b } else { set color w }
 		if {$color eq "w"} { set other b} else { set other w }
 		$canv itemconfigure stm$color -state normal
 		$canv itemconfigure stm$other -state hidden
@@ -1856,15 +1856,15 @@ proc UpdateSideToMove {canv} {
 proc UpdateControls {} {
 	variable Vars
 
-	set level [::scidb::game::level]
+	set level [::scidc::game::level]
 
-	if {[::scidb::game::position -1 atStart?]} { set state disabled } else { set state normal }
+	if {[::scidc::game::position -1 atStart?]} { set state disabled } else { set state normal }
 	::toolbar::childconfigure $Vars(control:back) -state $state
 	::toolbar::childconfigure $Vars(control:fastBack) -state $state
 	if {$level} { set state normal }
 	::toolbar::childconfigure $Vars(control:gotoStart) -state $state
 
-	if {[::scidb::game::position -1 atEnd?]} { set state disabled } else { set state normal }
+	if {[::scidc::game::position -1 atEnd?]} { set state disabled } else { set state normal }
 	::toolbar::childconfigure $Vars(control:fwd) -state $state
 	::toolbar::childconfigure $Vars(control:fastFwd) -state $state
 	if {$level} { set state normal }
@@ -1873,7 +1873,7 @@ proc UpdateControls {} {
 	if {$level == 0} { set state disabled } else { set state normal }
 	::toolbar::childconfigure $Vars(control:leaveVar) -state $state
 
-	if {[::scidb::game::variation count]} { set state normal } else { set state disabled }
+	if {[::scidc::game::variation count]} { set state normal } else { set state disabled }
 	::toolbar::childconfigure $Vars(control:enterVar) -state $state
 }
 
@@ -1892,11 +1892,11 @@ proc GameSwitched2 {position} {
 
 	# reset if position is 9 (all games closed)
 
-	set variant [::scidb::game::query $position mainvariant?]
-	set base [lindex [::scidb::game::link?] 0]
+	set variant [::scidc::game::query $position mainvariant?]
+	set base [lindex [::scidc::game::link?] 0]
 	set Vars(variant) $variant
 
-	set view [::scidb::game::view $position id]
+	set view [::scidc::game::view $position id]
 	if {$view >= 0} {
 		Unsubscribe $position
 		set Vars(current:game) [list $position $base $variant $view 0]
@@ -1907,7 +1907,7 @@ proc GameSwitched2 {position} {
 #	UpdateCrossTableButton
 	UpdateGameControls $position
 	UpdateGameButtonState(list) $position
-	UpdateGameButtonState(base) [::scidb::db::get name] [::scidb::app::variant]
+	UpdateGameButtonState(base) [::scidc::db::get name] [::scidc::app::variant]
 	UpdateSaveButton
 
 	set layout [expr {$variant eq "Crazyhouse" || $variant eq "ThreeCheck" ? $variant : "Normal"}]
@@ -1927,14 +1927,14 @@ proc GameClosed {position} {
 
 
 proc UpdateInfo {base variant} {
-	if {$base eq [::scidb::db::get name]} {
+	if {$base eq [::scidc::db::get name]} {
 		DatabaseSwitched $base $variant
 	}
 }
 
 
 proc DatabaseSwitched {base variant} {
-	UpdateGameButtonState(list) [::scidb::game::current]
+	UpdateGameButtonState(list) [::scidc::game::current]
 	UpdateGameButtonState(base) $base $variant
 	UpdateSaveButton
 #	UpdateCrossTableButton
@@ -1942,29 +1942,29 @@ proc DatabaseSwitched {base variant} {
 
 
 #proc UpdateCrossTableButton {} {
-#	variable ::scidb::scratchbaseName
+#	variable ::scidc::scratchbaseName
 #	variable Vars
 #
-#	set base [lindex [::scidb::game::sink?] 0]
+#	set base [lindex [::scidc::game::sink?] 0]
 #	if {$base eq $scratchbaseName} { set state disabled } else { set state normal }
 #	::toolbar::childconfigure $Vars(crossTable) -state $state
 #}
 
 
 proc UpdateSaveButton {} {
-	variable ::scidb::scratchbaseName
-	variable ::scidb::clipbaseName
+	variable ::scidc::scratchbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
-	set position [::scidb::game::current]
+	set position [::scidc::game::current]
 
 	if {$position == 9} {
 		::toolbar::childconfigure $Vars(game:replace) -state disabled
 		::toolbar::childconfigure $Vars(game:save) -state disabled
 	} elseif {$position >= 0} {
-		set actual [lindex [::scidb::game::link?] 0]
-		set variant [::scidb::game::variant?]
-		set current [::scidb::db::get name]
+		set actual [lindex [::scidc::game::link?] 0]
+		set variant [::scidc::game::variant?]
+		set current [::scidc::db::get name]
 		set tip(replace) ""
 		set tip(save) ""
 		set state(replace) normal
@@ -1973,14 +1973,14 @@ proc UpdateSaveButton {} {
 			set tip(replace) [format $::gamebar::mc::ReplaceGame [::util::databaseName $actual]]
 		}
 		if {	$actual eq $scratchbaseName
-			|| ![::scidb::db::get open? $actual]
-			|| [::scidb::db::get readonly? $actual]
-			|| $Vars(variant) ni [::scidb::db::get variants $actual]} {
+			|| ![::scidc::db::get open? $actual]
+			|| [::scidc::db::get readonly? $actual]
+			|| $Vars(variant) ni [::scidc::db::get variants $actual]} {
 			set state(replace) disabled
 			set tip(replace) ""
 		}
-		if {	$Vars(variant) in [::scidb::db::get variants $current]
-			&& ![::scidb::db::get readonly? $current $Vars(variant)]} {
+		if {	$Vars(variant) in [::scidc::db::get variants $current]
+			&& ![::scidc::db::get readonly? $current $Vars(variant)]} {
 			set tip(save) [format $::gamebar::mc::AddNewGame [::util::databaseName $current]]
 		} else {
 			set state(save) disabled
@@ -2030,14 +2030,14 @@ proc UpdateGameButtonState(list) {position} {
 
 	if {[llength $Vars(current:game)] > 1 && $position < 9} {
 		lassign $Vars(current:game) position base variant view number
-		if {[::scidb::db::get open? $base $variant]} {
-			if {[::scidb::view::open? games $base $variant $view]} {
+		if {[::scidc::db::get open? $base $variant]} {
+			if {[::scidc::view::open? games $base $variant $view]} {
 				if {[scidb::view::count games $base $variant $view] > 1} {
-					if {[::scidb::game::view $position next] >= 0} {
+					if {[::scidc::game::view $position next] >= 0} {
 						array set state { next normal last normal }
 						set state(random) normal
 					}
-					if {[::scidb::game::view $position prev] >= 0} {
+					if {[::scidc::game::view $position prev] >= 0} {
 						array set state { prev normal first normal }
 						set state(random) normal
 					}
@@ -2057,14 +2057,14 @@ proc UpdateGameButtonState(base) {base variant} {
 
 	if {$Vars(load:method) eq "list"} { return }
 
-	set position [::scidb::game::current]
+	set position [::scidc::game::current]
 	set numGames [scidb::view::count games $base $variant 0]
 	array set state { random disabled prev disabled next disabled first disabled last disabled }
 
 	if {$numGames > 0} {
 		set state(random) normal
 		if {$position < 9} {
-			lassign [::scidb::game::link? $position] myBase myVariant index
+			lassign [::scidc::game::link? $position] myBase myVariant index
 			set myVariant [::util::toMainVariant $myVariant]
 			if {$myBase eq $base && $myVariant eq $variant} {
 				if {$index > 0} { array set state { prev normal first normal } }
@@ -2113,11 +2113,11 @@ proc Subscribe {position base variant} {
 	variable Vars
 
 	set cmd [list [namespace current]::UpdateGameList $position]
-	after idle [list ::scidb::db::subscribe gameList $cmd]
+	after idle [list ::scidc::db::subscribe gameList $cmd]
 	set Vars(subscribe:list) $cmd
 
 	set cmd [list [namespace current]::UpdateGameInfo $position]
-	after idle [list ::scidb::db::subscribe gameInfo $cmd]
+	after idle [list ::scidc::db::subscribe gameInfo $cmd]
 	set Vars(subscribe:info) $cmd
 }
 
@@ -2126,8 +2126,8 @@ proc Unsubscribe {position} {
 	variable Vars
 
 	if {[llength $Vars(subscribe:list)]} {
-		after idle [list ::scidb::db::unsubscribe gameList $Vars(subscribe:list)]
-		after idle [list ::scidb::db::unsubscribe gameInfo $Vars(subscribe:info)]
+		after idle [list ::scidc::db::unsubscribe gameList $Vars(subscribe:list)]
+		after idle [list ::scidc::db::unsubscribe gameInfo $Vars(subscribe:info)]
 		set Vars(subscribe:list) {}
 		set Vars(subscribe:info) {}
 	}
@@ -2135,24 +2135,24 @@ proc Unsubscribe {position} {
 
 
 #proc ShowCrossTable {parent} {
-#	set base [::scidb::game::query database]
-#	set variant [::scidb::app::variant]
-#	set index [::scidb::game::index]
+#	set base [::scidc::game::query database]
+#	set variant [::scidc::app::variant]
+#	set index [::scidc::game::index]
 #	::crosstable::open .application $base $variant $index -1 game
 #}
 
 
 proc SaveGame {{mode ""}} {
-	variable ::scidb::scratchbaseName
-	variable ::scidb::clipbaseName
+	variable ::scidc::scratchbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
 	::tooltip::hide
-	set position [::scidb::game::current]
+	set position [::scidc::game::current]
 
 	if {0 <= $position && $position < 9} {
 		if {[string length $mode] == 0} {
-			if {[lindex [::scidb::game::link? $position] 0] eq $scratchbaseName} {
+			if {[lindex [::scidc::game::link? $position] 0] eq $scratchbaseName} {
 				set mode add
 			} else {
 				set mode replace
@@ -2295,8 +2295,8 @@ set stmBlack [image create photo -data {
 foreach size {16 22 32} {
 	set ::icon::${size}x${size}::whiteKnob [image create photo -width $size -height $size]
 	set ::icon::${size}x${size}::blackKnob [image create photo -width $size -height $size]
-	::scidb::tk::image copy $stmWhite [set ::icon::${size}x${size}::whiteKnob]
-	::scidb::tk::image copy $stmBlack [set ::icon::${size}x${size}::blackKnob]
+	::scidc::tk::image copy $stmWhite [set ::icon::${size}x${size}::whiteKnob]
+	::scidc::tk::image copy $stmBlack [set ::icon::${size}x${size}::blackKnob]
 }
 unset size
 

@@ -103,8 +103,8 @@ proc activate {w flag} {
 	variable ${path}::Vars
 
 	set Vars(active) $flag
-	set base [::scidb::db::get name]
-	set variant [::scidb::app::variant]
+	set base [::scidc::db::get name]
+	set variant [::scidc::app::variant]
 	set Vars($base:$variant:update:positions) 1
 	position::UpdateTable $path $base $variant
 
@@ -203,13 +203,13 @@ proc BuildFrame {twm frame uid width height} {
 			bind $frame <<TableSelected>>		[namespace code [list position::TableSelected $twm %d]]
 			bind $frame <<LanguageChanged>>	[list ::scrolledtable::refresh $Vars(frame:position)]
 
-			::scidb::db::subscribe positionList [list [namespace current]::position::Update $twm]
-			::scidb::db::subscribe dbInfo {} [list [namespace current]::Close $twm]
+			::scidc::db::subscribe positionList [list [namespace current]::position::Update $twm]
+			::scidc::db::subscribe dbInfo {} [list [namespace current]::Close $twm]
 		}
 		games {
 			set columns {white whiteElo black blackElo result event date length}
 			::gamestable::build $frame [namespace code [list View $twm]] $columns -id db:positions:$id:$uid
-			::scidb::db::subscribe gameList [list [namespace current]::games::Update $twm]
+			::scidc::db::subscribe gameList [list [namespace current]::games::Update $twm]
 		}
 	}
 }
@@ -229,8 +229,8 @@ proc ShowBoard {path x y} {
 	::scrolledtable::focus $table
 	if {$idn == 0} { return }
 
-	set fen [lindex [::scidb::board::idnToFen $idn] 0]
-	set board [::scidb::board::fenToBoard $fen]
+	set fen [lindex [::scidc::board::idnToFen $idn] 0]
+	set board [::scidc::board::fenToBoard $fen]
 	::browser::showPosition $path $board
 }
 
@@ -261,15 +261,15 @@ proc InitBase {path base variant} {
 	if {![info exists Vars($base:$variant:view)]} {
 		set Vars($base:$variant:initializing) 1
 		set Vars($base:$variant:view) \
-			[::scidb::view::new $base $variant unused unused unused unused master slave]
+			[::scidc::view::new $base $variant unused unused unused unused master slave]
 		set Vars($base:$variant:update) 1
 		set Vars($base:$variant:position) ""
 		set Vars($base:$variant:after:games) {}
 		set Vars($base:$variant:after:positions) {}
-		set Vars($base:$variant:lastChange) [::scidb::db::get lastChange $base $variant]
+		set Vars($base:$variant:lastChange) [::scidc::db::get lastChange $base $variant]
 		set Vars($base:$variant:positions:lastId) -1
 		set Vars($base:$variant:games:lastId) -1
-		::scidb::view::search $base $variant $Vars($base:$variant:view) null none
+		::scidc::view::search $base $variant $Vars($base:$variant:view) null none
 	}
 }
 
@@ -290,7 +290,7 @@ proc Close {path base variant} {
 namespace eval games {
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable [namespace parent]::${path}::Vars
 
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -311,19 +311,19 @@ proc Update2 {id path base variant} {
 
 	set Vars($base:$variant:games:lastId) $id
 	set lastChange $Vars($base:$variant:lastChange)
-	set Vars($base:$variant:lastChange) [::scidb::db::get lastChange $base $variant]
+	set Vars($base:$variant:lastChange) [::scidc::db::get lastChange $base $variant]
 	set view $Vars($base:$variant:view)
 
 	if {	[string is integer -strict $Vars($base:$variant:position)]
 		&& $lastChange < $Vars($base:$variant:lastChange)} {
-		set position [::scidb::db::find position $base $variant $Vars($base:$variant:position)]
+		set position [::scidc::db::find position $base $variant $Vars($base:$variant:position)]
 		if {$position >= 0} {
 			[namespace parent]::position::TableSearch $path $base $variant $view
 		} else {
 			[namespace parent]::position::Reset $path $base $variant
 		}
 	} else {
-		set n [::scidb::view::count games $base $variant $view]
+		set n [::scidc::view::count games $base $variant $view]
 		after idle [list ::gamestable::update $Vars(frame:games) $base $variant $n]
 	}
 }
@@ -352,7 +352,7 @@ proc UpdateTable {path base variant} {
 
 	if {$Vars(active)} {
 		if {$Vars($base:$variant:update)} {
-			set n [::scidb::db::count positions $base $variant]
+			set n [::scidc::db::count positions $base $variant]
 			after idle [list ::scrolledtable::update $Vars(frame:position) $base $variant $n]
 			after idle [list [namespace parent]::games::Update2 \
 				$Vars($base:$variant:positions:lastId) $path $base $variant]
@@ -363,7 +363,7 @@ proc UpdateTable {path base variant} {
 
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable [namespace parent]::${path}::Vars
 
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -459,7 +459,7 @@ proc TableSearch {path base variant view} {
 	::gamestable::activate $Vars(frame:games) none
 	::gamestable::select $Vars(frame:games) none
 	::gamestable::scroll $Vars(frame:games) home
-	::scidb::view::search $base $variant $view null none [list position $Vars($base:$variant:position)]
+	::scidc::view::search $base $variant $view null none [list position $Vars($base:$variant:position)]
 	::widget::busyCursor off
 }
 
@@ -477,19 +477,19 @@ proc SortColumn {path id dir} {
 	if {$selection >= 0 && [::scrolledtable::selectionIsVisible? $table]} { set see 1 }
 	switch $dir {
 		reverse {
-			::scidb::db::reverse position $base $variant $view
+			::scidc::db::reverse position $base $variant $view
 		}
 		cancel {
 			set columnNo [::scrolledtable::columnNo $table position]
-			::scidb::db::sort position $base $variant $columnNo $view -ascending -reset
+			::scidc::db::sort position $base $variant $columnNo $view -ascending -reset
 		}
 		ascending - descending {
 			set columnNo [::scrolledtable::columnNo $table $id]
-			::scidb::db::sort position $base $variant $columnNo $view -$dir
+			::scidc::db::sort position $base $variant $columnNo $view -$dir
 		}
 	}
 	if {$selection >= 0} {
-		set selection [::scidb::db::get lookupPosition $selection $view $base $variant]
+		set selection [::scidc::db::get lookupPosition $selection $view $base $variant]
 	}
 	::widget::busyCursor off
 	::scrolledtable::updateColumn $table $selection $see

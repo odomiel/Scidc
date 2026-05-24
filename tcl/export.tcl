@@ -653,7 +653,7 @@ proc open {parent args} {
 	variable icon::32x32::IconHtml
 	variable icon::32x32::IconPGN
 	variable icon::32x32::IconTeX
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable PdfEncodingList
 	variable Icons
 	variable Info
@@ -676,13 +676,13 @@ proc open {parent args} {
 	unset opts
 
 	if {	![info exists Info(index)]
-		&& [::scidb::view::count games $Info(base) $Info(variant) $Info(view)] == 0} {
+		&& [::scidc::view::count games $Info(base) $Info(variant) $Info(view)] == 0} {
 		::dialog::info -parent $parent -message $mc::NoGamesForExport
 		return
 	}
 
 	set Info(after) {}
-	set Info(encoding) [::scidb::db::get encoding $Info(base)]
+	set Info(encoding) [::scidc::db::get encoding $Info(base)]
 	set Info(pdf-encoding) 0
 	set Info(fonts) {}
 
@@ -1021,7 +1021,7 @@ proc BuildFrame {w} {
 
 	variable [namespace parent]::${type}::Tags
 
-	set extraTags [lsort [::scidb::misc::extraTags $type]]
+	set extraTags [lsort [::scidc::misc::extraTags $type]]
 	set tagList {}
 
 	foreach tag $extraTags {
@@ -3212,7 +3212,7 @@ proc DoExport {parent dlg file} {
 	set file [file normalize $file]
 
 	if {	([file exists $file] && ![file writable $file])
-		|| ([scidb::db::get open? $file] && [::scidb::db::get readonly? $file])} {
+		|| ([scidb::db::get open? $file] && [::scidc::db::get readonly? $file])} {
 		return [::dialog::error \
 			-parent $dlg \
 			-message [format $mc::DatabaseIsReadonly [::util::databaseName $file]] \
@@ -3243,7 +3243,7 @@ proc DoExport {parent dlg file} {
 
 	switch $Values(Type) {
 		scid - scidb - pgn {
-			if {[::scidb::db::get open? $file]} {
+			if {[::scidc::db::get open? $file]} {
 				set reply [::dialog::question \
 					-parent $dlg \
 					-message [format $mc::DatabaseIsOpen [::util::databaseName $file]] \
@@ -3365,7 +3365,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 				}
 				foreach piece $set {
 					# convert into UTF-8 sequence; e.g. "\u05d4\u05de" --> \xD7\x94\xd7\x9e
-					append preamble "\\utf8{[::scidb::misc::utf8sequence $piece]}"
+					append preamble "\\utf8{[::scidc::misc::utf8sequence $piece]}"
 				}
 				append preamble "}\n"
 			}
@@ -3423,7 +3423,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 					append		{ set mode append }
 					overwrite	{ set mode create }
 				}
-				::scidb::game::export $file \
+				::scidc::game::export $file \
 					-flags $Info($Values(Type),flags) \
 					-mode $mode \
 					-encoding $encoding \
@@ -3433,7 +3433,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 
 			html - pdf - tex {
 				return [::beta::notYetImplemented .application print-game]
-				::scidb::game::print $file $searchPath $script $preamble \
+				::scidc::game::print $file $searchPath $script $preamble \
 					-flags $flags \
 					-options $options \
 					-nags $nags \
@@ -3452,9 +3452,9 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 
 				if {$useCopyOperation} {
 					set close 0
-					::scidb::db::clear $file
-					::scidb::db::set variant $file $Info(variant)
-					set cmd [list ::scidb::view::copy \
+					::scidc::db::clear $file
+					::scidc::db::set variant $file $Info(variant)
+					set cmd [list ::scidc::view::copy \
 						$Info(base) \
 						$Info(view) \
 						$file \
@@ -3462,7 +3462,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 						$tagList \
 					]
 				} else {
-					set cmd [list ::scidb::view::export \
+					set cmd [list ::scidc::view::export \
 						$Info(base) \
 						$Info(variant) \
 						$Info(view) \
@@ -3478,7 +3478,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 			}
 
 			html - pdf - tex {
-				set cmd [list ::scidb::view::print \
+				set cmd [list ::scidc::view::print \
 					$Info(base) \
 					$Info(variant) \
 					$Info(view) \
@@ -3496,7 +3496,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 		}
 
 		set options {}
-		if {[llength [::scidb::db::get variants $Info(base)]] > 1} {
+		if {[llength [::scidc::db::get variants $Info(base)]] > 1} {
 			lappend options -message [format $mc::ExportDatabaseVariant $Info(variant)]
 		} else {
 			lappend options -message $mc::ExportDatabase
@@ -3568,7 +3568,7 @@ if {[pwd] ne "/home/gregor/development/c++/scidb/tcl"} {
 		}
 
 		if {$useCopyOperation} {
-			set cmd [list ::scidb::db::save $file]
+			set cmd [list ::scidc::db::save $file]
 			set rc [::util::catchException { ::progress::start $parent $cmd {} {} 1 } count]
 			if {$rc == 2} { ::log::error $::import::mc::AbortedDueToIoError }
 		}
@@ -3590,7 +3590,7 @@ proc ShowTrace {parent trace} {
 		$txt configure -state normal
 		$txt delete 1.0 end
 	} else {
-		tk::toplevel $dlg -class Scidb
+		tk::toplevel $dlg -class Scidc
 		set f [::ttk::frame $dlg.f]
 
 		tk::text $f.text \
@@ -3640,7 +3640,7 @@ proc Log {unused arguments} {
 
 # proc CloseView {} {
 # 	variable Info
-# 	::scidb::view::close $Info(base) $Info(view)
+# 	::scidc::view::close $Info(base) $Info(view)
 # }
 
 

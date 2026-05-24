@@ -57,17 +57,17 @@ using namespace tcl::app;
 Application* tcl::app::scidb = 0;
 Application const* tcl::app::Scidb = 0;
 
-static char const* CmdActiveVariants	= "::scidb::app::activeVariants";
-static char const* CmdClose				= "::scidb::app::close";
-static char const* CmdCount				= "::scidb::app::count";
-static char const* CmdFinalize			= "::scidb::app::finalize";
-static char const* CmdGet					= "::scidb::app::get";
-static char const* CmdInitialized		= "::scidb::app::initialized?";
-static char const* CmdLoad					= "::scidb::app::load";
-static char const* CmdLookup				= "::scidb::app::lookup";
-static char const* CmdMoveList			= "::scidb::app::moveList";
-static char const* CmdVariant				= "::scidb::app::variant";
-static char const* CmdWriting				= "::scidb::app::writing";
+static char const* CmdActiveVariants	= "::scidc::app::activeVariants";
+static char const* CmdClose				= "::scidc::app::close";
+static char const* CmdCount				= "::scidc::app::count";
+static char const* CmdFinalize			= "::scidc::app::finalize";
+static char const* CmdGet					= "::scidc::app::get";
+static char const* CmdInitialized		= "::scidc::app::initialized?";
+static char const* CmdLoad					= "::scidc::app::load";
+static char const* CmdLookup				= "::scidc::app::lookup";
+static char const* CmdMoveList			= "::scidc::app::moveList";
+static char const* CmdVariant				= "::scidc::app::variant";
+static char const* CmdWriting				= "::scidc::app::writing";
 
 
 namespace {

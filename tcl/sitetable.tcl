@@ -362,7 +362,7 @@ proc OpenURL {path} {
 	set variant [::scrolledtable::variant $path]
 	set view [{*}$Vars(viewcmd) $base $variant]
 	set col  [lsearch -exact $Vars(columns) site]
-	set site [::scidb::db::get siteInfo $index $view $base $variant $col]
+	set site [::scidc::db::get siteInfo $index $view $base $variant $col]
 
 	if {[::web::isWebLink $site]} {
 		::web::open $path $site
@@ -383,7 +383,7 @@ proc TableSelected {path index} {
 		set base [::scrolledtable::base $path]
 		set variant [::scrolledtable::variant $path]
 		set view [{*}$Vars(viewcmd) $base $variant]
-		set Vars($base:$variant:index) [::scidb::db::get siteIndex $index $view $base $variant]
+		set Vars($base:$variant:index) [::scidc::db::get siteIndex $index $view $base $variant]
 		set Vars($base:$variant:index) $index
 		{*}$Vars(selectcmd) $base $variant $view
 		::widget::busyCursor off
@@ -397,7 +397,7 @@ proc TableFill {path args} {
 
 	lassign [lindex $args 0] table base variant start first last columns
 
-	set codec [::scidb::db::get codec $base $variant]
+	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
 	set last [expr {min($last, [scidb::view::count sites $base $variant $view] - $start)}]
 
@@ -407,7 +407,7 @@ proc TableFill {path args} {
 
 	for {set i $first} {$i < $last} {incr i} {
 		set index [expr {$start + $i}]
-		set line [::scidb::db::get siteInfo $index $view $base $variant]
+		set line [::scidc::db::get siteInfo $index $view $base $variant]
 		set text {}
 		set k 0
 
@@ -464,7 +464,7 @@ proc TableVisit {table data} {
 	set view [{*}$Vars(viewcmd) $base $variant]
 	set row  [::scrolledtable::rowToIndex $table $row]
 	set col  [lsearch -exact $Vars(columns) $id]
-	set item [::scidb::db::get siteInfo $row $view $base $variant $col]
+	set item [::scidc::db::get siteInfo $row $view $base $variant $col]
 
 	if {[string length $item] > 0} {
 		set tip [::country::name $item]
@@ -488,19 +488,19 @@ proc SortColumn {path id dir {rating {}}} {
 	if {$selection >= 0 && [::scrolledtable::selectionIsVisible? $path]} { set see 1 }
 	switch $dir {
 		reverse {
-			::scidb::db::reverse site $base $variant $view
+			::scidc::db::reverse site $base $variant $view
 		}
 		cancel {
 			set columnNo [::scrolledtable::columnNo $path site]
-			::scidb::db::sort site $base $variant $columnNo $view -reset -ascending
+			::scidc::db::sort site $base $variant $columnNo $view -reset -ascending
 		}
 		default {
 			set columnNo [::scrolledtable::columnNo $path $id]
-			::scidb::db::sort site $base $variant $columnNo $view -$dir
+			::scidc::db::sort site $base $variant $columnNo $view -$dir
 		}
 	}
 	if {$selection >= 0} {
-		set selection [::scidb::db::get lookupSite $selection $view $base $variant]
+		set selection [::scidc::db::get lookupSite $selection $view $base $variant]
 	}
 	::widget::busyCursor off
 	::scrolledtable::updateColumn $path $selection $see
@@ -515,7 +515,7 @@ proc Find {path mode name} {
 	set variant [::scrolledtable::variant $path]
 	set view [{*}$Vars(viewcmd) $base $variant]
 	if {$mode eq "next"} { set lastIndex [::scrolledtable::active $path] } else { set lastIndex -1 }
-	set i [::scidb::view::find site $base $variant $view "$name*" $lastIndex]
+	set i [::scidc::view::find site $base $variant $view "$name*" $lastIndex]
 	if {$i >= 0} {
 		::scrolledtable::see $path $i
 		::scrolledtable::activate $path $i
@@ -528,7 +528,7 @@ proc GetSite {path base variant view index} {
 
 	if {$index == "outside"} { return "" }
 	set col [lsearch -exact $Vars(columns) site]
-	set site [::scidb::db::get siteInfo $index $view $base $variant $col]
+	set site [::scidc::db::get siteInfo $index $view $base $variant $col]
 }
 
 

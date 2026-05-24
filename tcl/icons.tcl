@@ -36,8 +36,8 @@ proc makeDisabledImage {img} {
 
 	if {![info exists Disabled($img)]} {
 		set Disabled($img) [image create photo -width 0 -height 0]
-		::scidb::tk::image disable $img $Disabled($img) 170
-		::scidb::tk::image grayscale $Disabled($img)
+		::scidc::tk::image disable $img $Disabled($img) 170
+		::scidc::tk::image grayscale $Disabled($img)
 	}
 	return $Disabled($img)
 }
@@ -49,8 +49,8 @@ proc makeGrayscale {img {darken 1.0}} {
 	if {![info exists Grayscale($img)]} {
 		set Grayscale($img) [image create photo -width [image width $img] -height [image height $img]]
 		$Grayscale($img) copy $img
-		::scidb::tk::image grayscale $Grayscale($img)
-		if {$darken != 1.0} { ::scidb::tk::image darken $darken $Grayscale($img) }
+		::scidc::tk::image grayscale $Grayscale($img)
+		if {$darken != 1.0} { ::scidc::tk::image darken $darken $Grayscale($img) }
 	}
 	return $Grayscale($img)
 }

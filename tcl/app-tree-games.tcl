@@ -44,7 +44,7 @@ proc build {twm parent width height} {
 		-id db:tree:games:$id \
 		-takefocus 0 \
 		-mode list \
-		-positioncmd ::scidb::tree::position \
+		-positioncmd ::scidc::tree::position \
 	]
 	if {$twm ni $Tables} { lappend Tables $twm }
 
@@ -71,7 +71,7 @@ proc build {twm parent width height} {
 	set Vars(table)  $table
 	set Vars(twm)    $twm
 
-	::scidb::db::subscribe gameList \
+	::scidc::db::subscribe gameList \
 		[list [namespace current]::TableUpdate $table] \
 		[list [namespace current]::Close $table] \
 		;
@@ -99,7 +99,7 @@ proc closed {w} {
 
 #	set i [lsearch $Tables $Vars(twm)]
 #	set Tables [lreplace $Tables $i $i]
-	::scidb::db::unsubscribe gameList \
+	::scidc::db::unsubscribe gameList \
 		[list [namespace current]::TableUpdate $Vars(table)] \
 		[list [namespace current]::Close $Vars(table)] \
 		;
@@ -229,14 +229,14 @@ proc TableVisit {table data} {
 
 
 proc View {pane base variant} {
-	return [::scidb::tree::view $pane $base]
+	return [::scidc::tree::view $pane $base]
 }
 
 
 proc TableUpdate {table id base variant {view -1} {index -1}} {
 	variable Vars
 
-	if {[::scidb::tree::isRefBase? $base] && $view == [::scidb::tree::view]} {
+	if {[::scidc::tree::isRefBase? $base] && $view == [::scidc::tree::view]} {
 		if {$Vars(hidden)} {
 			set Vars(update) [list $table $id $base $variant $view $index]
 		} else {
@@ -254,7 +254,7 @@ proc TableUpdate {table id base variant {view -1} {index -1}} {
 
 
 proc UpdateTable {table base variant} {
-	set size [::scidb::view::count games $base $variant [::scidb::tree::view]]
+	set size [::scidc::view::count games $base $variant [::scidc::tree::view]]
 	::scrolledtable::select $table none
 	after idle [list ::gamestable::update $table $base $variant $size]
 	after idle [list ::scrolledtable::scroll $table home]

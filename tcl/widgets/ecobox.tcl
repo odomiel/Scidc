@@ -205,7 +205,7 @@ proc Completion2 {w var selection} {
 		set $var ""
 	} elseif {[string length $content] >= 3} {
 		set content [string range $content 0 2]
-		set opening [::scidb::app::lookup ecoCode $content]
+		set opening [::scidc::app::lookup ecoCode $content]
 		lassign $opening long short
 		set vars [lrange $opening 2 end]
 		append content " \u2013 "

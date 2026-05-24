@@ -241,7 +241,7 @@ proc ShowCurrentTexture {which xc yc} {
 		}
 		$w.texture configure -height $ht -width $wd
 		set Vars(currentTexture) [image create photo -width $wd -height $ht]
-		::scidb::tk::image copy $texture($color) $Vars(currentTexture) \
+		::scidc::tk::image copy $texture($color) $Vars(currentTexture) \
 			-rotate [expr {$style(texture,$which,rotation)/90}]
 		$w.texture itemconfigure img -image $Vars(currentTexture)
 		set dx [expr {$x2 - $x1}]
@@ -516,7 +516,7 @@ proc SetTexture {which texture {private false}} {
 		}
 		MakeTexture $which
 	} else {
-		::scidb::tk::image recolor #00000000 photo_Square($color,$designSize)
+		::scidc::tk::image recolor #00000000 photo_Square($color,$designSize)
 	}
 }
 
@@ -549,7 +549,7 @@ proc SelectTexture {parent which} {
 	set Vars(offset,$which,y) $style(texture,$which,y1)
 	set Vars(rotation,$which) $style(texture,$which,rotation)
 
-	set dlg [tk::toplevel $parent.select_texture_$which -class Scidb]
+	set dlg [tk::toplevel $parent.select_texture_$which -class Scidc]
 	bind $dlg <<BrowserSelect>> [namespace code [list SetTexture $which %d true]]
 	bind $dlg <Destroy> "if {{%W} eq {$dlg}} { incr [namespace current]::Vars(open) -1 }"
 
@@ -652,7 +652,7 @@ proc SelectTexture {parent which} {
 
 	if {[winfo viewable [winfo toplevel $parent]]} { wm transient $dlg $parent }
 	wm iconname $dlg ""
-	wm title $dlg "$::scidb::app: $::mc::Texture"
+	wm title $dlg "$::scidc::app: $::mc::Texture"
 	wm protocol $dlg WM_DELETE_WINDOW "destroy $dlg"
 	wm withdraw $dlg
 	update idletasks
@@ -727,7 +727,7 @@ proc SelectColor {parent var component which showEraser} {
 				set color [expr {$which eq "w" ? "white" : "black"}]
 				set img photo_Texture(piece-bg:$style(color,$which,texture))
 				image create photo $img -width 16 -height 16
-				::scidb::tk::image copy $texture($color) $img -from 0 0 32 32
+				::scidc::tk::image copy $texture($color) $img -from 0 0 32 32
 				set n [lsearch -exact $RecentTextures($which) $img]
 				if {$n == -1} {
 					catch { image delete photo_Texture(piece-bg:[lindex $RecentTextures($which) end]) }
@@ -863,7 +863,7 @@ proc DrawGradient {which} {
 				\#start-offs#	[computeStartOffset $x1 $y1 $x2 $y2] \
 				\#stop-offs#	[computeStopOffset $x1 $y1 $x2 $y2] \
 			] $Constant(svgPattern)]
-	::scidb::tk::image create svg photo_Gradient
+	::scidc::tk::image create svg photo_Gradient
 }
 
 
@@ -893,10 +893,10 @@ proc RecolorHandle {canv type which} {
 	variable style
 	variable Widget
 
-	::scidb::tk::image recolor $style(gradient,$which,$type) photo_Circle($type)
+	::scidc::tk::image recolor $style(gradient,$which,$type) photo_Circle($type)
 	scan $style(gradient,$which,$type) "\#%2x%2x%2x" r g b
 	set luma	[expr {$r*0.2125 + $g*0.7154 + $b*0.0721}]
-	::scidb::tk::image recolor [expr {$luma < 128 ? "white" : "black"}] photo_Ring($type)
+	::scidc::tk::image recolor [expr {$luma < 128 ? "white" : "black"}] photo_Ring($type)
 	$canv raise c$type
 	$canv raise r$type
 
@@ -982,7 +982,7 @@ proc SelectGradient {which} {
 	photo_Circle(start) copy $::icon::15x15::circle
 	photo_Circle(stop) copy $::icon::15x15::circle
 
-	set dlg [tk::toplevel .selectgradient -class Scidb]
+	set dlg [tk::toplevel .selectgradient -class Scidc]
 	bind $dlg <Destroy> "
 		if {{%W} eq {$dlg}} {
 			incr [namespace current]::Vars(open) -1
@@ -1100,7 +1100,7 @@ proc SelectGradient {which} {
 
 	wm transient $dlg [winfo toplevel $Widget(dialog)]
 	wm iconname $dlg ""
-	wm title $dlg $::scidb::app
+	wm title $dlg $::scidc::app
 	wm protocol $dlg WM_DELETE_WINDOW "if {!\[::dialog::choosecolor::isOpen\]} { destroy $dlg }"
 	wm withdraw $dlg
 	util::place $dlg -parent $Widget(piece,$which) -position right -shift 1
@@ -1213,15 +1213,15 @@ proc RecolorButton {var which} {
 
 	if {[llength $style(color,$which,$var)]} {
 		photo_Circle($var,$which) copy $::icon::15x15::circle
-		::scidb::tk::image recolor $style(color,$which,$var) photo_Circle($var,$which)
+		::scidc::tk::image recolor $style(color,$which,$var) photo_Circle($var,$which)
 		photo_Circle($var,$which) copy $::icon::15x15::ringBW
 	} elseif {$var eq "fill" && [llength $style(color,$which,texture)]} {
 		set color [expr {$which eq "w" ? "white" : "black"}]
 		photo_Circle(fill,$which) copy $::icon::15x15::circle
-		::scidb::tk::image copy $texture($color) photo_Circle(fill,$which) -from 0 0 30 30 -alphamask
+		::scidc::tk::image copy $texture($color) photo_Circle(fill,$which) -from 0 0 30 30 -alphamask
 		photo_Circle(fill,$which) copy $::icon::15x15::ringBW
 	} else {
-		::scidb::tk::image recolor #00000000 photo_Circle($var,$which)
+		::scidc::tk::image recolor #00000000 photo_Circle($var,$which)
 	}
 	# this trick is forcing update of the image
 	$Widget($var,$which) configure -state normal
@@ -1447,7 +1447,7 @@ proc DestroyDialog {dlg size resetCmd} {
 
 	if {[dialog::question \
 			-parent $dlg \
-			-title $::scidb::app \
+			-title $::scidc::app \
 			-message [set [namespace current]::mc::CloseDialog]] eq "yes"} {
 		Reset
 		MakePieces $size
@@ -1492,7 +1492,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 
 	# toplevel
 	set point [expr {$parent eq "." ? "" : "."}]
-	set dlg [tk::toplevel ${parent}${point}configPieces -class Scidb]
+	set dlg [tk::toplevel ${parent}${point}configPieces -class Scidc]
 	set Widget(dialog) $dlg
 	bind $dlg <Escape> [namespace code [list DestroyDialog $dlg $size $resetCmd]]
 	bind $dlg <Destroy> [namespace code {
@@ -1621,7 +1621,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 	# display dialog
 	wm resizable $dlg 0 0
 	wm withdraw $dlg
-	wm title $dlg "$::scidb::app: [set [namespace current]::mc::PieceStyleConf]"
+	wm title $dlg "$::scidc::app: [set [namespace current]::mc::PieceStyleConf]"
 	::util::place $dlg -parent $parent -position center
 #	wm transient $dlg [winfo toplevel $parent]
 	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list DestroyDialog $dlg $size $resetCmd]]

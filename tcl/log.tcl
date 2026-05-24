@@ -252,7 +252,7 @@ proc Visibility {state} {
 
 proc SetTitle {} {
 	variable Log
-	wm title $Log "$::scidb::app - $mc::LogTitle"
+	wm title $Log "$::scidc::app - $mc::LogTitle"
 }
 
 
@@ -288,7 +288,7 @@ proc Open {} {
 	variable Log
 	variable colors
 
-	tk::toplevel $Log -class $::scidb::app
+	tk::toplevel $Log -class $::scidc::app
 	wm withdraw $Log
 	wm protocol $Log WM_DELETE_WINDOW [list wm withdraw $Log]
 	set top [tk::frame $Log.top]

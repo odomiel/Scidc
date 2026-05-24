@@ -119,13 +119,13 @@ proc map {w {checkIfGrabbed 0}} {
 
 	set img [$b.c itemcget image -image]
 	$img configure -width $width
-	::scidb::tk::x11 region $bx $by $img
-	::scidb::tk::image shadow 1.0 x $img
+	::scidc::tk::x11 region $bx $by $img
+	::scidc::tk::image shadow 1.0 x $img
 
 	set img [$r.c itemcget image -image]
 	$img configure -height $height
-	::scidb::tk::x11 region $rx $ry $img
-	::scidb::tk::image shadow 1.0 y $img
+	::scidc::tk::x11 region $rx $ry $img
+	::scidc::tk::image shadow 1.0 y $img
 
 	wm geometry $b ${width}x${size}+${bx}+${by}
 	wm geometry $r ${size}x${height}+${rx}+${ry}

@@ -194,7 +194,7 @@ proc open {parent args} {
 
 	array unset opts
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	set top [ttk::frame $dlg.top -takefocus 0 -borderwidth 0]
 	wm withdraw $dlg
 	pack $top -fill both -expand yes
@@ -257,7 +257,7 @@ proc open {parent args} {
 	RefreshHeader 2
 	EvalTrophyFlags
 
-	::scidb::player::dict open player
+	::scidc::player::dict open player
 
 	foreach column $Columns {
 		lassign $column id adjustment minwidth maxwidth width stretch ellipsis color
@@ -459,7 +459,7 @@ proc open {parent args} {
 	UpdateCount
 
 	set Priv(subscribe) [list [list [namespace current]::UpdateDatabaseInfo $table]]
-	::scidb::db::subscribe dbInfo {*}$Priv(subscribe)
+	::scidc::db::subscribe dbInfo {*}$Priv(subscribe)
 
 	set search [searchentry $top.search \
 		-history [namespace current]::History \
@@ -511,7 +511,7 @@ proc open {parent args} {
 	::util::place $dlg -parent [winfo toplevel $parent] -position center
 	wm deiconify $dlg
 
-	::scrolledtable::update $table "" "" [::scidb::player::count]
+	::scrolledtable::update $table "" "" [::scidc::player::count]
 	::scrolledtable::activate $table 0
 	::scrolledtable::focus $table
 }
@@ -535,8 +535,8 @@ proc Destroy {} {
 	variable Priv
 
 	set Priv(dialog) ""
-	::scidb::player::dict close
-	::scidb::db::unsubscribe dbInfo {*}$Priv(subscribe)
+	::scidc::player::dict close
+	::scidc::db::unsubscribe dbInfo {*}$Priv(subscribe)
 }
 
 
@@ -546,7 +546,7 @@ proc Find {path mode name} {
 	} else {
 		set lastIndex -1
 	}
-	set i [::scidb::player::search "${name}*" $lastIndex]
+	set i [::scidc::player::search "${name}*" $lastIndex]
 	if {$i >= 0} {
 		::scrolledtable::see $path $i
 		::scrolledtable::activate $path $i
@@ -562,10 +562,10 @@ proc SortColumn {table id dir} {
 	set see 0
 	switch $dir {
 		cancel {
-			::scidb::player::sort cancel
+			::scidc::player::sort cancel
 		}
 		reverse {
-			::scidb::player::sort reverse
+			::scidc::player::sort reverse
 		}
 		default {
 			if {$id eq "organization"} {
@@ -575,7 +575,7 @@ proc SortColumn {table id dir} {
 				rating2 - ranking2	{ set rt $Options(rating2:type) }
 				default					{ set rt $Options(rating1:type) }
 			}
-			::scidb::player::sort $dir $id $rt
+			::scidc::player::sort $dir $id $rt
 		}
 	}
 	::widget::busyCursor off
@@ -584,13 +584,13 @@ proc SortColumn {table id dir} {
 
 
 proc Letter {table alpha} {
-	::scidb::player::letter $alpha
+	::scidc::player::letter $alpha
 	UpdateFilter $table
 }
 
 
 proc UpdateFilter {table} {
-	set count [::scidb::player::count]
+	set count [::scidc::player::count]
 	::scrolledtable::select $table none
 	::scrolledtable::update $table "" "" $count
 	if {$count > 0} {
@@ -618,7 +618,7 @@ proc SetFilter {table} {
 	foreach title $Filter(titles) { set Title_($title) 1 }
 
 	set parent [winfo toplevel $table]
-	set dlg [tk::toplevel $parent.filterDialog -class Scidb]
+	set dlg [tk::toplevel $parent.filterDialog -class Scidc]
 	set top [ttk::frame $dlg.top -takefocus 0 -borderwidth 0]
 	wm withdraw $dlg
 	pack $top -fill both -expand yes
@@ -902,11 +902,11 @@ proc SetFilter {table} {
 	if {$Filter(operation) eq "reset"} {
 		if {$Filter(name) eq "*"} {
 			set Priv(letter) ""
-			::scidb::player::letter $Priv(letter)
+			::scidc::player::letter $Priv(letter)
 			set Filter(name) ""
 		} elseif {[string match {[A-Z]\*} $Filter(name)]} {
 			set Priv(letter) [string index $Filter(name) 0]
-			::scidb::player::letter $Priv(letter)
+			::scidc::player::letter $Priv(letter)
 			set Filter(name) ""
 		}
 	}
@@ -952,7 +952,7 @@ proc SetFilter {table} {
 
 	if {[arrayEqual Filter DefaultFilter]} { set state inactive } else { set state active }
 	$parent.filter configure -image $::icon::16x16::filter($state)
-	::scidb::player::filter $Filter(operation) $filter
+	::scidc::player::filter $Filter(operation) $filter
 	UpdateFilter $table
 	::widget::busyCursor off
 }
@@ -1000,7 +1000,7 @@ proc ResetFilter {top} {
 
 proc UpdateCount {} {
 	variable Priv
-	$Priv(label:size) configure -text "$mc::Count: [::locale::formatNumber [::scidb::player::count]]"
+	$Priv(label:size) configure -text "$mc::Count: [::locale::formatNumber [::scidc::player::count]]"
 }
 
 
@@ -1356,7 +1356,7 @@ proc PopupMenu {table menu _ _ index _} {
 proc ShowDataSources {dlg} {
 	set d $dlg.dataSources
 	catch { destroy $d }
-	tk::toplevel $d -class Scidb
+	tk::toplevel $d -class Scidc
 	wm title $d $mc::DataSourcesTitle
 	wm transient $d $dlg
 
@@ -1365,15 +1365,15 @@ proc ShowDataSources {dlg} {
 
 	set bold [list [font configure TkDefaultFont -family] [font configure TkDefaultFont -size] bold]
 
-	set fide_user [file join $::scidb::dir::user players_list.zip]
+	set fide_user [file join $::scidc::dir::user players_list.zip]
 	set fide_path [expr {[file exists $fide_user] \
 		? $fide_user \
-		: [file join $::scidb::dir::data players_list.zip]}]
+		: [file join $::scidc::dir::data players_list.zip]}]
 
-	set dwz_user [file join $::scidb::dir::user dwz-ratings.txt]
+	set dwz_user [file join $::scidc::dir::user dwz-ratings.txt]
 	set dwz_path [expr {[file exists $dwz_user] \
 		? $dwz_user \
-		: [file join $::scidb::dir::data dwz-ratings.txt]}]
+		: [file join $::scidc::dir::data dwz-ratings.txt]}]
 
 	set sources [list \
 		[list [format $::load::mc::RatingList FIDE] $fide_path \
@@ -1496,8 +1496,8 @@ proc UpdatePlayerData {dlg table} {
 		return
 	}
 
-	set fide_script [file join $::scidb::dir::share scripts update-fide-players.py]
-	set dwz_script  [file join $::scidb::dir::share scripts update-dwz-players.py]
+	set fide_script [file join $::scidc::dir::share scripts update-fide-players.py]
+	set dwz_script  [file join $::scidc::dir::share scripts update-dwz-players.py]
 
 	foreach script [list $fide_script $dwz_script] {
 		if {![file readable $script]} {
@@ -1524,23 +1524,23 @@ proc RunNextUpdate {dlg table} {
 		set Priv(update:label) $mc::UpdateList
 		$dlg.update configure -state normal
 
-		set fide_zip [file join $::scidb::dir::user players_list.zip]
-		set dwz_txt  [file join $::scidb::dir::user dwz-ratings.txt]
+		set fide_zip [file join $::scidc::dir::user players_list.zip]
+		set dwz_txt  [file join $::scidc::dir::user dwz-ratings.txt]
 
 		if {[file exists $fide_zip]} {
-			if {[catch {::scidb::app::load fide $fide_zip} lerr]} {
+			if {[catch {::scidc::app::load fide $fide_zip} lerr]} {
 				::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
 				return
 			}
 		}
 		if {[file exists $dwz_txt]} {
-			if {[catch {::scidb::app::load dwz $dwz_txt} lerr]} {
+			if {[catch {::scidc::app::load dwz $dwz_txt} lerr]} {
 				::dialog::error -parent $dlg -message [format $mc::UpdateFailed $lerr]
 				return
 			}
 		}
 
-		::scrolledtable::update $table "" "" [::scidb::player::count]
+		::scrolledtable::update $table "" "" [::scidc::player::count]
 		UpdateCount
 		::dialog::info -parent $dlg -message $mc::UpdateSuccess
 		return
@@ -1553,7 +1553,7 @@ proc RunNextUpdate {dlg table} {
 
 	if {[catch {
 		set Priv(update:chan) \
-			[_OpenPython $Priv(update:python) $script $::scidb::dir::user]
+			[_OpenPython $Priv(update:python) $script $::scidc::dir::user]
 	} err]} {
 		set Priv(update:label) $mc::UpdateList
 		$dlg.update configure -state normal
@@ -1587,8 +1587,8 @@ proc OnUpdateData {dlg table} {
 
 	set _expected [expr {
 		$Priv(update:type) eq "fide"
-			? [file join $::scidb::dir::user players_list.zip]
-			: [file join $::scidb::dir::user dwz-ratings.txt]
+			? [file join $::scidc::dir::user players_list.zip]
+			: [file join $::scidc::dir::user dwz-ratings.txt]
 	}]
 	if {![file exists $_expected]} {
 		set Priv(update:label) $mc::UpdateList

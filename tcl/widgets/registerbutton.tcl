@@ -72,7 +72,7 @@ proc Build {w args} {
 		-background [::colors::lookup theme,background] \
 		-takefocus 0 \
 		;
-	::scidb::tk::misc setClass $w Registerbutton
+	::scidc::tk::misc setClass $w Registerbutton
 	if {[llength $Vars(variable)]} { Configure $w }
 
 	catch { rename ::$w $w.__w__ }

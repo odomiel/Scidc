@@ -387,7 +387,7 @@ proc FindTextures {canv which} {
 		set Browser(files) {}
 
 		foreach {parts} $preferences($Browser(other)) {
-			lappend Browser(files) [file join $::scidb::dir::share textures {*}$parts]
+			lappend Browser(files) [file join $::scidc::dir::share textures {*}$parts]
 		}
 
 		set Browser(files) [lsort -dictionary $Browser(files)]
@@ -395,9 +395,9 @@ proc FindTextures {canv which} {
 		set Browser(files) {}
 
 		foreach cat [set [namespace parent]::square::texSubDirs] {
-			set dir [file join $::scidb::dir::share textures $which $cat]
+			set dir [file join $::scidc::dir::share textures $which $cat]
 			set files [glob -directory $dir -nocomplain *.jpg *.png *.gif]
-			set dir [file join $::scidb::dir::user textures $which $cat]
+			set dir [file join $::scidc::dir::user textures $which $cat]
 			lappend files {*}[glob -directory $dir -nocomplain *.jpg *.png *.gif]
 			lappend Browser(files) {*}[lsort -dictionary $files]
 		}
@@ -420,7 +420,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 	variable Rows
 	variable Cols
 
-	set dlg [tk::toplevel $parent.select_texture -class Scidb]
+	set dlg [tk::toplevel $parent.select_texture -class Scidc]
 	bind $dlg <Escape> [list destroy $dlg]
 	set top [ttk::frame $dlg.top]
 	pack $top -fill both -expand yes
@@ -462,7 +462,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 		wm transient $dlg $parent
 	}
 	wm iconname $dlg ""
-	wm title $dlg "$::scidb::app: $::mc::Texture"
+	wm title $dlg "$::scidc::app: $::mc::Texture"
 	wm protocol $dlg WM_DELETE_WINDOW "destroy $dlg"
 	wm withdraw $dlg
 	wm grid $dlg $Cols $Rows $Browser(incr) $Browser(incr)

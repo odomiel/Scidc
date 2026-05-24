@@ -1369,14 +1369,14 @@ proc registerTextFonts {context {styles {normal}}} {
 			if !{[info exists TextFontAlert($fam)]} {
 				dialog::alert \
 					-message "Because of incompatibility problems of the Tk library with the font\
-						service Scidb cannot display this font\
+						service Scidc cannot display this font\
 						('[lindex [font actual $text($context:$style)] 1]')." \
 					-detail "See\u00a0https://groups.google.com/forum/#!topic/comp.lang.tcl/XnkRQ5TI-Nc\
 						about this problem." \
-					-title "Scidb" \
+					-title "Scidc" \
 					;
 				puts "Because of incompatibility problems of the Tk library with the font\
-						service Scidb cannot display this font\
+						service Scidc cannot display this font\
 						('[lindex [font actual $text($context:$style)] 1]').\n\
 						See https://groups.google.com/forum/#!topic/comp.lang.tcl/XnkRQ5TI-Nc\
 						about this problem."
@@ -1448,7 +1448,7 @@ proc registerSymbolFonts {context} {
 		variable NoSymbolFontAlert
 		if {![info exists NoSymbolFontAlert]} {
 			puts "Because of incompatibility problems of the Tk library with the font\
-					service Scidb is not working properly on this system. See\
+					service Scidc is not working properly on this system. See\
 					https://groups.google.com/forum/#!topic/comp.lang.tcl/XnkRQ5TI-Nc about\
 					this problem."
 			set NoSymbolFontAlert 1
@@ -1536,10 +1536,10 @@ proc registerFigurineFonts {context} {
 			if {!$NoFigurineAlert} {
 				dialog::alert \
 					-message "Because of incompatibility problems of the Tk library with the font\
-						service Scidb cannot use figurine fonts." \
+						service Scidc cannot use figurine fonts." \
 					-detail "See\u00a0https://groups.google.com/forum/#!topic/comp.lang.tcl/XnkRQ5TI-Nc\
 						about this problem." \
-					-title "Scidb" \
+					-title "Scidc" \
 					;
 				set NoFigurineAlert 1
 			}
@@ -2348,7 +2348,7 @@ if {$tcl_platform(platform) ne "windows"} {
 		if {$::tcl_platform(os) eq "Darwin"} {
 			set fontDir /Library/Fonts/
 		} else {
-			set fontDir [file join $::scidb::dir::home .fonts]
+			set fontDir [file join $::scidc::dir::home .fonts]
 		}
 		if {![file isdirectory $fontDir]} {
 			if {[catch { file mkdir $fontDir }]} {

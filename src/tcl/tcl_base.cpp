@@ -1317,18 +1317,18 @@ tcl::init(Tcl_Interp* ti)
 	Treectrl_Init(ti);
 
 	Tcl_Eval(ti, "namespace eval ::scidb {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::dir {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::db {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::view {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::game {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::tree {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::pos {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::app {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::board {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::misc {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::crosstable {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::engine {}");
-	Tcl_Eval(ti, "namespace eval ::scidb::intern {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::dir {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::db {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::view {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::game {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::tree {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::pos {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::app {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::board {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::misc {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::crosstable {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::engine {}");
+	Tcl_Eval(ti, "namespace eval ::scidc::intern {}");
 
 	for (unsigned i = 0; i < U_NUMBER_OF(m_value); ++i)
 		tcl::incrRef(::m_value[i] = tcl::newObj(i));

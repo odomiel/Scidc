@@ -39,7 +39,7 @@ set Shutdown					"Shutdown..."
 set CancelLogout				"Cancel Logout"
 set AbortWriteOperation		"Abort write operation"
 
-set WriteOperationInProgress "Write operation in progress: currently Scidb is modifying/writing database '%s'."
+set WriteOperationInProgress "Write operation in progress: currently Scidc is modifying/writing database '%s'."
 set LogoutNotPossible		"Logout is currently not possible, the result would be a corrupted database."
 set RestartLogout				"Aborting the write operation will restart the logout process."
 set UnsavedFiles				"The following PGN files are unsaved:"
@@ -188,7 +188,7 @@ proc open {} {
 		wm protocol $app WM_SAVE_YOURSELF [namespace code [list WmSaveYourself $app]]
 		WmSaveYourself $app 0 ;# initial setup
 
-		::scidb::tk::sm connect \
+		::scidc::tk::sm connect \
 			-restart no \
 			-saveYourself [namespace code SmSaveYourself] \
 			-interactRequest [namespace code SmInteractRequest] \
@@ -469,7 +469,7 @@ proc exists? {uid} {
 
 proc shutdown {} {
 	variable icon::32x32::shutdown
-	variable ::scidb::mergebaseName
+	variable ::scidc::mergebaseName
 	variable twm::Options
 	variable Vars
 
@@ -483,7 +483,7 @@ proc shutdown {} {
 	raise .application
 
 	set n 0
-	set unsavedFiles [::scidb::app::get unsavedFiles]
+	set unsavedFiles [::scidc::app::get unsavedFiles]
 	if {$mergebaseName in $unsavedFiles} { incr n }
 
 	if {[llength $unsavedFiles] > $n} {
@@ -513,7 +513,7 @@ proc shutdown {} {
 		if {$toplevel ne ".application"} { destroy $toplevel }
 	}
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	pack [tk::frame $dlg.f -borderwidth 2 -relief raised]
 	pack [tk::label $dlg.f.text -compound left -image $shutdown -text " $mc::Shutdown"] -padx 10 -pady 10
@@ -521,12 +521,12 @@ proc shutdown {} {
 	wm transient $dlg .application
 	::util::place $dlg -parent .application -position center
 	update idletasks
-	::scidb::tk::wm frameless $dlg
+	::scidc::tk::wm frameless $dlg
 	wm deiconify $dlg
 	::ttk::grabWindow $dlg
 	::widget::busyCursor on
 	prepareExit $backup
-	if {[tk windowingsystem] eq "x11"} { ::scidb::tk::sm disconnect }
+	if {[tk windowingsystem] eq "x11"} { ::scidc::tk::sm disconnect }
 	::widget::busyCursor off
 	::ttk::releaseGrab $dlg
 	set Vars(shutdown) 1
@@ -541,9 +541,9 @@ proc prepareExit {{backup 1}} {
 		::log::delay
 		::remote::cleanup
 		database::prepareClose
-		::scidb::app::close
+		::scidc::app::close
 		if {$backup} { ::game::backup }
-		::scidb::app::finalize
+		::scidc::app::finalize
 		set Vars(exit:save) 0
 		::options::startTransaction
 		::options::saveOptionsFile
@@ -571,7 +571,7 @@ if {[tk windowingsystem] eq "x11"} {
 
 proc WmSaveYourself {app {shutdown 0}} {
 	if {$shutdown} { prepareExit }
-	wm command $app [concat [::scidb::tk::sm get -command] [::scidb::tk::sm get -argv]]
+	wm command $app [concat [::scidc::tk::sm get -command] [::scidc::tk::sm get -argv]]
 }
 
 
@@ -583,7 +583,7 @@ proc SmSaveYourself {shutdown} {
 
 
 proc SmInteractRequest {shutdown} {
-	set base [::scidb::app::writing -background no]
+	set base [::scidc::app::writing -background no]
 
 	## Handle foreground process ####################################
 	if {[string length $base]} {
@@ -592,7 +592,7 @@ proc SmInteractRequest {shutdown} {
 		set base [::util::databaseName $base]
 		set msg [format $mc::WriteOperationInProgress $base]
 
-		if {![::scidb::progress::interruptable?]} {
+		if {![::scidc::progress::interruptable?]} {
 			set detail $mc::LogoutNotPossible
 			dialog::error -parent $parent -message $msg -detail $detail -topmost yes 
 		} else {
@@ -608,7 +608,7 @@ proc SmInteractRequest {shutdown} {
 			]
 			if {$reply eq "cancel"} { return 0 }
 			set cmd [namespace code [list SmCallSaveYourself $shutdown]]
-			if {[::scidb::progress::interrupt -inform $cmd]} { return 1 }
+			if {[::scidc::progress::interrupt -inform $cmd]} { return 1 }
 		}
 
 		::log::suppress yes
@@ -617,7 +617,7 @@ proc SmInteractRequest {shutdown} {
 	}
 
 	## Handle background process - always interruptable #############
-	set base [::scidb::app::writing -background yes]
+	set base [::scidc::app::writing -background yes]
 	if {[string length $base] == 0} { return 1 }
 	set base [::util::databaseName $base]
 	set msg [format $mc::WriteOperationInProgress $base]
@@ -631,7 +631,7 @@ proc SmInteractRequest {shutdown} {
 	]
 	if {$reply eq "cancel"} { return 0 }
 	::log::suppress yes
-	::scidb::progress::interrupt -wait yes
+	::scidc::progress::interrupt -wait yes
 	return 1
 }
 
@@ -639,7 +639,7 @@ proc SmInteractRequest {shutdown} {
 proc SmCallSaveYourself {shutdown} {
 	update
 	::log::suppress no
-	::scidb::tk::sm saveyourself -shutdown $shutdown
+	::scidc::tk::sm saveyourself -shutdown $shutdown
 }
 
 } ;# [tk windowingsystem] eq "x11"
@@ -773,7 +773,7 @@ proc EmbedUnsavedFiles {unsaved w infoFont alertFont} {
 	append content "<table style='font-family: ${family}; font-size: ${size}px;'>"
 
 	foreach file $unsaved {
-		lassign [::scidb::db::get changes $file] added changed deleted descriptionHasChanged
+		lassign [::scidc::db::get changes $file] added changed deleted descriptionHasChanged
 		append content "<tr>"
 		append content "<td id='$file'>[::util::databaseName $file]&ensp;</td>"
 		if {$deleted > 0} {
@@ -875,10 +875,10 @@ proc UpdateSettingsText {w} {
 proc ChooseLanguage {parent} {
 	variable ::country::icon::flag
 
-	if {!$::scidb::dir::setup} { return }
+	if {!$::scidc::dir::setup} { return }
 	wm protocol $parent WM_DELETE_WINDOW {#}
 	set dlg $parent.lang
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [tk::frame $dlg.top -border 2 -relief raised]
 	pack $top
@@ -906,7 +906,7 @@ proc ChooseLanguage {parent} {
 	wm transient $dlg $parent
 	::util::place $dlg -parent $parent -position center
 	update idletasks
-	::scidb::tk::wm frameless $dlg
+	::scidc::tk::wm frameless $dlg
 	wm deiconify $dlg
 	focus $top.en
 	::ttk::grabWindow $dlg
@@ -928,7 +928,7 @@ proc SetupLang {langID} {
 
 
 proc Title {} {
-	return "$::scidb::app - $mc::ChessInfoDatabase"
+	return "$::scidc::app - $mc::ChessInfoDatabase"
 }
 
 
@@ -991,13 +991,13 @@ proc Startup2 {} {
 	ChooseLanguage $app
 	::load::writeLog
 	update idletasks
-	set ::scidb::intern::blocked 0
+	set ::scidc::intern::blocked 0
 
 	database::preOpen $app
 
 	foreach file [::process::arguments] {
 		set path [::util::databasePath $file]
-		if {![::scidb::db::get open? $path]} {
+		if {![::scidc::db::get open? $path]} {
 			database::openBase .application $path yes -encoding $::encoding::autoEncoding
 		}
 	}

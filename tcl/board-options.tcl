@@ -582,7 +582,7 @@ proc EnterName {parent labelText} {
 	variable Vars
 
 	set Vars(identifier) ""
-	set dlg [tk::toplevel ${parent}.enterName -class Scidb]
+	set dlg [tk::toplevel ${parent}.enterName -class Scidc]
 	set f [::ttk::frame $dlg.top]
 	::ttk::label $f.l -text $labelText
 	::ttk::entry $f.e \
@@ -607,7 +607,7 @@ proc EnterName {parent labelText} {
 	"
 
 	wm withdraw $dlg
-	wm title $dlg "$::scidb::app"
+	wm title $dlg "$::scidc::app"
 #	wm transient $dlg [winfo toplevel $parent]
 	catch { wm attributes $dlg -type dialog }
 	::util::place $dlg -parent $parent -position center
@@ -681,7 +681,7 @@ proc SaveSquareStyle {parent} {
 	RefreshBoard
 
 	set Vars(identifier) ""
-	set dlg [tk::toplevel ${parent}.saveSquareStyle -class Scidb]
+	set dlg [tk::toplevel ${parent}.saveSquareStyle -class Scidc]
 	set f [::ttk::frame $dlg.top]
 	pack $f -fill both -expand yes
 
@@ -731,7 +731,7 @@ proc SaveSquareStyle {parent} {
 	"
 
 	wm withdraw $dlg
-	wm title $dlg "$::scidb::app"
+	wm title $dlg "$::scidc::app"
 	::util::place $dlg -parent $parent -position center
 	wm transient $dlg [winfo toplevel $parent]
 	catch { wm attributes $dlg -type dialog }
@@ -881,7 +881,7 @@ proc openConfigDialog {parent applyProc} {
 	wm withdraw $dlg
 	makeFrame $dlg
 	::widget::dialogButtons $dlg {ok cancel apply revert} -default apply
-	wm title $dlg "$::scidb::app: $mc::BoardSetup"
+	wm title $dlg "$::scidc::app: $mc::BoardSetup"
 	wm transient $dlg [winfo toplevel $parent]
 	wm iconname $dlg ""
 	wm resizable $dlg yes no
@@ -1222,7 +1222,7 @@ proc EditStyles {parent which} {
 	::util::place $dlg -parent $parent -position center
 	wm transient $dlg [winfo toplevel $parent]
 	wm protocol $dlg WM_DELETE_WINDOW "destroy $dlg"
-	wm title $dlg $::scidb::app
+	wm title $dlg $::scidc::app
  	update idletasks
  	if {[scan [wm grid $dlg] "%d %d %d %d" bw bh wi hi] >= 2} {
 		wm minsize $dlg $bw $bh
@@ -1715,8 +1715,8 @@ proc DrawBoard {h w} {
 	if {[info exists [namespace current]::Stm(black)]} { image delete [namespace current]::Stm(black) }
 	image create photo [namespace current]::Stm(white) -width $stmSize -height $stmSize
 	image create photo [namespace current]::Stm(black) -width $stmSize -height $stmSize
-	::scidb::tk::image copy $stmWhite [namespace current]::Stm(white)
-	::scidb::tk::image copy $stmBlack [namespace current]::Stm(black)
+	::scidc::tk::image copy $stmWhite [namespace current]::Stm(white)
+	::scidc::tk::image copy $stmBlack [namespace current]::Stm(black)
 	$canv create image 0 0 -image [namespace current]::Stm(black) -tags {stm stmb} -anchor nw
 	$canv create image 0 0 -image [namespace current]::Stm(white) -tags {stm stmw} -anchor nw
 	
@@ -1989,7 +1989,7 @@ proc SetRecent {what recentColor recentCoords recentTexture recentRotation} {
 		set img photo_Texture(bg:$recentTexture)
 		set file [file join tile {*}$recentTexture]
 		image create photo $img -width 16 -height 16
-		::scidb::tk::image copy $texture($what) $img -from 0 0 32 32
+		::scidc::tk::image copy $texture($what) $img -from 0 0 32 32
 		set n [lsearch -exact -index 0 $RecentTextures $img]
 		if {$n == -1} {
 			catch { image delete photo_Texture(bg:[lindex $RecentTextures end 0]) }

@@ -102,11 +102,11 @@ proc openDialog {parent} {
 	variable Priv
 
 	set haveShared 0
-	if {$::tcl_platform(platform) eq "unix" && ![string match /home* $::scidb::dir::share]} {
+	if {$::tcl_platform(platform) eq "unix" && ![string match /home* $::scidc::dir::share]} {
 		set haveShared 1
 	}
 
-	set dlg [toplevel $parent.installPlayerPhotos -class Scidb]
+	set dlg [toplevel $parent.installPlayerPhotos -class Scidc]
 	set top [ttk::frame $dlg.top -borderwidth 0 -takefocus 0]
 	pack $top -fill both
 	wm withdraw $dlg
@@ -148,8 +148,8 @@ proc openDialog {parent} {
 	if {$haveShared} {
 		ttk::separator $top.sep -orient horizontal
 		set f [ttk::frame $top.f -borderwidth 0 -takefocus 0]
-		set timestamp(local)  [file join $::scidb::dir::user photos TIMESTAMP]
-		set timestamp(shared) [file join $::scidb::dir::photos TIMESTAMP]
+		set timestamp(local)  [file join $::scidc::dir::user photos TIMESTAMP]
+		set timestamp(shared) [file join $::scidc::dir::photos TIMESTAMP]
 
 		# Determine the last update folder: local or shared
 		if {![file readable $timestamp(local)]} {
@@ -263,9 +263,9 @@ proc findPhotoFile {name} {
 	set key [NormalizeName $name]
 	set dir [string index $key 0]
 	if {![string match {[a-z]} $dir]} { return "" }
-	set path [file join $::scidb::dir::user photos $dir $key]
+	set path [file join $::scidc::dir::user photos $dir $key]
 	if {[file readable $path]} { return $path }
-	set path [file join $::scidb::dir::photos $dir $key]
+	set path [file join $::scidc::dir::photos $dir $key]
 	if {[file readable $path]} { return $path }
 	return ""
 }
@@ -350,7 +350,7 @@ proc OpenPipe {informProc shared parent} {
 
 	set script "%UPDATE_PHOTO_FILES%"
 	if {	[string match ?UPDATE_PHOTO_FILES? $script]
-		|| ![file executable [set script [file join $::scidb::dir::exec $script]]]} {
+		|| ![file executable [set script [file join $::scidc::dir::exec $script]]]} {
 		set script /usr/local/bin/update-scidb-photo-files
 		if {![file executable $script]} { set script /usr/bin/update-scidb-photo-files }
 	}
@@ -577,7 +577,7 @@ proc AskPassword {parent} {
 	set result_ ""
 
 	if {$parent eq "."} { set dlg .ask } else { set dlg $parent.ask }
-	toplevel $dlg -class Scidb
+	toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top -borderwidth 1]
 	pack $top -fill both
@@ -639,8 +639,8 @@ proc UpdateDir {w} {
 
 proc InstallDir {{shared {}}} {
 	if {[llength $shared] == 0} { set shared [set [namespace current]::Priv(shared)] }
-	if {$shared} { return $::scidb::dir::photos }
-	return [file join $::scidb::dir::user photos]
+	if {$shared} { return $::scidc::dir::photos }
+	return [file join $::scidc::dir::user photos]
 }
 
 

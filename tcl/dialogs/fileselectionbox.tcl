@@ -253,8 +253,8 @@ proc dragCursors {{ext ""}} {
 											{.ppm .png .gif .jpg .jpeg} image
 											{folder} folder } {
 			if {[tk windowingsystem] eq "x11"} {
-				set accept [file join $::scidb::dir::share cursor drag-$name-accept-32x32.xcur]
-				set deny   [file join $::scidb::dir::share cursor drag-$name-deny-32x32.xcur]
+				set accept [file join $::scidc::dir::share cursor drag-$name-accept-32x32.xcur]
+				set deny   [file join $::scidc::dir::share cursor drag-$name-deny-32x32.xcur]
 
 				if {[file readable $accept] && [file readable $deny]} {
 					if {	![catch { ::xcursor::loadCursor $accept } acceptCursor]
@@ -568,7 +568,7 @@ proc DeleteFile {parent path} {
 	set result {}
 	set file [file rootname $path]
 	::application::database::removeRecentFile $path
-	foreach ext [::scidb::misc::suffixes $path] {
+	foreach ext [::scidc::misc::suffixes $path] {
 		lappend result "$file.$ext"
 	}
 	return $result
@@ -584,7 +584,7 @@ proc RenameFile {parent oldName newName} {
 	set result {}
 	set old [file rootname $oldName]
 	set new [file rootname $newName]
-	foreach ext [::scidb::misc::suffixes $oldName] {
+	foreach ext [::scidc::misc::suffixes $oldName] {
 		lappend result "$old.$ext" "$new.$ext"
 	}
 	return $result
@@ -598,7 +598,7 @@ proc DuplicateFile {srcName dstName} {
 	set result {}
 	set src [file rootname $srcName]
 	set dst [file rootname $dstName]
-	foreach ext [::scidb::misc::suffixes $srcName] {
+	foreach ext [::scidc::misc::suffixes $srcName] {
 		lappend result "$src.$ext" "$dst.$ext"
 	}
 	return $result
@@ -632,7 +632,7 @@ proc NumGames {filename {mtime 0}} {
 	catch { lassign $FileSizeCache($filename) size modified }
 	if {$modified != $mtime} {
 		if {[file extension $filename] ne ".scv"} {
-			set size [::scidb::misc::size $filename]
+			set size [::scidc::misc::size $filename]
 		} elseif {[catch {set size [GetArchiveSize $filename]} err]} {
 			set size -1
 		}
@@ -681,12 +681,12 @@ proc GetNumGames {filename mtime} {
 proc IsUsed {file} {
 	switch [string tolower [file extension $file]] {
 		.pgn - .pgn.gz - .bpgn - .bpgn.gz - .zip {
-#			if {![::scidb::db::get open? [file normalize $file]]} { return no }
-#			if {![::scidb::db::get readonly? $file]} { return yes }
+#			if {![::scidc::db::get open? [file normalize $file]]} { return no }
+#			if {![::scidc::db::get readonly? $file]} { return yes }
 		}
 
 		.sci - .si3 - .si4 - .si5 - .cbh - .cbf {
-			if {[::scidb::db::get open? [file normalize $file]]} { return yes }
+			if {[::scidc::db::get open? [file normalize $file]]} { return yes }
 		}
 	}
 
@@ -700,7 +700,7 @@ proc FormatTime {time} {
 
 
 proc MapExtension {extension} {
-	set result [::scidb::misc::mapExtension $extension]
+	set result [::scidc::misc::mapExtension $extension]
 	if {[string length $result]} { set result ".$result" }
 	if {$result ne $extension} { return $result }
 	if {$result in {.sci .scv .si3 .si4 .si5 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP}} {
@@ -760,7 +760,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 				if {$type eq "link"} { set fileType [format $mc::LinkTo $fileType] }
 				if {$ext eq ".cbf"} { append fileType " (DOS)" }
 				set readonly no
-				foreach ext [::scidb::misc::suffixes $filename] {
+				foreach ext [::scidc::misc::suffixes $filename] {
 					if {[file exists $filename] && ![file writable $filename]} { set readonly yes }
 				}
 
@@ -781,7 +781,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 
 				switch $ext {
 					.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz - .zip {
-						lassign [::scidb::misc::attributes $filename] numGames type variant created descr
+						lassign [::scidc::misc::attributes $filename] numGames type variant created descr
 						if {[string length $descr] == 0} { set descr "\u2014" }
 #						set type [set ::application::database::mc::T_$type]
 						set numGames [FormatNumGames $filename $numGames]
@@ -791,7 +791,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 						tk::label $f.lmodified -text "$::fsbox::mc::Modified:"
 						tk::label $f.tmodified -text $mtime
 						if {$ext eq ".zip"} {
-							set zipContent [::scidb::misc::zipContent $filename]
+							set zipContent [::scidc::misc::zipContent $filename]
 							set subcontent [lrange $zipContent 0 9]
 							set content [join $subcontent "\n"]
 							if {[llength $zipContent] > [llength $subcontent]} {
@@ -804,7 +804,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 							tk::label $f.lngames -text "$::crosstable::mc::Games:"
 							tk::label $f.tngames -text $numGames
 						}
-						if {[::scidb::db::get open? [file normalize $filename]]} {
+						if {[::scidc::db::get open? [file normalize $filename]]} {
 							set open [string tolower $::mc::Yes]
 						} else {
 							set open [string tolower $::mc::No]

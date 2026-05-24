@@ -34,7 +34,7 @@ set RecentlyUsed				"Recently used"
 set RemoveSelectedDatabase	"Remove selected database from history"
 set ClearHistory				"Clear entire history"
 set NewsAvailable				"There are updated news available"
-set NoInternetConnection	"Information: Scidb cannot connect to Internet."
+set NoInternetConnection	"Information: Scidc cannot connect to Internet."
 
 }
 
@@ -197,8 +197,8 @@ proc activate {w flag} {
 
 	if {$Priv(welcome)} {
 		set lang $::mc::langID
-		set file [file join $::scidb::dir::help $lang Welcome.html]
-		if {![file exists $file]} { set file [file join $::scidb::dir::help en Welcome.html] }
+		set file [file join $::scidc::dir::help $lang Welcome.html]
+		if {![file exists $file]} { set file [file join $::scidc::dir::help en Welcome.html] }
 		if {[file readable $file]} {
 			set fileContent ""
 			catch { set fileContent [::file::read $file -encoding utf-8] }
@@ -316,7 +316,7 @@ proc GetImage {file} {
 	}
 
 	if {![info exists Image_]} {
-		set file [file join $::scidb::dir::images $file]
+		set file [file join $::scidc::dir::images $file]
 		if {[catch { set Image_ [image create photo -file $file] }]} { return {} }
 	}
 	return  [list $Image_ [namespace code DoNothing]]

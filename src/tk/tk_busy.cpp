@@ -1360,7 +1360,7 @@ void
 tk::busy_init(Tcl_Interp* ti)
 {
     Tcl_PkgProvide(ti, "tkbusy", "1.0");
-    ::tcl::createCommand(ti, "::scidb::tk::busy", ScBusyObjCmd);
+    ::tcl::createCommand(ti, "::scidc::tk::busy", ScBusyObjCmd);
 }
 
 // vi:set ts=8 sw=4 et:

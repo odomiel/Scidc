@@ -67,20 +67,20 @@ using namespace app;
 using namespace tcl;
 using namespace tcl::app;
 
-static char const* CmdClose			= "::scidb::view::close";
-static char const* CmdCopy				= "::scidb::view::copy";
-static char const* CmdCount			= "::scidb::view::count";
-static char const* CmdEnumTags		= "::scidb::view::enumTags";
-static char const* CmdExport			= "::scidb::view::export";
-static char const* CmdFind				= "::scidb::view::find";
-static char const* CmdMap				= "::scidb::view::map";
-static char const* CmdNew				= "::scidb::view::new";
-static char const* CmdOpen				= "::scidb::view::open?";
-static char const* CmdPrint			= "::scidb::view::print";
-static char const* CmdSearch			= "::scidb::view::search";
-static char const* CmdStrip			= "::scidb::view::strip";
-static char const* CmdSubscribe		= "::scidb::view::subscribe";
-static char const* CmdUnsubscribe	= "::scidb::view::unsubscribe";
+static char const* CmdClose			= "::scidc::view::close";
+static char const* CmdCopy				= "::scidc::view::copy";
+static char const* CmdCount			= "::scidc::view::count";
+static char const* CmdEnumTags		= "::scidc::view::enumTags";
+static char const* CmdExport			= "::scidc::view::export";
+static char const* CmdFind				= "::scidc::view::find";
+static char const* CmdMap				= "::scidc::view::map";
+static char const* CmdNew				= "::scidc::view::new";
+static char const* CmdOpen				= "::scidc::view::open?";
+static char const* CmdPrint			= "::scidc::view::print";
+static char const* CmdSearch			= "::scidc::view::search";
+static char const* CmdStrip			= "::scidc::view::strip";
+static char const* CmdSubscribe		= "::scidc::view::subscribe";
+static char const* CmdUnsubscribe	= "::scidc::view::unsubscribe";
 
 
 namespace {

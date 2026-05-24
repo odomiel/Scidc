@@ -90,7 +90,7 @@ array set CharMap {
 
 
 proc emoticons {} {
-	return [::scidb::misc::emoticons list]
+	return [::scidc::misc::emoticons list]
 }
 
 

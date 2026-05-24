@@ -52,25 +52,25 @@ using namespace tcl;
 using namespace tcl::app;
 
 
-static char const* CmdFetch		= "::scidb::tree::fetch";
-static char const* CmdFinish		= "::scidb::tree::finish";
-static char const* CmdFreeze		= "::scidb::tree::freeze";
-static char const* CmdGameIndex	= "::scidb::tree::gameIndex";
-static char const* CmdGet			= "::scidb::tree::get";
-static char const* CmdInit			= "::scidb::tree::init";
-static char const* CmdInvalidate	= "::scidb::tree::invalidate";
-static char const* CmdIsRefBase	= "::scidb::tree::isRefBase?";
-static char const* CmdIsUpToDate	= "::scidb::tree::isUpToDate?";
-static char const* CmdList			= "::scidb::tree::list";
-static char const* CmdMove			= "::scidb::tree::move";
-static char const* CmdPlayer		= "::scidb::tree::player";
-static char const* CmdPosition	= "::scidb::tree::position";
-static char const* CmdSet			= "::scidb::tree::set";
-static char const* CmdStop			= "::scidb::tree::stop";
-static char const* CmdSwitch		= "::scidb::tree::switch";
-static char const* CmdUpdate		= "::scidb::tree::update";
-static char const* CmdVariant		= "::scidb::tree::variant";
-static char const* CmdView			= "::scidb::tree::view";
+static char const* CmdFetch		= "::scidc::tree::fetch";
+static char const* CmdFinish		= "::scidc::tree::finish";
+static char const* CmdFreeze		= "::scidc::tree::freeze";
+static char const* CmdGameIndex	= "::scidc::tree::gameIndex";
+static char const* CmdGet			= "::scidc::tree::get";
+static char const* CmdInit			= "::scidc::tree::init";
+static char const* CmdInvalidate	= "::scidc::tree::invalidate";
+static char const* CmdIsRefBase	= "::scidc::tree::isRefBase?";
+static char const* CmdIsUpToDate	= "::scidc::tree::isUpToDate?";
+static char const* CmdList			= "::scidc::tree::list";
+static char const* CmdMove			= "::scidc::tree::move";
+static char const* CmdPlayer		= "::scidc::tree::player";
+static char const* CmdPosition	= "::scidc::tree::position";
+static char const* CmdSet			= "::scidc::tree::set";
+static char const* CmdStop			= "::scidc::tree::stop";
+static char const* CmdSwitch		= "::scidc::tree::switch";
+static char const* CmdUpdate		= "::scidc::tree::update";
+static char const* CmdVariant		= "::scidc::tree::variant";
+static char const* CmdView			= "::scidc::tree::view";
 
 
 static int

@@ -166,7 +166,7 @@ proc SetupList {w} {
 			set flag $::country::icon::flag($code)
 			lappend list [list [::mc::mapForSort $country] $code $iso1 $flag $country $options]
 		}
-		set list [::scidb::misc::sort -index 0 -order [::mc::sortOrderTable] $list]
+		set list [::scidc::misc::sort -index 0 -order [::mc::sortOrderTable] $list]
 		foreach entry $list {
 			lassign $entry _ code iso1 flag country options
 			$w listinsert [list $code $iso1 $flag $country] {*}$options -index [incr index]
@@ -260,7 +260,7 @@ proc Search {w var full} {
 		$w current match iso $content
 		$w icursor end
 	} elseif {[string length $content] == 3 && [string toupper $content] eq $content} {
-		$w current match code [::scidb::app::lookup countryCode $content]
+		$w current match code [::scidc::app::lookup countryCode $content]
 		$w icursor end
 	} elseif {	[string length $content] > 1
 				&& [string is upper [string index $content 0]]

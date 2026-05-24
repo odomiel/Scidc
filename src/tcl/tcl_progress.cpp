@@ -26,8 +26,8 @@
 
 using namespace tcl;
 
-static char const* CmdInterrupt		= "::scidb::progress::interrupt";
-static char const* CmdInterruptable	= "::scidb::progress::interruptable?";
+static char const* CmdInterrupt		= "::scidc::progress::interrupt";
+static char const* CmdInterruptable	= "::scidc::progress::interruptable?";
 
 static Progress* m_currentProgress = 0;
 

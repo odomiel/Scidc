@@ -84,7 +84,7 @@ init(Tcl_Interp* ti)
 	if (Tcl_Init(ti) == TCL_ERROR || Tk_Init(ti) == TCL_ERROR)
 		return TCL_ERROR;
 
-	Tcl_PkgProvide(ti, "tkscidb", "1.0");
+	Tcl_PkgProvide(ti, "tkscidc", "1.0");
 
 	tcl::init(ti);
 	tk::init(ti);

@@ -89,26 +89,26 @@ if {[tk windowingsystem] eq "x11"} {
 	namespace eval x11 {
 		proc makeFrameless {w} {
 			update idletasks
-			::scidb::tk::wm menu $w
+			::scidc::tk::wm menu $w
 		}
 		proc makeToolbar {w} {
 			update idletasks
-			::scidb::tk::wm toolbar $w
+			::scidc::tk::wm toolbar $w
 		}
 		proc changeDesktop {w} {
 			if {[winfo exists .application]} {
-				::scidb::tk::wm desktop .application
+				::scidc::tk::wm desktop .application
 			} else {
-				::scidb::tk::wm desktop .
+				::scidc::tk::wm desktop .
 			}
 		}
 
-		proc ::trash::urlDecode {str} { return [::scidb::misc::url unescape $str] }
-		proc ::trash::urlEncode {str} { return [::scidb::misc::url escape $str] }
+		proc ::trash::urlDecode {str} { return [::scidc::misc::url unescape $str] }
+		proc ::trash::urlEncode {str} { return [::scidc::misc::url escape $str] }
 	}
 
 	proc toolbar::x11MakeToolbar {w} { ::x11::makeToolbar $w }
-	proc fsbox::makeFrameless {w} { update idletasks; ::scidb::tk::wm frameless $w }
+	proc fsbox::makeFrameless {w} { update idletasks; ::scidc::tk::wm frameless $w }
 	proc tooltip::x11DropShadow {args} { ::x11::dropShadow {*}$args }
 	proc dialog::messagebox::changeDesktop {w type} { ::x11::changeDesktop $w }
 }
@@ -118,7 +118,7 @@ proc dialog::messagebox::tokenize {msg} {
 	return [scidb::misc::xml tokenize [append expr <xml> $msg </xml>]]
 }
 
-proc fsbox::dirIsEmpty {dir} { return [::scidb::misc::dirEmpty? $dir] }
+proc fsbox::dirIsEmpty {dir} { return [::scidc::misc::dirEmpty? $dir] }
 proc fsbox::lookupColor {color} { return [::colors::lookup $color] }
 
 proc tlistbox::lookupColor {color} { return [::colors::lookup $color] }
@@ -184,7 +184,7 @@ proc fsbox::tooltip {args} { return [::tooltip::tooltip {*}$args] }
 proc fsbox::makeStateSpecificIcons {args} { return [::icon::makeStateSpecificIcons {*}$args] }
 proc fsbox::busy {args} { ::widget::busyCursor on }
 proc fsbox::unbusy {args} { ::widget::busyCursor off }
-proc fsbox::mySort {args} { return [::scidb::misc::sort {*}$args] }
+proc fsbox::mySort {args} { return [::scidc::misc::sort {*}$args] }
 proc fsbox::configureRadioEntry {args} { return [::theme::configureRadioEntry {*}$args] }
 proc fsbox::configureCheckEntry {args} { return [::theme::configureCheckEntry {*}$args] }
 
@@ -202,11 +202,11 @@ proc WriteOptions {chan} {
 	options::writeItem $chan ::toolbar::Options
 	options::writeItem $chan ::fsbox::bookmarks::Bookmarks
 	options::writeItem $chan ::fsbox::Options
-	options::writeItem $chan ::scidb::revision
+	options::writeItem $chan ::scidc::revision
 }
 options::hookWriter [namespace current]::WriteOptions
 
-proc archive::setModTime {file time} { ::scidb::misc::setModTime $file $time }
+proc archive::setModTime {file time} { ::scidc::misc::setModTime $file $time }
 proc archive::setInformation {progress msg} { ::dialog::progressbar::setInformation $progress ${msg}... }
 proc archive::setMaxTick {progress n} { ::dialog::progressbar::setMaximum $progress $n }
 
@@ -220,7 +220,7 @@ proc archive::tick {progress n} {
 	update
 }
 
-proc scrolledframe::MapWindow {w} { ::scidb::misc::mapWindow $w }
+proc scrolledframe::MapWindow {w} { ::scidc::misc::mapWindow $w }
 
 proc twm::tr {tok} { return [set $tok] }
 proc twm::tooltip {args} { ::tooltip::tooltip {*}$args }
@@ -279,7 +279,7 @@ debug::init
 
 # START OF MIGRATION ################################################################
 if {[catch {
-	file mkdir [file join $::scidb::dir::user layout] ;# this is new
+	file mkdir [file join $::scidc::dir::user layout] ;# this is new
 
 	if {![array exists ::setup::board::History]} {
 		set history_ $::setup::board::History
@@ -295,8 +295,8 @@ if {[catch {
 		}
 	}
 
-	if {$::scidb::revision < [::scidb::misc::revision]} {
-		if {$::scidb::revision == 83} {
+	if {$::scidc::revision < [::scidc::misc::revision]} {
+		if {$::scidc::revision == 83} {
 			set ::export::RecentlyUsedHistory	{}
 			set ::export::RecentlyUsedTiebreaks	{}
 			set ::application::database::RecentFiles {}
@@ -312,7 +312,7 @@ if {[catch {
 			set ::crosstable::MostRecentHistory {}
 		}
 
-		if {[::scidb::misc::revision] >= 96} {
+		if {[::scidc::misc::revision] >= 96} {
 			set ::crosstable::RecentlyUsedHistory {}
 			set ::crosstable::MostRecentHistory {}
 			array unset ::browser::Options font:bold
@@ -361,7 +361,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidb::revision < 946} {
+		if {$::scidc::revision < 946} {
 			foreach v {::pgn::browser::Colors ::pgn::editor::Colors} {
 				foreach {f c} {	background				"#ffffff"
 										background:current   "#ffdd76"
@@ -389,16 +389,16 @@ if {[catch {
 			}
 		}
 
-		if {$::scidb::revision < 1493} {
+		if {$::scidc::revision < 1493} {
 			foreach attr {docking:showall layout:list layout:name} {
 				if {[info exists ::application::Options($attr)]} {
 					set ::application::twm::Options(board:$attr) $::application::Options($attr)
 					array unset ::application::Options $attr
 				}
 			}
-			set files [glob -directory $::scidb::dir::layout -nocomplain *.layout]
+			set files [glob -directory $::scidc::dir::layout -nocomplain *.layout]
 			if {[llength $files]} {
-				set dest [file join $::scidb::dir::layout board]
+				set dest [file join $::scidc::dir::layout board]
 				file mkdir $dest
 				foreach file $files {
 					set fd [open $file "r"]
@@ -427,7 +427,7 @@ if {[catch {
 			}
 		}
 
-		::scidb::themes::update
+		::scidc::themes::update
 		set ::beta::WhatsNew 1
 	}
 
@@ -461,7 +461,7 @@ if {$::application::board::Options(promoted:mark) eq "1"} {
 }
 # END OF MIGRATION ##################################################################
 
-set scidb::revision [::scidb::misc::revision]
+set scidb::revision [::scidc::misc::revision]
 
 # --- Initalization ----------------------------------------------------
 

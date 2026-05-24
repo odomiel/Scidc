@@ -209,7 +209,7 @@ proc update {position} {
 
 
 proc View {pane base} {
-	set view [::scidb::tree::view]
+	set view [::scidc::tree::view]
 	if {$view == -1} { return 0 }
 	return $view
 }
@@ -218,11 +218,11 @@ proc View {pane base} {
 proc StartSearch {table} {
 	variable Vars
 
-	if {[llength [::scidb::vars::get]] == 0} { return }
+	if {[llength [::scidc::vars::get]] == 0} { return }
 
 	if {$Vars(searching)} {
 		set Vars(searching) 0
-		::scidb::vars::stop
+		::scidc::vars::stop
 		place forget $Vars(progress)
 		ConfigSearchButton $table Start
 		# show "interrupted by user"
@@ -235,7 +235,7 @@ proc StartSearch {table} {
 proc Close {table base} {
 	variable Vars
 
-	if {$base eq [::scidb::vars::get]} {
+	if {$base eq [::scidc::vars::get]} {
 		set Vars(data) {}
 		::table::clear $table
 		::table::setHeight $table 0
@@ -294,7 +294,7 @@ proc VisitItem {table data} {
 		set value [lindex $Vars(data) $row [columnIndex $id]]
 		set item {}
 
-		set opening [::scidb::app::lookup ecoCode $value]
+		set opening [::scidc::app::lookup ecoCode $value]
 		lassign $opening long short
 		set vars [lrange $opening 2 end]
 		if {[llength $vars} {
@@ -330,10 +330,10 @@ proc FetchResult {table {force false}} {
 	if {[llength $Options(sort:column)]} {
 		lappend options -sort [columnIndex $Options(sort:column)]
 	}
-	set state [::scidb::vars::finish $Options(rating:type) $Options(search:mode) {*}$options]
+	set state [::scidc::vars::finish $Options(rating:type) $Options(search:mode) {*}$options]
 
 	if {$force || $state ne "unchanged"} {
-		set Vars(data) [::scidb::vars::fetch]
+		set Vars(data) [::scidc::vars::fetch]
 		set nrows [llength $Vars(data)]
 		if {$nrows == 2} { set nrows 1 } elseif {$nrows} { incr nrows }
 		set active [::table::active $table]
@@ -388,7 +388,7 @@ proc FillTable {table} {
 
 	set total [lindex $Vars(data) end [columnIndex frequency]]
 	set nrows [llength $Vars(data)]
-	set stm [::scidb::pos::stm]
+	set stm [::scidc::pos::stm]
 	set row 1
 
 	foreach rowData $Vars(data) {
@@ -437,7 +437,7 @@ proc Select {table x y} {
 		set nrows [llength $Vars(data)]
 
 		if {0 <= $row && ($nrows == 1 || $row < $nrows - 1)} {
-			set move [::scidb::vars::move $row]
+			set move [::scidc::vars::move $row]
 			if {[string length $move]} {
 				set Vars(selected) $row
 				::table::select $table $row
@@ -548,7 +548,7 @@ proc Activate {table} {
 	set Vars(activated) 1
 	
 	if {$Vars(selected) == [::table::selection $table]} {
-		set move [::scidb::vars::move $Vars(selected)]
+		set move [::scidc::vars::move $Vars(selected)]
 		::move::addMove menu $move -nomovecmd [list set [namespace current]::Vars(activated)]
 	} else {
 		set Vars(activated) 0
@@ -577,7 +577,7 @@ proc Scrollbar {table state} {
 
 
 proc PopupMenu {table x y} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 	variable _Current
 
@@ -619,7 +619,7 @@ proc PopupMenu {table x y} {
 	$m add cascade -menu $n -label $mc::ChooseReferenceBase
 
 	set list {}
-	foreach base [::scidb::vars::list] {
+	foreach base [::scidc::vars::list] {
 		if {$base eq $Vars(current)} { set _Current $base }
 		lappend list [list [::util::databaseName $base] $base]
 	}
@@ -632,7 +632,7 @@ proc PopupMenu {table x y} {
 		-label $text \
 		-value $clipbaseName \
 		-variable [namespace current]::_Current \
-		-command [list ::scidb::vars::set $clipbaseName] \
+		-command [list ::scidc::vars::set $clipbaseName] \
 		;
 	::theme::configureRadioEntry $n $text
 	foreach base [lsort -dictionary -index 0 $list] {
@@ -641,7 +641,7 @@ proc PopupMenu {table x y} {
 			-label $text \
 			-value $value \
 			-variable [namespace current]::_Current \
-			-command [list ::scidb::vars::set $value] \
+			-command [list ::scidc::vars::set $value] \
 			;
 		::theme::configureRadioEntry $n $text
 	}

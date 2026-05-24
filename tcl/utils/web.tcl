@@ -41,7 +41,7 @@ proc isWebLink {url} {
 
 
 proc open {parent url} {
-	set url [::scidb::misc::url escape $url]
+	set url [::scidc::misc::url escape $url]
 	::widget::busyCursor on
 
 	switch -- [tk windowingsystem] {
@@ -257,7 +257,7 @@ proc FindDefaultBrowser {} {
 	set browser [auto_execok x-www-browser]
 	if {[llength $browser] && ![IsExcluded $browser]} { return $browser }
 
-	set htmlviewrc [file join $::scidb::dir::home .htmlviewrc]
+	set htmlviewrc [file join $::scidc::dir::home .htmlviewrc]
 	if {[file readable $htmlviewrc]} {
 		set chan [::open $htmlviewrc]
 

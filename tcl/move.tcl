@@ -81,7 +81,7 @@ proc translate {san} {
 
 
 proc setup {} {
-	::scidb::pos::searchDepth [set [namespace current]::Options(searchDepth)]
+	::scidc::pos::searchDepth [set [namespace current]::Options(searchDepth)]
 }
 
 
@@ -173,7 +173,7 @@ proc nextGuess {args} {
 		if {$square != $Square(current)} { return }
 	}
 
-	set suggested [::scidb::pos::$meth $Square(current)]
+	set suggested [::scidc::pos::$meth $Square(current)]
 
 	if {$suggested != -1} {
 		if {$Square(suggested) != -1} {
@@ -206,7 +206,7 @@ proc enterSquare {{square {}}} {
 	set Square(suggested) -1
 
 	if {$Drop(piece) ne " "} {
-		if {$hilite(show-suggested) && [::scidb::pos::legal? $square $square no $Drop(piece)]} {
+		if {$hilite(show-suggested) && [::scidc::pos::legal? $square $square no $Drop(piece)]} {
 			set Square(origin) $square
 			set Square(suggested) $square
 			::board::diagram::hilite $board $Square(suggested) suggested
@@ -215,7 +215,7 @@ proc enterSquare {{square {}}} {
 		set Square(origin) -1
 
 		if {$hilite(show-suggested)} {
-			set suggested [::scidb::pos::guess $square]
+			set suggested [::scidc::pos::guess $square]
 			if {$suggested != -1} { set Square(origin) $square }
 		} else {
 			set suggested -1
@@ -287,7 +287,7 @@ proc pressSquare {square state} {
 		::board::diagram::hilite $board $square selected
 
 		# Drag this piece if it is the same color as the side to move:
-		set c [::scidb::pos::stm]
+		set c [::scidc::pos::stm]
 		set p [string index [::board::diagram::piece $board $square] 0]
 		if {$c eq $p} { ::board::diagram::setDragSquare $board $square }
 	} elseif {$hilite(show-suggested)} {
@@ -407,7 +407,7 @@ proc dragPiece {x y state} {
 
 		set allowIllegalMove [::util::shiftIsHeldDown? $state]
 
-		if {$square != -1 && [::scidb::pos::legal? $from $square $allowIllegalMove]} {
+		if {$square != -1 && [::scidc::pos::legal? $from $square $allowIllegalMove]} {
 			::board::diagram::hilite $board $square suggested
 			::board::diagram::raisePiece $board $from
 		}
@@ -428,16 +428,16 @@ proc addMove {confirmWindowType san args} {
 	}
 	array set opts $args
 
-	if {[::scidb::game::position atEnd?]} {
+	if {[::scidc::game::position atEnd?]} {
 		::application::pgn::ensureScratchGame
 		set action "append"
 	} else {
 		if {!$opts(-force)} {
-			set moves [::scidb::game::next moves -ascii]
+			set moves [::scidc::game::next moves -ascii]
 
 			for {set i 0} {$i < [llength $moves]} {incr i} {
 				if {[lindex $moves $i] eq $san} {
-					::scidb::game::go variation [expr {$i - 1}]
+					::scidc::game::go variation [expr {$i - 1}]
 					::application::board::goto 1
 					return ""
 				}
@@ -465,24 +465,24 @@ proc addMove {confirmWindowType san args} {
 proc doAction {action san {noMoveCmd {}}} {
 	switch $action {
 		mainline {
-			::scidb::game::variation mainline $san
-			::scidb::game::go 1
+			::scidc::game::variation mainline $san
+			::scidc::game::go 1
 		}
 
 		variation {
-			set varno [::scidb::game::variation new $san]
+			set varno [::scidc::game::variation new $san]
 			EnterVariation $varno
 		}
 
 		replace {
-			::scidb::game::replace $san
-			::scidb::game::go 1
+			::scidc::game::replace $san
+			::scidc::game::go 1
 		}
 
 		trial {
 			::game::flipTrialMode
-			::scidb::game::trial $san
-			::scidb::game::go 1
+			::scidc::game::trial $san
+			::scidc::game::go 1
 		}
 
 		exchange {
@@ -490,16 +490,16 @@ proc doAction {action san {noMoveCmd {}}} {
 			doDestructiveCommand \
 				$board \
 				$mc::Action(exchange) \
-				[list ::scidb::game::exchange $san] \
-				[list ::scidb::game::go 1] \
+				[list ::scidc::game::exchange $san] \
+				[list ::scidc::game::go 1] \
 				$noMoveCmd \
 				;
 		}
 
 		append {
 			::application::pgn::ensureScratchGame
-			::scidb::game::move $san
-			::scidb::game::go 1
+			::scidc::game::move $san
+			::scidc::game::go 1
 		}
 
 		default {
@@ -513,7 +513,7 @@ proc doAction {action san {noMoveCmd {}}} {
 
 proc addActionsToMenu {m command {extraActions {}}} {
 	set i 0
-	set atEnd [::scidb::game::position atEnd?]
+	set atEnd [::scidc::game::position atEnd?]
 
 	set actionList {}
 	if {$atEnd} {
@@ -521,7 +521,7 @@ proc addActionsToMenu {m command {extraActions {}}} {
 	} else {
 		lappend actionList replace variation mainline
 	}
-	if {![::scidb::game::query trial] && [::scidb::game::current] < 9} {
+	if {![::scidc::game::query trial] && [::scidc::game::current] < 9} {
 		lappend actionList trial
 	}
 	if {!$atEnd} {
@@ -598,7 +598,7 @@ proc inHandDropPosition {w x y state piece} {
 
 		set allowIllegalMove [::util::shiftIsHeldDown? $state]
 
-		if {$square != -1 && [::scidb::pos::legal? $square $square $allowIllegalMove $piece]} {
+		if {$square != -1 && [::scidc::pos::legal? $square $square $allowIllegalMove $piece]} {
 			::board::diagram::hilite $board $square suggested
 			[::board::diagram::canvas $board] raise drag-piece
 		}
@@ -627,7 +627,7 @@ proc inHandPieceDrop {w x y state piece} {
 		::application::board::finishDrop
 	} else {
 		::application::board::deselectInHandPiece
-		if {[::scidb::pos::legal? $square $square $allowIllegalMove $piece]} {
+		if {[::scidc::pos::legal? $square $square $allowIllegalMove $piece]} {
 			::board::diagram::setPiece $board $square $piece
 			set Drop(takeBack) $square
 			set Drop(piece) $piece
@@ -654,13 +654,13 @@ proc nextVariation {} {
 	variable Variation
 
 	if {$Variation} {
-		::scidb::game::go 1
+		::scidc::game::go 1
 		set Variation 0
-	} elseif {![::scidb::game::position atStart?]} {
-		::scidb::game::go -1
-		while {[::scidb::game::position atStart?] && ![::scidb::game::position isMainline?]} {
-			::scidb::game::variation leave
-			::scidb::game::go -1
+	} elseif {![::scidc::game::position atStart?]} {
+		::scidc::game::go -1
+		while {[::scidc::game::position atStart?] && ![::scidc::game::position isMainline?]} {
+			::scidc::game::variation leave
+			::scidc::game::go -1
 		}
 		set Variation 1
 	}
@@ -668,8 +668,8 @@ proc nextVariation {} {
 
 
 proc EnterVariation {varno} {
-	::scidb::game::go variation $varno
-	::scidb::game::go 1
+	::scidc::game::go variation $varno
+	::scidc::game::go 1
 }
 
 
@@ -686,12 +686,12 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 	variable Drop
 
 	if {$sq2 == -1} { return 0 }
-	if {[::scidb::game::query over?]} { return 0 }
+	if {[::scidc::game::query over?]} { return 0 }
 	if {$sq2 == -1} { return 0 }
 	set nullmove [expr {$sq1 eq "null" && $sq2 eq "null"}]
 
 	if {$sq1 ne "null"} {
-		set c [::scidb::pos::stm]
+		set c [::scidc::pos::stm]
 		set s [string index [::board::diagram::piece $board $sq1] 0]
 		set f [string index [::board::diagram::piece $board $sq2] 1]
 		if {$s ne $c || $f eq "k"} {
@@ -701,9 +701,9 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 		}
 	}
 
-	if {![::scidb::pos::valid? $sq1 $sq2]} { return 0 }
+	if {![::scidc::pos::valid? $sq1 $sq2]} { return 0 }
 
-	if {!$allowIllegalMove && ![::scidb::pos::legal? $sq1 $sq2 $allowIllegalMove $Drop(piece)]} {
+	if {!$allowIllegalMove && ![::scidc::pos::legal? $sq1 $sq2 $allowIllegalMove $Drop(piece)]} {
 		return 0
 	}
 
@@ -713,7 +713,7 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 	if {[scidb::pos::promotion? $sq1 $sq2 $allowIllegalMove]} {
 		catch { destroy $board.popup_promotion }
 		set color [string index [::board::diagram::piece $board $sq1] 0]
-		set variant [::scidb::game::query Variant?]
+		set variant [::scidc::game::query Variant?]
 		set m [menu $board.popup_promotion -tearoff false]
 		catch { wm attributes $m -type popup_menu }
 		switch $variant {
@@ -738,10 +738,10 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 		if {$_promoted == " "} { return 0 }
 #	} elseif {!$nullmove && $sq1 eq $sq2 && $Drop(piece) eq " "} {
 #		catch { destroy $board.popup_drop }
-#		set color [string range [::scidb::game::query stm] 0 0]
+#		set color [string range [::scidc::game::query stm] 0 0]
 #		set m [menu $board.popup_drop -tearoff false]
 #		catch { wm attributes $m -type popup_menu }
-#		set pieceCount [::scidb::pos::inHand? -destination $sq1 -stm]
+#		set pieceCount [::scidc::pos::inHand? -destination $sq1 -stm]
 #		set havePieces 0
 #		foreach n $pieceCount p {q r b n p} {
 #			if {$n} {
@@ -770,7 +770,7 @@ proc DoAddMove {sq1 sq2 allowIllegalMove} {
 #		}
 	}
 
-	addMove menu [::scidb::pos::san $sq1 $sq2 $_promoted] \
+	addMove menu [::scidc::pos::san $sq1 $sq2 $_promoted] \
 		-nomovecmd [namespace code AfterAddMove] \
 		-force [expr {$allowIllegalMove || $Variation}] \
 		;

@@ -4,7 +4,7 @@
 
 include ../../Makefile.in
 
-EXE = fairy-stockfish-scidb
+EXE = fairy-stockfish-scidc
 
 all:
 	@true

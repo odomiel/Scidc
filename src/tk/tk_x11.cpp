@@ -42,7 +42,7 @@
 
 using namespace tcl;
 
-static char const* Command = "::scidb::tk::x11";
+static char const* Command = "::scidc::tk::x11";
 static XErrorHandler xErrorHandler = 0;
 
 /* Ubuntu 24.04 compat: catch BadMatch from XGetImage on Wayland/compositing WM */

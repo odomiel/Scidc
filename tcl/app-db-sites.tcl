@@ -87,8 +87,8 @@ proc activate {w flag} {
 	variable ${path}::Vars
 
 	set Vars(active) $flag
-	set base [::scidb::db::get name]
-	set variant [::scidb::app::variant]
+	set base [::scidc::db::get name]
+	set variant [::scidc::app::variant]
 	set Vars($base:$variant:update:sites) 1
 	site::DoUpdate $path $base $variant
 
@@ -160,7 +160,7 @@ proc BuildFrame {twm frame uid width height} {
 				-id db:sites:$id:$uid \
 				-usefind 1 \
 				;
-			::scidb::db::subscribe siteList \
+			::scidc::db::subscribe siteList \
 				[list [namespace current]::site::Update $twm] \
 				[list [namespace current]::Close $twm] \
 				;
@@ -171,7 +171,7 @@ proc BuildFrame {twm frame uid width height} {
 				-selectcmd [namespace code [list SelectEvent $twm]] \
 				-id db:sites:$id:$uid \
 				;
-			::scidb::db::subscribe eventList [list [namespace current]::event::Update $twm]
+			::scidc::db::subscribe eventList [list [namespace current]::event::Update $twm]
 		}
 	}
 }
@@ -180,7 +180,7 @@ proc BuildFrame {twm frame uid width height} {
 proc Select {path base variant index} {
 	variable ${path}::Vars
 
-	set position [::scidb::db::get lookupSite $index $Vars($base:$variant:view) $base $variant]
+	set position [::scidc::db::get lookupSite $index $Vars($base:$variant:view) $base $variant]
 	::sitetable::see $Vars(frame:site) $position
 	update idletasks
 	set row [::qsitetable::indexToRow $Vars(frame:site) $position]
@@ -219,18 +219,18 @@ proc InitBase {path base variant} {
 	if {![info exists Vars($base:$variant:view)]} {
 		set Vars($base:$variant:initializing) 1
 		set Vars($base:$variant:view) \
-			[::scidb::view::new $base $variant slave master slave slave slave slave]
+			[::scidc::view::new $base $variant slave master slave slave slave slave]
 		set Vars($base:$variant:update:sites) 1
 		set Vars($base:$variant:sort:sites) $Defaults(sort:sites)
 		set Vars($base:$variant:sort:events) $Defaults(sort:events)
-		set Vars($base:$variant:lastChange) [::scidb::db::get lastChange $base $variant]
+		set Vars($base:$variant:lastChange) [::scidc::db::get lastChange $base $variant]
 		set Vars($base:$variant:sites:lastId) -1
 		set Vars($base:$variant:events:lastId) -1
 		set Vars($base:$variant:select) -1
 		set Vars($base:$variant:selected:key) {}
 		::sitetable::init $Vars(frame:site) $base $variant
 		::eventtable::init $Vars(frame:event) $base $variant
-		::scidb::view::search $base $variant $Vars($base:$variant:view) null events
+		::scidc::view::search $base $variant $Vars($base:$variant:view) null events
 	}
 }
 
@@ -270,14 +270,14 @@ proc Search {path base variant view {selected -1}} {
 	if {$selected == -1} {
 		set selected [::sitetable::selectedSite $Vars(frame:site) $base $variant]
 		if {$selected >= 0} {
-			set index [::scidb::db::get siteIndex $selected $view $base $variant]
+			set index [::scidc::db::get siteIndex $selected $view $base $variant]
 			set Vars($base:$variant:selected:key) [scidb::db::get siteKey $base $variant site $index]
 		}
 	}
 
 	if {$selected >= 0} {
-		if {$index == -1} { set index [::scidb::db::get siteIndex $selected $view $base $variant] }
-		::scidb::view::search $base $variant $view null events [list site $index]
+		if {$index == -1} { set index [::scidc::db::get siteIndex $selected $view $base $variant] }
+		::scidc::view::search $base $variant $view null events [list site $index]
 		::eventtable::scroll $Vars(frame:event) home
 	} else {
 		Reset $path $base $variant
@@ -288,7 +288,7 @@ proc Search {path base variant view {selected -1}} {
 
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable [namespace parent]::${path}::Vars
 
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -317,12 +317,12 @@ proc DoUpdate {path base variant} {
 		if {[llength $Vars($base:$variant:sort:sites)]} {
 			::widget::busyCursor on
 			set view $Vars($base:$variant:view)
-			::scidb::db::sort site $base $variant $Vars($base:$variant:sort:sites) $view
+			::scidc::db::sort site $base $variant $Vars($base:$variant:sort:sites) $view
 			::widget::busyCursor off
 			set Vars($base:$variant:sort:sites) {}
 		}
 		if {$Vars($base:$variant:update:sites)} {
-			set n [::scidb::db::count sites $base $variant]
+			set n [::scidc::db::count sites $base $variant]
 			after idle [list ::sitetable::update $Vars(frame:site) $base $variant $n]
 			after idle [namespace code [list [namespace parent]::event::Update2 \
 				$Vars($base:$variant:sites:lastId) $path $base $variant]]
@@ -365,12 +365,12 @@ proc DoUpdate {path base variant} {
 		if {[llength $Vars($base:$variant:sort:events)]} {
 			::widget::busyCursor on
 			set view $Vars($base:$variant:view)
-			::scidb::db::sort event $base $variant $Vars($base:$variant:sort:events) $view
+			::scidc::db::sort event $base $variant $Vars($base:$variant:sort:events) $view
 			::widget::busyCursor off
 			set Vars($base:$variant:sort:events) {}
 		}
 		if {$Vars($base:$variant:update:events)} {
-			set n [::scidb::view::count events $base $variant $Vars($base:$variant:view)]
+			set n [::scidc::view::count events $base $variant $Vars($base:$variant:view)]
 			after idle [list ::eventtable::update $Vars(frame:event) $base $variant $n]
 			set Vars($base:$variant:update:events) 0
 		}

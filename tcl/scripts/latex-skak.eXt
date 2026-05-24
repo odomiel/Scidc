@@ -76,8 +76,8 @@
 	\\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue]{hyperref}
 
 	\\DeclareGraphicsExtensions{.pgn}
-	\\graphicspath{{/usr/local/share/scidb-beta/pdf/sets/Default/200}
-						{/usr/local/share/scidb-beta/pdf/sets/Default/200/pieces/Merida}}
+	\\graphicspath{{/usr/local/share/scidc-beta/pdf/sets/Default/200}
+						{/usr/local/share/scidc-beta/pdf/sets/Default/200/pieces/Merida}}
 
 	\\setlength{\\columnsep}{7mm}
 	\\setlength{\\parindent}{0pt}

@@ -69,7 +69,7 @@ init(Tcl_Interp* ti)
 		tcl::init(ti);
 		tk::init(ti);
 
-		Tcl_PkgProvide(ti, "tkscidb", "1.0");
+		Tcl_PkgProvide(ti, "tkscidc", "1.0");
 
 #ifdef BROKEN_LINKER_HACK
 

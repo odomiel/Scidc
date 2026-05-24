@@ -12,8 +12,8 @@
 
 include ../Makefile.in
 
-SCRIPT = scidb$(SUFFIX)
-ARCH = arch-scidb
+SCRIPT = scidc$(SUFFIX)
+ARCH = arch-scidc
 
 # NOTE that the ordering is important!
 SOURCES = \
@@ -606,7 +606,7 @@ $(ARCH): utils/archive.tcl
 	@echo "Building $(ARCH)"
 	@if [ -e $(ARCH) ]; then rm -f $(ARCH); fi
 	@cat utils/archive.tcl | sed            \
-		-e 's/%PROGRAM%/tclscidb$(SUFFIX)/g' \
+		-e 's/%PROGRAM%/tclscidc$(SUFFIX)/g' \
 		-e 's#%SHAREDIR%#$(DATADIR)#g'       \
 		-e 's/%ARCH%/$(ARCH)/g'              \
 		> $(ARCH)

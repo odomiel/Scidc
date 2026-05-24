@@ -134,7 +134,7 @@ proc gamebar {path} {
 	::tooltip::tooltip exclude $gamebar input-1
 #	::tooltip::tooltip exclude $gamebar close:input-1
 
-	::scidb::db::subscribe gameInfo [list [namespace current]::Update $gamebar]
+	::scidc::db::subscribe gameInfo [list [namespace current]::Update $gamebar]
 
 	return $path
 }
@@ -728,17 +728,17 @@ proc popupMenu {gamebar parent {addGameHistory 1} {remove -1}} {
 
 
 proc addDestinationsForSaveToMenu {parent m {discardActualBase 0}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 
-	set actual [::scidb::db::get name]
-	set variant [::scidb::game::query Variant?]
-	set position [::scidb::game::current]
+	set actual [::scidc::db::get name]
+	set variant [::scidc::game::query Variant?]
+	set position [::scidc::game::current]
 	set result {}
 
-	foreach base [::scidb::tree::list] {
+	foreach base [::scidc::tree::list] {
 		if {	(!$discardActualBase || $base ne $actual)
-			&& ![::scidb::db::get readonly? $base]
-			&& $variant in [::scidb::db::get variants $base]} {
+			&& ![::scidc::db::get readonly? $base]
+			&& $variant in [::scidc::db::get variants $base]} {
 			lappend result $base
 		}
 	}
@@ -791,19 +791,19 @@ proc addVariantsToMenu {parent m {excludeNormal 0}} {
 
 
 proc mergeGame {parent position} {
-	::merge::openDialog $parent [::scidb::game::current] $position
+	::merge::openDialog $parent [::scidc::game::current] $position
 }
 
 
 proc exportGame {parent {position -1}} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 
-	if {$position == -1} { set position [::scidb::game::current] }
-	lassign [::scidb::game::sink? $position] base variant index
-	set sink [lindex [::scidb::game::sink? $position] 0]
+	if {$position == -1} { set position [::scidc::game::current] }
+	lassign [::scidc::game::sink? $position] base variant index
+	set sink [lindex [::scidc::game::sink? $position] 0]
 	set mode original
 
-	if {[::scidb::game::query $position modified?]} {
+	if {[::scidc::game::query $position modified?]} {
 		if {$base ne $scratchbaseName} {
 			if {$sink eq $scratchbaseName} {
 				set mode modified
@@ -823,7 +823,7 @@ proc exportGame {parent {position -1}} {
 	if {[string length $white] && [string length $black]} {
 		set title "$white-$black"
 	} else {
-		set title [lindex [::scidb::game::sink? $position] 2]
+		set title [lindex [::scidc::game::sink? $position] 2]
 	}
 
 	::export::open $parent \
@@ -832,7 +832,7 @@ proc exportGame {parent {position -1}} {
 		-index $index \
 		-title $title \
 		-extension [string range [file extension $base] 1 end] \
-		-languages [::scidb::game::query langSet $position] \
+		-languages [::scidc::game::query langSet $position] \
 		-preferred [::application::pgn::languages] \
 		;
 }
@@ -977,7 +977,7 @@ proc Press {gamebar id {pref {}}} {
 
 
 proc Release {gamebar id {pref {}}} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable Specs
 
 	if {[llength $pref] == 0 && ($id eq "-1" || $id eq $Specs(selected:$gamebar))} { return }
@@ -990,7 +990,7 @@ proc Release {gamebar id {pref {}}} {
 		} elseif {$Specs(state:$id:$gamebar) eq "unlocked"} {
 			SetState $gamebar $id locked
 		} else {
-			if {[lindex [::scidb::game::link? $id] 0] eq $scratchbaseName} {
+			if {[lindex [::scidc::game::link? $id] 0] eq $scratchbaseName} {
 				set question $mc::DiscardNewGame
 			} else {
 				set question $mc::DiscardChanges
@@ -1015,8 +1015,8 @@ proc Release {gamebar id {pref {}}} {
 
 proc ShowTags {gamebar id} {
 	variable ::application::database::mc::T_Clipbase
-	variable ::scidb::scratchbaseName
-	variable ::scidb::clipbaseName
+	variable ::scidc::scratchbaseName
+	variable ::scidc::clipbaseName
 	variable Specs
 
 	if {$id eq "-1"} { set id $Specs(selected:$gamebar) }
@@ -1026,8 +1026,8 @@ proc ShowTags {gamebar id} {
 	set f [::util::makePopup $dlg]
 	set bg [$f cget -background]
 
-	lassign [::scidb::game::link? $id] base variant number
-	set sink [lindex [::scidb::game::sink? $id] 0]
+	lassign [::scidc::game::link? $id] base variant number
+	set sink [lindex [::scidc::game::sink? $id] 0]
 
 	if {$base ne $scratchbaseName} {
 		tk::frame $f.fram -background $bg
@@ -1038,7 +1038,7 @@ proc ShowTags {gamebar id} {
 			set name [::util::databaseName $base]
 		}
 		append name " (#[expr {$number + 1}])"
-		if {[::scidb::game::query $id modified?]} { set fg darkred } else { set fg black }
+		if {[::scidc::game::query $id modified?]} { set fg darkred } else { set fg black }
 		if {$sink eq $scratchbaseName} {
 			tk::label $f.fram.link -text "\uf08e" -background $bg -foreground $fg
 			set size [font configure [$f.fram.link cget -font] -size]
@@ -1404,8 +1404,8 @@ proc ShowSeparateColumn {gamebar {flag -1}} {
 
 proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remove} {
 	variable ::game::history::mc::GameHistory
-	variable ::scidb::clipbaseName
-	variable ::scidb::scratchbaseName
+	variable ::scidc::clipbaseName
+	variable ::scidc::scratchbaseName
 	variable icon::15x15::digit
 
 	if {[::game::historyIsEmpty?]} {
@@ -1491,12 +1491,12 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 		-compound left \
 		;
 
-	set actual [::scidb::db::get name]
-	set position [::scidb::game::current]
-	lassign [::scidb::game::link? $position] base variant index
-	set sink [lindex [::scidb::game::sink? $position] 0]
+	set actual [::scidc::db::get name]
+	set position [::scidc::game::current]
+	lassign [::scidc::game::link? $position] base variant index
+	set sink [lindex [::scidc::game::sink? $position] 0]
 
-	if {$actual eq $scratchbaseName || [::scidb::db::count games] == 0} {
+	if {$actual eq $scratchbaseName || [::scidc::db::count games] == 0} {
 		set state disabled
 	} else {
 		set state normal
@@ -1521,12 +1521,12 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 		set variant [::util::toMainVariant $variant]
 		unset -nocomplain state
 
-		set actual [::scidb::db::get name]
+		set actual [::scidc::db::get name]
 
 		if {$base ne $scratchbaseName} {
 			if {	$index >= 0
-				&& [::scidb::db::get open? $base $variant]
-				&& ![::scidb::db::get readonly? $base $variant]} {
+				&& [::scidc::db::get open? $base $variant]
+				&& ![::scidc::db::get readonly? $base $variant]} {
 				set state normal
 			} else {
 				set state disabled
@@ -1544,7 +1544,7 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 				-accel "$::mc::Key(Ctrl)-$::application::board::mc::Accel(replace-game)" \
 				;
 
-			if {![::scidb::game::query modified?]} { set state disabled }
+			if {![::scidc::game::query modified?]} { set state disabled }
 			$m add command \
 				-label " [format $mc::ReplaceMoves $name]" \
 				-image $::icon::16x16::save \
@@ -1556,8 +1556,8 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 		}
 
 		if {	$actual eq $scratchbaseName
-			|| [::scidb::db::get readonly? $actual]
-			|| $variant ni [::scidb::db::get variants $actual]} {
+			|| [::scidc::db::get readonly? $actual]
+			|| $variant ni [::scidc::db::get variants $actual]} {
 			set state disabled
 		} else {
 			set state normal
@@ -1585,7 +1585,7 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 			;
 
 		if {$base ne $scratchbaseName && $sink ne $scratchbaseName} {
-			if {[::scidb::game::query modified?]} { set state normal } else { set state disabled }
+			if {[::scidc::game::query modified?]} { set state normal } else { set state disabled }
 			$m add command \
 				-label " $mc::ReloadCurrentGame" \
 				-image $::icon::16x16::reload \
@@ -1618,7 +1618,7 @@ proc AddGameMenuEntries {gamebar m addSaveMenu addGameHistory clearHistory remov
 			;
 
 		set clipbaseState normal
-		if {[::scidb::db::count games $clipbaseName $variant] == 0} { set clipbaseState disabled }
+		if {[::scidc::db::count games $clipbaseName $variant] == 0} { set clipbaseState disabled }
 		$m add command \
 			-label " $mc::PasteLastClipbaseGame" \
 			-image $::icon::16x16::none \
@@ -1728,7 +1728,7 @@ proc ReplaceMoves {parent base variant position number} {
 
 
 proc CheckIfModified {parent position} {
-	if {![::scidb::game::query $position modified?]} { return false }
+	if {![::scidc::game::query $position modified?]} { return false }
 	set reply [::dialog::question -parent $parent -message $mc::DiscardChanges]
 	return [expr {$reply eq "no"}]
 }
@@ -1778,15 +1778,15 @@ proc WhichVersion {parent title} {
 
 
 proc CopyThisGameToClipbase {parent position} {
-	variable ::scidb::scratchbaseName
-	variable ::scidb::clipbaseName
+	variable ::scidc::scratchbaseName
+	variable ::scidc::clipbaseName
 	variable mode
 
-	lassign [::scidb::game::link? $position] base variant index
-	set sink [lindex [::scidb::game::sink? $position] 0]
+	lassign [::scidc::game::link? $position] base variant index
+	set sink [lindex [::scidc::game::sink? $position] 0]
 	set mode original
 
-	if {[::scidb::game::query $position modified?]} {
+	if {[::scidc::game::query $position modified?]} {
 		if {$base ne $scratchbaseName} {
 			if {$sink eq $scratchbaseName} {
 				set msg $mc::WillCopyModifiedGame
@@ -1801,19 +1801,19 @@ proc CopyThisGameToClipbase {parent position} {
 		}
 	}
 
-	::scidb::game::copy game $clipbaseName $position $mode
+	::scidc::game::copy game $clipbaseName $position $mode
 }
 
 
 proc CopyThisGameToClipboard {parent position} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable mode
 
-	lassign [::scidb::game::link? $position] base variant index
-	set sink [lindex [::scidb::game::sink? $position] 0]
+	lassign [::scidc::game::link? $position] base variant index
+	set sink [lindex [::scidc::game::sink? $position] 0]
 	set mode original
 
-	if {[::scidb::game::query $position modified?]} {
+	if {[::scidc::game::query $position modified?]} {
 		if {$base ne $scratchbaseName} {
 			if {$sink eq $scratchbaseName} {
 				set mode modified
@@ -1826,7 +1826,7 @@ proc CopyThisGameToClipboard {parent position} {
 	}
 
 	set flags [::export::getPgnFlags]
-	set result [string trim [::scidb::game::toPGN $mode -position $position -flags $flags]]
+	set result [string trim [::scidc::game::toPGN $mode -position $position -flags $flags]]
 
 	if {[string length $result]} {
 		::clipboard::selectText $result
@@ -1835,18 +1835,18 @@ proc CopyThisGameToClipboard {parent position} {
 
 
 proc PasteFromClipbase {parent position} {
-	if {![CheckIfModified $parent $position]} { ::scidb::game::paste clipbase $position }
+	if {![CheckIfModified $parent $position]} { ::scidc::game::paste clipbase $position }
 }
 
 
 proc PasteGameFrom {parent from to} {
-	if {![CheckIfModified $parent $to]} { ::scidb::game::paste $from $to }
+	if {![CheckIfModified $parent $to]} { ::scidc::game::paste $from $to }
 }
 
 
 proc ReloadCurrentGame {parent} {
 	set reply [::dialog::question -parent $parent -message $::engine::mc::ThrowAwayChanges]
-	if {$reply eq "yes"} { ::scidb::game::reload }
+	if {$reply eq "yes"} { ::scidc::game::reload }
 }
 
 
@@ -1858,7 +1858,7 @@ proc LoadGameNumber {parent} {
 	pack $top -fill both
 
 	ttk::label $top.enter -text "$mc::EnterGameNumber:"
-	set max [::scidb::db::count games [::scidb::db::get variant?]]
+	set max [::scidc::db::count games [::scidc::db::get variant?]]
 	set cmd [namespace code [list CheckOkButton $dlg $max]]
 	::ttk::spinbox $top.number -from 1 -to $max -width 10 -exportselection false 
 	$top.number delete 0 end
@@ -1891,15 +1891,15 @@ proc LoadGameNumber {parent} {
 	if {$Action_ eq "ok"} {
 		set number [string trim [$top.number get]]
 		set dlg [winfo toplevel $top.number]
-		set position [::scidb::game::current]
+		set position [::scidc::game::current]
 		if {[::application::pgn::unlocked? $position]} {
 			set view [lindex [::game::getSourceInfo $position] 2]
 		} else {
 			set view -1
 		}
 		::game::new [winfo parent $dlg] \
-			-base [::scidb::db::get name] \
-			-variant [::scidb::db::get variant?] \
+			-base [::scidc::db::get name] \
+			-variant [::scidc::db::get variant?] \
 			-number [expr {$number - 1}] \
 			-view $view \
 			;
@@ -1921,7 +1921,7 @@ proc CheckOkButton {dlg max value valid} {
 
 
 proc GetSource {id} {
-	lassign [::scidb::game::sink? $id] base variant index
+	lassign [::scidc::game::sink? $id] base variant index
 	set variant [::util::toMainVariant $variant]
 	return [list $base $variant $index]
 }
@@ -1934,10 +1934,10 @@ proc PopupEventMenu {gamebar id} {
 	catch { destroy $menu }
 	menu $menu -tearoff 0
 
-	lassign [::scidb::game::link? $id] base variant _
+	lassign [::scidc::game::link? $id] base variant _
 	set variant [::util::toMainVariant $variant]
 
-	if {[::scidb::db::get open? $base $variant]} {
+	if {[::scidc::db::get open? $base $variant]} {
 		set Specs(event:locked) 1
 		set name [GetEventName $id]
 		if {[string length $name]} {
@@ -1959,7 +1959,7 @@ proc PopupSiteMenu {gamebar id} {
 	menu $menu -tearoff 0
 
 	set Specs(site:locked) 1
-	lassign [::scidb::game::link? $id] base variant _
+	lassign [::scidc::game::link? $id] base variant _
 	set variant [::util::toMainVariant $variant]
 	set site [lindex $Specs(data:$id:$gamebar) 3]
 	if {[::web::isWebLink $site]} {
@@ -1979,10 +1979,10 @@ proc PopupPlayerMenu {gamebar id side} {
 	catch { destroy $menu }
 	menu $menu -tearoff 0
 
-	lassign [::scidb::game::link? $id] base variant _
+	lassign [::scidc::game::link? $id] base variant _
 	set variant [::util::toMainVariant $variant]
 
-	if {[::scidb::db::get open? $base $variant]} {
+	if {[::scidc::db::get open? $base $variant]} {
 		set Specs(player:locked) 1
 		set info [GetPlayerInfo $id $side]
 		set name [lindex $info 0]
@@ -2023,11 +2023,11 @@ proc BuildMenu {gamebar id side menu} {
 		eval $addsep
 		set addsep {}
 	
-		if {$current && [lindex [::scidb::game::sink? $id] 0] ne $::scidb::scratchbaseName} {
-			lassign [::scidb::game::link? $id] base variant index
+		if {$current && [lindex [::scidc::game::sink? $id] 0] ne $::scidc::scratchbaseName} {
+			lassign [::scidc::game::link? $id] base variant index
 			set variant [::util::toMainVariant $variant]
-			if {[::scidb::db::get open? $base $variant] && ![::scidb::db::get readonly? $base $variant]} {
-				set flag [::scidb::db::get deleted? $index -1 $base]
+			if {[::scidc::db::get open? $base $variant] && ![::scidc::db::get readonly? $base $variant]} {
+				set flag [::scidc::db::get deleted? $index -1 $base]
 				if {$flag} { set var UndeleteGame } else { set var DeleteGame }
 				$menu add command \
 					-compound left \
@@ -2228,12 +2228,12 @@ proc UpdateLine {gamebar id} {
 
 
 proc MakeData {gamebar id tags {update no}} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable Specs
 
 	lassign {"N.N." "N.N." "?" "?" "" "" "" "" 0 0} \
 		white black event site date eventCountry whiteCountry blackCountry whiteElo blackElo
-	lassign [::scidb::game::link? $id] base _ _
+	lassign [::scidc::game::link? $id] base _ _
 
 	if {$base eq $scratchbaseName && !$update} {
 		if {![info exists Specs(count:$id:$gamebar)]} {
@@ -2259,10 +2259,10 @@ proc MakeData {gamebar id tags {update no}} {
 			}
 		}
 
-		set whiteCountry [::scidb::game::query $id country white]
-		set blackCountry [::scidb::game::query $id country black]
-		set whiteElo [::scidb::game::query $id elo white]
-		set blackElo [::scidb::game::query $id elo black]
+		set whiteCountry [::scidc::game::query $id country white]
+		set blackCountry [::scidc::game::query $id country black]
+		set whiteElo [::scidc::game::query $id elo white]
+		set blackElo [::scidc::game::query $id elo black]
 		set eventDate [::locale::formatNormalDate $date]
 
 		set date ""
@@ -2283,7 +2283,7 @@ proc Update {gamebar id {update yes}} {
 
 	if {$id >= 9} { return }
 
-	set tags [::scidb::game::tags $id]
+	set tags [::scidc::game::tags $id]
 	set data [MakeData $gamebar $id $tags $update]
 
 	set Specs(data:$id:$gamebar) $data
@@ -2626,7 +2626,7 @@ proc Normal {gamebar id item} {
 
 
 proc EnterEvent {gamebar id} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable Specs
 
 	set sid $Specs(selected:$gamebar)
@@ -2744,7 +2744,7 @@ proc LeaveFlag {gamebar id} {
 
 
 proc GetEventInfo {id} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }
@@ -2753,7 +2753,7 @@ proc GetEventInfo {id} {
 
 
 proc GetEventName {id} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 
 	lassign [GetSource $id] base variant index
 	if {$base eq $scratchbaseName} { return {""} }

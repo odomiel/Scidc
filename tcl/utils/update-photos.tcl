@@ -36,11 +36,11 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 #! The "\" at the end of the comment line below is necessary! It means
 #! that the "exec" line is a comment to Tcl/Tk, but not to /bin/sh.
-#! The next line restarts using tclscidb: \
+#! The next line restarts using tclscidc: \
 exec `dirname $0`/%PROGRAM% "$0" ${1+"$@"}
 
 package require Tcl 8.6
-package require tclscidb
+package require tclscidc
 
 catch { wm withdraw . }
 
@@ -68,7 +68,7 @@ if {$tcl_platform(platform) eq "windows"} {
 		set share $env(SCIDB_SHAREDIR)
 	} else {
 		set share "%SHAREDIR%"
-		if {[string match ?SHAREDIR? $share]} { set share /usr/local/share/scidb-beta }
+		if {[string match ?SHAREDIR? $share]} { set share /usr/local/share/scidc-beta }
 	}
 	set photoDir [file join $share photos]
 } else {

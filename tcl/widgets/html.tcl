@@ -51,17 +51,17 @@ namespace import ::tcl::mathfunc::max
 
 
 proc findHyphenPatterns {lang} {
-	set patternFilename [file join $::scidb::dir::hyphen pattern $lang.dat]
+	set patternFilename [file join $::scidc::dir::hyphen pattern $lang.dat]
 	if {![file readable $patternFilename]} { return { "" {} } }
 	set dictFilenames ""
-	set filename [file join $::scidb::dir::hyphen dict xx.dat]
+	set filename [file join $::scidc::dir::hyphen dict xx.dat]
 	if {[file readable $filename]} { append dictFilenames $filename }
-	set filename [file join $::scidb::dir::hyphen dict $lang.dat]
+	set filename [file join $::scidc::dir::hyphen dict $lang.dat]
 	if {[file readable $filename]} {
 		if {[string length $dictFilenames]} { append dictFilenames ";" }
 		append dictFilenames $filename
 	}
-	set filename [file join $::scidb::dir::home dict $lang.dat]
+	set filename [file join $::scidc::dir::home dict $lang.dat]
 	if {[file readable $filename]} {
 		if {[string length $dictFilenames]} { append dictFilenames ";" }
 		append dictFilenames $filename
@@ -73,7 +73,7 @@ proc findHyphenPatterns {lang} {
 proc preload {lang} {
 	lassign [findHyphenPatterns $lang] patternFilename dictFilenames
 	if {[string length $patternFilename]} {
-		::scidb::misc::html preload $patternFilename $dictFilenames
+		::scidc::misc::html preload $patternFilename $dictFilenames
 	}
 }
 
@@ -85,7 +85,7 @@ proc hyphenate {lang content} {
 #			# don't use German eszet:
 #			set content [string map {"�" "ss"} $content]
 #		}
-		set content [::scidb::misc::html hyphenate $patternFilename $dictFilenames $content]
+		set content [::scidc::misc::html hyphenate $patternFilename $dictFilenames $content]
 	}
 
 	return $content

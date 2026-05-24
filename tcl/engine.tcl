@@ -219,7 +219,7 @@ proc openAdmininstration {parent} {
 	variable Data_
 
 	set dlg $parent.adminEngines
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $top -fill both -expand yes
@@ -473,18 +473,18 @@ proc openSetup {parent {number -1}} {
 		return
 	}
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top -takefocus 0]
 	pack $top -fill both -expand yes
 	set lf [ttk::labelframe $top.engine -text $mc::Select(engine)]
 	set rf [ttk::labelframe $top.profile -text $mc::Select(profile)]
 
-	set memory [::scidb::misc::memFree]
+	set memory [::scidc::misc::memFree]
 	if {$memory == -1} {
 		set memory 256
 	} else {
-		set memory [expr {min(256, [::scidb::misc::predPow2 [expr {$memory/1048576}]])}]
+		set memory [expr {min(256, [::scidc::misc::predPow2 [expr {$memory/1048576}]])}]
 	}
 
 	foreach {attr value} [list \
@@ -495,7 +495,7 @@ proc openSetup {parent {number -1}} {
 		current:name "" \
 		current:protocol UCI \
 		current:memory $memory \
-		current:cores [expr {[::scidb::misc::numberOfProcessors] - 1}] \
+		current:cores [expr {[::scidc::misc::numberOfProcessors] - 1}] \
 		current:priority $::mc::Normal \
 		current:profile Default \
 		engine:name "" \
@@ -698,7 +698,7 @@ proc openEngineLog {parent} {
 
 	if {[logIsOpen? $parent]} { return }
 	if {$parent eq "."} { set dlg .engineLog } else { set dlg $parent.engineLog }
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	set top [ttk::frame $dlg.top -takefocus 0]
 	tk::text $top.text \
 		-width 80 \
@@ -712,7 +712,7 @@ proc openEngineLog {parent} {
 	$top.text tag configure error -foreground [::colors::lookup darkred]
 	$top.text tag configure in -foreground [::colors::lookup darkgreen]
 	$top.text tag configure out -foreground [::colors::lookup black]
-	::scidb::engine::log open [namespace current]::Log $top.text
+	::scidc::engine::log open [namespace current]::Log $top.text
 	ttk::scrollbar $top.hsb -orient horizontal -command [list $top.text xview]
 	ttk::scrollbar $top.vsb -orient vertical -command [list ::widget::textLineScroll $top.text]
 	pack $top -expand yes -fill both
@@ -823,8 +823,8 @@ proc setup {} {
 	variable EmptyEngine
 	variable Engines
 
-	set localFile $::scidb::file::engines
-	set shareFile [file join $::scidb::dir::share engines [file tail $localFile]]
+	set localFile $::scidc::file::engines
+	set shareFile [file join $::scidc::dir::share engines [file tail $localFile]]
 	set localFiletime 0
 	set shareFiletime 0
 
@@ -884,7 +884,7 @@ proc setup {} {
 				array set engine $EmptyEngine
 				array set engine $entry
 				if {!$engine(UserDefined) && ![file executable $engine(Command)]} {
-					set candidate [file join $::scidb::dir::engines [file tail $engine(Command)]]
+					set candidate [file join $::scidc::dir::engines [file tail $engine(Command)]]
 					if {[file executable $candidate]} {
 						set engine(Command) $candidate
 						catch { file stat $candidate st; set engine(FileTime) $st(mtime) }
@@ -932,8 +932,8 @@ proc startEngine {number isReadyCmd signalCmd updateCmd clientData} {
 	set protocol $Vars(current:protocol)
 	if {[string length $engine(Directory)] && [file isdirectory $engine(Directory)]} {
 		set dir $engine(Directory)
-	} elseif {[file isdirectory $::scidb::dir::log]} {
-		set dir $::scidb::dir::log
+	} elseif {[file isdirectory $::scidc::dir::log]} {
+		set dir $::scidc::dir::log
 	} else {
 		set dir [pwd]
 	}
@@ -945,7 +945,7 @@ proc startEngine {number isReadyCmd signalCmd updateCmd clientData} {
 	if {$cmd eq ""} { return [string trim "$engine(Command) $engine(Parameters)"] }
 	if {$cmd eq "no-wine"} { return -2 }
 
-	set id [::scidb::engine::start \
+	set id [::scidc::engine::start \
 		$cmd \
 		$dir \
 		$protocol \
@@ -969,9 +969,9 @@ proc activateEngine {number features} {
 	set Vars(engine:priority) $Vars(current:priority)
 	sendOptions $number $engineId
 	sendFeatures $number $engineId $features
-	::scidb::engine::activate $engineId
+	::scidc::engine::activate $engineId
 	if {$Vars(current:priority) ne "normal"} {
-		::scidb::engine::priority $engineId $Vars(current:priority)
+		::scidc::engine::priority $engineId $Vars(current:priority)
 	}
 }
 
@@ -996,7 +996,7 @@ proc sendFeatures {number engineId features} {
 	if {[info exists engineFeatures(threads)]} { set featureArr(smp) $Vars(current:cores) }
 	if {[info exists engineFeatures(smp)]} { set featureArr(smp) $Vars(current:cores) }
 	if {[info exists engineFeatures(hashSize)]} { set featureArr(hashSize) $Vars(current:memory) }
-	::scidb::engine::setFeatures $engineId [array get featureArr]
+	::scidc::engine::setFeatures $engineId [array get featureArr]
 }
 
 
@@ -1023,7 +1023,7 @@ proc sendOptions {number engineId} {
 					lassign $opt name _ value _ _ _
 					lappend pairs $name $value
 				}
-				::scidb::engine::setOptions $engineId options $pairs
+				::scidc::engine::setOptions $engineId options $pairs
 			}
 			Script {
 				set script ""
@@ -1035,7 +1035,7 @@ proc sendOptions {number engineId} {
 						append script $line "\n"
 					}
 				}
-				::scidb::engine::setOptions $engineId script $script
+				::scidc::engine::setOptions $engineId script $script
 			}
 		}
 	}
@@ -1048,14 +1048,14 @@ proc restartAnalysis {number opponentsView features} {
 	set engineId $Vars(engine:id)
 
 	if {$engineId != -1} {
-		::scidb::engine::analyze stop $engineId
+		::scidc::engine::analyze stop $engineId
 		if {$Vars(current:profile) ne $Vars(engine:profile)} {
 			sendOptions $number $engineId
 		}
 		if {$Vars(current:cores) != $Vars(engine:cores) || $Vars(current:memory) != $Vars(engine:memory)} {
 			sendFeatures $number $engineId $features
 		}
-		::scidb::engine::analyze start $engineId -opponent $opponentsView
+		::scidc::engine::analyze start $engineId -opponent $opponentsView
 	}
 }
 
@@ -1064,7 +1064,7 @@ proc startAnalysis {number} {
 	variable ${number}::Vars
 
 	if {$Vars(engine:id) != -1} {
-		::scidb::engine::analyze start $Vars(engine:id)
+		::scidc::engine::analyze start $Vars(engine:id)
 	}
 }
 
@@ -1073,7 +1073,7 @@ proc stopAnalysis {number} {
 	variable ${number}::Vars
 
 	if {$Vars(engine:id) != -1} {
-		::scidb::engine::analyze stop $Vars(engine:id)
+		::scidc::engine::analyze stop $Vars(engine:id)
 	}
 }
 
@@ -1082,7 +1082,7 @@ proc pause {number} {
 	variable ${number}::Vars
 
 	if {$Vars(engine:id) != -1} {
-		::scidb::engine::pause $Vars(engine:id)
+		::scidc::engine::pause $Vars(engine:id)
 	}
 }
 
@@ -1091,7 +1091,7 @@ proc resume {number} {
 	variable ${number}::Vars
 
 	if {$Vars(engine:id) != -1} {
-		::scidb::engine::resume $Vars(engine:id)
+		::scidc::engine::resume $Vars(engine:id)
 	}
 }
 
@@ -1110,7 +1110,7 @@ proc kill {number} {
 	set engineId $Vars(engine:id)
 
 	if {$engineId != -1} {
-		::scidb::engine::kill $engineId
+		::scidc::engine::kill $engineId
 		set Vars(engine:name) ""
 		set Vars(engine:profile) ""
 		set Vars(engine:id) -1
@@ -1161,7 +1161,7 @@ proc StartEngine {number list} {
 	wm withdraw [winfo toplevel $list]
 	update idletasks
 
-	if {$Vars(engine:id) >= 0 && [::scidb::engine::active? $Vars(engine:id)]} {
+	if {$Vars(engine:id) >= 0 && [::scidc::engine::active? $Vars(engine:id)]} {
 		if {$Vars(current:protocol) ne $Vars(engine:protocol)} {
 			::application::analysis::startAnalysis $number
 		} else {
@@ -1174,7 +1174,7 @@ proc StartEngine {number list} {
 			}
 			if {$Vars(current:priority) ne $Vars(engine:priority)} {
 				set Vars(engine:priority) $Vars(current:priority)
-				::scidb::engine::priority $engineId $Vars(current:priority)
+				::scidc::engine::priority $engineId $Vars(current:priority)
 			}
 		}
 	} else {
@@ -1225,7 +1225,7 @@ proc SetPriority {number} {
 
 
 proc RoundMem {mem} {
-	set m [::scidb::misc::predPow2 $mem]
+	set m [::scidc::misc::predPow2 $mem]
 	set m2 [expr {$m + $m/2}]
 	if {$m2 <= $mem} { return $m2 }
 	return $m
@@ -1233,14 +1233,14 @@ proc RoundMem {mem} {
 
 
 proc MemAvail {} {
-	set mem [::scidb::misc::memAvail]
+	set mem [::scidc::misc::memAvail]
 	if {$mem <= 0} { return 2048 }
 	return [RoundMem [expr {$mem/1048576}]]
 }
 
 
 proc MemTotal {} {
-	set mem [::scidb::misc::memTotal]
+	set mem [::scidc::misc::memTotal]
 	if {$mem <= 0} { return 2048 }
 	return [RoundMem [expr {$mem/1048576}]]
 }
@@ -1299,12 +1299,12 @@ proc UseEngine {number list item profileList} {
 			set max [MemAvail]
 		} else {
 			lassign $features(hashSize) min max
-			set min2 [expr {max(16, [::scidb::misc::succPow2 $min])}]
+			set min2 [expr {max(16, [::scidc::misc::succPow2 $min])}]
 			set nmin [expr {$min2 + $min2/2}]
 			if {$nmin <= $min} { set min $nmin } else { set min $min2 }
 			set max [expr {min($max, [MemAvail])}]
 		}
-		set free [::scidb::misc::memFree]
+		set free [::scidc::misc::memFree]
 		if {$free >= 0} {
 			set free [expr {$free/1048576}]
 			if {$max > 0 } { set free [expr {min($free, $max)}] }
@@ -1314,11 +1314,11 @@ proc UseEngine {number list item profileList} {
 			set options {}
 			if {$min > $free} { lappend options -foreground gray40 }
 			$Vars(widget:memory) listinsert $min {*}$options
-			set incr [expr {[::scidb::misc::predPow2 $min]/2}]
+			set incr [expr {[::scidc::misc::predPow2 $min]/2}]
 			set last $min
 			incr min $incr
 		}
-		set avail [::scidb::misc::memAvail]
+		set avail [::scidc::misc::memAvail]
 		if {$avail > $last} {
 			$Vars(widget:memory) listinsert $min -foreground gray40
 		}
@@ -1333,7 +1333,7 @@ proc UseEngine {number list item profileList} {
 	}
 
 	if {[info exists features(smp)] || [info exists features(threads)]} {
-		set ncpus [::scidb::misc::numberOfProcessors]
+		set ncpus [::scidc::misc::numberOfProcessors]
 		if {[info exists features(threads)]} {
 			lassign $features(threads) min max
 			set ncpus [expr {min($max, $ncpus)}]
@@ -1368,7 +1368,7 @@ proc SetupClearHash {number engineName} {
 		set protocol $Vars(current:protocol)
 		array set features $engine(Features:$protocol)
 
-		if {$Vars(engine:id) == -1 || ![::scidb::engine::active? $Vars(engine:id)]} {
+		if {$Vars(engine:id) == -1 || ![::scidc::engine::active? $Vars(engine:id)]} {
 			set state disabled
 		} elseif {[info exists features(clearHash)]} {
 			set state normal
@@ -1391,7 +1391,7 @@ proc SetTitle {number list} {
 
 
 proc CloseLog {dlg} {
-	::scidb::engine::log close
+	::scidc::engine::log close
 	destroy $dlg
 }
 
@@ -1598,7 +1598,7 @@ proc TabChanged {} {
 
 proc GetImage {file} {
 	set img ""
-	catch { set img [image create photo -file [file join $::scidb::dir::images $file]] }
+	catch { set img [image create photo -file [file join $::scidc::dir::images $file]] }
 	return $img
 }
 
@@ -1780,7 +1780,7 @@ proc RenameProfile {number parent} {
 	if {$profileName eq "Default"} { set profileName $::mc::Default }
 	set OldProfile_ $profileName
 
-	set dlg [tk::toplevel $parent.renameProfile -class Scidb]
+	set dlg [tk::toplevel $parent.renameProfile -class Scidc]
 	pack [set top [ttk::frame $dlg.top -takefocus 0]]
 	wm withdraw $dlg
 
@@ -1844,7 +1844,7 @@ proc NewProfile {number parent} {
 	variable CopyFrom_ ""
 	variable ${number}::Vars
 
-	set dlg [tk::toplevel $parent.newProfile -class Scidb]
+	set dlg [tk::toplevel $parent.newProfile -class Scidc]
 	pack [set top [ttk::frame $dlg.top -takefocus 0]]
 	wm withdraw $dlg
 
@@ -1962,7 +1962,7 @@ proc OpenSetupDialog(Script) {number parent} {
 	array set profiles $engine(Profiles:WB)
 	set script $profiles($Vars(current:profile))
 
-	set dlg [tk::toplevel $parent.confScript -class Scidb]
+	set dlg [tk::toplevel $parent.confScript -class Scidc]
 #	pack [set top [ttk::frame $dlg.top -takefocus 0]] -fill both -expand yes
 	pack [set main [tk::panedwindow $dlg.main -orient vertical -opaqueresize true]] -fill both -expand yes
 	wm withdraw $dlg
@@ -1986,7 +1986,7 @@ proc OpenSetupDialog(Script) {number parent} {
 		-undo yes \
 		-font TkFixedFont \
 		;
-	::scidb::tk::misc setClass $edit.txt Script
+	::scidc::tk::misc setClass $edit.txt Script
 	ttk::scrollbar $edit.hsb -orient horizontal -command [list $edit.txt xview]
 	ttk::scrollbar $edit.vsb -orient vertical -command [list $edit.txt yview]
 	grid $edit.txt -row 1 -column 1 -sticky nsew
@@ -2212,7 +2212,7 @@ proc OpenSetupDialog(Options) {number parent} {
 
 	if {[winfo workareawidth $parent] >= 1500} { set vertical 0 } else { set vertical 1 }
 
-	set dlg [tk::toplevel $parent.confOptions -class Scidb]
+	set dlg [tk::toplevel $parent.confOptions -class Scidc]
 #	if {$vertical} { set expand x } else { set expand y }
 #	set scrolled [::scrolledframe $dlg.top -expand $expand]
 	set scrolled [::scrolledframe $dlg.top]
@@ -2364,7 +2364,7 @@ proc OpenSetupDialog(Options) {number parent} {
 					;
 				if {	$Vars(engine:name) ne $Vars(current:name)
 					|| $Vars(engine:id) == -1
-					|| ![::scidb::engine::active? $Vars(engine:id)]} {
+					|| ![::scidc::engine::active? $Vars(engine:id)]} {
 					$val configure -state disabled
 				}
 			}
@@ -2446,7 +2446,7 @@ proc OpenSetupDialog(Options) {number parent} {
 
 proc InvokeButton {number name} {
 	variable ${number}::Vars
-	::scidb::engine::invoke $Vars(engine:id) $name
+	::scidc::engine::invoke $Vars(engine:id) $name
 }
 
 
@@ -2495,8 +2495,8 @@ proc ClearHash {number} {
 	variable ${number}::Vars
 
 	if {$Vars(engine:id) == -1} { return }
-	if {![::scidb::engine::active? $Vars(engine:id)]} { return }
-	::scidb::engine::clearHash $Vars(engine:id)
+	if {![::scidc::engine::active? $Vars(engine:id)]} { return }
+	::scidc::engine::clearHash $Vars(engine:id)
 	::application::analysis::clearHash $number
 }
 
@@ -2521,7 +2521,7 @@ proc GetPath(file) {parent key dflt dir} {
 	}
 
 	set initialdir $dir
-	if {[string length $initialdir] == 0} { set initialdir $::scidb::dir::home }
+	if {[string length $initialdir] == 0} { set initialdir $::scidc::dir::home }
 
 	set result [::dialog::openFile \
 		-parent $parent \
@@ -2556,7 +2556,7 @@ proc GetPath(path) {parent key dflt dir} {
 	if {[string length $dflt] > 0 && [file isdirectory $dflt]} {
 		set initialdir $dflt
 	} elseif {[string length $dir] == 0} {
-		set initialdir $::scidb::dir::home
+		set initialdir $::scidc::dir::home
 	} else {
 		set initialdir $dir
 	}
@@ -2845,7 +2845,7 @@ proc ProbeEngine {parent entry protocols} {
 
 	set supportedProtocols {}
 	set cmd [Command $engine(Command) $engine(Parameters)]
-	set wait [tk::toplevel $parent.wait -class Scidb]
+	set wait [tk::toplevel $parent.wait -class Scidc]
 	wm withdraw $wait
 	pack [tk::frame $wait.f -border 2 -relief raised]
 	pack [tk::label $wait.f.text -text "$mc::Probing..."] -padx 10 -pady 10
@@ -2858,7 +2858,7 @@ proc ProbeEngine {parent entry protocols} {
 	wm transient $wait $parent
 	::util::place $wait -parent $parent -position center
 	update idletasks
-	::scidb::tk::wm frameless $wait
+	::scidc::tk::wm frameless $wait
 	wm deiconify $wait
 	::ttk::grabWindow $wait
 	::widget::busyCursor on
@@ -2866,7 +2866,7 @@ proc ProbeEngine {parent entry protocols} {
 	update idletasks
 
 	foreach prot $protocols {
-		set res [::scidb::engine::probe $cmd $::scidb::dir::log $prot $timeout]
+		set res [::scidc::engine::probe $cmd $::scidc::dir::log $prot $timeout]
 
 		switch [lindex $res 0] {
 			failed - undecidable {}
@@ -2925,8 +2925,8 @@ proc ProbeEngine {parent entry protocols} {
 				if {$max > 0 && $min >= $max} {
 					array unset fts hashSize
 				} else {
-					set min [::scidb::misc::succPow2 $min]
-					if {$max > 0} { set max [::scidb::misc::predPow2 $max] }
+					set min [::scidc::misc::succPow2 $min]
+					if {$max > 0} { set max [::scidc::misc::predPow2 $max] }
 					set fts(hashSize) [list $min $max]
 				}
 			}
@@ -2962,7 +2962,7 @@ proc ProbeEngine {parent entry protocols} {
 	array unset result
 	set result {}
 	if {[string length $engine(Name)]} {
-		set result [::scidb::engine::info $engine(Name)]
+		set result [::scidc::engine::info $engine(Name)]
 	} else {
 		set engine(Name) $engine(Identifier)
 	}
@@ -2987,13 +2987,13 @@ proc ProbeEngine {parent entry protocols} {
 	}
 
 	set dir [string map {" " "-"} $engine(ShortId)]
-	set engine(Directory) [file join $::scidb::dir::user engines $dir]
+	set engine(Directory) [file join $::scidc::dir::user engines $dir]
 
 	if {	"WB" in $engine(Protocol)
 		&& [lindex $engine(Profiles:WB) 0] eq "Default"
 		&& [string length [lindex $engine(Profiles:WB) 1]] == 0} {
-		set sharedir [file join $::scidb::dir::share engines]
-		set script [file join $::scidb::dir::share engines $engine(ShortId).dat]
+		set sharedir [file join $::scidc::dir::share engines]
+		set script [file join $::scidc::dir::share engines $engine(ShortId).dat]
 		if {[file readable $script]} {
 			lset engine(Profiles:WB) 1 [::file::read $script -encoding utf-8]
 		}
@@ -3081,7 +3081,7 @@ proc SaveEngine {list} {
 
 
 proc SaveEngineList {} {
-	set filename $::scidb::file::engines
+	set filename $::scidc::file::engines
 	set f [open $filename.tmp "w"]
 	fconfigure $f -encoding utf-8
 
@@ -3176,7 +3176,7 @@ proc NewEngine {list} {
 		-class engine \
 		-geometry last \
 		-title $mc::SelectEngine \
-		-initialdir $::scidb::dir::engines \
+		-initialdir $::scidc::dir::engines \
 		-filetypes [list [list $::dialog::fsbox::mc::FileType(exe) {x}]] \
 	]
 	if {[llength $result] == 0} { return }
@@ -3200,7 +3200,7 @@ proc NewEngine {list} {
 		if {$file eq $engine(Command)} { lappend entries $entry }
 	}
 	if {[llength $entries] > 0} {
-		set dlg [tk::toplevel $parent.chooseCopy -class Scidb]
+		set dlg [tk::toplevel $parent.chooseCopy -class Scidc]
 		set top [ttk::frame $dlg.top -takefocus 0]
 		pack $top -fill both
 		ttk::label $top.msg -text $mc::EngineAlreadyExists
@@ -3410,13 +3410,13 @@ proc MakePhotos {logo file} {
 			set h $Logo(height)
 		}
 		set tmp [image create photo -width $w -height $h]
-		::scidb::tk::image copy $img $tmp
+		::scidc::tk::image copy $img $tmp
 		image delete $img
 		set img $tmp
 	}
 
 	set img2 [image create photo -width $w -height $h]
-	::scidb::tk::image disable $img $img2 150
+	::scidc::tk::image disable $img $img2 150
 	set Photo($logo) [list $file $img $img2]
 }
 
@@ -3483,7 +3483,7 @@ proc GetDirectory {parent list} {
 
 	set result [::dialog::chooseDir \
 		-parent $parent \
-		-initialdir $::scidb::dir::home \
+		-initialdir $::scidc::dir::home \
 		-showhidden yes \
 		-geometry last \
 	]
@@ -3556,10 +3556,10 @@ proc LoadSharedConfiguration {file} {
 		array unset engine
 		array set engine $entry
 
-		set engine(Command) "[file join $::scidb::dir::engines $engine(Command)]"
+		set engine(Command) "[file join $::scidc::dir::engines $engine(Command)]"
 
 		if {[file executable $engine(Command)]} {
-			set result [::scidb::engine::info $engine(Name)]
+			set result [::scidc::engine::info $engine(Name)]
 			if {[llength $result]} {
 				lassign $result _ Country _ CCRL _ _ _ Url _
 				# We don't like to set the ELO value
@@ -3575,11 +3575,11 @@ proc LoadSharedConfiguration {file} {
 			set engine(Timestamp) 0
 			if {![info exists engine(Directory)]} {
 				set dir [file tail $engine(Command)]
-				set engine(Directory) [file normalize [file join $::scidb::dir::user engines $dir]]
+				set engine(Directory) [file normalize [file join $::scidc::dir::user engines $dir]]
 			}
 			if {![file isdirectory $engine(Directory)]} {
 				file mkdir $engine(Directory)
-				set sharedir [file join $::scidb::dir::share engines [file tail $engine(Command)]]
+				set sharedir [file join $::scidc::dir::share engines [file tail $engine(Command)]]
 				set sharedir [file normal $sharedir]
 				if {$sharedir ne $engine(Directory) && [file isdirectory $sharedir]} {
 					set files [glob -directory $sharedir -nocomplain *]

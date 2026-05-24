@@ -171,7 +171,7 @@
 ::mc::VariantName(Shuffle)			"Shuffle Chess" ;# NEW
 
 ### themes #############################################################
-::scidb::themes::mc::CannotOverwriteTheme	"Kan inte skriva över tema %s."
+::scidc::themes::mc::CannotOverwriteTheme	"Kan inte skriva över tema %s."
 
 ### file ###############################################################
 ::file::mc::CheckPermissions	"Check file permissions." ;# NEW
@@ -265,7 +265,7 @@
 ### menu ###############################################################
 ::menu::mc::Theme								"Tema"
 ::menu::mc::ColorScheme						"Color Scheme" ;# NEW
-::menu::mc::CustomStyleMenu				"Scidb's Style Menu" ;# NEW
+::menu::mc::CustomStyleMenu				"Scidc's Style Menu" ;# NEW
 ::menu::mc::DefaultStyleMenu				"Default Style Menu" ;# NEW
 ::menu::mc::OrdinaryMonitor				"Ordinary Monitor" ;# NEW
 ::menu::mc::HighQualityMonitor			"High Quality Monitor" ;# NEW
@@ -289,7 +289,7 @@
 ::menu::mc::Language						"&Språk"
 ::menu::mc::Toolbars						"&Verktygsfält"
 ::menu::mc::ShowLog						"Visa &Log"
-::menu::mc::AboutScidb					"&Om Scidb"
+::menu::mc::AboutScidb					"&Om Scidc"
 ::menu::mc::TipOfTheDay					"Tip of the &Day" ;# NEW
 ::menu::mc::Fullscreen					"&Helskärm"
 ::menu::mc::LeaveFullscreen			"Lämna &helskärm"
@@ -331,8 +331,8 @@
 
 # Default Application
 ::menu::mc::Assign							"assign" ;# NEW
-::menu::mc::FailedSettingDefaultApp		"Failed to set Scidb as a default application for %s." ;# NEW
-::menu::mc::SuccessSettingDefaultApp	"Successfully set Scidb as a default application for %s." ;# NEW
+::menu::mc::FailedSettingDefaultApp		"Failed to set Scidc as a default application for %s." ;# NEW
+::menu::mc::SuccessSettingDefaultApp	"Successfully set Scidc as a default application for %s." ;# NEW
 ::menu::mc::CommandFailed					"Command '%s' failed." ;# NEW
 
 ### load ###############################################################
@@ -392,7 +392,7 @@
 ::tips::mc::CouldNotFindAnyTip   "Could not find any tip." ;# NEW
 ::tips::mc::RepeatAllTips        "Repeat all tips (restart from the beginning)" ;# NEW
 ::tips::mc::NextTip              "Next Tip" ;# NEW
-::tips::mc::FirstTip             "<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidb!</b></p>" ;# NEW
+::tips::mc::FirstTip             "<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidc!</b></p>" ;# NEW
 
 ::tips::mc::Choice(everytime)             "Show everytime" ;# NEW
 ::tips::mc::Choice(periodically)          "Show periodically" ;# NEW
@@ -560,7 +560,7 @@
 ::application::information::mc::RemoveSelectedDatabase "Remove selected database from history" ;# NEW
 ::application::information::mc::ClearHistory             "Clear entire history" ;# NEW
 ::application::information::mc::NewsAvailable          "There are updatednews available" ;# NEW
-::application::information::mc::NoInternetConnection   "Information: Scidb cannot connect to Internet." ;# NEW
+::application::information::mc::NoInternetConnection   "Information: Scidc cannot connect to Internet." ;# NEW
 
 ### application::database ##############################################
 ::application::database::mc::FileOpen							"Öppna databas"

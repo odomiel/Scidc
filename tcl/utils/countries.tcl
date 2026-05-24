@@ -686,7 +686,7 @@ proc countryFlag {code} {
 
 	if {[llength $code] == 0} { return {} }
 	if {[info exists _Flags($code)]} { return [set _Flags($code)] }
-	set file [file join $::scidb::dir::share flags $code.png]
+	set file [file join $::scidc::dir::share flags $code.png]
 	if {[catch {set _Flags($code) [image create photo -file $file]}]} { return {} }
 	return [set _Flags($code)]
 }
@@ -6660,8 +6660,8 @@ set flag(ZZX) [image create photo -data {
 } ;# namespace 32x32
 } ;# namespace icon
 
-if {[::scidb::misc::debug?]} {
-	set countries [::scidb::app::get countryCodes]
+if {[::scidc::misc::debug?]} {
+	set countries [::scidc::app::get countryCodes]
 
 	foreach r $regions {
 		foreach item [set region($r)] {
@@ -6672,7 +6672,7 @@ if {[::scidb::misc::debug?]} {
 			if {![info exists icon::flag($code)]} {
 				puts stderr "Missing tiny flag for country code $code"
 			}
-			set file [file join $::scidb::dir::share flags $code.png]
+			set file [file join $::scidc::dir::share flags $code.png]
 			if {![file readable $file]} {
 				puts "File $file is missing"
 			}

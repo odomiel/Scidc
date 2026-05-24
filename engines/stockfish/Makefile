@@ -4,7 +4,7 @@
 
 include ../../Makefile.in
 
-EXE = stockfish-scidb
+EXE = stockfish-scidc
 
 all:
 	@true

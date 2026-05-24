@@ -1,11 +1,11 @@
 # check-build.tcl
 
 destroy .
-if {[catch {::scidb::app::initialized?} err]} {
+if {[catch {::scidc::app::initialized?} err]} {
 	puts "FAILED"
 	return
 }
-if {[catch {::scidb::app::load eco [file join data eco.bin]} err]} {
+if {[catch {::scidc::app::load eco [file join data eco.bin]} err]} {
 	puts "FAILED"
 	return
 }

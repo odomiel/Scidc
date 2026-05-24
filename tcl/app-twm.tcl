@@ -198,7 +198,7 @@ proc toVariant {layoutVariant} {
 
 
 proc makeDir {id layoutVariant} {
-	set dir [file join $::scidb::dir::layout $id]
+	set dir [file join $::scidc::dir::layout $id]
 	if {$layoutVariant ne "normal"} { set dir [file join $dir $layoutVariant] }
 	return $dir
 }
@@ -1510,7 +1510,7 @@ proc SaveLayout {twm parent cmd name title} {
 		}
 	}
 	set names [glob $id]
-	set dlg [tk::toplevel $parent.save -class Scidb]
+	set dlg [tk::toplevel $parent.save -class Scidc]
 	pack [set top [ttk::frame $dlg.top -borderwidth 0 -takefocus 0]]
 	set cb [ttk::combobox $top.input \
 		-height 10 \
@@ -1731,9 +1731,9 @@ proc Amalgamate {twm frame} {
 
 proc CurrentLayoutVariant {id} {
 	if {$id ne "board"} {
-		set variant [::scidb::db::get variant?]
-	} elseif {[::scidb::game::current] >= 0} {
-		set variant [::scidb::game::query variant?]
+		set variant [::scidc::db::get variant?]
+	} elseif {[::scidc::game::current] >= 0} {
+		set variant [::scidc::game::query variant?]
 	} else {
 		return "normal" ;# no game exists before startup has been completed
 	}

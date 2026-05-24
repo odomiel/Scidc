@@ -55,7 +55,7 @@ set TheMissingOnes		"the missing ones"
 
 set Version					"Version"
 set Distributed			"This program is distributed under the terms of the GNU General Public License."
-set Inspired				"Scidb is inspired by Scid 3.6.1, copyrighted \u00A9 1999-2003 by Shane Hudson."
+set Inspired				"Scidc is inspired by Scid 3.6.1, copyrighted \u00A9 1999-2003 by Shane Hudson."
 set SpecialThanks			"Special thanks to %s for his terrific work. His effort is the basis for this application."
 
 } ;# namespace mc
@@ -69,12 +69,12 @@ proc openDialog {parent} {
 	if {[winfo exists $dlg]} {
 		::widget::dialogRaise $dlg
 	} else {
-		tk::toplevel $dlg -class $::scidb::app
+		tk::toplevel $dlg -class $::scidc::app
 		wm iconname $dlg ""
 		wm withdraw $dlg
 		BuildDialog $dlg
 		wm protocol $dlg WM_DELETE_WINDOW [list destroy $dlg]
-		wm title $dlg [format [set [namespace current]::mc::InfoTitle] $::scidb::app]
+		wm title $dlg [format [set [namespace current]::mc::InfoTitle] $::scidc::app]
 		wm resizable $dlg 0 0
 #		wm transient $dlg [winfo toplevel $parent]
 		util::place $dlg -parent [winfo toplevel $parent] -position center
@@ -151,7 +151,7 @@ proc DisplayAbout {w} {
 		<link/>
 		<table border='0' style='font-family: Final Frontier, $fam; font-size: 16pt;' color='$tableColor'>
 			<tr>
-				<td><img src='Scidb-Logo-128'/></td>
+				<td><img src='Scidc-Logo-128'/></td>
 				<td width='30px'></td>
 				<td align='center'>
 					<font style='font-size: 48pt;'><font color='$accentColor'>S</font>cidb</font><br/>
@@ -165,7 +165,7 @@ proc DisplayAbout {w} {
 		</table>
 		<br/><br/>
 		<font style='font-family: $fam; font-size: 12pt;'>
-			$mc::Version $::scidb::version<br/>
+			$mc::Version $::scidc::version<br/>
 			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/><br/>
 			[Url http://scidb.sourceforge.net]<br/><br/>
 			$mc::Distributed<br/><br/>
@@ -178,7 +178,7 @@ proc DisplayAbout {w} {
 proc GetImage {name} {
 	variable Images
 
-	set file [file join $::scidb::dir::images $name.png]
+	set file [file join $::scidc::dir::images $name.png]
 	if {[catch { set img [image create photo -file $file] }]} {
 		set src $::help::icon::16x16::broken
 		set img [image create photo -width [image width $src] -height [image height $src]]
@@ -560,7 +560,7 @@ proc BuildSystemFrame {w} {
 	global tcl_platform
 
 	set padding 40
-	set total [::scidb::misc::memTotal]
+	set total [::scidc::misc::memTotal]
 	if {$total == -1} { set total "" }
 	
 	set xft ""
@@ -620,7 +620,7 @@ proc BuildSystemFrame {w} {
 proc GetOSImage {os} {
 	variable Images
 
-	set file [file join $::scidb::dir::images OS-$os.png]
+	set file [file join $::scidc::dir::images OS-$os.png]
 	if {[catch { set img [image create photo -file $file] }]} {
 		set src $::help::icon::16x16::broken
 		set img [image create photo -width [image width $src] -height [image height $src]]

@@ -267,14 +267,14 @@ proc openDialog {parent figurines} {
 	variable figurines_
 
 	set figurines_ $figurines
-	set dlg [tk::toplevel $parent.figurines -class Scidb]
+	set dlg [tk::toplevel $parent.figurines -class Scidc]
 	::widget::dialogButtons $dlg close
 	$dlg.close configure -command [list destroy $dlg]
 	pack [set f [listbox $dlg.list -frametype frame]]
 	$f select $figurines
 	::bind $f <<ListboxSelect>> [list set [namespace current]::figurines_ %d]
 	wm withdraw $dlg
-	wm title $dlg "$::scidb::app - $::pgn::setup::mc::Setup(MoveStyle)"
+	wm title $dlg "$::scidc::app - $::pgn::setup::mc::Setup(MoveStyle)"
 	wm resizable $dlg no no
 	::util::place $dlg -parent $parent -position center
 	wm transient $dlg [winfo toplevel $parent]

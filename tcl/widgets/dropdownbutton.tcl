@@ -336,7 +336,7 @@ proc SetIcon {w height} {
 		foreach {state attr} {normal foreground active activeforeground disabled disabledforeground} {
 			set img [image create photo -height $size -width [expr {$size + 1}]]
 			set svg [string map [list FILL $Priv(arrow$attr)] $svg::arrow]
-			::scidb::tk::image create svg $img
+			::scidc::tk::image create svg $img
 			set Icons($size:$state) $img
 		}
 	}

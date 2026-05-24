@@ -1123,7 +1123,7 @@ proc DrawFadingPiece {w sq piece dir} {
 			RaiseInput $w
 		}
 
-		::scidb::tk::image disable \
+		::scidc::tk::image disable \
 			photo_Piece($piece,$Board(size)) \
 			$Board(animate,piece) \
 			[expr {round($Board(animate,opacity))}] \
@@ -1263,8 +1263,8 @@ proc MakeSquare {squareSize color} {
 	if {($squareSize % 2) != ($size % 2)} { incr size }
 	set img [image create photo -width $size -height $size]
 	set svg [string map [list \#c# $color] $Rectangle]
-	::scidb::tk::image create svg $img
-	::scidb::tk::image alpha 0.8 $img -composite overlay
+	::scidc::tk::image create svg $img
+	::scidc::tk::image alpha 0.8 $img -composite overlay
 	return $img
 }
 
@@ -1313,7 +1313,7 @@ proc MakePromoImage {w {method ""}} {
 				set s [expr {($size*2)/5}]
 				if {$s % 2 == 0} { incr s }
 				set star [image create photo -width $s -height $s]
-				::scidb::tk::image create [namespace current]::Star $star
+				::scidc::tk::image create [namespace current]::Star $star
 				set x1 [expr {($size - $s)/2}]
 				set y1 [expr {$size - $s - 2}]
 				$img copy $star -to $x1 $y1 [expr {$x1 + $s}] [expr {$y1 + $s}]
@@ -1321,11 +1321,11 @@ proc MakePromoImage {w {method ""}} {
 			disk {
 				variable Disk
 				set tmp [image create photo -width [image width $Disk] -height [image height $Disk]]
-				::scidb::tk::image copy $Disk $tmp
-				::scidb::tk::image colorize orange 0.7 $tmp
-				::scidb::tk::image copy $tmp $img
+				::scidc::tk::image copy $Disk $tmp
+				::scidc::tk::image colorize orange 0.7 $tmp
+				::scidc::tk::image copy $tmp $img
 				image delete $tmp
-				#::scidb::tk::image alpha 0.9 $img -composite overlay
+				#::scidc::tk::image alpha 0.9 $img -composite overlay
 			}
 		}
 	}
@@ -1341,10 +1341,10 @@ proc MakeCircle {squareSize color} {
 	if {($squareSize % 2) != ($size % 2)} { incr size }
 	set tmp [image create photo -width [image width $Circle] -height [image height $Circle]]
 	$tmp copy $Circle
-	::scidb::tk::image colorize $color 0.7 $tmp
+	::scidc::tk::image colorize $color 0.7 $tmp
 	set img [image create photo -width $size -height $size]
-	::scidb::tk::image copy $tmp $img
-	::scidb::tk::image alpha 0.8 $img -composite overlay
+	::scidc::tk::image copy $tmp $img
+	::scidc::tk::image alpha 0.8 $img -composite overlay
 	image delete $tmp
 	return $img
 }
@@ -1367,10 +1367,10 @@ proc MakeDisk {squareSize color} {
 	if {($squareSize % 2) != ($size % 2)} { incr size }
 	set tmp [image create photo -width [image width $Disk] -height [image height $Disk]]
 	$tmp copy $Disk
-	::scidb::tk::image colorize $color 0.7 $tmp
+	::scidc::tk::image colorize $color 0.7 $tmp
 	set img [image create photo -width $size -height $size]
-	::scidb::tk::image copy $tmp $img
-	::scidb::tk::image alpha 0.8 $img -composite overlay
+	::scidc::tk::image copy $tmp $img
+	::scidc::tk::image alpha 0.8 $img -composite overlay
 	image delete $tmp
 	return $img
 }
@@ -1621,7 +1621,7 @@ proc MakeArrow {size rows cols color type} {
 
 	set img [image create photo -width $length -height $length]
 	# NOTE: for any reason the resulting arrow is not anti-aliased
-	::scidb::tk::image create svg $img -scale $scalef -rotate $rot
+	::scidc::tk::image create svg $img -scale $scalef -rotate $rot
 
 	if {$ncols != $nrows} {
 		set w [expr {min($length, int(1.2*max(1, $ncols)*$size + 0.5))}]

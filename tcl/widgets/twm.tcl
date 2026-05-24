@@ -385,7 +385,7 @@ proc SetupTheme {twm} {
 	set Options(header:tab:foreground) \
 		[expr {[string length $tabfg] ? $tabfg : $Defaults(header:tab:foreground)}]
 
-	if {[::scidb::tk::twm exists $twm]} {
+	if {[::scidc::tk::twm exists $twm]} {
 		if {[string length [set background $Vars(panedwindow:background)]] == 0} {
 			set background [GetBackground background]
 		}
@@ -412,104 +412,104 @@ proc WidgetProc {twm command args} {
 	variable ${twm}::Vars
 
 	switch -- $command {
-		adjacent			{ return [::scidb::tk::twm adjacent $twm {*}$args] }
+		adjacent			{ return [::scidc::tk::twm adjacent $twm {*}$args] }
 		adjust			{ return [Adjust $twm {*}$args] }
-		amalgamatable	{ return [::scidb::tk::twm amalgamatable $twm {*}$args] }
+		amalgamatable	{ return [::scidc::tk::twm amalgamatable $twm {*}$args] }
 		amalgamate		{ return [Amalgamate $twm 1 {*}$args] }
-		amalgamated		{ return [::scidb::tk::twm amalgamated $twm {*}$args] }
+		amalgamated		{ return [::scidc::tk::twm amalgamated $twm {*}$args] }
 		build				{ return [BuildPane $twm {*}$args] }
 		cget				{ return [$twm.__twm_frame__ cget {*}$args] }
-		changeuid		{ return [::scidb::tk::twm changeuid $twm {*}$args] }
+		changeuid		{ return [::scidc::tk::twm changeuid $twm {*}$args] }
 		childconfigure	{ return [ChildConfigure $twm {*}$args] }
-		clone				{ return [::scidb::tk::twm clone $twm {*}$args] }
+		clone				{ return [::scidc::tk::twm clone $twm {*}$args] }
 		close				{ return [Close $twm {*}$args] }
 		collect			{ return [Collect $twm {*}$args] }
 		compare			{ return [compareLayouts $twm {*}$args] }
 		configure		{ return [$twm.__twm_frame__ configure {*}$args] }
-		container		{ return [::scidb::tk::twm container $twm {*}$args] }
+		container		{ return [::scidc::tk::twm container $twm {*}$args] }
 		deiconify		{ return [Deiconify $twm {*}$args] }
 		destroy			{ DestroyPane $twm {*}$args }
-		dimension		{ return [::scidb::tk::twm dimension $twm {*}$args] }
+		dimension		{ return [::scidc::tk::twm dimension $twm {*}$args] }
 		fullscreen		{ return [Fullscreen $twm {*}$args] }
 		geometry			{ return [Geometry $twm {*}$args] }
-		dock				{ return [::scidb::tk::twm dock $twm {*}$args] }
-		dump				{ return [::scidb::tk::twm dump $twm {*}$args] }
-		eqp?				{ return [::scidb::tk::twm eqp $twm {*}$args] }
-		exists			{ return [::scidb::tk::twm exists $twm {*}$args] }
-		find				{ return [::scidb::tk::twm find $twm {*}$args] }
+		dock				{ return [::scidc::tk::twm dock $twm {*}$args] }
+		dump				{ return [::scidc::tk::twm dump $twm {*}$args] }
+		eqp?				{ return [::scidc::tk::twm eqp $twm {*}$args] }
+		exists			{ return [::scidc::tk::twm exists $twm {*}$args] }
+		find				{ return [::scidc::tk::twm find $twm {*}$args] }
 		flat?				{ return [HasFlatHeader $twm {*}$args] }
-		floats			{ return [::scidb::tk::twm floats $twm] }
+		floats			{ return [::scidc::tk::twm floats $twm] }
 		frame				{ return [MakeFrame $twm frame {*}$args] }
 		frame2			{ MakeFrame2 $twm {*}$args }
 		framehdrsize	{ return [FrameHeaderSize $twm {*}$args] }
-		frames			{ return [::scidb::tk::twm frames $twm {*}$args] }
+		frames			{ return [::scidc::tk::twm frames $twm {*}$args] }
 		frozen?			{ return [expr {[set [namespace current]::Frozen] eq $twm}] }
-		get				{ return [::scidb::tk::twm get $twm {*}$args] }
-		get!				{ return [::scidb::tk::twm get! $twm {*}$args] }
+		get				{ return [::scidc::tk::twm get $twm {*}$args] }
+		get!				{ return [::scidc::tk::twm get! $twm {*}$args] }
 		header			{ UpdateHeader $twm {*}$args }
 		headerfontsize	{ return [HeaderFontSize $twm {*}$args] }
-		headerframes	{ return [::scidb::tk::twm headerframes $twm] }
-		hidden			{ return [::scidb::tk::twm hidden $twm {*}$args] }
+		headerframes	{ return [::scidc::tk::twm headerframes $twm] }
+		hidden			{ return [::scidc::tk::twm hidden $twm {*}$args] }
 		hide				{ Hide $twm {*}$args }
-		id					{ return [::scidb::tk::twm id $twm {*}$args] }
-		init				{ ::scidb::tk::twm init $twm -aligntimeout $Vars(panedwindow:timeout) {*}$args }
-		inspect			{ return [::scidb::tk::twm inspect $twm \
+		id					{ return [::scidc::tk::twm id $twm {*}$args] }
+		init				{ ::scidc::tk::twm init $twm -aligntimeout $Vars(panedwindow:timeout) {*}$args }
+		inspect			{ return [::scidc::tk::twm inspect $twm \
 											flat hide stayontop amalgamate fullscreen {*}$args] }
-		iscontainer		{ return [::scidb::tk::twm iscontainer $twm {*}$args] }
-		isdocked			{ return [::scidb::tk::twm isdocked $twm {*}$args] }
+		iscontainer		{ return [::scidc::tk::twm iscontainer $twm {*}$args] }
+		isdocked			{ return [::scidc::tk::twm isdocked $twm {*}$args] }
 		isfloat			{ return [expr {$args in [$twm floats]}] }
 		isframe			{ return [string match "TwmFrame" [winfo class {*}$args]] }
 		isheaderframe	{ return [string match {Twm*rame} [winfo class {*}$args]] }
-		ismetachild		{ return [::scidb::tk::twm ismetachild $twm {*}$args] }
+		ismetachild		{ return [::scidc::tk::twm ismetachild $twm {*}$args] }
 		ismetaframe		{ return [string equal "TwmMetaframe" [winfo class {*}$args]] }
 		ismultiwindow	{ return [string match {*Multiwindow} [winfo class {*}$args]] }
 		isnotebook		{ return [string match {*Notebook} [winfo class {*}$args]] }
-		ispane			{ return [::scidb::tk::twm ispane $twm {*}$args] }
+		ispane			{ return [::scidc::tk::twm ispane $twm {*}$args] }
 		ispanedwindow	{ return [string match {*Panedwindow} [winfo class {*}$args]] }
 		isroot			{ return [string match $twm {*}$args] }
-		istoplevel		{ return [expr {[::scidb::tk::twm toplevel $twm {*}$args] eq $args}] }
-		isundockable	{ return [::scidb::tk::twm get $twm [::scidb::tk::twm leaf $twm {*}$args] undock 0]}
-		leader			{ return [::scidb::tk::twm leader $twm {*}$args] }
-		leaf				{ return [::scidb::tk::twm leaf $twm {*}$args] }
-		leaves			{ return [::scidb::tk::twm leaves $twm {*}$args] }
-		load				{ ::scidb::tk::twm load $twm {*}$args }
+		istoplevel		{ return [expr {[::scidc::tk::twm toplevel $twm {*}$args] eq $args}] }
+		isundockable	{ return [::scidc::tk::twm get $twm [::scidc::tk::twm leaf $twm {*}$args] undock 0]}
+		leader			{ return [::scidc::tk::twm leader $twm {*}$args] }
+		leaf				{ return [::scidc::tk::twm leaf $twm {*}$args] }
+		leaves			{ return [::scidc::tk::twm leaves $twm {*}$args] }
+		load				{ ::scidc::tk::twm load $twm {*}$args }
 		metaframe		{ return [MakeFrame $twm metaframe {*}$args] }
 		multiwindow		{ return [MakeMultiwindow $twm {*}$args] }
 		nbhdrsize		{ return [NotebookHeaderSize $twm {*}$args] }
-		neighbors		{ return [::scidb::tk::twm neighbors $twm {*}$args] }
-		new				{ return [::scidb::tk::twm new $twm {*}$args] }
+		neighbors		{ return [::scidc::tk::twm neighbors $twm {*}$args] }
+		new				{ return [::scidc::tk::twm new $twm {*}$args] }
 		notebook			{ return [MakeNotebook $twm {*}$args] }
-		orientation		{ return [::scidb::tk::twm orientation $twm {*}$args] }
+		orientation		{ return [::scidc::tk::twm orientation $twm {*}$args] }
 		pack				{ return [Pack $twm {*}$args] }
 		paneconfigure	{ return [PaneConfigure $twm {*}$args] }
 		panedwindow		{ return [MakePanedWindow $twm {*}$args] }
 		pane				{ return [MakePane $twm {*}$args] }
-		panes				{ return [::scidb::tk::twm panes $twm {*}$args] }
-		parent			{ return [::scidb::tk::twm parent $twm {*}$args] }
+		panes				{ return [::scidc::tk::twm panes $twm {*}$args] }
+		parent			{ return [::scidc::tk::twm parent $twm {*}$args] }
 		ready				{ event generate $twm <<TwmReady>> -data $args }
-		ready?			{ return [::scidb::tk::twm ready $twm] }
-		refresh			{ return [::scidb::tk::twm refresh $twm {*}$args] }
+		ready?			{ return [::scidc::tk::twm ready $twm] }
+		refresh			{ return [::scidc::tk::twm refresh $twm {*}$args] }
 		resize			{ return [Resize $twm {*}$args] }
 		resizing			{ return [Resizing $twm {*}$args] }
 		sashsize			{ return $Options(sash:size) }
-		see				{ ::scidb::tk::twm see $twm {*}$args }
+		see				{ ::scidc::tk::twm see $twm {*}$args }
 		select			{ return [Select $twm {*}$args] }
 		selected			{ return [QuerySelected $twm {*}$args] }
 		separate			{ return [Amalgamate $twm 0 {*}$args] }
-		set				{ ::scidb::tk::twm set $twm {*}$args }
-		set!				{ ::scidb::tk::twm set! $twm {*}$args }
-		show				{ ::scidb::tk::twm show $twm {*}$args }
+		set				{ ::scidc::tk::twm set $twm {*}$args }
+		set!				{ ::scidc::tk::twm set! $twm {*}$args }
+		show				{ ::scidc::tk::twm show $twm {*}$args }
 		showall			{ return [ShowAll $twm {*}$args] }
 		stayontop		{ StayOnTop $twm {*}$args }
 		title				{ UpdateTitle $twm {*}$args }
 		togglebar		{ return [ToggleHeaders $twm {*}$args] }
-		togglenotebook	{ return [::scidb::tk::twm toggle $twm {*}$args] }
-		toplevel			{ return [::scidb::tk::twm toplevel $twm {*}$args] }
-		toplevels		{ return [::scidb::tk::twm toplevels $twm {*}$args] }
-		uid				{ return [::scidb::tk::twm uid $twm {*}$args] }
-		undock			{ return [::scidb::tk::twm undock $twm {*}$args] }
+		togglenotebook	{ return [::scidc::tk::twm toggle $twm {*}$args] }
+		toplevel			{ return [::scidc::tk::twm toplevel $twm {*}$args] }
+		toplevels		{ return [::scidc::tk::twm toplevels $twm {*}$args] }
+		uid				{ return [::scidc::tk::twm uid $twm {*}$args] }
+		undock			{ return [::scidc::tk::twm undock $twm {*}$args] }
 		unpack			{ return [Unpack $twm {*}$args] }
-		visible			{ return [::scidb::tk::twm visible $twm {*}$args] }
+		visible			{ return [::scidc::tk::twm visible $twm {*}$args] }
 		workarea			{ return [WorkArea $twm {*}$args] }
 		default			{ return -code error "unknown command '$command'" }
 	}
@@ -930,9 +930,9 @@ proc Resize {twm pane width height args} {
 		if {$minHeight > 0} { set minHeight [expr {$minHeight + $bd}] }
 		if {$maxWidth > 0} { set maxWidth [expr {$maxWidth + $bd}] }
 		if {$maxHeight > 0} { set maxHeight [expr {$maxHeight + $bd}] }
-		::scidb::tk::twm resize $twm $pane $width $height $minWidth $minHeight $maxWidth $maxHeight
+		::scidc::tk::twm resize $twm $pane $width $height $minWidth $minHeight $maxWidth $maxHeight
 	} else {
-		::scidb::tk::twm resize $twm $pane $width $height
+		::scidc::tk::twm resize $twm $pane $width $height
 	}
 }
 
@@ -1482,8 +1482,8 @@ proc DoHeaderMotion {twm frame x y} {
 		set Frozen $twm
 		set child [lindex [pack slaves $frame] end]
 		if {$Options(motion:busy)} {
-			::scidb::tk::busy hold $child
-			::scidb::tk::busy configure $child -cursor hand2
+			::scidc::tk::busy hold $child
+			::scidc::tk::busy configure $child -cursor hand2
 		}
 		set Vars(docking:container) [lmap v [$twm container] \
 			{expr {[$twm ismultiwindow $v] || [$twm isnotebook $v] ? $v : [continue]}}]
@@ -1501,7 +1501,7 @@ proc DoHeaderMotion {twm frame x y} {
 		incr wd $bd; incr ht $bd
 		wm geometry $frame ${wd}x${ht}+${x}+${y}
 		wm overrideredirect $frame $Options(motion:overrideredirect)
-		::scidb::tk::wm dialog $frame ;# wm attributes $frame -type dnd
+		::scidc::tk::wm dialog $frame ;# wm attributes $frame -type dnd
 		wm state $frame normal
 		tkwait visibility $frame
 		ttk::globalGrab $frame
@@ -1523,7 +1523,7 @@ proc HeaderRelease {twm frame {timeout 0}} {
 	# Must be at start of this function (for safety).
 	ttk::releaseGrab $frame
 
-	if {$Options(motion:busy)} { ::scidb::tk::busy forget [lindex [pack slaves $frame] end] }
+	if {$Options(motion:busy)} { ::scidc::tk::busy forget [lindex [pack slaves $frame] end] }
 
 	bind $frame <Button1-Motion> {#}
 	bind $frame <ButtonRelease-1> {#}
@@ -1904,9 +1904,9 @@ proc ShowHighlightRegion {twm frame w canv} {
 
 	$tl.c configure -width $wd -height $ht
 	set img [image create photo -width $wd -height $ht]
-	::scidb::tk::x11 region $x $y $img
-	::scidb::tk::image paintover $Options(highlight:color) $Options(highlight:opacity) $img
-	::scidb::tk::image border $img \
+	::scidc::tk::x11 region $x $y $img
+	::scidc::tk::image paintover $Options(highlight:color) $Options(highlight:opacity) $img
+	::scidc::tk::image border $img \
 		-width 1 \
 		-type dark \
 		-composite overlay \
@@ -2330,7 +2330,7 @@ proc Close {twm {frame ""}} {
 
 
 proc DestroyTWM {twm} {
-	::scidb::tk::twm close $twm
+	::scidc::tk::twm close $twm
 	after idle [list [namespace current]::DestroyNamespace $twm]
 }
 
@@ -2765,8 +2765,8 @@ set shape(m) [image create photo -data {
 
 foreach {dir pt} {t n b s l w r e} {
 	set shape($pt) [image create photo -width 16 -height 16]
-	::scidb::tk::image copy $shape($dir) $shape($pt)
-	::scidb::tk::image recolor black $shape($pt)
+	::scidc::tk::image copy $shape($dir) $shape($pt)
+	::scidc::tk::image recolor black $shape($pt)
 }
 
 } ;# namespace 16x16
@@ -2921,8 +2921,8 @@ set shape(m) [image create photo -data {
 
 foreach {dir pt} {t n b s l w r e} {
 	set shape($pt) [image create photo -width 24 -height 24]
-	::scidb::tk::image copy $shape($dir) $shape($pt)
-	::scidb::tk::image recolor black $shape($pt)
+	::scidc::tk::image copy $shape($dir) $shape($pt)
+	::scidc::tk::image recolor black $shape($pt)
 }
 
 } ;# namespace 32x32
@@ -2998,8 +2998,8 @@ set shape(m) [image create photo -data {
 
 foreach {dir pt} {t n b s l w r e} {
 	set shape($pt) [image create photo -width 32 -height 32]
-	::scidb::tk::image copy $shape($dir) $shape($pt)
-	::scidb::tk::image recolor black $shape($pt)
+	::scidc::tk::image copy $shape($dir) $shape($pt)
+	::scidc::tk::image recolor black $shape($pt)
 }
 
 } ;# namespace 32x32

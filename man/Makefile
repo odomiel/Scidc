@@ -14,12 +14,12 @@ include ../Makefile.in
 
 .SUFFIXES: .n
 
-SCRIPT = scidb$(SUFFIX)
-PROGRAM = tkscidb$(SUFFIX)
+SCRIPT = scidc$(SUFFIX)
+PROGRAM = tkscidc$(SUFFIX)
 
-$(SCRIPT).1.gz: scidb.n cbh2si4.n cdb2sci.n
+$(SCRIPT).1.gz: scidc.n cbh2si4.n cdb2sci.n
 	@echo "Make user manuals"
-	@cat scidb.n | sed -e 's#%SCRIPT%#$(SCRIPT)#' -e 's#%PROGRAM%#$(PROGRAM)#' -e 's#%BINDIR%#$(BINDIR)#' -e 's#%SHAREDIR%#$(SHAREDIR)#' | gzip -c > $(SCRIPT).1.gz
+	@cat scidc.n | sed -e 's#%SCRIPT%#$(SCRIPT)#' -e 's#%PROGRAM%#$(PROGRAM)#' -e 's#%BINDIR%#$(BINDIR)#' -e 's#%SHAREDIR%#$(SHAREDIR)#' | gzip -c > $(SCRIPT).1.gz
 	@cat cbh2si4.n | sed -e 's#%BINDIR%#$(BINDIR)#' -e 's#%SHAREDIR%#$(SHAREDIR)#' | gzip -c > cbh2si4.1.gz
 	@cat cdb2sci.n | sed -e "s#%BINDIR%#$(BINDIR)#" -e 's#%SHAREDIR%#$(SHAREDIR)#' | gzip -c > cdb2sci.1.gz
 

@@ -66,7 +66,7 @@ proc open {parent base variant info view index {fen {}}} {
 	set position [::game::nextGamePosition]
 	set dlg $parent.overview$position
 	lappend Priv($base:$variant:$number:$view) $dlg
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	bind $dlg <Alt-Key> [list tk::AltKeyInDialog $dlg %A]
 	::widget::dialogButtons $dlg {close previous next help} -default close
 #	foreach type {close previous next help} { $dlg.$type configure -width 15 }
@@ -139,13 +139,13 @@ proc open {parent base variant info view index {fen {}}} {
 	set Vars(subscribe:close) [list [namespace current]::Close $base $variant $nb]
 	set Vars(subscribe:data)  [list [list [namespace current]::UpdateData $nb]]
 
-	::scidb::db::subscribe gameList {*}$Vars(subscribe:list)
-	::scidb::db::subscribe gameData {*}$Vars(subscribe:data)
-	::scidb::view::subscribe {*}$Vars(subscribe:close)
+	::scidc::db::subscribe gameList {*}$Vars(subscribe:list)
+	::scidc::db::subscribe gameData {*}$Vars(subscribe:data)
+	::scidc::view::subscribe {*}$Vars(subscribe:close)
 
-	if {$variant == [::scidb::app::variant] && $view == [::scidb::tree::view $base]} {
+	if {$variant == [::scidc::app::variant] && $view == [::scidc::tree::view $base]} {
 		set Vars(subscribe:tree) [list [list [namespace current]::UpdateTreeBase $nb]]
-		::scidb::db::subscribe tree {*}$Vars(subscribe:tree)
+		::scidc::db::subscribe tree {*}$Vars(subscribe:tree)
 	}
 
 	return $nb
@@ -200,8 +200,8 @@ proc Update {nb id base variant {view -1} {index -1}} {
 		&& ($Vars(view) == $view || $Vars(view) == 0)} {
 		if {$Vars(closed)} {
 			set index $Vars(index:last)
-			if {[::scidb::view::count games $base $variant $Vars(view)] <= $index} { return }
-			set info [::scidb::db::get gameInfo $index $Vars(view) $base $variant]
+			if {[::scidc::view::count games $base $variant $Vars(view)] <= $index} { return }
+			set info [::scidc::db::get gameInfo $index $Vars(view) $base $variant]
 			if {$info ne $Vars(info)} { return }
 			set Vars(index) $index
 			set Vars(closed) false
@@ -217,7 +217,7 @@ proc Update2 {nb} {
 	variable ${nb}::Vars
 
 	set Vars(index) \
-		[::scidb::db::get gameIndex [expr {$Vars(number) - 1}] $Vars(view) $Vars(base) $Vars(variant)]
+		[::scidc::db::get gameIndex [expr {$Vars(number) - 1}] $Vars(view) $Vars(base) $Vars(variant)]
 	ConfigureButtons $nb
 }
 
@@ -232,7 +232,7 @@ proc UpdateData {nb id evenMainline} {
 	if {$Vars(position) != $id} { return }
 
 	if {$evenMainline} {
-		lassign [::scidb::game::link? $id] base variant index
+		lassign [::scidc::game::link? $id] base variant index
 		set link [list $base [::util::toMainVariant $variant] $index]
 		if {$Vars(link) eq $link} {
 			set Vars(modified) 1
@@ -312,7 +312,7 @@ proc NextGame {nb {step 0}} {
 	incr Vars(index) $step
 	ConfigureButtons $nb
 
-	set Vars(info) [::scidb::db::get gameInfo $Vars(index) $view $base $variant]
+	set Vars(info) [::scidc::db::get gameInfo $Vars(index) $view $base $variant]
 	set Vars(number) [::gamestable::column $Vars(info) number]
 	set dlg [winfo toplevel $nb]
 	set key "$base:$variant:$number:$view"
@@ -333,7 +333,7 @@ proc NextGame {nb {step 0}} {
 		if {$failed} { continue }
 		set num [expr {$ncols*$nrows}]
 		set result [::widget::busyOperation \
-			{ ::scidb::game::dump $base $variant $view $Vars(index) $Vars(fen) $num }]
+			{ ::scidc::game::dump $base $variant $view $Vars(index) $Vars(fen) $num }]
 		set failed 1
 		switch [lindex $result 0] {
 			 1 { set failed 0 }
@@ -540,10 +540,10 @@ proc PopupMenu {nb} {
 		-command [namespace code [list LoadGame $nb]] \
 		-state $state \
 		;
-if {0} { ;# TODO not working because we did not load this game, we've used ::scidb::game::dump instead
+if {0} { ;# TODO not working because we did not load this game, we've used ::scidc::game::dump instead
 	set position $Vars(position)
-	if {[::scidb::game::current] < 9} { set state normal } else { set state disabled }
-	if {[::merge::alreadyMerged [::scidb::game::current] $position]} { set state disabled }
+	if {[::scidc::game::current] < 9} { set state normal } else { set state disabled }
+	if {[::merge::alreadyMerged [::scidc::game::current] $position]} { set state disabled }
 	$menu add command \
 		-label " $::browser::mc::MergeGame..." \
 		-image $::icon::16x16::merge \
@@ -640,11 +640,11 @@ proc Destroy {nb} {
 		if {$i >= 0} { set Priv($key) [lreplace $Priv($key) $i $i] }
 		if {[llength $Priv($key)] == 0} { array unset Priv $key }
 
-		::scidb::db::unsubscribe gameList {*}$Vars(subscribe:list)
-		::scidb::db::unsubscribe gameData {*}$Vars(subscribe:data)
-		::scidb::view::unsubscribe {*}$Vars(subscribe:close)
+		::scidc::db::unsubscribe gameList {*}$Vars(subscribe:list)
+		::scidc::db::unsubscribe gameData {*}$Vars(subscribe:data)
+		::scidc::view::unsubscribe {*}$Vars(subscribe:close)
 		if {[info exists Vars(subscribe:tree)]} {
-			::scidb::db::unsubscribe tree {*}$Vars(subscribe:tree)
+			::scidc::db::unsubscribe tree {*}$Vars(subscribe:tree)
 		}
 
 		namespace delete [namespace current]::${nb}

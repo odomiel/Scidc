@@ -111,7 +111,7 @@ proc open {parent pos lang} {
 
 	set dlg $parent.__comment__
 	set Vars(dialog) $dlg
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 
 	set top [tk::frame $dlg.top]
@@ -125,7 +125,7 @@ proc open {parent pos lang} {
 	bind $dlg <Alt-Key> [list tk::AltKeyInDialog $dlg %A]
 
 	set Vars(widget:main) $main
-	set Vars(key) [::scidb::game::position key]
+	set Vars(key) [::scidc::game::position key]
 	set Vars(pos) $pos
 	set Vars(lang) {}
 	set Vars(mc) $::mc::langID
@@ -279,7 +279,7 @@ proc MakeEditor {lang} {
 		-undo no \
 	]
 	set Vars(widget:text:$lang) $f
-	::scidb::tk::misc setClass $t Comment
+	::scidc::tk::misc setClass $t Comment
 	set s [ttk::scrollbar $f.sb -command [namespace code [list ::widget::textLineScroll $t]]]
 	bind $t <<Altered>> [namespace code [list EditAltered $t]]
 
@@ -377,8 +377,8 @@ proc Accept {} {
 
 	set lang $Vars(lang)
 	SetUndoPoint $Vars(widget:text:$lang).text
-	set Vars(comment) [::scidb::misc::xml fromList [ParseContent $lang] -replacewithspace \u2423]
-	::scidb::game::update comment $Vars(key) $Vars(pos) $Vars(comment)
+	set Vars(comment) [::scidc::misc::xml fromList [ParseContent $lang] -replacewithspace \u2423]
+	::scidc::game::update comment $Vars(key) $Vars(pos) $Vars(comment)
 	if {![info exists Vars(remember:$lang)]} { set Vars(remember:$lang) "" }
 	SetRevertState $lang
 }
@@ -432,7 +432,7 @@ proc Revert {dlg} {
 
 proc GetComment {} {
 	variable Vars
-	return [::scidb::game::query comment $Vars(pos)]
+	return [::scidc::game::query comment $Vars(pos)]
 }
 
 
@@ -441,7 +441,7 @@ proc GetNormalizedComment {} {
 
 	set comment [GetComment]
 
-	set content [::scidb::misc::xml toList $comment \
+	set content [::scidc::misc::xml toList $comment \
 		-expandemoticons [ExpandEmoticons] \
 		-detectemoticons [DetectEmoticons] \
 		-replacespaces "\u2423" \
@@ -480,7 +480,7 @@ proc Init {parent lang} {
 	}
 
 	set Vars(comment) [GetComment]
-	set Vars(langSet) [::scidb::game::query langSet]
+	set Vars(langSet) [::scidc::game::query langSet]
 	array unset Vars content:*
 	array unset Vars symbol:*
 
@@ -494,7 +494,7 @@ proc Init {parent lang} {
 
 	lremove Vars(langSet) ""
 
-	set content [::scidb::misc::xml toList $Vars(comment) \
+	set content [::scidc::misc::xml toList $Vars(comment) \
 		-expandemoticons [ExpandEmoticons] \
 		-detectemoticons [DetectEmoticons] \
 		-replacespaces "\u2423" \
@@ -785,7 +785,7 @@ proc PasteText {w {str ""}} {
 
 		while {$m > 1} {
 			set s [string range $str $i [expr {$i + $m - 1}]]
-			set nag [::scidb::misc::mapCodeToNag $s]
+			set nag [::scidc::misc::mapCodeToNag $s]
 			if {$nag > 0} {
 				InsertNag $w $nag
 				incr i $m
@@ -804,7 +804,7 @@ proc PasteText {w {str ""}} {
 
 			switch $k {
 				-1 {
-					set nag [::scidb::misc::mapCodeToNag $c]
+					set nag [::scidc::misc::mapCodeToNag $c]
 					if {$nag} {
 						InsertNag $w $nag
 					} elseif {[info exists ::font::mapCodeToNag($c)]} {
@@ -1125,8 +1125,8 @@ proc DumpToComment {dump} {
 	set newContent "{xx {"
 	append newContent $content
 	append newContent "}}"
-	set newContent [::scidb::misc::xml fromList $newContent]
-	lassign [::scidb::misc::xml toList $newContent \
+	set newContent [::scidc::misc::xml fromList $newContent]
+	lassign [::scidc::misc::xml toList $newContent \
 		-expandemoticons [ExpandEmoticons] -detectemoticons [DetectEmoticons]] newContent Vars(emotions)
 	set content [lindex $newContent 0 1]
 
@@ -1896,7 +1896,7 @@ proc DisplayEmoticons {} {
 	if {[$w edit info -undodepth]} {
 		set reply [::dialog::question \
 			-parent [winfo toplevel $w] \
-			-title $::scidb::app \
+			-title $::scidc::app \
 			-message $mc::ReallySwitch \
 			-detail $mc::LosingChanges \
 			-default no \
@@ -1908,8 +1908,8 @@ proc DisplayEmoticons {} {
 	}
 
 	if {$Options(showEmoticons)} { set opt -detectemoticons } else { set opt -expandemoticons }
-	set content [::scidb::misc::xml fromList $comment]
-	set content [lindex [::scidb::misc::xml toList $content $opt 1] 0]
+	set content [::scidc::misc::xml fromList $comment]
+	set content [lindex [::scidc::misc::xml toList $content $opt 1] 0]
 
 	SetupComment $lang [lindex $content 0 1]
 	$w mark set insert $mark
@@ -1955,7 +1955,7 @@ proc CopyText {fromLang toLang} {
 		if {[string length $Vars(content:$toLang)]} {
 			set reply [::dialog::question \
 				-parent [winfo toplevel $Vars(widget:text:$toLang).text] \
-				-title $::scidb::app \
+				-title $::scidc::app \
 				-message $mc::OverwriteContent \
 				-detail $mc::AppendContent \
 				-default no \

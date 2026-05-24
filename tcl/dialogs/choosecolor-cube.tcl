@@ -26,7 +26,7 @@
 
 ::util::source color-cube
 
-package require tkscidb
+package require tkscidc
 
 namespace eval dialog {
 namespace eval choosecolor {
@@ -368,7 +368,7 @@ proc MakeCubeImage {width height} {
 
 	if {[info exists ColorCube]} { image delete $ColorCube }
 	set ColorCube [image create photo -width $width -height $height]
-	::scidb::tk::image colorcube $ColorCube 36 12
+	::scidc::tk::image colorcube $ColorCube 36 12
 	
 	$Vars(widget:hs) create image 0 0 -anchor nw -image $ColorCube -tags cube
 	$Vars(widget:hs) lower cube

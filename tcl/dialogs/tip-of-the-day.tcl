@@ -35,7 +35,7 @@ set CouldNotOpenFile		"Could not open file %s."
 set CouldNotFindAnyTip	"Could not find any tip."
 set RepeatAllTips			"Repeat all tips (restart from the beginning)"
 set NextTip					"Next Tip" ;# Unused
-set FirstTip				"<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidb!</b></p>"
+set FirstTip				"<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidc!</b></p>"
 
 set Choice(everytime)				"Show everytime"
 set Choice(periodically)			"Show periodically"
@@ -66,12 +66,12 @@ proc open {parent} {
 		return $dlg
 	}
 
-	set Options(lastDay) [::scidb::misc::julianDay]
+	set Options(lastDay) [::scidc::misc::julianDay]
 	set Options(counter) 3
-	::scidb::misc::html cache on
+	::scidc::misc::html cache on
 	Setup
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm protocol $dlg WM_DELETE_WINDOW [list destroy $dlg]
 	wm withdraw $dlg
 
@@ -95,7 +95,7 @@ proc open {parent} {
 		-showhyphens 1 \
 		-fontsize [::font::html::fontSize tips] \
 		-textalign $Options(textalign) \
-		-importdir [file join $::scidb::dir::help $Priv(lang)] \
+		-importdir [file join $::scidc::dir::help $Priv(lang)] \
 		-width 560 \
 		-usevertscroll no \
 		-usehorzscroll no \
@@ -117,7 +117,7 @@ proc open {parent} {
 
 	bind $dlg <Control-Shift-N> [namespace code ShowNextTip] ;# developer only
 	bind $dlg <Control-Shift-I> [namespace code ShowNextImage] ;# developer only
-	bind $top <Destroy> [list ::scidb::misc::html cache off]
+	bind $top <Destroy> [list ::scidc::misc::html cache off]
 
 	set Priv(mode) $mc::Choice($Options(mode))
 	set options [ttk::combobox $dlg.options \
@@ -161,7 +161,7 @@ proc show {parent} {
 	if {!$Options(firstTime)} {
 		if {[string match periodically* $Options(mode)]} {
 			if {$Options(counter) > 0 && [incr Options(counter) -1] > 0} { return }
-			if {$Options(lastDay) + 7 > [::scidb::misc::julianDay]} { return }
+			if {$Options(lastDay) + 7 > [::scidc::misc::julianDay]} { return }
 		}
 	}
 
@@ -178,10 +178,10 @@ proc Setup {} {
 
 	if {![info exists Priv(lang)]} {
 		set Priv(lang) $::mc::langID
-		set Priv(file) [file join $::scidb::dir::help $Priv(lang) Tip-of-the-Day.html]
+		set Priv(file) [file join $::scidc::dir::help $Priv(lang) Tip-of-the-Day.html]
 		if {![file readable $Priv(file)]} {
 			set Priv(lang) en
-			set Priv(file) [file join $::scidb::dir::help en Tip-of-the-Day.html]
+			set Priv(file) [file join $::scidc::dir::help en Tip-of-the-Day.html]
 		}
 		set Priv(tips) {}
 		set Priv(new-tips) {}
@@ -368,18 +368,18 @@ proc GetNextMotiveFile {} {
 	variable Options
 	variable Priv
 
-	if {$Options(firstTime)} { return [file join $::scidb::dir::images Scidb-Logo-128.png] }
+	if {$Options(firstTime)} { return [file join $::scidc::dir::images Scidb-Logo-128.png] }
 
 	while {1} {
 		if {[llength $Options(motives)] == 0} {
 			set Options(motives) \
-				[glob -nocomplain -directory $::scidb::dir::images -types f -tails Motive-*.*]
+				[glob -nocomplain -directory $::scidc::dir::images -types f -tails Motive-*.*]
 			lappend Options(motives) Scidb-Logo-128.png
 		}
 		set rand [expr {min([llength $Options(motives)] - 1, int(rand()*[llength $Options(motives)]))}]
 		set file [lindex $Options(motives) $rand]
 		set Options(motives) [lreplace $Options(motives) $rand $rand]
-		set Priv(motive) [file join $::scidb::dir::images $file]
+		set Priv(motive) [file join $::scidc::dir::images $file]
 		if {[file readable $Priv(motive)]} { return $Priv(motive) }
 	}
 }
@@ -398,7 +398,7 @@ proc FullPath {file} {
 
 	if {[string length $file] == 0} { return "" }
 	if {[string length [file extension $file]] == 0} { append file .html }
-	return [file normalize [file join $::scidb::dir::help $Priv(lang) $file]]
+	return [file normalize [file join $::scidc::dir::help $Priv(lang) $file]]
 }
 
 
@@ -538,7 +538,7 @@ proc GetImage {file} {
 
 	if {$file eq "motive"} { set file [FindMotiveFile] }
 
-	set file [file join $::scidb::dir::help $Priv(lang) $file]
+	set file [file join $::scidc::dir::help $Priv(lang) $file]
 
 	if {[catch { set img [image create photo -file $file] }]} {
 		set src $::help::icon::16x16::broken

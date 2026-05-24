@@ -170,7 +170,7 @@
 ::mc::VariantName(Shuffle)			"Shuffle-Schach"
 
 ### themes #############################################################
-::scidb::themes::mc::CannotOverwriteTheme	"Das Theme %s konnte nicht überschrieben werden."
+::scidc::themes::mc::CannotOverwriteTheme	"Das Theme %s konnte nicht überschrieben werden."
 
 ### file ###############################################################
 ::file::mc::CheckPermissions	"Überprüfe die Dateiberechtigungen."
@@ -288,7 +288,7 @@
 ::menu::mc::Language							"&Sprache"
 ::menu::mc::Toolbars							"&Funktionsleisten"
 ::menu::mc::ShowLog							"&Log zeigen"
-::menu::mc::AboutScidb						"&Über Scidb"
+::menu::mc::AboutScidb						"&Über Scidc"
 ::menu::mc::TipOfTheDay						"&Tip des Tages"
 ::menu::mc::Fullscreen						"&Vollbild"
 ::menu::mc::LeaveFullscreen				"&Vollbild verlassen"
@@ -2387,7 +2387,7 @@ set ::playerdict::mc::WebSource			"Webquelle"
 ### info ###############################################################
 ::info::mc::InfoTitle				"Über %s"
 ::info::mc::Info						"Information"
-::info::mc::About						"Über Scidb"
+::info::mc::About						"Über Scidc"
 ::info::mc::Contributions			"Beteiligte"
 ::info::mc::License					"Lizens"
 ::info::mc::Localization			"Lokalisierung"

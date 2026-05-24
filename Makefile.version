@@ -1,6 +1,6 @@
-##### Makefile.in for Scidb for Unix operating systems.
+##### Makefile.in for Scidc for Unix operating systems.
 
-# Scidb version:
+# Scidc version:
 #-----------------------------------------------------------------------
 SCIDB_VERSION	= -DSCIDB_VERSION="\"1.1.126 BETA\""
 SCIDB_REVISION	= -DSCIDB_REVISION="\"1493\""

@@ -139,7 +139,7 @@ proc build {top width height} {
 
 	tk::label $logo.icon -image $::icon::64x64::logo -background $bg
 	tk::label $logo.logo \
-		-text "Scidb" \
+		-text "Scidc" \
 		-foreground [::colors::lookup steelblue4] \
 		-font [list {Final Frontier} 26] \
 		-background $bg \
@@ -211,7 +211,7 @@ proc build {top width height} {
 	# set Vars(deletemarks) -marks
 
 	::pgn::setup::setupStyle editor {0 1 2 3 4 5 6 7 8}
-	::scidb::game::undoSetup 200 1
+	::scidc::game::undoSetup 200 1
 
 	::toolbar::setup $top -id editor -layout board
 	set tbGame [::toolbar::toolbar $top \
@@ -330,7 +330,7 @@ proc build {top width height} {
 	[namespace parent]::board::bindKeys
 
 	InitScratchGame ;# before subscribing
-	::scidb::db::subscribe gameSwitch [namespace current]::GameSwitched
+	::scidc::db::subscribe gameSwitch [namespace current]::GameSwitched
 	::pgn::setup::setupNags editor
 	Raise history
 }
@@ -365,13 +365,13 @@ proc refresh {{regardFontSize no}} {
 	for {set i 0} {$i < 9} {incr i} {
 		::pgn::setup::setupStyle editor $i
 		::pgn::setup::configureText $Vars(frame:$i)
-		::scidb::game::refresh $i
+		::scidc::game::refresh $i
 	}
 
 	set Vars(charwidth) [font measure [$Vars(pgn:0) cget -font] "0"]
 
 	if {$regardFontSize} {
-		if {$Vars(index) >= 0} { ::scidb::game::refresh $Vars(index) -immediate }
+		if {$Vars(index) >= 0} { ::scidc::game::refresh $Vars(index) -immediate }
 		SetAlignment
 	}
 
@@ -394,7 +394,7 @@ proc activate {w flag} {
 
 
 proc closed {w} {
-	::scidb::db::unsubscribe gameSwitch [namespace current]::GameSwitched
+	::scidc::db::unsubscribe gameSwitch [namespace current]::GameSwitched
 }
 
 
@@ -419,7 +419,7 @@ proc add {position base variant tags {at -1}} {
 		::gamebar::add $Vars(gamebar) $position $tags
 	}
 	ResetGame $Vars(pgn:$position) $position $tags
-	if {![::game::preloading?]} { ::scidb::game::switch $position }
+	if {![::game::preloading?]} { ::scidc::game::switch $position }
 }
 
 
@@ -470,7 +470,7 @@ proc select {{position {}}} {
 		set position [::gamebar::selected $Vars(gamebar)]
 		if {[llength $position]} { return }
 		if {[::gamebar::empty? $Vars(gamebar)]} {
-			::scidb::game::switch 9
+			::scidc::game::switch 9
 			Raise history
 			return
 		}
@@ -558,16 +558,16 @@ proc importGame {{overwrite ""}} {
 
 
 proc saveGame {mode {base ""}} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable Vars
 
-	set position [::scidb::game::current]
+	set position [::scidc::game::current]
 	set parent $Vars(main)
-	lassign [::scidb::game::link? $position] myBase variant index
-	if {![::scidb::db::get open? $myBase]} {
+	lassign [::scidc::game::link? $position] myBase variant index
+	if {![::scidc::db::get open? $myBase]} {
 		# TODO: try to open database instead
-		set myBase [::scidb::db::get name]
-		set variant [::scidb::db::get variant? $myBase]
+		set myBase [::scidc::db::get name]
+		set variant [::scidc::db::get variant? $myBase]
 		set index -1
 		set mode add
 	}
@@ -578,11 +578,11 @@ proc saveGame {mode {base ""}} {
 		set base $myBase
 	}
 	if {$base eq $scratchbaseName} {
-		set base [::scidb::db::get name]
+		set base [::scidc::db::get name]
 	}
 
-	if {[::scidb::db::get readonly? $base $variant]} { return }
-	if {$variant ni [::scidb::db::get variants $base]} { return }
+	if {[::scidc::db::get readonly? $base $variant]} { return }
+	if {$variant ni [::scidc::db::get variants $base]} { return }
 
 	switch $mode {
 		add		{ ::dialog::save::open $parent $base $variant $position }
@@ -611,7 +611,7 @@ proc FindKey {w attr} {
 
 
 proc FindRange {w key position} {
-	if {[::scidb::game::position $position startKey] eq $key} { return {end end} }
+	if {[::scidc::game::position $position startKey] eq $key} { return {end end} }
 	set range [$w tag nextrange m:move $key]
 	if {[llength $range] == 0} {
 		# TODO: How can this happen? But in fact it happens sometimes.
@@ -646,7 +646,7 @@ proc editComment {pos {position -1} {key {}} {lang {}}} {
 
 	if {$position == -1} { set position $Vars(position) }
 
-	if {[::scidb::game::position $position atStart?]} {
+	if {[::scidc::game::position $position atStart?]} {
 		switch $pos {
 			after		{ return }
 			before	{ set pos preceding }
@@ -658,7 +658,7 @@ proc editComment {pos {position -1} {key {}} {lang {}}} {
 		foreach code [array names Vars lang:active:*] {
 			set code [string range $code end-1 end]
 			if {[string length $lang] == 0 || $code eq $::mc::langID} {
-				if {[::scidb::game::query $position langSet $pos $Vars(current:$position) $code]} {
+				if {[::scidc::game::query $position langSet $pos $Vars(current:$position) $code]} {
 					set lang $code
 				}
 			}
@@ -666,7 +666,7 @@ proc editComment {pos {position -1} {key {}} {lang {}}} {
 		if {[string length $lang] == 0} { set lang xx }
 	}
 
-	::scidb::game::variation unfold -force
+	::scidc::game::variation unfold -force
 	Edit $position ::comment $key $pos $lang
 }
 
@@ -682,14 +682,14 @@ proc openMarksPalette {{position -1} {key {}}} {
 
 proc scroll {args} {
 	variable Vars
-	::widget::textLineScroll $Vars(pgn:[::scidb::game::current]) scroll {*}$args
+	::widget::textLineScroll $Vars(pgn:[::scidc::game::current]) scroll {*}$args
 }
 
 
 proc flipTrialMode {} {
 	variable Vars
 
-	set Vars(current:[::scidb::game::current]) ""
+	set Vars(current:[::scidc::game::current]) ""
 	::game::flipTrialMode
 }
 
@@ -699,7 +699,7 @@ proc redo {} { Undo redo }
 
 
 proc undoLastMove {} {
-	set cmd [::scidb::game::query undo]
+	set cmd [::scidc::game::query undo]
 	if {$cmd eq "move:append" || $cmd eq "move:nappend"} { Undo undo }
 }
 
@@ -707,9 +707,9 @@ proc undoLastMove {} {
 proc replaceMoves {parent base variant position number} {
 	if {![::dialog::save::checkIfWriteable $parent $base $variant $position $number]} { return }
 
-	if {[::scidb::game::query modified?]} {
+	if {[::scidc::game::query modified?]} {
 		set reply [::dialog::question -parent $parent -message $mc::ReallyReplaceMoves]
-		if {$reply eq "yes"} { ::util::catchException { ::scidb::game::update moves } }
+		if {$reply eq "yes"} { ::util::catchException { ::scidc::game::update moves } }
 	} else {
 		::dialog::info -parent $parent -message $mc::CurrentGameIsNotModified
 	}
@@ -741,16 +741,16 @@ proc showDiagram {w keysym state} {
 
 
 proc ensureScratchGame {} {
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable Vars
 
 	if {![::gamebar::empty? $Vars(gamebar)]} { return 0 }
 
-	::scidb::game::switch 9
-	::scidb::game::new 0
-	::scidb::game::switch 0
-	::scidb::pos::setup [::scidb::pos::fen]
-	set tags [::scidb::game::tags 0]
+	::scidc::game::switch 9
+	::scidc::game::new 0
+	::scidc::game::switch 0
+	::scidc::pos::setup [::scidc::pos::fen]
+	set tags [::scidc::game::tags 0]
 	::game::setFirst $scratchbaseName Normal $tags utf-8
 	add 0 $scratchbaseName Normal $tags
 	select 0
@@ -832,9 +832,9 @@ proc Raise {what} {
 proc InitScratchGame {} {
 	variable Vars
 
-	::scidb::game::new 9
-	::scidb::game::langSet 9 [languages]
-	::scidb::game::switch 9
+	::scidc::game::new 9
+	::scidc::game::langSet 9 [languages]
+	::scidc::game::switch 9
 
 	set Vars(current:9) {}
 	set Vars(successor:9) {}
@@ -844,15 +844,15 @@ proc InitScratchGame {} {
 	set Vars(last:9) {}
 	set Vars(tags:9) {}
 
-	::scidb::game::subscribe board 9 [namespace parent]::board::update
-	::scidb::game::subscribe board 9 [namespace parent]::analysis::update
-	::scidb::game::switch 9
+	::scidc::game::subscribe board 9 [namespace parent]::board::update
+	::scidc::game::subscribe board 9 [namespace parent]::analysis::update
+	::scidc::game::switch 9
 	set Vars(position) -1
 }
 
 
 proc StateChanged {position modified} {
-	if {![::scidb::game::query trial]} {
+	if {![::scidc::game::query trial]} {
 		::gamebar::setState [set [namespace current]::Vars(gamebar)] $position $modified
 		::game::stateChanged $position $modified
 	}
@@ -877,7 +877,7 @@ proc See {position {key ""} {succKey ""}} {
 
 	set w $Vars(pgn:$position)
 
-	if {$key eq [::scidb::game::position startKey]} {
+	if {$key eq [::scidc::game::position startKey]} {
 		$w see begin 
 		return
 	}
@@ -974,8 +974,8 @@ proc GameBarEvent {action position} {
 
 			if {[::gamebar::empty? $Vars(gamebar)]} {
 				::widget::busyCursor on
-				::scidb::game::switch 9
-				::scidb::game::refresh 9 -immediate
+				::scidc::game::switch 9
+				::scidc::game::refresh 9 -immediate
 				Raise history
 				::widget::busyCursor off
 				::annotation::deactivate
@@ -994,8 +994,8 @@ proc GameBarEvent {action position} {
 		}
 
 		select {
-			::scidb::game::switch $position
-			[namespace parent]::board::updateMarks [::scidb::game::query marks]
+			::scidc::game::switch $position
+			[namespace parent]::board::updateMarks [::scidc::game::query marks]
 			Raise $position
 		}
 	}
@@ -1009,7 +1009,7 @@ proc ToggleLanguage {lang} {
 
 proc SetLanguages {position} {
 	if {$position <= 10} {
-		after idle [list ::scidb::game::langSet $position [languages]]
+		after idle [list ::scidc::game::langSet $position [languages]]
 	}
 }
 
@@ -1078,13 +1078,13 @@ proc GameSwitched {oldPos newPos} {
 	if {![info exists Vars(virgin:$newPos)]} { return }
 	if {$Vars(next:position) != -1 && $Vars(next:position) != $newPos} { return }
 	set Vars(next:position) -1
-	[namespace parent]::twm::switchLayout [::scidb::game::query $newPos variant] game
+	[namespace parent]::twm::switchLayout [::scidc::game::query $newPos variant] game
 	if {[info exists Vars(lang:set:$newPos)]} {
 		UpdateLanguages $newPos $Vars(lang:set:$newPos)
 	}
 	if {$newPos < 9 && $Vars(setup:$newPos)} {
 		::widget::textLineScroll $Vars(pgn:$newPos) moveto 0
-		ProcessGoto $newPos [::scidb::game::position key] $Vars(successor:$newPos)
+		ProcessGoto $newPos [::scidc::game::position key] $Vars(successor:$newPos)
 		set Vars(setup:$newPos) 0
 	}
 }
@@ -1132,21 +1132,21 @@ proc ConfigureEditor {} {
 	variable Vars
 
 	set position $Vars(position)
-	::scidb::tree::freeze 1
-	::scidb::game::new 10
+	::scidc::tree::freeze 1
+	::scidc::game::new 10
 	ResetVars 10
 	set Vars(lang:set:10) [list {} $::mc::langID]
 	set Vars(position) $position
-	::scidb::game::switch 10
+	::scidc::game::switch 10
 	::pgn::setup::openSetupDialog [winfo toplevel $Vars(main)] editor 10
 	set Vars(position) $position
-	::scidb::game::release 10
-	::scidb::game::switch $position
-	::scidb::tree::freeze 0
+	::scidc::game::release 10
+	::scidc::game::switch $position
+	::scidc::tree::freeze 0
 	refresh
 
 	set Vars(current:$position) ""
-	ProcessGoto $position [::scidb::game::position key] $Vars(successor:$position)
+	ProcessGoto $position [::scidc::game::position key] $Vars(successor:$position)
 }
 
 
@@ -1254,7 +1254,7 @@ proc DoLayout {position content {context editor} {w {}}} {
 						set Vars(result:$position) ""
 					}
 
-					marks	{ [namespace parent]::board::updateMarks [::scidb::game::query marks] }
+					marks	{ [namespace parent]::board::updateMarks [::scidc::game::query marks] }
 					goto	{ ProcessGoto $position [lindex $args 1] [lindex $args 2] }
 				}
 			}
@@ -1278,7 +1278,7 @@ proc DoLayout {position content {context editor} {w {}}} {
 
 			result {
 				if {$Options(show:result)} {
-					set reason [::scidb::game::query $position termination]
+					set reason [::scidc::game::query $position termination]
 					set resultList [list {*}[lrange $node 1 end] $reason $Options(spacing:paragraph)]
 					set stm [lindex $node 2]
 
@@ -1288,7 +1288,7 @@ proc DoLayout {position content {context editor} {w {}}} {
 						$w mark gravity m-0 left
 						$w mark set cur m-0
 						$w delete cur end
-						set variant [::scidb::game::query $position variant]
+						set variant [::scidc::game::query $position variant]
 						set result [::browser::makeResult {*}[lrange $resultList 0 end-1] $variant]
 						if {[llength $result]} {
 							lassign $result result reason
@@ -1329,7 +1329,7 @@ proc DoLayout {position content {context editor} {w {}}} {
 					set ismove [expr {$start == $end}]
 
 					if {$ismove} {
-						set end [::scidb::game::query $position nextKey? $end]
+						set end [::scidc::game::query $position nextKey? $end]
 					}
 
 					set start [$w index $start]
@@ -1401,7 +1401,7 @@ proc ProcessGoto {position key succKey} {
 	set w $Vars(pgn:$position)
 
 	if {$Vars(current:$position) ne $key} {
-		::scidb::game::variation unfold
+		::scidc::game::variation unfold
 		$w tag remove h:curr begin end
 		$w tag remove h:move begin end
 		$w tag remove h:next begin end
@@ -1416,10 +1416,10 @@ proc ProcessGoto {position key succKey} {
 			}
 		}
 		set Vars(previous:$position) $key
-		foreach k [::scidb::game::next keys $position] {
+		foreach k [::scidc::game::next keys $position] {
 			$w tag add h:next {*}[FindRange $w $k $position]
 		}
-		[namespace parent]::board::updateMarks [::scidb::game::query marks]
+		[namespace parent]::board::updateMarks [::scidc::game::query marks]
 		if {$position < 9} { ::annotation::update $key } ;# TODO should use subscriber
 	} elseif {$Vars(dirty:$position)} {
 		set Vars(dirty:$position) 0
@@ -1454,7 +1454,7 @@ proc UpdateHeader {context position w data} {
 			}
 		}
 
-		set variant [::scidb::game::query $position variant?]
+		set variant [::scidc::game::query $position variant?]
 		set newline ""
 
 		switch $variant {
@@ -1808,7 +1808,7 @@ proc PrintComment {position w level key pos data} {
 	set lastChar ""
 	set paragraph 0
 
-	foreach entry [lindex [::scidb::misc::xml toList $data] 0] {
+	foreach entry [lindex [::scidc::misc::xml toList $data] 0] {
 		lassign $entry lang comment
 		if {[string length $lang] == 0} {
 			set lang xx
@@ -1905,7 +1905,7 @@ proc PrintMoveInfo {position w level key data} {
 	set underline 0
 	set flags 0
 	set count 0
-	set moveInfo [lindex [::scidb::misc::xml toList $data] 0 0 1]
+	set moveInfo [lindex [::scidc::misc::xml toList $data] 0 0 1]
 
 	foreach pair $moveInfo {
 		lassign $pair code text
@@ -2075,7 +2075,7 @@ proc LeaveMove {w} {
 
 proc EnterMark {w} {
 	$w tag add h:mark m:mark.current.first m:mark.current.last
-	::tooltip::show $w [string map {",," "," " " "\n"} [::scidb::game::query marks [FindKey $w mark]]]
+	::tooltip::show $w [string map {",," "," " " "\n"} [::scidc::game::query marks [FindKey $w mark]]]
 }
 
 
@@ -2088,7 +2088,7 @@ proc LeaveMark {w tag} {
 proc EnterBracket {w} {
 	variable CursorCounter
 
-	set mode [expr {[::scidb::game::variation folded? [FindKey $w fold]] ? "expand" : "collapse"}]
+	set mode [expr {[::scidc::game::variation folded? [FindKey $w fold]] ? "expand" : "collapse"}]
 	set cursor [set cursor::$mode]
 	incr CursorCounter
 	after 75 [namespace code [list SetCursor $w $CursorCounter $cursor]]
@@ -2121,7 +2121,7 @@ proc LeavePlus {w} {
 
 proc ToggleFold {w mode triggerEnter} {
 	set current [$w index current]
-	::scidb::game::variation fold [FindKey $w $mode] toggle
+	::scidc::game::variation fold [FindKey $w $mode] toggle
 	if {$triggerEnter} {
 		$w mark set current $current
 		EnterBracket $w ;# toggle cursor
@@ -2165,7 +2165,7 @@ proc GotoMove {{position {}} {key {}}} {
 	if {[llength $key] == 0} { set key $Vars(active:$position) }
 
 	set Vars(see:$position) 0
-	::scidb::game::moveto $position $key
+	::scidc::game::moveto $position $key
 	set Vars(see:$position) 1
 }
 
@@ -2206,7 +2206,7 @@ proc EditInfo {w {key {}}} {
 		if {[string length $Vars(active:$position)]} {
 			set key [FindKey $w info]
 		} else {
-			set key [::scidb::game::query start]
+			set key [::scidc::game::query start]
 		}
 		GotoMove $position $key
 	}
@@ -2217,11 +2217,11 @@ proc EditInfo {w {key {}}} {
 proc Undo {action} {
 	variable Vars
 
-	if {[llength [::scidb::game::query $action]]} {
+	if {[llength [::scidc::game::query $action]]} {
 #		XXX Do not use busy cursor, because the KeyRelease event will be lost!
 #		::widget::busyCursor on
-		::scidb::game::execute $action
-		[namespace parent]::board::updateMarks [::scidb::game::query marks]
+		::scidc::game::execute $action
+		[namespace parent]::board::updateMarks [::scidc::game::query marks]
 		::annotation::update
 #		::widget::busyCursor off
 	}
@@ -2281,11 +2281,11 @@ proc ResetGame {w position {tags {}}} {
 		::pgn::setup::setupStyle editor $position
 	}
 	if {$position <= 9} {
-		::scidb::game::subscribe pgn $position [namespace current]::DoLayout
-		::scidb::game::subscribe board $position [namespace parent]::board::update
-		::scidb::game::subscribe tree $position [namespace parent]::tree::update
-		::scidb::game::subscribe board $position [namespace parent]::analysis::update
-		::scidb::game::subscribe state $position [namespace current]::StateChanged
+		::scidc::game::subscribe pgn $position [namespace current]::DoLayout
+		::scidc::game::subscribe board $position [namespace parent]::board::update
+		::scidc::game::subscribe tree $position [namespace parent]::tree::update
+		::scidc::game::subscribe board $position [namespace parent]::analysis::update
+		::scidc::game::subscribe state $position [namespace current]::StateChanged
 	}
 }
 
@@ -2293,11 +2293,11 @@ proc ResetGame {w position {tags {}}} {
 proc ForgetGame {position} {
 	variable Vars
 
-	if {[::scidb::game::query $position open]} {
+	if {[::scidc::game::query $position open]} {
 		if {$position < 9} {
 			::game::release $position
 		} else {
-			::scidb::game::release $position
+			::scidc::game::release $position
 		}
 	}
 	array unset Vars *:$position
@@ -2312,7 +2312,7 @@ proc HasMoveInfo {} {
 		if {$use} { lappend showMoveInfo $type }
 	}
 
-	return [::scidb::game::query moveInfo? $showMoveInfo]
+	return [::scidc::game::query moveInfo? $showMoveInfo]
 }
 
 
@@ -2327,7 +2327,7 @@ proc UpdateButtons {} {
 		::toolbar::remove $Vars(button:show:moveinfo)
 	}
 
-	if {[::scidb::game::query variations?]} {
+	if {[::scidc::game::query variations?]} {
 		::toolbar::add $Vars(separator:variations)
 		::toolbar::add $Vars(button:expand-variations)
 		::toolbar::add $Vars(button:fold-variations)
@@ -2342,7 +2342,7 @@ proc UpdateButtons {} {
 proc PopupMenu {parent position} {
 	variable ::annotation::mc::Nag
 	variable ::annotation::LastNag
-	variable ::scidb::scratchbaseName
+	variable ::scidc::scratchbaseName
 	variable ::notation::moveStyles
 	variable MoveInfoPGN
 	variable Vars
@@ -2363,8 +2363,8 @@ proc PopupMenu {parent position} {
 			;
 		$menu add separator
 	} else {
-		if {[::scidb::game::level] > 0} {
-			set varno [::scidb::game::variation current]
+		if {[::scidc::game::level] > 0} {
+			set varno [::scidc::game::variation current]
 			if {$varno > 1} {
 				$menu add command \
 					-label " $mc::Command(variation:first)" \
@@ -2385,7 +2385,7 @@ proc PopupMenu {parent position} {
 				-compound left \
 				-command [namespace code RemoveVariation] \
 				;
-			if {[::scidb::game::variation length] % 2} {
+			if {[::scidc::game::variation length] % 2} {
 				set state disabled
 			} else {
 				set state normal
@@ -2422,41 +2422,41 @@ proc PopupMenu {parent position} {
 
 		menu $menu.strip
 		set state "normal"
-		if {![::scidb::game::position isMainline?] || [::scidb::game::position atStart?]} {
+		if {![::scidc::game::position isMainline?] || [::scidc::game::position atStart?]} {
 			set state "disabled"
 		}
 		$menu.strip add command \
 			-label $mc::Command(strip:moves) \
 			-state $state \
-			-command [list ::widget::busyOperation { ::scidb::game::strip moves }] \
+			-command [list ::widget::busyOperation { ::scidc::game::strip moves }] \
 			;
 		set state "normal"
-		if {	[::scidb::game::position atEnd?]
-			|| (![::scidb::game::position isMainline?] && [::scidb::game::position atStart?])} {
+		if {	[::scidc::game::position atEnd?]
+			|| (![::scidc::game::position isMainline?] && [::scidc::game::position atStart?])} {
 			set state "disabled"
 		}
 		$menu.strip add command \
 			-label $mc::Command(strip:truncate) \
 			-state $state \
-			-command [list ::widget::busyOperation { ::scidb::game::strip truncate }] \
+			-command [list ::widget::busyOperation { ::scidc::game::strip truncate }] \
 			;
 		foreach cmd {variations annotations info marks} {
 			set state "normal"
-			if {[::scidb::game::count $cmd] == 0} { set state "disabled" }
+			if {[::scidc::game::count $cmd] == 0} { set state "disabled" }
 			$menu.strip add command \
 				-label $mc::Command(strip:$cmd) \
 				-state $state \
-				-command [list ::widget::busyOperation [list ::scidb::game::strip $cmd]] \
+				-command [list ::widget::busyOperation [list ::scidc::game::strip $cmd]] \
 				;
 		}
 
 		set state "normal"
-		if {[::scidb::game::count comments] == 0} { set state disabled }
-		lassign [::scidb::game::link? $position] base variant index
+		if {[::scidc::game::count comments] == 0} { set state disabled }
+		lassign [::scidc::game::link? $position] base variant index
 
 		$menu.strip add command \
 			-label " $mc::Command(strip:comments)" \
-			-command [list ::widget::busyOperation { ::scidb::game::strip comments }] \
+			-command [list ::widget::busyOperation { ::scidc::game::strip comments }] \
 			-state $state \
 			;
 
@@ -2465,7 +2465,7 @@ proc PopupMenu {parent position} {
 			-menu $menu.strip.comments \
 			-label " $mc::Command(strip:language)" \
 			-state $state \
-			-command [list ::widget::busyOperation [list ::scidb::game::strip comments]] \
+			-command [list ::widget::busyOperation [list ::scidc::game::strip comments]] \
 			;
 
 		if {$state eq "normal"} {
@@ -2475,7 +2475,7 @@ proc PopupMenu {parent position} {
 					-compound left \
 					-image $::country::icon::flag([::mc::countryForLang $lang]) \
 					-label " [::encoding::languageName $lang]" \
-					-command [list ::widget::busyOperation [list ::scidb::game::strip comments $l]] \
+					-command [list ::widget::busyOperation [list ::scidc::game::strip comments $l]] \
 					;
 			}
 		}
@@ -2493,7 +2493,7 @@ proc PopupMenu {parent position} {
 			-command [namespace code [list CopyComments $parent]] \
 			-state $state \
 			;
-		if {$base eq $::scidb::scratchbaseName} {
+		if {$base eq $::scidc::scratchbaseName} {
 			$menu add command \
 				-label " $::import::mc::ImportPgnGame..." \
 				-image $::icon::16x16::filetypePGN \
@@ -2508,7 +2508,7 @@ proc PopupMenu {parent position} {
 			-command [namespace code PasteClipboardVariation] \
 			;
 
-#		set vars [::scidb::game::next moves -unicode]
+#		set vars [::scidc::game::next moves -unicode]
 #
 #		foreach {which cmd start} {first FirstVariation 2
 #											promote PromoteVariation 1
@@ -2546,10 +2546,10 @@ proc PopupMenu {parent position} {
 			-command [list ::annotation::addNag suffix 156] \
 			;
 
-		if {![::scidb::game::position atStart?]} {
+		if {![::scidc::game::position atStart?]} {
 			set cmd ::annotation::addNag
 
-			if {[::scidb::pos::stm] eq "w"} {
+			if {[::scidc::pos::stm] eq "w"} {
 				upvar #0 ::annotation::isWhiteNag isStmNag
 			} else {
 				upvar #0 ::annotation::isBlackNag isStmNag
@@ -2632,7 +2632,7 @@ proc PopupMenu {parent position} {
 			;
 		set accel "$::mc::Key(Ctrl)-$::mc::Key(Shift)-"
 		append accel "[set [namespace parent]::board::mc::Accel(edit-comment)]"
-		if {[::scidb::game::position atStart?]} {
+		if {[::scidc::game::position atStart?]} {
 			$menu add command \
 				-label " $mc::EditPrecedingComment..." \
 				-image $::fsbox::bookmarks::icon::16x16::modify \
@@ -2656,7 +2656,7 @@ proc PopupMenu {parent position} {
 				-accel "$::mc::Key(Ctrl)-[set [namespace parent]::board::mc::Accel(edit-comment)]" \
 				;
 		}
-		if {[::scidb::game::position atEnd?] || [::scidb::game::query length] == 0} {
+		if {[::scidc::game::position atEnd?] || [::scidc::game::query length] == 0} {
 			$menu add command \
 				-label " $mc::EditTrailingComment..." \
 				-image $::fsbox::bookmarks::icon::16x16::modify \
@@ -2685,7 +2685,7 @@ proc PopupMenu {parent position} {
 	}
 
 	foreach action {undo redo} {
-		set cmd [::scidb::game::query $action]
+		set cmd [::scidc::game::query $action]
 		set label [set ::mc::[string toupper $action 0 0]]
 		set accel "$::mc::Key(Ctrl)-"
 		if {$action eq "undo"} { append accel "Z" } else { append accel "Y" }
@@ -2706,18 +2706,18 @@ proc PopupMenu {parent position} {
 
 	$menu add separator
 
-	if {[::scidb::game::query variations?]} {
+	if {[::scidc::game::query variations?]} {
 		$menu add command \
 			-compound left \
 			-label " $mc::CollapseVariations" \
 			-image $::icon::16x16::toggleMinus \
-			-command [list ::scidb::game::variation fold on] \
+			-command [list ::scidc::game::variation fold on] \
 			;
 		$menu add command \
 			-compound left \
 			-label " $mc::ExpandVariations" \
 			-image $::icon::16x16::togglePlus \
-			-command [list ::scidb::game::variation fold off] \
+			-command [list ::scidc::game::variation fold off] \
 			;
 		$menu add separator
 	}
@@ -2866,7 +2866,7 @@ proc PasteClipboardGame {} {
 	variable Vars
 
 	set position $Vars(position)
-	set variant [::scidb::game::query $position variant?]
+	set variant [::scidc::game::query $position variant?]
 	::import::openEdit $Vars(frame:$position) $position -mode game -variant $variant
 }
 
@@ -2875,7 +2875,7 @@ proc PasteClipboardVariation {} {
 	variable Vars
 
 	set position $Vars(position)
-	set variant [::scidb::game::query $position variant?]
+	set variant [::scidc::game::query $position variant?]
 	::import::openEdit $Vars(frame:$position) $position -mode variation -variant $variant
 }
 
@@ -2993,7 +2993,7 @@ proc DoCopyComments {dlg} {
 	set countryList [::country::makeCountryList]
 	set srcCode [lindex $countryList [lsearch -exact -index 1 $countryList $Vars(lang:src)] 2]
 	set dstCode [lindex $countryList [lsearch -exact -index 1 $countryList $Vars(lang:dst)] 2]
-	::scidb::game::copy comments $srcCode $dstCode -strip $Vars(strip:orig)
+	::scidc::game::copy comments $srcCode $dstCode -strip $Vars(strip:orig)
 	destroy $dlg
 }
 
@@ -3003,83 +3003,83 @@ proc FoldVariations {flag} {
 
 	set position $Vars(position)
 	if {$position == -1} { return }
-	::scidb::game::variation fold $flag
+	::scidc::game::variation fold $flag
 	See $position
 }
 
 
 proc TransposeGame {} {
 	::game::flipTrialMode
-	::widget::busyOperation { ::scidb::game::transpose true }
+	::widget::busyOperation { ::scidc::game::transpose true }
 }
 
 
 proc FirstVariation {{varno 0}} {
 	variable Vars
 
-	set key [::scidb::game::position key]
+	set key [::scidc::game::position key]
 
 	if {$varno} {
-		set position [::scidb::game::current]
+		set position [::scidc::game::current]
 		set Vars(current:$position) {}
 		set Vars(successor:$position) {}
-		::scidb::game::position forward
+		::scidc::game::position forward
 	} else {
-		set varno [::scidb::game::variation leave]
+		set varno [::scidc::game::variation leave]
 		set parts [split $key "."]
 		lset parts end-1 0
 		set key [join $parts "."]
 	}
 
-	::widget::busyOperation { ::scidb::game::variation first $varno }
-	::scidb::game::moveto $key
+	::widget::busyOperation { ::scidc::game::variation first $varno }
+	::scidc::game::moveto $key
 }
 
 
 proc PromoteVariation {{varno 0}} {
-	set key [::scidb::game::position key]
+	set key [::scidc::game::position key]
 
 	if {$varno} {
-		::scidb::game::position forward
+		::scidc::game::position forward
 	} else {
-		set varno [::scidb::game::variation leave]
+		set varno [::scidc::game::variation leave]
 		set parts [split $key "."]
 		set parts [lreplace $parts end-2 end-1]
 		set key [join $parts "."]
 	}
 
-	::widget::busyOperation { ::scidb::game::variation promote $varno }
-	::scidb::game::moveto $key
+	::widget::busyOperation { ::scidc::game::variation promote $varno }
+	::scidc::game::moveto $key
 }
 
 
 proc RemoveVariation {{varno 0}} {
 	if {$varno} {
-		::scidb::game::position forward
+		::scidc::game::position forward
 	} else {
-		set varno [::scidb::game::variation leave]
+		set varno [::scidc::game::variation leave]
 	}
 
-	::widget::busyOperation { ::scidb::game::variation remove $varno }
+	::widget::busyOperation { ::scidc::game::variation remove $varno }
 
 	if {$varno} {
-		::scidb::game::position backward
-		::scidb::game::moveto [::scidb::game::position key]
+		::scidc::game::position backward
+		::scidc::game::moveto [::scidc::game::position key]
 	} else {
-		::scidb::game::moveto [::scidb::game::query parent $key]
+		::scidc::game::moveto [::scidc::game::query parent $key]
 	}
 }
 
 
 proc InsertMoves {parent} {
-	set key [::scidb::game::position key]
-	set varno  [::scidb::game::variation leave]
+	set key [::scidc::game::position key]
+	set varno  [::scidc::game::variation leave]
 	::move::doDestructiveCommand \
 		$parent \
 		$mc::Command(variation:insert) \
-		[list ::widget::busyOperation [list ::scidb::game::variation insert $varno]] \
-		[list ::scidb::game::moveto [::scidb::game::query parent $key]] \
-		[list ::scidb::game::moveto $key]
+		[list ::widget::busyOperation [list ::scidc::game::variation insert $varno]] \
+		[list ::scidc::game::moveto [::scidc::game::query parent $key]] \
+		[list ::scidc::game::moveto $key]
 }
 
 
@@ -3087,12 +3087,12 @@ proc ExchangeMoves {parent} {
 	variable Length_
 	variable Key_
 
-	set key [::scidb::game::position key]
-	set varno [::scidb::game::variation leave]
+	set key [::scidc::game::position key]
+	set varno [::scidc::game::variation leave]
 	set dlg [tk::toplevel $parent.exchange -class Dialog]
 	set top [::ttk::frame $dlg.top]
 	pack $dlg.top
-	set Length_ [::scidb::game::variation length $varno]
+	set Length_ [::scidc::game::variation length $varno]
 	::ttk::spinbox $top.sblength \
 		-from [expr {$Length_ % 2 ? 1 : 2}]  \
 		-to [expr {10000 + ($Length_ % 2)}] \
@@ -3132,9 +3132,9 @@ proc ExchangeMoves {parent} {
 		::move::doDestructiveCommand \
 			$parent \
 			$mc::Command(variation:exchange) \
-			[list ::widget::busyOperation [list ::scidb::game::variation exchange $varno $Length_]] \
-			[list ::scidb::game::moveto [::scidb::game::query parent $key]] \
-			[list ::scidb::game::moveto $key]
+			[list ::widget::busyOperation [list ::scidc::game::variation exchange $varno $Length_]] \
+			[list ::scidc::game::moveto [::scidc::game::query parent $key]] \
+			[list ::scidc::game::moveto $key]
 	}
 }
 
@@ -3144,7 +3144,7 @@ proc DontExchangeMoves {dlg key} {
 
 	destroy $dlg
 	set Length_ -1
-	::scidb::game::moveto $key
+	::scidc::game::moveto $key
 }
 
 
@@ -3205,7 +3205,7 @@ proc Shuffle {variant} {
 
 	set parent $Vars(frame)
 
-	if {[::scidb::game::query modified?]} {
+	if {[::scidc::game::query modified?]} {
 		set reply [::dialog::question -parent $parent -message $::gamebar::mc::DiscardNewGame]
 		if {$reply eq "no"} { return }
 	}
@@ -3215,14 +3215,14 @@ proc Shuffle {variant} {
 	} elseif {$variant eq "Normal"} {
 		set newIdn [::setup::shuffle $variant]
 	} else {
-		set oldIdn [::scidb::game::query idn]
+		set oldIdn [::scidc::game::query idn]
 		set newIdn [::setup::shuffle $variant]
 		while {$oldIdn == $newIdn} { set newIdn [::setup::shuffle $variant] }
 	}
 
-	::scidb::game::clear $newIdn
+	::scidc::game::clear $newIdn
 	if {$Vars(position) >= 0} {
-		::scidb::game::modified $Vars(position) no
+		::scidc::game::modified $Vars(position) no
 	}
 }
 
@@ -3232,7 +3232,7 @@ proc LanguageChanged {} {
 
 	foreach position [::game::usedPositions?] {
 		# needed for updating header and reason (of result)
-		::scidb::game::refresh $position
+		::scidc::game::refresh $position
 	}
 
 	::toolbar::childconfigure $Vars(button:new) \
@@ -3248,8 +3248,8 @@ switch [tk windowingsystem] {
 
 	x11 {
 		if {[::xcursor::supported?]} {
-			set file1 [file join $::scidb::dir::share cursor collapse-16x16.xcur]
-			set file2 [file join $::scidb::dir::share cursor expand-16x16.xcur]
+			set file1 [file join $::scidc::dir::share cursor collapse-16x16.xcur]
+			set file2 [file join $::scidc::dir::share cursor expand-16x16.xcur]
 			if {[file readable $file1] && [file readable $file2]} {
 				catch {
 					set collapse [::xcursor::loadCursor $file1]
@@ -3267,8 +3267,8 @@ switch [tk windowingsystem] {
 		# under windows the cursor wil be displayed with size 32x32
 		# (source: http://wiki.tcl.tk/8674)
 		# but probably this information is not up-to-date
-		set file1 [file join $::scidb::dir::share cursor collapse-16x16.$ext]
-		set file2 [file join $::scidb::dir::share cursor expand-16x16.$ext]
+		set file1 [file join $::scidc::dir::share cursor collapse-16x16.$ext]
+		set file2 [file join $::scidc::dir::share cursor expand-16x16.$ext]
 		if {[file readable $file1] && [file readable $file2]} {
 			set collapse [list @$file1]
 			set expand [list @$file2]

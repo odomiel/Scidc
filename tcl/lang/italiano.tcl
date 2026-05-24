@@ -171,7 +171,7 @@
 ::mc::VariantName(Shuffle)			"Scacchi Shuffle"
 
 ### themes #############################################################
-::scidb::themes::mc::CannotOverwriteTheme	"Impossibile sovrascrivere il tema %s."
+::scidc::themes::mc::CannotOverwriteTheme	"Impossibile sovrascrivere il tema %s."
 
 ### file ###############################################################
 ::file::mc::CheckPermissions	"Check file permissions." ;# NEW
@@ -392,7 +392,7 @@
 ::tips::mc::CouldNotFindAnyTip	"Could not find any tip." ;# NEW
 ::tips::mc::RepeatAllTips			"Repeat all tips (restart from the beginning)" ;# NEW
 ::tips::mc::NextTip					"Next Tip" ;# NEW
-::tips::mc::FirstTip					"<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidb!</b></p>" ;# NEW
+::tips::mc::FirstTip					"<p>The Tip-of-the-Day information serves to a better insight into the functioning of this application. Furthermore it will give useful hints that will help to know what is possible.</p><p color='darkgreen'><b>Have joy with Scidc!</b></p>" ;# NEW
 
 ::tips::mc::Choice(everytime)					"Show everytime" ;# NEW
 ::tips::mc::Choice(periodically)				"Show periodically" ;# NEW
@@ -560,7 +560,7 @@
 ::application::information::mc::RemoveSelectedDatabase "Remove selected database from history" ;# NEW
 ::application::information::mc::ClearHistory             "Clear entire history" ;# NEW
 ::application::information::mc::NewsAvailable          "There are updatednews available" ;# NEW
-::application::information::mc::NoInternetConnection   "Information: Scidb cannot connect to Internet." ;# NEW
+::application::information::mc::NoInternetConnection   "Information: Scidc cannot connect to Internet." ;# NEW
 
 ### application::database ##############################################
 ::application::database::mc::FileOpen							"Apri Database"

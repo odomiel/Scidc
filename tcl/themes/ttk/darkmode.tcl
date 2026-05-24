@@ -1,4 +1,4 @@
-# Scidb dark mode TTK theme — derived from clam (image-free, geometric)
+# Scidc dark mode TTK theme — derived from clam (image-free, geometric)
 namespace eval ttk::theme::darkmode {
 
 package provide ttk::theme::darkmode 0.1

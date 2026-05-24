@@ -31,8 +31,8 @@ namespace eval splash {
 proc open {} {
 	variable Picture
 
-	tk::toplevel .splash -class Scidb
-	wm title .splash $::scidb::app
+	tk::toplevel .splash -class Scidc
+	wm title .splash $::scidc::app
 	wm attributes .splash -topmost
 	catch { wm attributes .splash -type splash }
 	tk::frame .splash.f -relief raised -borderwidth 1
@@ -48,7 +48,7 @@ proc open {} {
 	update idletasks
 	
 	switch [tk windowingsystem] {
-		x11	{ ::scidb::tk::wm splash .splash }
+		x11	{ ::scidc::tk::wm splash .splash }
 		win32	{ wm overrideredirect .splash on }
 		aqua	{ ::tk::unsupported::MacWindowStyle style .splash plainDBox {} }
 	}

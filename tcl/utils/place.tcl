@@ -75,7 +75,7 @@ proc geometry {path args} {
 	# This is not correct in every case, sometimes 'reqheight' is too large.
 	# But sometimes 'height' is too small, and then we need 'reqheight'.
 	# No way to find an optimal solution.
-	# Currently only one window (in Scidb) is known where the placement is
+	# Currently only one window (in Scidc) is known where the placement is
 	# (mathematically) incorrect: the Tip-of-the-Day window.
 	if {$w <= 0} { set w [expr {max([winfo reqwidth  $path], [winfo width  $path])}] }
 	if {$h <= 0} { set h [expr {max([winfo reqheight $path], [winfo height $path])}] }

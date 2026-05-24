@@ -614,7 +614,7 @@ proc build {path getViewCmd {visibleColumns {}} {args {}}} {
 	}
 
 	if {[::scrolledtable::visible? $path moveList]} {
-		::scidb::app::moveList open $path [namespace current]::FetchMoveList
+		::scidc::app::moveList open $path [namespace current]::FetchMoveList
 	}
 
 	set Vars(ranges) {}
@@ -779,12 +779,12 @@ proc bind {path sequence script} {
 
 
 proc showGame {path base variant view index {pos {}}} {
-	set info [::scidb::db::get gameInfo $index $view $base $variant]
+	set info [::scidc::db::get gameInfo $index $view $base $variant]
 	set length [lindex $info [columnIndex length]]
 	set result [lindex $info [columnIndex result]]
 #	set result [::util::formatResult $result]
 	if {$result eq "1/2-1/2"} { set result "1/2" }
-	set moves [lindex [::scidb::game::dump $base $variant $view $index $pos] 1]
+	set moves [lindex [::scidc::game::dump $base $variant $view $index $pos] 1]
 	showMoves $path $moves -result $result -showEmpty [expr {$length == 0}]
 }
 
@@ -868,8 +868,8 @@ proc hideMoves {path} {
 
 proc deleteGame {base variant index {view -1}} {
 	::widget::busyCursor on
-	set flag [expr {![::scidb::db::get deleted? $index $view $base $variant]}]
-	::scidb::db::set delete $index $view $base $variant $flag
+	set flag [expr {![::scidc::db::get deleted? $index $view $base $variant]}]
+	::scidc::db::set delete $index $view $base $variant $flag
 	::widget::busyCursor off
 }
 
@@ -879,8 +879,8 @@ proc addGameFlagsMenuEntry {menu base variant view index} {
 	variable _Flags
 
 	set item     [lsearch -exact -index 0 $Columns flags]
-	set myFlags  [lindex [::scidb::db::get gameInfo $index $view $base $variant] $item]
-	set allFlags [::scidb::db::get gameFlags $base $variant]
+	set myFlags  [lindex [::scidc::db::get gameInfo $index $view $base $variant] $item]
+	set allFlags [::scidc::db::get gameFlags $base $variant]
 
 	foreach flag $allFlags { set _Flags($flag) 0 }
 	foreach flag $myFlags  { set _Flags($flag) 1 }
@@ -894,7 +894,7 @@ proc addGameFlagsMenuEntry {menu base variant view index} {
 		}
 		switch $flag {
 			1 - 2 - 3 - 4 - 5 - 6 {
-				set text [lindex [::scidb::db::get customFlags $base $variant] [expr {$flag - 1}]]
+				set text [lindex [::scidc::db::get customFlags $base $variant] [expr {$flag - 1}]]
 				if {[string length $text] == 0} { set text $mc::Custom }
 			}
 
@@ -930,7 +930,7 @@ proc TableSelected {path index} {
 	set base [::scrolledtable::base $path]
 	set variant [::scrolledtable::variant $path]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [::scidb::db::get gameInfo $index $view $base $variant]
+	set info [::scidc::db::get gameInfo $index $view $base $variant]
 	set number [expr {[column $info number] - 1}]
 	set fen {}
 	if {[llength $Vars(positioncmd)]} { set fen [{*}$Vars(positioncmd)] }
@@ -956,7 +956,7 @@ proc Refresh {path} {
 	variable ${path}::Vars
 
 	set Vars(ranges) {}
-	if {[::scidb::app::moveList open? $path]} { ::scidb::app::moveList clear $path }
+	if {[::scidc::app::moveList open? $path]} { ::scidc::app::moveList clear $path }
 	::scrolledtable::refresh $path
 }
 
@@ -1045,10 +1045,10 @@ proc PrepareImages {path count} {
 
 	if {!$Options(transparent) && [llength $Vars(crosshand)] == 0} {
 		set Vars(crosshand) [image create photo -width $width -height $height]
-		::scidb::tk::image recolor white $Vars(crosshand) -composite set
+		::scidc::tk::image recolor white $Vars(crosshand) -composite set
 		$Vars(crosshand) copy $border
 		foreach k {0 1 2} {
-			::scidb::tk::image recolor [lindex $colors $k] $Vars(crosshand) \
+			::scidc::tk::image recolor [lindex $colors $k] $Vars(crosshand) \
 				-area {*}$Vars(area:$k) \
 				-composite set
 		}
@@ -1062,7 +1062,7 @@ proc PrepareImages {path count} {
 		if {$Options(transparent)} {
 			$image copy $border
 			foreach k {0 1 2} {
-				::scidb::tk::image recolor [lindex $colors $k] $image \
+				::scidc::tk::image recolor [lindex $colors $k] $image \
 					-area {*}$Vars(area:$k) \
 					-composite set
 			}
@@ -1086,11 +1086,11 @@ proc TableFill {path args} {
 
 	lassign [lindex $args 0] table base variant start first last columns
 
-	set codec [::scidb::db::get codec $base $variant]
+	set codec [::scidc::db::get codec $base $variant]
 	set used [::table::used $table acv]
 	set view [{*}$Vars(viewcmd) $base $variant]
 
-	if {![::scidb::view::open? games $base $variant $view]} {
+	if {![::scidc::view::open? games $base $variant $view]} {
 		# may happen due to pending updates
 		return [clear $path]
 	}
@@ -1110,7 +1110,7 @@ proc TableFill {path args} {
 
 	for {set i $first; set count 0} {$i < $last} {incr i; incr count} {
 		set index [expr {$start + $i}]
-		set line [::scidb::db::get gameInfo $index $view $base $variant \
+		set line [::scidc::db::get gameInfo $index $view $base $variant \
 			-ratings $ratings -notation $Options(move:notation)]
 		set deleted !
 		set text {}
@@ -1141,18 +1141,18 @@ proc TableFill {path args} {
 							set usage 0
 							foreach j {0 1 2} {
 								if {[lindex $item $j] == 0} {
-									::scidb::tk::image alpha 0 $image -area {*}$Vars(area:$j)
+									::scidc::tk::image alpha 0 $image -area {*}$Vars(area:$j)
 								} else {
 									set a [expr {([lindex $item $j]*17)/255.0}]
 #									set a [expr {sqrt([lindex $item $j]*4335)/255.0}]
-									::scidb::tk::image alpha $a $image -area {*}$Vars(area:$j)
+									::scidc::tk::image alpha $a $image -area {*}$Vars(area:$j)
 									incr usage
 								}
 							}
 							if {$usage} {
 								if {!$Options(transparent)} {
 									set image [lindex $unused $count]
-									::scidb::tk::image recolor white $image -composite set
+									::scidc::tk::image recolor white $image -composite set
 									$image copy $Vars(crosshand)
 								}
 								lappend text [list @ $image]
@@ -1479,7 +1479,7 @@ proc TableFill {path args} {
 		::table::setState $table $i ${deleted}deleted
 	}
 
-	if {$first < $last && [::scidb::app::moveList open? $path]} {
+	if {$first < $last && [::scidc::app::moveList open? $path]} {
 		FetchMoveList $path
 
 		set first [expr {$first + $start}]
@@ -1489,7 +1489,7 @@ proc TableFill {path args} {
 		lappend Vars(ranges) [list $first $last]
 		set opts {}
 		if {[llength $Vars(positioncmd)]} { set opts [list -fen [{*}$Vars(positioncmd)]] }
-		::scidb::app::moveList retrieve $path $base $variant $view $start $end $first $last \
+		::scidc::app::moveList retrieve $path $base $variant $view $start $end $first $last \
 			-length 40 -notation $Options(move:notation) {*}$opts
 	}
 }
@@ -1512,7 +1512,7 @@ proc FetchMoveList {path} {
 		set upper [expr {min($upper, $lastRow)}]
 
 		for {} {$lower < $upper} {incr lower} {
-			if {[string length [set moves [::scidb::app::moveList fetch $path $lower]]]} {
+			if {[string length [set moves [::scidc::app::moveList fetch $path $lower]]]} {
 				if {$moves eq "*"} {
 					set moves $mc::NoMoves
 				} else {
@@ -1545,9 +1545,9 @@ proc TableHide {table id flag} {
 
 	if {$id eq "moveList"} {
 		if {$flag} {
-			::scidb::app::moveList close $table
+			::scidc::app::moveList close $table
 		} else {
-			::scidb::app::moveList open $table [namespace current]::FetchMoveList
+			::scidc::app::moveList open $table [namespace current]::FetchMoveList
 			::scrolledtable::refresh $table
 		}
 	} elseif {$id eq "deleted"} {
@@ -1564,7 +1564,7 @@ proc TableVisit {table data} {
 	lassign $data base variant mode id row
 	if {[string length $base] == 0} { return }
 	if {$row == -1} { return }
-	set codec [::scidb::db::get codec $base $variant]
+	set codec [::scidc::db::get codec $base $variant]
 
 	switch $id {
 		acv - key - opening { if {[string match cb? $codec]} { return } }
@@ -1594,7 +1594,7 @@ proc TableVisit {table data} {
 
 	set view 	[{*}$Vars(viewcmd) $base $variant]
 	set index	[::scrolledtable::rowToIndex $table $row]
-	set item 	[::scidb::db::get gameInfo $index $view $base $variant $col]
+	set item 	[::scidc::db::get gameInfo $index $view $base $variant $col]
 	set font  	[::tooltip::font]
 	set tip		""
 
@@ -1635,7 +1635,7 @@ proc TableVisit {table data} {
 				if {[string length $tip]} { append tip "\n" }
 				switch $flag {
 					1 - 2 - 3 - 4 - 5 - 6 {
-						set text [lindex [::scidb::db::get customFlags $base $variant] [expr {$flag - 1}]]
+						set text [lindex [::scidc::db::get customFlags $base $variant] [expr {$flag - 1}]]
 						if {[string length $text] == 0} {
 							set text "$mc::Custom $flag"
 						}
@@ -1753,19 +1753,19 @@ proc SortColumn {path id dir {rating {}}} {
 	}
 	switch $dir {
 		reverse {
-			::scidb::db::reverse gameInfo $base $variant $view
+			::scidc::db::reverse gameInfo $base $variant $view
 		}
 		cancel {
 			set columnNo [::scrolledtable::columnNo $path number]
-			::scidb::db::sort gameInfo $base $variant $columnNo $view -ascending
+			::scidc::db::sort gameInfo $base $variant $columnNo $view -ascending
 		}
 		default {
 			set columnNo [::scrolledtable::columnNo $path $id]
-			::scidb::db::sort gameInfo $base $variant $columnNo $view -$dir -ratings $ratings
+			::scidc::db::sort gameInfo $base $variant $columnNo $view -$dir -ratings $ratings
 		}
 	}
 	if {$selection >= 0} {
-		set selection [::scidb::db::get gameIndex $number $view $base $variant]
+		set selection [::scidc::db::get gameIndex $number $view $base $variant]
 	}
 	::widget::busyCursor off
 	::scrolledtable::updateColumn $path $selection $see
@@ -1792,7 +1792,7 @@ proc GetSite {path base variant view index} {
 	variable ${path}::Vars
 
 	if {$index eq "outside"} { return "" }
-	set line [::scidb::db::get gameInfo $index $view $base $variant]
+	set line [::scidc::db::get gameInfo $index $view $base $variant]
 	set col [lsearch -exact $Vars(columns) site]
 	return [lindex $line $col]
 }
@@ -1833,9 +1833,9 @@ proc PopupMenu {path menu base variant index column} {
 				-command [namespace code [list LoadGame $path $index]] \
 				;
 			if {$Vars(mode) ne "merge"} {
-				if {[::scidb::game::current] < 9} { set state normal } else { set state disabled }
+				if {[::scidc::game::current] < 9} { set state normal } else { set state disabled }
 				set position [list $base $variant $view $index]
-				if {[::merge::alreadyMerged [::scidb::game::current] $position]} { set state disabled }
+				if {[::merge::alreadyMerged [::scidc::game::current] $position]} { set state disabled }
 				$menu add command \
 					-compound left \
 					-image $::icon::16x16::merge \
@@ -1889,9 +1889,9 @@ proc PopupMenu {path menu base variant index column} {
 				;
 			::bind $menu <Key-space> [namespace code [list InvokeAction $menu load $path $index]]
 			if {$Vars(mode) ne "merge"} {
-				if {[::scidb::game::current] < 9} { set state normal } else { set state disabled }
+				if {[::scidc::game::current] < 9} { set state normal } else { set state disabled }
 				set position [list $base $variant $view $index]
-				if {[::merge::alreadyMerged [::scidb::game::current] $position]} { set state disabled }
+				if {[::merge::alreadyMerged [::scidc::game::current] $position]} { set state disabled }
 				$menu add command \
 					-compound left \
 					-image $::icon::16x16::merge \
@@ -1927,9 +1927,9 @@ proc PopupMenu {path menu base variant index column} {
 
 		if {!$Vars(sortable)} { return }
 
-		if {![::scidb::db::get readonly? $base $variant]} {
+		if {![::scidc::db::get readonly? $base $variant]} {
 			$menu add separator
-			set flag [::scidb::db::get deleted? $index $view $base $variant]
+			set flag [::scidc::db::get deleted? $index $view $base $variant]
 
 			if {$flag} { set text $mc::UndeleteGame } else { set text $mc::DeleteGame }
 			$menu add command \
@@ -1941,7 +1941,7 @@ proc PopupMenu {path menu base variant index column} {
 
 			addGameFlagsMenuEntry $menu $base $variant $view $index
 
-			set info [::scidb::db::get gameInfo $index $view $base $variant]
+			set info [::scidc::db::get gameInfo $index $view $base $variant]
 			$menu add command \
 				-compound left \
 				-image $::icon::16x16::setup \
@@ -2049,7 +2049,7 @@ proc PopupMenu {path menu base variant index column} {
 
 proc SetFlag {base variant index view flag} {
 	variable _Flags
-	::scidb::db::set flag $index $view $base $variant $flag $_Flags($flag)
+	::scidc::db::set flag $index $view $base $variant $flag $_Flags($flag)
 }
 
 
@@ -2097,7 +2097,7 @@ proc Open(browse) {path {index -1}} {
 	set base [::scrolledtable::base $path]
 	set variant [::scrolledtable::variant $path]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [::scidb::db::get gameInfo $index $view $base $variant]
+	set info [::scidc::db::get gameInfo $index $view $base $variant]
 	set topl [winfo toplevel $path]
 
 	::widget::busyOperation \
@@ -2114,7 +2114,7 @@ proc Open(overview) {path {index -1}} {
 	set base [::scrolledtable::base $path]
 	set variant [::scrolledtable::variant $path]
 	set view [{*}$Vars(viewcmd) $base $variant]
-	set info [::scidb::db::get gameInfo $index $view $base $variant]
+	set info [::scidc::db::get gameInfo $index $view $base $variant]
 
 	::widget::busyOperation \
 		{ ::overview::open $path $base $variant $info $view $index [{*}$Vars(positioncmd)] }

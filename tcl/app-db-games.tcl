@@ -278,7 +278,7 @@ proc BuildPane {twm frame uid width height} {
 		}
 	}
 
-	::scidb::db::subscribe gameList \
+	::scidc::db::subscribe gameList \
 		[list [namespace current]::Update $tb] \
 		[list [namespace current]::Close $tb] \
 		;
@@ -297,7 +297,7 @@ proc View {pane base variant} {
 
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable ${path}::Vars
 
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -306,11 +306,11 @@ proc Update {path id base variant {view -1} {index -1}} {
 	if {$view <= 0} {
 		after cancel $Vars(after)
 
-		set codec [::scidb::db::get codec $base]
+		set codec [::scidc::db::get codec $base]
 		if {$Vars(codec) ne $codec} { CodecChanged $path $codec }
 
 		if {$index == -1} {
-			set n [::scidb::db::count games $base $variant]
+			set n [::scidc::db::count games $base $variant]
 			set Vars(after) [after idle [list ::gamestable::update $path $base $variant $n]]
 		} else {
 			set Vars(after) [after idle [list ::gamestable::fill $path $index [expr {$index + 1}]]]
@@ -420,7 +420,7 @@ proc Goto {table number} {
 
 	if {[string is integer -strict $number]} {
 		if {$number > 0} {
-			set index [::scidb::db::get gameIndex [expr {$number - 1}] 0]
+			set index [::scidc::db::get gameIndex [expr {$number - 1}] 0]
 			if {$index >= 0} {
 				::gamestable::see $table $index
 				::gamestable::focus $table

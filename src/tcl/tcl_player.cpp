@@ -44,13 +44,13 @@ using namespace db;
 using namespace tcl;
 
 
-static char const* CmdCount	= "::scidb::player::count";
-static char const* CmdDict		= "::scidb::player::dict";
-static char const* CmdFilter	= "::scidb::player::filter";
-static char const* CmdLetter	= "::scidb::player::letter";
-static char const* CmdInfo		= "::scidb::player::info";
-static char const* CmdSearch	= "::scidb::player::search";
-static char const* CmdSort		= "::scidb::player::sort";
+static char const* CmdCount	= "::scidc::player::count";
+static char const* CmdDict		= "::scidc::player::dict";
+static char const* CmdFilter	= "::scidc::player::filter";
+static char const* CmdLetter	= "::scidc::player::letter";
+static char const* CmdInfo		= "::scidc::player::info";
+static char const* CmdSearch	= "::scidc::player::search";
+static char const* CmdSort		= "::scidc::player::sort";
 
 static app::PlayerDictionary* m_dictionary = 0;
 

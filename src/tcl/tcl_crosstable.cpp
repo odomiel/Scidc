@@ -54,10 +54,10 @@ using namespace tcl;
 using namespace tcl::app;
 
 
-static char const* CmdGet		= "::scidb::crosstable::get";
-static char const* CmdEmit		= "::scidb::crosstable::emit";
-static char const* CmdMake		= "::scidb::crosstable::make";
-static char const* CmdRelease	= "::scidb::crosstable::release";
+static char const* CmdGet		= "::scidc::crosstable::get";
+static char const* CmdEmit		= "::scidc::crosstable::emit";
+static char const* CmdMake		= "::scidc::crosstable::make";
+static char const* CmdRelease	= "::scidc::crosstable::release";
 
 
 namespace {

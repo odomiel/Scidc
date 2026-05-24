@@ -358,7 +358,7 @@ proc refreshTexture {which size} {
 	if {$x2 - $x1 > $y2 - $y1} { set x2 [expr {$x1 + $y2 - $y1}] }
 	if {$y2 - $y1 > $x2 - $x1} { set y2 [expr {$y1 + $x2 - $x1}] }
 
-	::scidb::tk::image copy $texture($which) photo_Square($which,$size) \
+	::scidc::tk::image copy $texture($which) photo_Square($which,$size) \
 		-from $x1 $y1 $x2 $y2 \
 		-rotate [expr {$style(texture,$color,rotation)/90}] \
 		;
@@ -407,7 +407,7 @@ proc setupSquares {size} {
 				} else {
 					set color $style($which,solid)
 					if {[string length $color] == 0} { set color gray }
-					::scidb::tk::image recolor $color photo_Square($which,$s) -composite set
+					::scidc::tk::image recolor $color photo_Square($which,$s) -composite set
 					photo_Square($which,$s) copy photo_Borderline($s)
 				}
 
@@ -541,9 +541,9 @@ proc unregisterSize {size} {
 
 proc findTexture {sub style name} {
 	if {[string length $name] == 0} { return "" }
-	set file [file join $::scidb::dir::user textures $sub $style $name]
+	set file [file join $::scidc::dir::user textures $sub $style $name]
 	if {![file readable $file]} {
-		set file [file join $::scidb::dir::share textures $sub $style $name]
+		set file [file join $::scidc::dir::share textures $sub $style $name]
 	}
 	return $file
 }
@@ -603,7 +603,7 @@ proc loadImage {file dst} {
 	set tex [image create photo -file $file]
 	set w [min [image width $dst] [image width $tex]]
 	set h [min [image height $dst] [image height $tex]]
-	::scidb::tk::image copy $tex $dst -from 0 0 $w $h
+	::scidc::tk::image copy $tex $dst -from 0 0 $w $h
 	image delete $tex
 }
 
@@ -980,7 +980,7 @@ proc setTile {canv which {wd 0} {ht 0}} {
 		set h [image height $texture($which)]
 		if {$rotation != 180} { set tmp $w; set w $h; set h $tmp }
 		set img [image create photo -width $w -height $h]
-		::scidb::tk::image copy $texture($which) $img -rotate [expr {$rotation/90}]
+		::scidc::tk::image copy $texture($which) $img -rotate [expr {$rotation/90}]
 		set Tile($which:img) $texture($which)
 		set Tile($which:tile) $img
 		set Tile($which:rotation) $rotation
@@ -1147,7 +1147,7 @@ proc saveWorkingSet {name {which theme}} {
 	set Working(Modified) false
 	set name [regsub -all {[|]} $name "_"]
 	set fname [regsub -all {[|/\\~\"*.:<>?\000-\039]} $name "_"]
-	set filename [file join $::scidb::dir::user themes [expr {$which eq "theme" ? "" : $which}] $fname]
+	set filename [file join $::scidc::dir::user themes [expr {$which eq "theme" ? "" : $which}] $fname]
 
 	if {[file exists "$filename.dat"]} {
 		set n 2
@@ -1198,7 +1198,7 @@ proc RefreshSquare {which size} {
 	if {$x2 - $x1 > $y2 - $y1} { set x2 [expr {$x1 + $y2 - $y1}] }
 	if {$y2 - $y1 > $x2 - $x1} { set y2 [expr {$y1 + $x2 - $x1}] }
 
-	::scidb::tk::image copy $texture($which) photo_Square($which,$size) \
+	::scidc::tk::image copy $texture($which) photo_Square($which,$size) \
 		-from $x1 $y1 $x2 $y2 \
 		-rotate [expr {$style($which,rotation)/90}]
 	photo_Square($which,$size) copy photo_Borderline($size)
@@ -1208,7 +1208,7 @@ proc RefreshSquare {which size} {
 proc RefreshBorder {size} {
 	variable square::style
 
-	::scidb::tk::image border photo_Borderline($size) \
+	::scidc::tk::image border photo_Borderline($size) \
 		-gap				[computeGap $size] \
 		-bordercolor	$style(borderline,color) \
 		-width			[expr {int(round($style(borderline,width)*$size + 0.2))}] \
@@ -1464,15 +1464,15 @@ proc MakeBorderlines {} {
 		image create photo photo_Borderline(vert,lite,$n) -width 1 -height $sh
 		image create photo photo_Borderline(vert,dark,$n) -width 1 -height $sh
 
-		::scidb::tk::image recolor #ffffff photo_Borderline(horz,lite,$n) -composite set
-		::scidb::tk::image recolor #ffffff photo_Borderline(vert,lite,$n) -composite set
-		::scidb::tk::image recolor #000000 photo_Borderline(horz,dark,$n) -composite set
-		::scidb::tk::image recolor #000000 photo_Borderline(vert,dark,$n) -composite set
+		::scidc::tk::image recolor #ffffff photo_Borderline(horz,lite,$n) -composite set
+		::scidc::tk::image recolor #ffffff photo_Borderline(vert,lite,$n) -composite set
+		::scidc::tk::image recolor #000000 photo_Borderline(horz,dark,$n) -composite set
+		::scidc::tk::image recolor #000000 photo_Borderline(vert,dark,$n) -composite set
 
-		::scidb::tk::image alpha [set alpha$n] photo_Borderline(horz,lite,$n)
-		::scidb::tk::image alpha [set alpha$n] photo_Borderline(vert,lite,$n)
-		::scidb::tk::image alpha [set alpha$n] photo_Borderline(horz,dark,$n)
-		::scidb::tk::image alpha [set alpha$n] photo_Borderline(vert,dark,$n)
+		::scidc::tk::image alpha [set alpha$n] photo_Borderline(horz,lite,$n)
+		::scidc::tk::image alpha [set alpha$n] photo_Borderline(vert,lite,$n)
+		::scidc::tk::image alpha [set alpha$n] photo_Borderline(horz,dark,$n)
+		::scidc::tk::image alpha [set alpha$n] photo_Borderline(vert,dark,$n)
 	}
 }
 

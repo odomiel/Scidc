@@ -175,7 +175,7 @@ proc Build {w args} {
 	rename ::$w $w.__switcher__
 	proc ::$w {command args} "[namespace current]::WidgetProc $w \$command {*}\$args"
 
-	::scidb::db::subscribe dbInfo [list [namespace current]::UpdateInfo $w]
+	::scidc::db::subscribe dbInfo [list [namespace current]::UpdateInfo $w]
 
 	return $w
 }
@@ -192,7 +192,7 @@ proc WidgetProc {w command args} {
 
 		active? {
 			set file [lindex $args 0]
-			set variants [::scidb::db::get variants $file]
+			set variants [::scidc::db::get variants $file]
 			return [expr {$Vars(variant) in $variants}]
 		}
 
@@ -251,7 +251,7 @@ proc WidgetProc {w command args} {
 		readonly {
 			lassign $args file flag
 			set rc [lset Vars(bases) $Vars(index:$file) 5 $flag]
-			set variants [::scidb::db::get variants $file]
+			set variants [::scidc::db::get variants $file]
 			if {$Vars(variant) ni $variants} {
 				SwitchToVariant $w [lindex $variants 0]
 			}
@@ -300,7 +300,7 @@ proc WidgetProc {w command args} {
 
 
 proc UpdateInfo {w file variant} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable ${w}::Vars
 
 	if {$file ne $clipbaseName && [string length [file extension $file]] == 0} { return }
@@ -381,8 +381,8 @@ proc Select {w file} {
 proc SetCount {w id file} {
 	variable ${w}::Vars
 
-	set count [::scidb::db::count games $file $Vars(variant)]
-	set total [::scidb::db::count total $file]
+	set count [::scidc::db::count games $file $Vars(variant)]
+	set total [::scidc::db::count total $file]
 	if {$total > $count} {
 		set count "[::locale::formatNumber $count] / [::locale::formatNumber $total]"
 	} elseif {$count == 0} {
@@ -400,7 +400,7 @@ proc SwitchToVariant {w variant} {
 
 	set file [lindex $Vars(bases) $Vars(map:$Vars(selection)) 2]
 	set Vars(base:$Vars(variant)) $file
-	set variants [::scidb::db::get variants $file]
+	set variants [::scidc::db::get variants $file]
 	set Vars(variant) $variant
 
 	if {$variant ni $variants} {
@@ -424,7 +424,7 @@ proc CheckVariant {w file {variant ""}} {
 
 	if {[string length $variant] == 0} { set variant $Vars(variant) }
 
-	set variants [::scidb::db::get variants $file]
+	set variants [::scidc::db::get variants $file]
 
 	if {$variant ni $variants} {
 		if {[info exists Vars(variant:$file)]} {
@@ -449,7 +449,7 @@ proc UpdateBase {w id} {
 	variable Options
 
 	lassign [lindex $Vars(bases) $Vars(map:$id)] _ type file ext
-	set variants [::scidb::db::get variants $file]
+	set variants [::scidc::db::get variants $file]
 	set included [expr {$Vars(variant) in $variants}]
 	set canv $w.content
 
@@ -618,7 +618,7 @@ proc DeleteBase {w file} {
 	if {$id != $newId} {
 		set file [lindex $Vars(bases) $Vars(map:$newId) 2]
 		set variant $Vars(variant)
-		if {[llength $Vars(subset)] == 1 && [llength [::scidb::db::get variants $file]] == 0} {
+		if {[llength $Vars(subset)] == 1 && [llength [::scidc::db::get variants $file]] == 0} {
 			set variant Normal
 		}
 		CheckVariant $w $file $variant
@@ -660,7 +660,7 @@ proc AddBase {w file type readonly {encoding {}}} {
 	incr Vars(counter)
 
 	if {[string length $encoding] == 0 || $encoding eq $::encoding::autoEncoding} {
-		set encoding [::scidb::db::get encoding $file]
+		set encoding [::scidc::db::get encoding $file]
 	}
 	set name [::util::databaseName $file no]
 	set ext [GetFileType $file]
@@ -747,7 +747,7 @@ proc LayoutSwitcher {w args} {
 
 	for {set i 1} {$i < [llength $Vars(bases)]} {incr i} {
 		set file [lindex $Vars(bases) $i 2]
-		set variants [::scidb::db::get variants $file]
+		set variants [::scidc::db::get variants $file]
 		if {$Vars(variant) in $variants} {
 			lappend subset [lindex $Vars(bases) $i 0]
 		}
@@ -903,10 +903,10 @@ proc LayoutSwitcher {w args} {
 		set sizeState $state
 		if {$state ne "hidden"} {
 			lassign [lindex $Vars(bases) $Vars(map:$id)] _ type file
-			if {[::scidb::db::get writable? $file]} {
+			if {[::scidc::db::get writable? $file]} {
 				set ext [string tolower [file extension $file]]
 				if {$ext eq ".pgn" || $ext eq ".pgn.gz" || $ext eq ".zip"} {
-					if {[::scidb::db::get unsaved? $file]} { set sizeState modified }
+					if {[::scidc::db::get unsaved? $file]} { set sizeState modified }
 				}
 			}
 		}
@@ -964,7 +964,7 @@ proc HandleDragEvent {w src types x y} {
 	set id [FindDragItem $w $x $y]
 	if {$id < 0} { return {} }
 	set base [lindex $Vars(bases) $Vars(map:$id) 2]
-	set variants [::scidb::db::get variants $base]
+	set variants [::scidc::db::get variants $base]
 	if {$Vars(variant) ni $variants} { return {} }
 
 	set Vars(drag-item) $id
@@ -973,7 +973,7 @@ proc HandleDragEvent {w src types x y} {
 	foreach entry $Vars(bases) {
 		lassign $entry i _ file _ _ readonly
 		if {!$readonly} {
-			set variants [::scidb::db::get variants $file]
+			set variants [::scidc::db::get variants $file]
 			if {$Vars(variant) in $variants} {
 				lappend Vars(drop-targets) $i
 			}
@@ -991,7 +991,7 @@ proc HandleDragEvent {w src types x y} {
 	}
 
 	set actionList {copy}
-	if {[::scidb::db::get memoryOnly? $base] || $::tcl_platform(platform) ne "windows"} {
+	if {[::scidc::db::get memoryOnly? $base] || $::tcl_platform(platform) ne "windows"} {
 		lappend actionList move
 	}
 	lappend actionList link ask private
@@ -1002,7 +1002,7 @@ proc HandleDragEvent {w src types x y} {
 	if {$file eq $base} {
 		lappend files $file
 	} else {
-		foreach ext [::scidb::misc::suffixes $base] {
+		foreach ext [::scidc::misc::suffixes $base] {
 			set f "$file.$ext"
 			if {[file exists $f]} { lappend files $f }
 		}
@@ -1192,7 +1192,7 @@ proc ParseUriFiles {parent files allowedExtensions action} {
 
 		if {[string length $origExt]} {
 			set origExt [string range $origExt 1 end]
-			set mappedExt [::scidb::misc::mapExtension $origExt]
+			set mappedExt [::scidc::misc::mapExtension $origExt]
 
 			if {$origExt ne $mappedExt} {
 				set f [file rootname $file]
@@ -1325,7 +1325,7 @@ proc ImportDatabases {parent uriFiles destination variant x y} {
 		set detail [join $databaseList "\n"]
 		set reply [::dialog::question \
 			-parent $parent \
-			-title "$::scidb::app: $mc::ImportGames" \
+			-title "$::scidc::app: $mc::ImportGames" \
 			-message $msg \
 			-detail $detail \
 			-buttons {yes no} \
@@ -1353,8 +1353,8 @@ proc CopyDatabase {parent src dst variant x y} {
 	set opts [list -message $msg. -interrupt yes]
 	set args [list [namespace current]::LogCopyDb {}]
 
-	set srcVariants [::scidb::db::get variants $src]
-	set dstVariants [::scidb::db::get variants $dst]
+	set srcVariants [::scidc::db::get variants $src]
+	set dstVariants [::scidc::db::get variants $dst]
 
 	if {[llength $srcVariants] > 1} { set varg ",variant" } else { set varg "" }
 
@@ -1372,7 +1372,7 @@ proc CopyDatabase {parent src dst variant x y} {
 	$m add separator
 
 	# All games of current variant ###########################
-	set ngames [::scidb::db::count games $src $variant]
+	set ngames [::scidc::db::count games $src $variant]
 	if {$ngames == 0} { set state disabled } else { set state normal }
 	set txt [format $mc::SelectGames(all$varg) $variant]
 	switch $ngames {
@@ -1407,7 +1407,7 @@ proc CopyDatabase {parent src dst variant x y} {
 
 	if {[llength $srcVariants] > 1 && [llength $dstVariants] > 1} {
 		# Copy all games of database #############################
-		set ntotal [::scidb::db::count total $src]
+		set ntotal [::scidc::db::count total $src]
 		if {$ntotal == $ngames} { set state disabled } else { set state normal }
 		set txt $mc::SelectGames(complete)
 		switch $ntotal {
@@ -1451,12 +1451,12 @@ proc CopyDatabase {parent src dst variant x y} {
 			# TODO
 		}
 		all {
-			set ngames [::scidb::db::count games $dst $variant]
-			set cmd [list ::scidb::view::copy $src 0 $dst $variant {}]
+			set ngames [::scidc::db::count games $dst $variant]
+			set cmd [list ::scidc::view::copy $src 0 $dst $variant {}]
 		}
 		complete {
-			set ngames [::scidb::db::count total $dst]
-			set cmd [list ::scidb::db::copy $src $dst {}]
+			set ngames [::scidc::db::count total $dst]
+			set cmd [list ::scidc::db::copy $src $dst {}]
 		}
 	}
 
@@ -1488,7 +1488,7 @@ proc CopyDatabase {parent src dst variant x y} {
 	update idletasks	;# be sure the following will be appended
 
 	::import::logResult $total $illegal $mc::NoGamesCopied $mc::CopiedGames $accepted $rejected
-	set cmd [list ::scidb::db::save $dst]
+	set cmd [list ::scidc::db::save $dst]
 	set rc [::util::catchException { ::progress::start $parent $cmd {} {} 1 } count]
 	if {$rc == 1} { ::log::error $::import::mc::AbortedDueToIoError }
 	::progress::close
@@ -1529,10 +1529,10 @@ proc Properties {w id popup} {
 		set label ::tk::label
 		set options [list -background [$f cget -background]]
 	} else {
-		tk::toplevel $dlg -class Scidb
+		tk::toplevel $dlg -class Scidc
 		set f $dlg.f
 		tk::frame $f -takefocus 0 -background [::colors::lookup $Defaults(prop:background)]
-		wm title $dlg "$::scidb::app - [::util::databaseName $file]"
+		wm title $dlg "$::scidc::app - [::util::databaseName $file]"
 		wm resizable $dlg false false
 		set label ::ttk::label
 		set options {}
@@ -1540,7 +1540,7 @@ proc Properties {w id popup} {
 	}
 
 	set variant $Vars(variant)
-	set variants [::scidb::db::get variants $file]
+	set variants [::scidc::db::get variants $file]
 	if {[llength $variants] == 1 && $variant ni $variants} {
 		set variant [lindex $variants 0]
 	}
@@ -1577,10 +1577,10 @@ proc Properties {w id popup} {
 	grid columnconfigure $f {0 2 4} -minsize $::theme::padx
 	grid rowconfigure $f [list 0 [expr {$row - 1}]] -minsize $::theme::pady
 
-	set size [::scidb::db::count games $file $variant]
-	set readOnly [::scidb::db::get readonly? $file]
+	set size [::scidc::db::count games $file $variant]
+	set readOnly [::scidc::db::get readonly? $file]
 
-	set descr [::scidb::db::get description $file]
+	set descr [::scidc::db::get description $file]
 	if {[string length $descr] == 0} { set descr "\u2014" }
 	grid $f.lpath $f.tpath $f.ldescr $f.tdescr
 	$f.tpath configure -text $file
@@ -1591,13 +1591,13 @@ proc Properties {w id popup} {
 			grid remove $f.l$name $f.t$name
 		}
 	} else {
-		set created [::scidb::db::get created? $file]
+		set created [::scidc::db::get created? $file]
 		if {[string length $created] == 0} {
 			$f.tcreated configure -text $::mc::NotAvailableSign
 		} else {
 			$f.tcreated configure -text [::locale::formatTime $created]
 		}
-		set lastModified [::scidb::db::get modified? $file]
+		set lastModified [::scidc::db::get modified? $file]
 		if {[string length $lastModified] == 0} {
 			$f.tlastModified configure -text $::mc::NotAvailableSign
 		} else {
@@ -1615,8 +1615,8 @@ proc Properties {w id popup} {
 	$f.tgames		configure -text $ngames
 	$f.treadonly	configure -text [expr {$readOnly ? $::mc::Yes : $::mc::No}]
 
-	set txt [::scidb::db::get usedencoding $file]
-	if {[::scidb::db::get encodingState $file] ne "ok"} { append txt " ($mc::Failed)" }
+	set txt [::scidc::db::get usedencoding $file]
+	if {[::scidc::db::get encodingState $file] ne "ok"} { append txt " ($mc::Failed)" }
 	$f.tencoding configure -text $txt
 
 	set slaves [grid slaves $f]
@@ -1638,7 +1638,7 @@ proc Properties {w id popup} {
 			}
 		}
 
-		lassign [::scidb::db::get stats $file] deleted changed added minYear maxYear avgYear \
+		lassign [::scidc::db::get stats $file] deleted changed added minYear maxYear avgYear \
 			minElo maxElo avgElo resNone resWhite resBlack resDraw resLost
 		set total [expr {double($resWhite + $resBlack + $resDraw + $resLost)}]
 		set size [expr {double($size)}]
@@ -1708,7 +1708,7 @@ proc ShowDescription {w id} {
 	variable ${w}::Vars
 
 	set file [lindex $Vars(bases) $Vars(map:$id) 2]
-	set text [::scidb::db::get description $file]
+	set text [::scidc::db::get description $file]
 	if {[string length $text]} { ::tooltip::show $w.content $text }
 }
 

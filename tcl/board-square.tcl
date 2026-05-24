@@ -128,7 +128,7 @@ proc SelectSquareColor {which} {
 		set style($which,solid) $selection
 		set style($which,texture) {}
 		loadTexture $which
-		::scidb::tk::image recolor $selection photo_Square($which,$designSize) -composite set
+		::scidc::tk::image recolor $selection photo_Square($which,$designSize) -composite set
 		addToList [namespace current]::RecentColors($which) $selection
 		ConfigureSquareFrame $which
 		SetTooltip $which
@@ -158,7 +158,7 @@ proc ShowCurrentTexture {which xc yc} {
 		}
 		$w.texture configure -height $ht -width $wd
 		set Vars(currentTexture) [image create photo -width $wd -height $ht]
-		::scidb::tk::image copy $texture($which) $Vars(currentTexture) \
+		::scidc::tk::image copy $texture($which) $Vars(currentTexture) \
 			-rotate [expr {$style($which,rotation)/90}]
 		$w.texture itemconfigure img -image $Vars(currentTexture)
 		set dx [expr {$x2 - $x1}]
@@ -489,7 +489,7 @@ proc BrowserSelect {parent which chosen} {
 
 	set w [min [image width photo_Square($which,$designSize)] [image width $texture]]
 	set h [min [image height photo_Square($which,$designSize)] [image height $texture]]
-	::scidb::tk::image copy $texture photo_Square($which,$designSize) -from 0 0 $w $h
+	::scidc::tk::image copy $texture photo_Square($which,$designSize) -from 0 0 $w $h
 	photo_Square($which,$designSize) copy photo_Borderline($designSize)
 
 	set style($which,texture) $chosen
@@ -682,29 +682,29 @@ proc RecolorButton {type which} {
 
 	if {$which eq "texture"} {
 		if {$style($type,texture) eq ""} {
-			::scidb::tk::image recolor #00000000 photo_Circle(texture)
+			::scidc::tk::image recolor #00000000 photo_Circle(texture)
 		} else {
 			# TODO really neccessary?
-			set file [file join $::scidb::dir::user textures tile {*}$style($type,texture)]
+			set file [file join $::scidc::dir::user textures tile {*}$style($type,texture)]
 			set texture [getTexture $file]
 			photo_Circle(texture) copy $::icon::15x15::circle
 			if {[llength $texture]} {
-				::scidb::tk::image copy $texture photo_Circle(texture) -from 0 0 15 15 -alphamask
+				::scidc::tk::image copy $texture photo_Circle(texture) -from 0 0 15 15 -alphamask
 				photo_Circle(texture) copy $::icon::15x15::ringBW
 			} else {
 				image create photo photo_Circle(temp) -width 15 -height 15
 				loadImage $file photo_Circle(temp)
-				::scidb::tk::image copy photo_Circle(temp) photo_Circle(texture) -from 0 0 15 15 -alphamask
+				::scidc::tk::image copy photo_Circle(temp) photo_Circle(texture) -from 0 0 15 15 -alphamask
 				image delete photo_Circle(temp)
 			}
 			photo_Circle(texture) copy $::icon::15x15::ringBW
 		}
 	} else {
 		if {$style($type,$which) eq ""} {
-			::scidb::tk::image recolor #00000000 photo_Circle($which)
+			::scidc::tk::image recolor #00000000 photo_Circle($which)
 		} else {
 			photo_Circle($which) copy $::icon::15x15::circle
-			::scidb::tk::image recolor $style($type,$which) photo_Circle($which)
+			::scidc::tk::image recolor $style($type,$which) photo_Circle($which)
 			photo_Circle($which) copy $::icon::15x15::ringBW
 		}
 
@@ -804,7 +804,7 @@ proc DestroyDialog {dlg size resetCmd} {
 
 	if {[dialog::question \
 			-parent $dlg \
-			-title $::scidb::app \
+			-title $::scidc::app \
 			-message [set [namespace current]::mc::CloseDialog]] eq "yes"} {
 		Reset $size
 		{*}$resetCmd
@@ -853,7 +853,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 
 	# toplevel
 	set point [expr {$parent eq "." ? "" : "."}]
-	set dlg [tk::toplevel ${parent}${point}configSquares -class Scidb]
+	set dlg [tk::toplevel ${parent}${point}configSquares -class Scidc]
 	bind $dlg <Destroy> [namespace code {
 		if {"%W" eq [winfo toplevel %W]} {
 			unregisterSize [set [namespace parent]::designSize]
@@ -910,7 +910,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 		image create photo photo_Circle(color) -width 15 -height 15
 		photo_Circle(color) copy $::icon::15x15::circle
 	}
-	::scidb::tk::image recolor $style(borderline,color) photo_Circle(color)
+	::scidc::tk::image recolor $style(borderline,color) photo_Circle(color)
 	ttk::button $fgap.gapColor \
 		-style aligned.TButton \
 		-textvar [namespace current]::mc::GapColor \
@@ -946,7 +946,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 			image create photo photo_Circle($which) -width 15 -height 15
 		}
 		photo_Circle($which) copy $::icon::15x15::circle
-		::scidb::tk::image recolor $style(hilite,$which) photo_Circle($which)
+		::scidc::tk::image recolor $style(hilite,$which) photo_Circle($which)
 		ttk::button $hil.$which \
 			-style aligned.TButton \
 			-textvar $textvar \
@@ -1006,7 +1006,7 @@ proc openConfigDialog {parent size closeCmd updateCmd resetCmd} {
 	# map window
 	wm resizable $dlg 0 0
 	wm withdraw $dlg
-	wm title $dlg "$::scidb::app: [set [namespace current]::mc::SquareStyleConf]"
+	wm title $dlg "$::scidc::app: [set [namespace current]::mc::SquareStyleConf]"
 	::util::place $dlg -parent $parent -position center
 #	wm transient $dlg [winfo toplevel $parent]
 	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list DestroyDialog $dlg $size $resetCmd]]

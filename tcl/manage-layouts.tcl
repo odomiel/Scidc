@@ -70,7 +70,7 @@ proc open {twm id layoutVariant layoutName} {
 	set (id) $id
 
 	set dlg $twm.layout
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 
 	pack [set top [ttk::frame $dlg.top]] -expand yes -fill both

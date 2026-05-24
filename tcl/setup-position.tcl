@@ -45,7 +45,7 @@ proc open {parent} {
 	set dlg $parent.setup_position
 	if {[winfo exists $dlg]} { return }
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $dlg.top
@@ -59,7 +59,7 @@ proc open {parent} {
 	set borderSize 2
 	set edge 20
 	set rank $top.board.rank
-	set variant [::scidb::game::query Variant?]
+	set variant [::scidc::game::query Variant?]
 
 	if {![info exists Vars(position)]} {
 		::board::registerBoardSize $squareSize
@@ -251,7 +251,7 @@ proc Shuffle {variant} {
 
 	set Vars(idn) [[namespace parent]::shuffle $variant]
 
-	if {[::scidb::game::query Variant?] eq "Antichess"} {
+	if {[::scidc::game::query Variant?] eq "Antichess"} {
 		set castling 0
 	} else {
 		switch $variant {
@@ -260,7 +260,7 @@ proc Shuffle {variant} {
 		}
 	}
 
-	set fen [::scidb::board::idnToFen $Vars(idn)]
+	set fen [::scidc::board::idnToFen $Vars(idn)]
 	set Vars(position) [string range $fen 36 43]
 
 	UpdateBoard
@@ -297,7 +297,7 @@ proc UpdatePiece {piece col} {
 	SetPiece $piece $col
 
 	set Vars(position) [string replace $Vars(position) $col $col [string toupper $piece]]
-	set Vars(idn) [::scidb::board::positionNumber $Vars(position)]
+	set Vars(idn) [::scidc::board::positionNumber $Vars(position)]
 
 	Update
 }
@@ -326,7 +326,7 @@ proc Update {} {
 		set state normal
 	}
 
-	if {[::scidb::game::query Variant?] ne "Antichess"} {
+	if {[::scidc::game::query Variant?] ne "Antichess"} {
 		if {$Vars(idn) != 0 & $Vars(idn) > 960} {
 			$Vars(castling:widget) configure -state disabled
 		} else {
@@ -351,7 +351,7 @@ proc UsePrevious {dlg} {
 		incr col
 	}
 
-	set Vars(idn) [::scidb::board::positionNumber $Vars(position)]
+	set Vars(idn) [::scidc::board::positionNumber $Vars(position)]
 	UpdateButtons
 	Update
 }
@@ -385,7 +385,7 @@ proc Accept {dlg} {
 
 	set Previous [list $Vars(position) $Vars(castling)]
 
-	::scidb::game::clear $fen
+	::scidc::game::clear $fen
 	destroy $dlg
 }
 

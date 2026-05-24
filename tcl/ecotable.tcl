@@ -244,19 +244,19 @@ proc activate {w flag} {
 	set (active) $flag
 
 	if {$flag} {
-		set position [::scidb::game::current]
-		::scidb::game::subscribe opening $position $(update)
-		::scidb::game::subscribe board $position $(board)
-		::scidb::db::subscribe gameSwitch [list [namespace current]::GameSwitched $w]
+		set position [::scidc::game::current]
+		::scidc::game::subscribe opening $position $(update)
+		::scidc::game::subscribe board $position $(board)
+		::scidc::db::subscribe gameSwitch [list [namespace current]::GameSwitched $w]
 		set (lastpos) $position
 		Update $w
 	} else {
 		HideBoard $w
 		if {$(lastpos) >= 0} {
-			::scidb::game::unsubscribe board $(lastpos) $(board)
-			::scidb::game::unsubscribe opening $(lastpos) $(update)
+			::scidc::game::unsubscribe board $(lastpos) $(board)
+			::scidc::game::unsubscribe opening $(lastpos) $(update)
 		}
-		::scidb::db::unsubscribe gameSwitch [list [namespace current]::GameSwitched $w]
+		::scidc::db::unsubscribe gameSwitch [list [namespace current]::GameSwitched $w]
 	}
 }
 
@@ -316,10 +316,10 @@ proc Update {w {force no}} {
 	if {!$(mode:fixed)} {
 		set (mode) $Options(move:mode)
 	}
-	set (data) [::scidb::game::ecotable -notation $Options(move:notation) -mode $(mode)]
+	set (data) [::scidc::game::ecotable -notation $Options(move:notation) -mode $(mode)]
 	if {$(active) || $force || $(id) ne "board"} {
-		set variant [::scidb::game::query variant]
-		set base [::scidb::game::query database]
+		set variant [::scidc::game::query variant]
+		set base [::scidc::game::query database]
 		::scrolledtable::update $w.table $base $variant [llength $(data)]
 	}
 }
@@ -331,11 +331,11 @@ proc GameSwitched {w oldPos newPos} {
 	HideBoard $w
 	set (lastpos) $oldPos
 	if {$oldPos >= 0} {
-		::scidb::game::unsubscribe opening $oldPos $(update)
-		::scidb::game::unsubscribe board $oldPos $(board)
+		::scidc::game::unsubscribe opening $oldPos $(update)
+		::scidc::game::unsubscribe board $oldPos $(board)
 	}
-	::scidb::game::subscribe opening $newPos $(update)
-	::scidb::game::subscribe board $newPos $(board)
+	::scidc::game::subscribe opening $newPos $(update)
+	::scidc::game::subscribe board $newPos $(board)
 	Update $w
 }
 
@@ -435,10 +435,10 @@ proc TableSelected {w table index} {
 	::scrolledtable::select $table $row
 	set (selection:active) 1
 	if {$(mode) eq "single"} {
-		::scidb::game::go ply $index
+		::scidc::game::go ply $index
 	} else {
-		set fen [::scidb::game::codeToFen [lindex $(data) $index 2]]
-		::scidb::game::go position $fen
+		set fen [::scidc::game::codeToFen [lindex $(data) $index 2]]
+		::scidc::game::go position $fen
 	}
 	set (selection:active) 0
 }
@@ -470,7 +470,7 @@ proc TableShow_ {w table x y} {
    lassign [::scrolledtable::identify $table $x $y] row col elem id
 	if {$row == -1} { return }
 	set index [::scrolledtable::rowToIndex $table $row]
-	set fen [::scidb::game::codeToFen [lindex $(data) $index 2]]
+	set fen [::scidc::game::codeToFen [lindex $(data) $index 2]]
 	ShowBoard $table $fen
 }
 
@@ -497,7 +497,7 @@ proc UpdateBoard {parent fen} {
 	if {![winfo exists $w]} { 
 		return [ShowBoard $parent $fen]
 	}
-	::board::diagram::update $w.board [::scidb::board::fenToBoard $fen]
+	::board::diagram::update $w.board [::scidc::board::fenToBoard $fen]
 }
 
 

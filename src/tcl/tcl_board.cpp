@@ -47,15 +47,15 @@ using namespace tcl;
 using namespace tcl::app;
 using namespace db;
 
-static char const* CmdAnalyseFen			= "::scidb::board::analyseFen";
-static char const* CmdFenToBoard			= "::scidb::board::fenToBoard";
-static char const* CmdIdnToFen			= "::scidb::board::idnToFen";
-static char const* CmdIsValidFen			= "::scidb::board::isValidFen";
-static char const* CmdMakeFen				= "::scidb::board::makeFen";
-static char const* CmdNearest				= "::scidb::board::nearest";
-static char const* CmdNormalizeFen		= "::scidb::board::normalizeFen";
-static char const* CmdPositionNumber	= "::scidb::board::positionNumber";
-static char const* CmdTransposeFen		= "::scidb::board::transposeFen";
+static char const* CmdAnalyseFen			= "::scidc::board::analyseFen";
+static char const* CmdFenToBoard			= "::scidc::board::fenToBoard";
+static char const* CmdIdnToFen			= "::scidc::board::idnToFen";
+static char const* CmdIsValidFen			= "::scidc::board::isValidFen";
+static char const* CmdMakeFen				= "::scidc::board::makeFen";
+static char const* CmdNearest				= "::scidc::board::nearest";
+static char const* CmdNormalizeFen		= "::scidc::board::normalizeFen";
+static char const* CmdPositionNumber	= "::scidc::board::positionNumber";
+static char const* CmdTransposeFen		= "::scidc::board::transposeFen";
 
 
 namespace

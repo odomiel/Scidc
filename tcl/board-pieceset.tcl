@@ -421,7 +421,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 				set maskStrokeWidth [expr {max(0, $maskStrokeWidth - 2*($pieceStroke*$strokeScale))}]
 			}
 			image create photo piece(bg) -width $sampleSize -height $sampleSize
-			::scidb::tk::image create font($pieceColor$p,mask) piece(bg) \
+			::scidc::tk::image create font($pieceColor$p,mask) piece(bg) \
 				-flip $fontIsOutline \
 				-scale [expr $scale*$pieceScale] \
 				-translate $pieceMoveX $pieceMoveY \
@@ -436,7 +436,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 			if {$shadowDiffuse ne "none"} {
 				set sh [image create photo -width $sampleSize -height $sampleSize]
 				$sh copy piece(bg)
-				::scidb::tk::image recolor $shadowColor $sh
+				::scidc::tk::image recolor $shadowColor $sh
 				set s [expr {$sampleSize - 1}]
 				set offs 1
 				for {set i 0} {$i < $shadowSize} {incr i} {
@@ -446,18 +446,18 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 						-compositingrule overlay
 					incr s -1; incr offs 1
 				}
-				::scidb::tk::image boost $opacity $shadowOpacity piece(sh)
-				if {$shadowDiffuse eq "quadratic"} { ::scidb::tk::image diffuse $shadowOpacity piece(sh) }
+				::scidc::tk::image boost $opacity $shadowOpacity piece(sh)
+				if {$shadowDiffuse eq "quadratic"} { ::scidc::tk::image diffuse $shadowOpacity piece(sh) }
 				image delete $sh
 			} else {
 				piece(sh) copy piece(bg)
-				::scidb::tk::image recolor $shadowColor piece(sh)
+				::scidc::tk::image recolor $shadowColor piece(sh)
 			}
 		}
 
 		if {$needBackground} {
 			image create photo piece(tp) -width $sampleSize -height $sampleSize
-			::scidb::tk::image create font($c$p,mask) piece(tp) \
+			::scidc::tk::image create font($c$p,mask) piece(tp) \
 				-flip $fontIsOutline \
 				-sharpen $fontIsOutline \
 				-scale [expr {$scale*$pieceScale}] \
@@ -471,7 +471,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 
 		if {$useTexture} {
 			image create photo piece(tex) -width $size -height $size
-			::scidb::tk::image create font($pieceColor$p,mask) piece(tex) \
+			::scidc::tk::image create font($pieceColor$p,mask) piece(tex) \
 				-flip $fontIsOutline \
 				-sharpen $fontIsOutline \
 				-scale [expr {$scale*$pieceScale}] \
@@ -479,14 +479,14 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 				-stroke-width 0 \
 				-fill white
 			set color [expr {$c eq "w" ? "white" : "black"}]
-			::scidb::tk::image copy photo_Square($color,$size) piece(tex) -alphamask
+			::scidc::tk::image copy photo_Square($color,$size) piece(tex) -alphamask
 		}
 
 		image create photo piece(fg) -width $sampleSize -height $sampleSize
 
 		if {$fontIsOutline && [llength $grad]} {
 			if {$pieceColor eq "w"} {
-				::scidb::tk::image create font(w$p,exterior) piece(fg) \
+				::scidc::tk::image create font(w$p,exterior) piece(fg) \
 					-bbox $minX $minY $maxX $maxY \
 					-flip $fontIsOutline \
 					-scale [expr $scale*$pieceScale] \
@@ -494,7 +494,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 					-gradient $grad
 				image create photo piece(tp) -width $sampleSize -height $sampleSize
 				if {$overstroke > 0} {
-					::scidb::tk::image create font($pieceColor$p) piece(tp) \
+					::scidc::tk::image create font($pieceColor$p) piece(tp) \
 						-flip $fontIsOutline \
 						-sharpen true \
 						-scale [expr $scale*$pieceScale] \
@@ -505,7 +505,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 						-fill $overstrokeColor($c)
 					piece(fg) copy piece(tp)
 				}
-				set bounds [::scidb::tk::image create font(w$p) piece(tp) \
+				set bounds [::scidc::tk::image create font(w$p) piece(tp) \
 					-flip $fontIsOutline \
 					-sharpen [expr {[llength $strokeColor($c)] == 0}] \
 					-scale [expr $scale*$pieceScale] \
@@ -519,7 +519,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 				piece(fg) copy piece(tp)
 				image delete piece(tp)
 			} else {
-				::scidb::tk::image create font(b$p,exterior) piece(fg) \
+				::scidc::tk::image create font(b$p,exterior) piece(fg) \
 					-bbox $minX $minY $maxX $maxY \
 					-flip $fontIsOutline \
 					-scale [expr {$scale*$pieceScale}] \
@@ -528,7 +528,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 					-gradient $grad
 				if {[string length $font(b$p,interior)]} {
 					image create photo piece(tp) -width $sampleSize -height $sampleSize
-					::scidb::tk::image create font($pieceColor$p,interior) piece(tp) \
+					::scidc::tk::image create font($pieceColor$p,interior) piece(tp) \
 						-bbox $minX $minY $maxX $maxY \
 						-flip $fontIsOutline \
 						-scale [expr {$scale*$pieceScale}] \
@@ -548,7 +548,7 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 			} else {
 				set color $fillColor($c)
 			}
-			set bounds [::scidb::tk::image create font($pieceColor$p) piece(fg) \
+			set bounds [::scidc::tk::image create font($pieceColor$p) piece(fg) \
 				-flip $fontIsOutline \
 				-sharpen [expr {$fontIsOutline && [llength $strokeColor($c)] == 0}] \
 				-scale [expr $scale*$pieceScale] \
@@ -573,15 +573,15 @@ proc MakePieces {	prefix pieceSet pieceList size scale contour boostContour shad
 
 			if {$useTexture} {
 				set temp [image create photo -width $size -height $size]
-				::scidb::tk::image copy piece(sample) photo_Piece($prefix$c$p,$size)
-				::scidb::tk::image copy piece(fg) $temp
+				::scidc::tk::image copy piece(sample) photo_Piece($prefix$c$p,$size)
+				::scidc::tk::image copy piece(fg) $temp
 				photo_Piece($prefix$c$p,$size) copy piece(tex)
 				photo_Piece($prefix$c$p,$size) copy $temp
 				image delete $temp
 				image delete piece(sample)
 			} else {
 				piece(sample) copy piece(fg)
-				::scidb::tk::image copy piece(sample) photo_Piece($prefix$c$p,$size)
+				::scidc::tk::image copy piece(sample) photo_Piece($prefix$c$p,$size)
 				image delete piece(sample)
 			}
 		} else {

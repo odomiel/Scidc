@@ -220,14 +220,14 @@ proc open {parent} {
 	if {[winfo exists $dlg]} { return }
 
 	SetupCursors
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $dlg.top
 
 	unset -nocomplain Vars
 
-	set variant [::scidb::game::query Variant?]
+	set variant [::scidc::game::query Variant?]
 	if {$variant eq "Antichess"} {
 		set normal disabled
 		set readonly disabled
@@ -236,10 +236,10 @@ proc open {parent} {
 		set readonly readonly
 	}
 
-	set Vars(pos) [::scidb::pos::board]
+	set Vars(pos) [::scidc::pos::board]
 	set Vars(positionId) 0
 	set Vars(castling) 1
-	set Vars(fen) [::scidb::board::normalizeFen [::scidb::pos::fen] $Options(fen:format)]
+	set Vars(fen) [::scidc::board::normalizeFen [::scidc::pos::fen] $Options(fen:format)]
 	AnalyseFen $Vars(fen) init
 	array set Memo [array get Vars]
 	set Vars(fen:memo) ""
@@ -914,7 +914,7 @@ proc FitBottom {dst src cols} {
 # 
 # 	if {$Vars(histindex) >= 0} {
 # 		set Vars(fen) [lindex $Vars(history) $Vars(histindex)]
-# 		set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
+# 		set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 # 		::board::diagram::update $Vars(board) $Vars(pos)
 # 		incr Vars(histindex) -1
 # 	}
@@ -927,14 +927,14 @@ proc FitBottom {dst src cols} {
 # 	if {$Vars(histindex) < [llength $Vars(history)] - 1} {
 # 		incr Vars(histindex) +1
 # 		set Vars(fen) [lindex $Vars(history) $Vars(histindex)]
-# 		set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
+# 		set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 # 		::board::diagram::update $Vars(board) $Vars(pos)
 # 	}
 # }
 
 
 proc Variant? {} {
-	set variant [::scidb::game::query Variant?]
+	set variant [::scidc::game::query Variant?]
 
 	switch $variant {
 		Crazyhouse - Antichess - ThreeCheck { return $variant }
@@ -978,7 +978,7 @@ proc SetupCastlingButtons {f} {
 proc SetupPromoted {} {
 	variable Vars
 
-	lassign [::scidb::board::analyseFen $Vars(fen)] error _ idn _ _ _ _ _ _ _ _ promoted difference
+	lassign [::scidc::board::analyseFen $Vars(fen)] error _ idn _ _ _ _ _ _ _ _ promoted difference
 	ShowHoldingInfo $difference
 	if {$idn > 4*960} { set idn 0 }
 	::board::diagram::removeAllPromoted $Vars(board)
@@ -1053,7 +1053,7 @@ proc AnalyseFen {fen {cmd none}} {
 	variable Vars
 
 	if {$cmd eq "init"} {
-		lassign [::scidb::board::analyseFen $fen] \
+		lassign [::scidc::board::analyseFen $fen] \
 			error _ idn _ _ castling ep stm moveno halfmoves checksGiven promoted difference
 
 		if {$idn > 4*960} { set idn 0 }
@@ -1091,7 +1091,7 @@ proc AnalyseFen {fen {cmd none}} {
 
 		set checksGiven [list $Vars(checks:w) $Vars(checks:b)]
 
-		lassign [::scidb::board::analyseFen $fen $castling $castlingFiles $checksGiven] \
+		lassign [::scidc::board::analyseFen $fen $castling $castlingFiles $checksGiven] \
 			error warnings idn _ _ _ ep stm moveno halfmoves checksGiven promoted difference
 		if {$idn > 4*960} { set idn 0 }
 	}
@@ -1100,7 +1100,7 @@ proc AnalyseFen {fen {cmd none}} {
 		if {[string length $error]} {
 			::dialog::error \
 				-parent [winfo toplevel $Vars(board)]  \
-				-title "$::scidb::app: $mc::Error(InvalidFen)" \
+				-title "$::scidc::app: $mc::Error(InvalidFen)" \
 				-message $mc::Error($error) \
 				;
 			return 0
@@ -1108,7 +1108,7 @@ proc AnalyseFen {fen {cmd none}} {
 		foreach warning $warnings {
 			set answer [::dialog::question \
 				-parent [winfo toplevel $Vars(board)]  \
-				-title "$::scidb::app: $mc::Error(InvalidFen)" \
+				-title "$::scidc::app: $mc::Error(InvalidFen)" \
 				-message [set mc::Warning($warning)] \
 			]
 			if {$answer eq "no"} { return 0 }
@@ -1274,10 +1274,10 @@ proc SetupBoard {cmd} {
 		}
 
 		mirror {
-			set Vars(fen) [::scidb::board::transposeFen $Vars(fen) $Options(fen:format)]
+			set Vars(fen) [::scidc::board::transposeFen $Vars(fen) $Options(fen:format)]
 			set Vars(fen) [scidb::board::normalizeFen $Vars(fen) $Options(fen:format)]
-			set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
-			set promoted [lindex [::scidb::board::analyseFen $Vars(fen)] 11]
+			set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
+			set promoted [lindex [::scidc::board::analyseFen $Vars(fen)] 11]
 			::board::diagram::update $Vars(board) $Vars(pos) $promoted
 		}
 	}
@@ -1293,8 +1293,8 @@ proc Shuffle {variant} {
 	set castling $Vars(castling)
 
 	if {[string is integer $variant]} {
-		lassign [::scidb::board::idnToFen $variant $Options(fen:format)] Vars(fen) castlingRights
-		set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
+		lassign [::scidc::board::idnToFen $variant $Options(fen:format)] Vars(fen) castlingRights
+		set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 		::board::diagram::update $Vars(board) $Vars(pos)
 		AnalyseFen $Vars(fen) init
 		set idn ""
@@ -1356,7 +1356,7 @@ proc AnalyseCastlingRights {fen castling positionId} {
 		set Vars($type) [expr {$vars($type) ne "--"}]
 		set vars($type) [string index $vars($type) 0]
 	}
-	set fen [::scidb::board::normalizeFen $fen xfen]
+	set fen [::scidc::board::normalizeFen $fen xfen]
 	foreach fyle [split [lindex $fen 2] {}] {
 		switch -- $fyle {
 			A - B - C - D - E - F - G - H {
@@ -1394,8 +1394,8 @@ proc SetCastlingRights {} {
 		set idn [expr {$idn + 2880}]
 	}
 
-	lassign [::scidb::board::idnToFen $idn $Options(fen:format)] Vars(fen) castlingRights
-	set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
+	lassign [::scidc::board::idnToFen $idn $Options(fen:format)] Vars(fen) castlingRights
+	set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 	AnalyseFen $Vars(fen) init
 }
 
@@ -1468,7 +1468,7 @@ proc Update {} {
 
 	set promoted [::board::diagram::promotedSquares $Vars(board)]
 
-	set Vars(fen) [::scidb::board::makeFen $Vars(pos) $Vars(stm) $Vars(ep) $Vars(moveno) \
+	set Vars(fen) [::scidc::board::makeFen $Vars(pos) $Vars(stm) $Vars(ep) $Vars(moveno) \
 		$Vars(halfmoves) $Vars(checks:w) $Vars(checks:b) $holding $promoted $Options(fen:format)]
 
 	if {[string length $castling]} {
@@ -1482,7 +1482,7 @@ proc Update {} {
 	}
 
 	if {[llength $Vars(idn)] == 0} {
-		set Vars(fen) [::scidb::board::makeFen \
+		set Vars(fen) [::scidc::board::makeFen \
 			$Vars(pos) $Vars(stm) $Vars(ep) $Vars(moveno) $Vars(halfmoves) \
 			$Vars(checks:w) $Vars(checks:b) $holding $promoted $Options(fen:format)] \
 			;
@@ -1534,10 +1534,10 @@ proc SwitchFormat {w} {
 
 	set values {}
 	foreach fen $History($variant) {
-		lappend values [::scidb::board::normalizeFen $fen $Options(fen:format)]
+		lappend values [::scidc::board::normalizeFen $fen $Options(fen:format)]
 	}
 	set History($variant) $values
-	set Vars(fen) [::scidb::board::normalizeFen $Vars(fen) $Options(fen:format)]
+	set Vars(fen) [::scidc::board::normalizeFen $Vars(fen) $Options(fen:format)]
 
 	set cb $Vars(combo)
 	set current [$cb current]
@@ -1559,13 +1559,13 @@ proc ResetFen {} {
 	}
 
 	if {[string length $Vars(fen)]} {
-		lassign [::scidb::board::analyseFen $Vars(fen)] \
+		lassign [::scidc::board::analyseFen $Vars(fen)] \
 			error _ _ _ _ castling ep stm moveno halfmoves _ promoted difference
 
 		ShowHoldingInfo $difference
 
 		if {[string match {TooMany*InHolding} $error]} {
-			set Vars(fen) [::scidb::board::normalizeFen $Vars(fen) $Options(fen:format) -clearholding]
+			set Vars(fen) [::scidc::board::normalizeFen $Vars(fen) $Options(fen:format) -clearholding]
 			set error ""
 		}
 
@@ -1580,12 +1580,12 @@ proc ResetFen {} {
 				append msg $mc::Error($error)
 				::dialog::error \
 					-parent [winfo toplevel $Vars(board)]  \
-					-title "$::scidb::app: $mc::Error(InvalidFen)" \
+					-title "$::scidc::app: $mc::Error(InvalidFen)" \
 					-message $msg \
 					;
 			}
 		} elseif {[AnalyseFen $Vars(fen) init]} {
-			set Vars(pos) [::scidb::board::fenToBoard $Vars(fen)]
+			set Vars(pos) [::scidc::board::fenToBoard $Vars(fen)]
 			::board::diagram::update $Vars(board) $Vars(pos)
 			set Vars(field) ""
 			SetupPromoted
@@ -1620,8 +1620,8 @@ proc Accept {} {
 	}
 
 	if {[AnalyseFen $Vars(fen) check]} {
-		set Vars(fen) [::scidb::board::normalizeFen $Vars(fen) $Options(fen:format)]
-		::scidb::game::clear $Vars(fen)
+		set Vars(fen) [::scidc::board::normalizeFen $Vars(fen) $Options(fen:format)]
+		::scidc::game::clear $Vars(fen)
 		destroy [winfo toplevel $Vars(combo)]
 		set variant [Variant?]
 		set i [lsearch -exact $History($variant) $Vars(fen)]
@@ -1658,8 +1658,8 @@ proc SetupCursors {} {
 		x11 {
 			if {[::xcursor::supported?]} {
 				foreach fig {k q r b n p} {
-					set wfile [file join $::scidb::dir::share cursor igor-w${fig}-32x32.xcur]
-					set bfile [file join $::scidb::dir::share cursor igor-b${fig}-32x32.xcur]
+					set wfile [file join $::scidc::dir::share cursor igor-w${fig}-32x32.xcur]
+					set bfile [file join $::scidc::dir::share cursor igor-b${fig}-32x32.xcur]
 
 					if {[file readable $wfile] && [file readable $bfile]} {
 						catch {
@@ -1671,7 +1671,7 @@ proc SetupCursors {} {
 						::log::info Setup $msg
 					}
 				}
-				set file [file join $::scidb::dir::share cursor circle-orange-16x16.xcur]
+				set file [file join $::scidc::dir::share cursor circle-orange-16x16.xcur]
 				if {[file readable $file]} {
 					catch { set Cursor(.) [::xcursor::loadCursor $file] }
 				} else {
@@ -1680,9 +1680,9 @@ proc SetupCursors {} {
 				}
 			} else {
 				foreach fig {k q r b n p} {
-					set wfile [file join $::scidb::dir::share cursor igor-w${fig}-32x32.xbm]
-					set bfile [file join $::scidb::dir::share cursor igor-b${fig}-32x32.xbm]
-					set mfile [file join $::scidb::dir::share cursor igor-w${fig}-32x32_mask.xbm]
+					set wfile [file join $::scidc::dir::share cursor igor-w${fig}-32x32.xbm]
+					set bfile [file join $::scidc::dir::share cursor igor-b${fig}-32x32.xbm]
+					set mfile [file join $::scidc::dir::share cursor igor-w${fig}-32x32_mask.xbm]
 
 					if {[file readable $wfile] && [file readable $bfile] && [file readable $mfile]} {
 						set Cursor(w$fig) [list @$wfile $mfile black white]
@@ -1698,8 +1698,8 @@ proc SetupCursors {} {
 
 		win32 - aqua {
 			if {[tk windowingsystem] eq "win32"} { set ext cur } else { set ext crsr }
-			set wfile [file join $::scidb::dir::share cursor igor-w${fig}-32x32.$ext]
-			set bfile [file join $::scidb::dir::share cursor igor-b${fig}-32x32.$ext]
+			set wfile [file join $::scidc::dir::share cursor igor-w${fig}-32x32.$ext]
+			set bfile [file join $::scidc::dir::share cursor igor-b${fig}-32x32.$ext]
 
 			if {[file readable $wfile] && [file readable $bfile]} {
 				set Cursor(w$fig) [list @$wfile]
@@ -1708,7 +1708,7 @@ proc SetupCursors {} {
 				::log::info Setup [format $::application::pgn::mc::CannotOpenCursorFiles "$wfile $bfile"]
 			}
 
-			set file [file join $::scidb::dir::share cursor circle-orange-32x32.$ext]
+			set file [file join $::scidc::dir::share cursor circle-orange-32x32.$ext]
 			if {[file readable $file]} {
 				set Cursor(.) [list @$file]
 			} else {

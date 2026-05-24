@@ -101,8 +101,8 @@ proc activate {w flag} {
 	variable ${path}::Vars
 
 	set Vars(active) $flag
-	set base [::scidb::db::get name]
-	set variant [::scidb::app::variant]
+	set base [::scidc::db::get name]
+	set variant [::scidc::app::variant]
 	set Vars($base:$variant:update) 1
 	names::UpdateTable $path $base $variant
 
@@ -191,7 +191,7 @@ proc BuildFrame {twm frame uid width height} {
 				lappend columns $cid $opts
 			}
 			set table [::scrolledtable::build $frame $columns -id db:annotators:$id:$uid]
-			::scidb::db::subscribe annotatorList \
+			::scidc::db::subscribe annotatorList \
 				[list [namespace current]::names::Update $twm] \
 				[list [namespace current]::Close $twm] \
 				;
@@ -201,7 +201,7 @@ proc BuildFrame {twm frame uid width height} {
 		games {
 			set columns {white whiteElo black blackElo event result site date acv}
 			::gamestable::build $frame [namespace code [list View $twm]] $columns -id db:annotators:$id:$uid
-			::scidb::db::subscribe gameList \
+			::scidc::db::subscribe gameList \
 				[list [namespace current]::games::Update $twm] \
 				[list [namespace current]::Close $twm] \
 				;
@@ -241,7 +241,7 @@ proc InitBase {path base variant} {
 	if {![info exists Vars($base:$variant:view)]} {
 		set Vars($base:$variant:initializing) 1
 		set Vars($base:$variant:view) \
-			[::scidb::view::new $base $variant slave slave slave master slave slave]
+			[::scidc::view::new $base $variant slave slave slave master slave slave]
 		set Vars($base:$variant:update) 1
 		set Vars($base:$variant:sort) $Defaults(sort)
 		set Vars($base:$variant:annotator) ""
@@ -249,10 +249,10 @@ proc InitBase {path base variant} {
 		set Vars($base:$variant:after:names) {}
 		set Vars($base:$variant:after:names) {}
 		set Vars($base:$variant:after:lastId) {}
-		set Vars($base:$variant:lastChange) [::scidb::db::get lastChange $base $variant]
+		set Vars($base:$variant:lastChange) [::scidc::db::get lastChange $base $variant]
 		set Vars($base:$variant:names:lastId) -1
 		set Vars($base:$variant:games:lastId) -1
-		::scidb::view::search $base $variant $Vars($base:$variant:view) null none
+		::scidc::view::search $base $variant $Vars($base:$variant:view) null none
 	}
 }
 
@@ -260,7 +260,7 @@ proc InitBase {path base variant} {
 namespace eval games {
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable [namespace parent]::${path}::Vars
 	
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -280,12 +280,12 @@ proc Update2 {id path base variant} {
 	if {$id <= $Vars($base:$variant:games:lastId)} { return }
 	set Vars($base:$variant:games:lastId) $id
 	set lastChange $Vars($base:$variant:lastChange)
-	set Vars($base:$variant:lastChange) [::scidb::db::get lastChange $base $variant]
+	set Vars($base:$variant:lastChange) [::scidc::db::get lastChange $base $variant]
 	set view $Vars($base:$variant:view)
 
 	if {[llength $Vars($base:$variant:annotator)] && $lastChange < $Vars($base:$variant:lastChange)} {
 		if {[string length $Vars($base:$variant:annotator)]} {
-			set selected [::scidb::db::find annotator $base $variant $Vars($base:$variant:annotator)]
+			set selected [::scidc::db::find annotator $base $variant $Vars($base:$variant:annotator)]
 			if {$selected >= 0} {
 				[namespace parent]::names::TableSearch $path $base $variant $view
 			} else {
@@ -293,7 +293,7 @@ proc Update2 {id path base variant} {
 			}
 		}
 	} else {
-		set n [::scidb::view::count games $base $variant $view]
+		set n [::scidc::view::count games $base $variant $view]
 		after idle [list ::gamestable::update $Vars(frame:games) $base $variant $n]
 	}
 }
@@ -320,12 +320,12 @@ proc UpdateTable {path base variant} {
 	if {$Vars(active)} {
 		if {[llength $Vars($base:$variant:sort)]} {
 			::widget::busyCursor on
-			::scidb::db::sort annotator $base $variant $Vars($base:$variant:sort) $Vars($base:$variant:view)
+			::scidc::db::sort annotator $base $variant $Vars($base:$variant:sort) $Vars($base:$variant:view)
 			::widget::busyCursor off
 			set Vars($base:$variant:sort) {}
 		}
 		if {$Vars($base:$variant:update)} {
-			set n [::scidb::db::count annotators $base $variant]
+			set n [::scidc::db::count annotators $base $variant]
 			after cancel $Vars($base:$variant:after:names)
 			after cancel $Vars($base:$variant:after:lastId)
 			set Vars($base:$variant:after:names) [after idle [list \
@@ -339,7 +339,7 @@ proc UpdateTable {path base variant} {
 
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable [namespace parent]::${path}::Vars
 
 	if {$base ne $clipbaseName && [string length [file extension $base]] == 0} { return }
@@ -421,7 +421,7 @@ proc TableSearch {path base variant view} {
 	::gamestable::activate $Vars(frame:games) none
 	::gamestable::select $Vars(frame:games) none
 	::gamestable::scroll $Vars(frame:games) home
-	::scidb::view::search $base $variant $view null none [list annotator $Vars($base:$variant:annotator)]
+	::scidc::view::search $base $variant $view null none [list annotator $Vars($base:$variant:annotator)]
 	::widget::busyCursor off
 }
 
@@ -444,19 +444,19 @@ proc SortColumn {path id dir} {
 	}
 	switch $dir {
 		reverse {
-			::scidb::db::reverse annotator $base $variant $view
+			::scidc::db::reverse annotator $base $variant $view
 		}
 
 		default {
 			set options {}
 			if {$dir eq "descending"} { lappend options -descending }
 			set columnNo [::scrolledtable::columnNo $Vars(frame:annotator) $id]
-			::scidb::db::sort annotator $base $variant $columnNo $view {*}$options
+			::scidc::db::sort annotator $base $variant $columnNo $view {*}$options
 		}
 	}
 	if {$selection >= 0} {
 		set selection \
-			[::scidb::db::get annotatorIndex $Vars($base:$variant:annotator) $view $base $variant]
+			[::scidc::db::get annotatorIndex $Vars($base:$variant:annotator) $view $base $variant]
 	}
 	::widget::busyCursor off
 	::scrolledtable::updateColumn $Vars(frame:annotator) $selection $see
@@ -466,15 +466,15 @@ proc SortColumn {path id dir} {
 proc Find {path mode name} {
 	variable ${path}::Vars
 
-	set base [::scidb::db::get name]
-	set variant [::scidb::app::variant]
+	set base [::scidc::db::get name]
+	set variant [::scidc::app::variant]
 	set view $Vars($base:$variant:view)
 	if {$mode eq "next"} {
 		set lastIndex [::scrolledtable::active $Vars(frame:annotator)]
 	} else {
 		set lastIndex -1
 	}
-	set i [::scidb::view::find annotator $base $variant $view "$name*" $lastIndex]
+	set i [::scidc::view::find annotator $base $variant $view "$name*" $lastIndex]
 	if {$i >= 0} {
 		::scrolledtable::see $Vars(frame:annotator) $i
 		::scrolledtable::activate $Vars(frame:annotator) $i

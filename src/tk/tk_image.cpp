@@ -3072,7 +3072,7 @@ tk_image(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 void
 tk::image_init(Tcl_Interp* ti)
 {
-	tk_cmd_image = tcl::createCommand(ti, "::scidb::tk::image", tk_image);
+	tk_cmd_image = tcl::createCommand(ti, "::scidc::tk::image", tk_image);
 }
 
 // vi:set ts=3 sw=3:

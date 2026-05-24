@@ -45,10 +45,10 @@ SYS_LDFLAGS       = -Wl,--allow-multiple-definition -Wl,-Bsymbolic-functions
 BINDIR            = /usr/local/bin
 ENGINESDIR        = /usr/local/games
 LIBDIR            = /usr/local/lib
-SHAREDIR          = /usr/local/share/scidb-beta
+SHAREDIR          = /usr/local/share/scidc-beta
 MANDIR            = /usr/local/man
 FONTDIR           = /usr/local/share/fonts/truetype/Scidb
-DATADIR           = /usr/local/share/scidb-beta
+DATADIR           = /usr/local/share/scidc-beta
 XDGDIR            = 
 
 # TCL_VERSION: Set this according to the version of Tcl/Tk you have

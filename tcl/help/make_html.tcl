@@ -225,9 +225,9 @@ proc print {chan source title head body} {
 
 	set headerMap [list \
 		%TITLE% $title \
-		%TITLE-PREFIX% "Scidb - $::help::mc::Help" \
+		%TITLE-PREFIX% "Scidc - $::help::mc::Help" \
 		%LANG% $lang \
-		%CONTENT% "Scidb - Help Page" \
+		%CONTENT% "Scidc - Help Page" \
 		%STYLE% "../styles/help.css" \
 		%HEAD% $head
 	]

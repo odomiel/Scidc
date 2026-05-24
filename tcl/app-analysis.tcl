@@ -125,7 +125,7 @@ array set GlobalOptions {
 	engine:font			TkTextFont
 }
 # Edge values:
-# Scidb:		45	 75	175	400
+# Scidc:		45	 75	175	400
 # Scid:		50	150	300	550
 # CB:			35	70		160
 
@@ -585,7 +585,7 @@ proc startAnalysis {number} {
 
 	if {!$Vars(engine:pause)} {
 		if {$Options(engine:bestFirst)} { set order bestFirst } else { set order unordered }
-		::scidb::engine::ordering [::engine::id $number] $order
+		::scidc::engine::ordering [::engine::id $number] $order
 		if {$Options(engine:singlePV)} { set multiPV 1 } else { set multiPV $Options(engine:multiPV) }
 		::engine::activateEngine $number [list multiPV $multiPV]
 	}
@@ -734,7 +734,7 @@ proc SetOrdering {tree} {
 	}
 
 	if {[::engine::active? $Vars(number)]} {
-		::scidb::engine::ordering [::engine::id $Vars(number)] $order
+		::scidc::engine::ordering [::engine::id $Vars(number)] $order
 	}
 
 	if {$Options(engine:bestFirst)} {
@@ -782,7 +782,7 @@ proc SetMultiPV {tree {number 0}} {
 
 	if {$Options(engine:singlePV)} { set multiPV 1 } else { set multiPV $Options(engine:multiPV) }
 	if {[::engine::active? $Vars(number)]} {
-		::scidb::engine::multiPV [::engine::id $Vars(number)] $multiPV
+		::scidc::engine::multiPV [::engine::id $Vars(number)] $multiPV
 	}
 	if {$Options(engine:bestFirst) || $Options(engine:singlePV)} {
 		set Vars(best:1) black
@@ -1175,7 +1175,7 @@ proc Display(error) {tree code} {
 		searchMate							{ set msg $mc::SearchMateNotSupported }
 
 		variant {
-			set variant [::scidb::engine::variant [::engine::id $Vars(number)]]
+			set variant [::scidc::engine::variant [::engine::id $Vars(number)]]
 			set msg [format $mc::NotSupported($code) $::mc::VariantName($variant)]
 		}
 	}
@@ -1243,7 +1243,7 @@ proc VisitItem {tree mode column item {x {}} {y {}}} {
 		$tree activate root
 		set Vars(current:item) 0
 	} else {
-		if {$item <= [::scidb::engine::countLines [::engine::id $Vars(number)]]} {
+		if {$item <= [::scidc::engine::countLines [::engine::id $Vars(number)]]} {
 			$tree activate $item
 		}
 		set Vars(current:item) $item
@@ -1256,22 +1256,22 @@ proc AddMove {tree x y state} {
 	variable ${Vars(number)}::Options
 
 	if {$Vars(engine:opponent)} { return }
-	if {[::scidb::game::query expansion?]} { return }
+	if {[::scidc::game::query expansion?]} { return }
 	set engineID [::engine::id $Vars(number)]
 	if {$engineID == -1} { return }
-	if {![::scidb::engine::bound? $engineID]} { return }
+	if {![::scidc::engine::bound? $engineID]} { return }
 	set id [$tree identify $x $y]
 	if {[lindex $id 0] ne "item"} { return }
 	set id [$tree identify $x $y]
 	set line [$tree item order [lindex $id 1] -visible]
-	if {[::scidb::engine::empty? $engineID $line]} { return }
-	::scidb::engine::snapshot $engineID
-	set san [::scidb::engine::snapshot $engineID san $line]
-	if  {[::scidb::game::valid? $san]} {
+	if {[::scidc::engine::empty? $engineID $line]} { return }
+	::scidc::engine::snapshot $engineID
+	set san [::scidc::engine::snapshot $engineID san $line]
+	if  {[::scidc::game::valid? $san]} {
 		set force [::util::shiftIsHeldDown? $state]
 		::move::addMove menu $san -force $force
 	}
-	::scidb::engine::snapshot $engineID clear
+	::scidc::engine::snapshot $engineID clear
 }
 
 
@@ -1281,12 +1281,12 @@ proc InsertMoves {tree what line} {
 	set id [::engine::id $Vars(number)]
 
 	if {[application::pgn::ensureScratchGame]} {
-		::scidb::engine::bind $id
+		::scidc::engine::bind $id
 	}
 
 	# don't care about errors, may happen if the user is
 	# double clicking or in seldom cases due to raise conditions
-	::scidb::engine::snapshot $id $what $line
+	::scidc::engine::snapshot $id $what $line
 }
 
 
@@ -1294,7 +1294,7 @@ proc InsertComment {tree line} {
 	variable ${tree}::Vars
 
 	set id [::engine::id $Vars(number)]
-	set san [::scidb::engine::snapshot $id comment $line]
+	set san [::scidc::engine::snapshot $id comment $line]
 
 	if {[string length $san]} {
 		set move {}
@@ -1307,8 +1307,8 @@ proc InsertComment {tree line} {
 			set san [string range $san 1 end]
 		}
 		lappend move [list str $san]
-		set comment [::scidb::misc::xml fromList [list [list {} $move]]]
-		::scidb::game::update addcomment [::scidb::game::query current] [::scidb::game::current] $comment
+		set comment [::scidc::misc::xml fromList [list [list {} $move]]]
+		::scidc::game::update addcomment [::scidc::game::query current] [::scidc::game::current] $comment
 	}
 }
 
@@ -1338,11 +1338,11 @@ proc PopupMenu {tree number args} {
 		if {[lindex $id 0] eq "item"} {
 			set line [$tree item order [lindex $id 1] -visible]
 			set id [::engine::id $Vars(number)]
-			if {	![::scidb::engine::empty? $id $line]
-				&& ![::scidb::game::query expansion?]
-				&& [::scidb::engine::bound? $id]} {
+			if {	![::scidc::engine::empty? $id $line]
+				&& ![::scidc::game::query expansion?]
+				&& [::scidc::engine::bound? $id]} {
 				$tree activate [set Vars(current:item) [expr {$line + 1}]]
-				if {[set atLineEnd [::scidb::engine::snapshot $id]] eq "atend"} {
+				if {[set atLineEnd [::scidc::engine::snapshot $id]] eq "atend"} {
 					set action move
 					set icon $icon::16x16::append
 				} else {
@@ -1363,7 +1363,7 @@ proc PopupMenu {tree number args} {
 						-command [namespace code [list InsertMoves $tree seq $line]] \
 						;
 				}
-				if {[::scidb::game::current] != 9} {
+				if {[::scidc::game::current] != 9} {
 					$menu add command \
 						-label " $mc::Add(line)" \
 						-image $::icon::16x16::plus \
@@ -1587,7 +1587,7 @@ proc SetupEvalEdges {tree} {
 	set values {0.45 0.75 1.75 4.00}
 	set btn [ttk::button $top.scidb \
 		-style aligned.TButton \
-		-text "Scidb" \
+		-text "Scidc" \
 		-command [namespace code [list SetEdgeValues $top $values]] \
 	]
 	grid $btn -row 5 -column 1 -sticky w

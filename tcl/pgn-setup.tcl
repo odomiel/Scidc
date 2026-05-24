@@ -501,7 +501,7 @@ proc setupStyle {context positionList} {
 	}
 
 	foreach position $positionList {
-		::scidb::game::setupStyle \
+		::scidc::game::setupStyle \
 			$position \
 			{*}$thresholds \
 			$Options(style:column) \
@@ -520,7 +520,7 @@ proc setupStyle {context positionList} {
 proc setupNags {context} {
 	variable [namespace parent]::${context}::Options
 	set nags [expr {$Options(show:nagtext) ? [::annotation::unusualNags] : {}}]
-	::scidb::game::setupNags $nags
+	::scidc::game::setupNags $nags
 }
 
 
@@ -572,7 +572,7 @@ proc openSetupDialog {parent context position args} {
 	set Priv(applied) 0
 	set Priv(dlg) $parent.pgnSetup
 
-	set dlg [tk::toplevel $Priv(dlg) -class Scidb]
+	set dlg [tk::toplevel $Priv(dlg) -class Scidc]
 	wm withdraw $dlg
 	set top [::ttk::frame $dlg.top -takefocus 0]
 	pack $top -fill both -expand yes
@@ -633,7 +633,7 @@ proc openSetupDialog {parent context position args} {
 		[namespace code [list SelectionChanged $options $context $position %d]]
 	set Priv(context) $context
 	if {$complex} { set mainlineOnly no } else { set mainlineOnly yes }
-	::scidb::game::subscribe pgn $position [namespace current]::UpdateDisplay $mainlineOnly
+	::scidc::game::subscribe pgn $position [namespace current]::UpdateDisplay $mainlineOnly
 	$style select Appearance
 
 	grid $style -row 1 -column 1 -sticky nsew
@@ -657,7 +657,7 @@ proc openSetupDialog {parent context position args} {
 	::tooltip::tooltip $dlg.revert $mc::RevertSettings
 	::tooltip::tooltip $dlg.reset $mc::ResetSettings
 
-	wm title $dlg "$::scidb::app - $mc::Configure($context)"
+	wm title $dlg "$::scidc::app - $mc::Configure($context)"
 	wm resizable $dlg no no
 	::util::place $dlg -parent $parent -position center
 	wm transient $dlg [winfo toplevel $parent]
@@ -668,7 +668,7 @@ proc openSetupDialog {parent context position args} {
 	tkwait window $dlg
 	::ttk::releaseGrab $dlg
 
-	::scidb::game::unsubscribe pgn $position [namespace current]::UpdateDisplay
+	::scidc::game::unsubscribe pgn $position [namespace current]::UpdateDisplay
 	set Options(show:opening) 1
 	set Options(show:result) 1
 
@@ -817,7 +817,7 @@ proc FinishReset {context position} {
 	setupStyle $context $position
 	setupNags $context
 	configureText $Priv(path) setup
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 
@@ -883,7 +883,7 @@ proc UpdateDisplay {position data} {
 proc DoUpdateDisplay {context position data} {
 	variable Priv
 
-	if {[::scidb::game::query $position open?]} {
+	if {[::scidc::game::query $position open?]} {
 		::pgn::${context}::doLayout $position $data $context $Priv(pgn)
 	}
 }
@@ -1281,7 +1281,7 @@ proc TakeOver {context position topic} {
 
 	setupStyle $context $position
 	configureText $Priv(path) setup
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 
@@ -1365,7 +1365,7 @@ proc RefreshFigurineFont {context position lang} {
 	::font::registerFigurineFonts setup
 	array set New_Fonts [array get ::font::Options]
 	configureText $Priv(path) setup
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 
@@ -1447,7 +1447,7 @@ proc RefreshOptions {context position attr} {
 	setupStyle $context $position
 	setupNags $context
 	configureText $Priv(path) setup
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 
@@ -1460,7 +1460,7 @@ proc UpdateFonts {dlg context position font} {
 	foreach attr {family size} { set New_Fonts(setup:$attr) [set $attr] }
 	RefreshFonts $all
 	configureText $Priv(path) setup
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 
@@ -1708,9 +1708,9 @@ proc SelectionChanged {mw context position tag {blink yes}} {
 	$mw raise $Priv(pane:$pane)
 
 	setupStyle $context $position
-	::scidb::game::switch $position
-	::scidb::game::import $position $data [namespace current]::Trash {}
-	::scidb::game::langSet $position [list {} $langID]
+	::scidc::game::switch $position
+	::scidc::game::import $position $data [namespace current]::Trash {}
+	::scidc::game::langSet $position [list {} $langID]
 	if {$pane ne $Priv(previous-pane)} {
 		::pgn::${context}::resetGoto $w $position
 		foreach key [$w tag names] {
@@ -1721,9 +1721,9 @@ proc SelectionChanged {mw context position tag {blink yes}} {
 
 	if {[llength $Priv(color:attr)]} {
 		if {$pane eq "colors"} {
-			::scidb::game::go $position end
-			set key [::scidb::game::position $position key]
-			::scidb::game::go $position start
+			::scidc::game::go $position end
+			set key [::scidc::game::position $position key]
+			::scidc::game::go $position start
 			set hover [string match hover* $tag]
 			$w tag raise h:curr h:move
 
@@ -1755,7 +1755,7 @@ proc SelectionChanged {mw context position tag {blink yes}} {
 			}
 		}
 
-		::scidb::game::go $position 1
+		::scidc::game::go $position 1
 
 		if {$context ne "editor"} {
 			if {$tag in {"current-move" "next-moves"}} {
@@ -1786,11 +1786,11 @@ proc UpdatePosition {position} {
 	variable Priv
 
 	set w $Priv(pgn)
-	set key [::scidb::game::position $position key]
+	set key [::scidc::game::position $position key]
 	set range [$w tag nextrange m:move $key]
 	$w tag add h:curr {*}$range
 	$w tag add h:move {*}$range
-	set key [::scidb::game::next keys $position]
+	set key [::scidc::game::next keys $position]
 	set range [$w tag nextrange m:move $key]
 	$w tag add h:next {*}$range
 	$w tag remove sel begin end

@@ -54,8 +54,8 @@ set CannotMerge					"Cannot merge games with different variants."
 
 proc openDialog {parent primary secondary} {
 	variable ::pgn::merge::Options
-	variable ::scidb::mergebaseName
-	variable ::scidb::clipbaseName
+	variable ::scidc::mergebaseName
+	variable ::scidc::clipbaseName
 	variable Priv
 
 	set dlg .mergeDialog
@@ -104,22 +104,22 @@ proc openDialog {parent primary secondary} {
 		$pw add $preview -sticky nsew -stretch always
 
 		::game::freeze $primary [namespace current]::mc::GameisLocked
-		::scidb::db::new $mergebaseName Undetermined [::application::database::lookupType Clipbase]
-		lassign [::scidb::game::sink? $primary] base variant number
+		::scidc::db::new $mergebaseName Undetermined [::application::database::lookupType Clipbase]
+		lassign [::scidc::game::sink? $primary] base variant number
 		lappend Priv(secondaries) [list $base $variant $number]
 		set Priv(variant) [::util::toMainVariant $variant]
 		set Priv(pos:merge) 20
 		set Priv(pos:game) 21
 		lappend Priv(temporary) $Priv(pos:merge) $Priv(pos:game)
 		lappend Priv(games) $Priv(pos:game)
-		::scidb::game::copy game $mergebaseName $primary original
-		::scidb::game::new $Priv(pos:merge)
-		::scidb::game::new $Priv(pos:game)
-		set number [expr {[::scidb::db::count games $mergebaseName $Priv(variant)] - 1}]
-		::scidb::game::load $Priv(pos:merge) $mergebaseName $Priv(variant) $number
-		::scidb::game::load $Priv(pos:game) $mergebaseName $Priv(variant) $number
-		::scidb::game::langSet $Priv(pos:merge) *
-		::scidb::game::langSet $Priv(pos:game) *
+		::scidc::game::copy game $mergebaseName $primary original
+		::scidc::game::new $Priv(pos:merge)
+		::scidc::game::new $Priv(pos:game)
+		set number [expr {[::scidc::db::count games $mergebaseName $Priv(variant)] - 1}]
+		::scidc::game::load $Priv(pos:merge) $mergebaseName $Priv(variant) $number
+		::scidc::game::load $Priv(pos:game) $mergebaseName $Priv(variant) $number
+		::scidc::game::langSet $Priv(pos:merge) *
+		::scidc::game::langSet $Priv(pos:game) *
 
 		### left frame with controls ###############################
 
@@ -136,7 +136,7 @@ proc openDialog {parent primary secondary} {
 		]
 		::bind $table <<TableCheckbutton>> [namespace code { TableCheckbutton %d }]
 		::bind $table <<TableConfigured>> [namespace code { TableConfigured %W }]
-		::scidb::db::subscribe gameList [list [namespace current]::Update $tb]
+		::scidc::db::subscribe gameList [list [namespace current]::Update $tb]
 
 		set btns [ttk::frame $control.buttons -borderwidth 2 -relief ridge]
 
@@ -297,12 +297,12 @@ proc openDialog {parent primary secondary} {
 	if {$secondary eq "clipbase"} {
 		set base $clipbaseName
 		set variant $Priv(variant)
-		set number [expr {[::scidb::db::count games $clipbaseName $variant] - 1}]
+		set number [expr {[::scidc::db::count games $clipbaseName $variant] - 1}]
 	} elseif {[llength $secondary] == 4} {
 		lassign $secondary base variant view index
-		set number [::scidb::db::get gameNumber $base $variant $index $view]
+		set number [::scidc::db::get gameNumber $base $variant $index $view]
 	} else {
-		lassign [::scidb::game::sink? $secondary] base variant number
+		lassign [::scidc::game::sink? $secondary] base variant number
 	}
 
 	set id [list $base $variant $number]
@@ -318,13 +318,13 @@ proc openDialog {parent primary secondary} {
 	}
 
 	set temporary [::game::nextGamePosition]
-	::scidb::game::new $temporary
-	::scidb::game::load $temporary $base $variant $number
-	::scidb::game::langSet $temporary *
-	::scidb::game::copy game $mergebaseName $temporary original
-	set number [expr {[::scidb::db::count games $mergebaseName $variant] - 1}]
-	::scidb::game::load $temporary $mergebaseName $variant $number
-	::scidb::game::langSet $temporary *
+	::scidc::game::new $temporary
+	::scidc::game::load $temporary $base $variant $number
+	::scidc::game::langSet $temporary *
+	::scidc::game::copy game $mergebaseName $temporary original
+	set number [expr {[::scidc::db::count games $mergebaseName $variant] - 1}]
+	::scidc::game::load $temporary $mergebaseName $variant $number
+	::scidc::game::langSet $temporary *
 	set Priv(used:$number) 1
 	set cmd [list ::gamestable::setState $Priv(table) $number check]
 	if {[llength $Priv(games)] > 1} { {*}$cmd } else { lappend Priv(script) $cmd }
@@ -335,20 +335,20 @@ proc openDialog {parent primary secondary} {
 
 
 proc alreadyMerged {primary secondary} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Priv
 
-	lassign [::scidb::game::sink? $primary] base variant number
+	lassign [::scidc::game::sink? $primary] base variant number
 	set id1 [list $base $variant $number]
 
 	if {$secondary eq "clipbase"} {
 		set base $clipbaseName
-		set number [expr {[::scidb::db::count games $clipbaseName $variant] - 1}]
+		set number [expr {[::scidc::db::count games $clipbaseName $variant] - 1}]
 	} elseif {[llength $secondary] == 4} {
 		lassign $secondary base variant view index
-		set number [::scidb::db::get gameNumber $base $variant $index $view]
+		set number [::scidc::db::get gameNumber $base $variant $index $view]
 	} else {
-		lassign [::scidb::game::sink? $secondary] base variant number
+		lassign [::scidc::game::sink? $secondary] base variant number
 	}
 
 	set id2 [list $base $variant $number]
@@ -387,11 +387,11 @@ proc ShowGame {base variant number fen} {
 	::pgn::setup::setupStyle merge $position
 	::pgn::editor::resetGame $Priv(pgn:game) $position
 	set updateCmd [namespace current]::UpdateDisplay(game)
-	::scidb::game::langSet $position *
-	::scidb::game::subscribe pgn $position $updateCmd no
-	::scidb::game::refresh $position -immediate
+	::scidc::game::langSet $position *
+	::scidc::game::subscribe pgn $position $updateCmd no
+	::scidc::game::refresh $position -immediate
 	$Priv(pgn:game) yview moveto 0.0
-	::scidb::game::unsubscribe pgn $Priv(pos:game) $updateCmd
+	::scidc::game::unsubscribe pgn $Priv(pos:game) $updateCmd
 	set Priv(current) $position
 }
 
@@ -402,11 +402,11 @@ proc View {base variant} {
 
 
 proc Update {path id base variant {view -1} {index -1}} {
-	variable ::scidb::mergebaseName
+	variable ::scidc::mergebaseName
 	variable Priv
 
 	if {$base == $mergebaseName && $variant == $Priv(variant)} {
-		set n [::scidb::view::count games $base $variant $view]
+		set n [::scidc::view::count games $base $variant $view]
 		set selection [gamestable::selection $path]
 		gamestable::update $path $base $variant $n
 		gamestable::select $path $selection
@@ -455,21 +455,21 @@ proc GetMergeState {} {
 
 
 proc Destroy {dlg} {
-	variable ::scidb::mergebaseName
+	variable ::scidc::mergebaseName
 	variable Priv
 
-	::scidb::db::unsubscribe gameList [list [namespace current]::Update $Priv(table)]
+	::scidc::db::unsubscribe gameList [list [namespace current]::Update $Priv(table)]
 
 	foreach position $Priv(temporary) {
 		::pgn::editor::forgetGame $position
-		::scidb::game::release $position
+		::scidc::game::release $position
 	}
 
 	foreach pane {game merge} {
 		::pgn::setup::closeText $Priv(pgn:$pane) merge
 	}
 
-	::scidb::db::close $mergebaseName
+	::scidc::db::close $mergebaseName
 	::game::unfreeze $Priv(primary)
 	unset Priv
 }
@@ -488,7 +488,7 @@ proc Save {dlg mode} {
 		set position $Priv(primary)
 	}
 
-	::scidb::game::swap $Priv(pos:merge) $position
+	::scidc::game::swap $Priv(pos:merge) $position
 	::game::setModified $position
 	::widget::busyCursor off
 
@@ -508,17 +508,17 @@ proc DoMerge {} {
 		if {$length == -1} { set length unlimited }
 		set games [lrange $mergeState 4 end]
 
-		set startKey [::scidb::game::query current $Priv(primary)]
-		::scidb::game::moveto [lindex $Priv(pos:merge)] $startKey
-		::scidb::game::moveto [lindex $Priv(pos:game)] $startKey
+		set startKey [::scidc::game::query current $Priv(primary)]
+		::scidc::game::moveto [lindex $Priv(pos:merge)] $startKey
+		::scidc::game::moveto [lindex $Priv(pos:game)] $startKey
 
 		set position $Priv(pos:merge)
-		while {[string length [::scidb::game::query $position undo]]} {
-			::scidb::game::execute undo $position
+		while {[string length [::scidc::game::query $position undo]]} {
+			::scidc::game::execute undo $position
 		}
-		::scidb::game::langSet $position *
-		::scidb::game::merge $position $games $Priv(startpos) $Priv(transposition) $depth $length
-		::scidb::game::langSet $position *
+		::scidc::game::langSet $position *
+		::scidc::game::merge $position $games $Priv(startpos) $Priv(transposition) $depth $length
+		::scidc::game::langSet $position *
 
 		set Priv(state) $mergeState
 	}
@@ -533,10 +533,10 @@ proc UpdatePreview {} {
 
 	::pgn::setup::setupStyle merge $Priv(pos:merge)
 	set updateCmd [namespace current]::UpdateDisplay(merge)
-	::scidb::game::subscribe pgn $Priv(pos:merge) $updateCmd no
-	::scidb::game::layout $Priv(pos:merge)
+	::scidc::game::subscribe pgn $Priv(pos:merge) $updateCmd no
+	::scidc::game::layout $Priv(pos:merge)
 	$Priv(pgn:merge) yview moveto 0.0
-	::scidb::game::unsubscribe pgn $Priv(pos:merge) $updateCmd
+	::scidc::game::unsubscribe pgn $Priv(pos:merge) $updateCmd
 
 	ConfigureUpdateButton
 	::widget::busyCursor off
@@ -556,7 +556,7 @@ proc UpdateDisplay(merge) {position data} {
 proc DoUpdateDisplay {pane position data} {
 	variable Priv
 
-	if {[::scidb::game::query $position open?]} {
+	if {[::scidc::game::query $position open?]} {
 		::pgn::editor::doLayout $position $data merge $Priv(pgn:$pane)
 	}
 }
@@ -579,9 +579,9 @@ proc Refresh {} {
 		if {$Priv(pos:$pane)} {
 			::pgn::setup::setupStyle merge $Priv(pos:$pane)
 			set updateCmd [namespace current]::UpdateDisplay($pane)
-			::scidb::game::subscribe pgn $Priv(pos:$pane) $updateCmd no
-			::scidb::game::refresh $Priv(pos:$pane) -immediate
-			::scidb::game::unsubscribe pgn $Priv(pos:$pane) $updateCmd
+			::scidc::game::subscribe pgn $Priv(pos:$pane) $updateCmd no
+			::scidc::game::refresh $Priv(pos:$pane) -immediate
+			::scidc::game::unsubscribe pgn $Priv(pos:$pane) $updateCmd
 		}
 	}
 

@@ -1,5 +1,5 @@
 # ======================================================================
-# Copyright: (C) 2026 Scidb contributors
+# Copyright: (C) 2026 Scidc contributors
 # ======================================================================
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ variable LogFile ""
 
 
 proc logDir {} {
-	return [file join $::scidb::dir::user logs]
+	return [file join $::scidc::dir::user logs]
 }
 
 
@@ -51,25 +51,25 @@ proc toggleStderr {} {
 
 	set Options(stderrToFile) [expr {!$Options(stderrToFile)}]
 	if {$Options(stderrToFile)} {
-		if {[lsearch -exact [info commands ::scidb::misc::*] ::scidb::misc::setLogFile] < 0} {
+		if {[lsearch -exact [info commands ::scidc::misc::*] ::scidc::misc::setLogFile] < 0} {
 			set Options(stderrToFile) 0
 			after idle [list tk_messageBox -type ok -icon warning \
-				-title $::scidb::app \
-				-message "::scidb::misc::setLogFile nicht verfügbar.\nBitte Programm neu bauen (make)."]
+				-title $::scidc::app \
+				-message "::scidc::misc::setLogFile nicht verfügbar.\nBitte Programm neu bauen (make)."]
 			return
 		}
 		set dir [ensureLogDir]
 		set date [clock format [clock seconds] -format "%Y%m%d"]
 		set LogFile [file join $dir "stderr-$date.log"]
-		if {[catch { ::scidb::misc::setLogFile $LogFile } err]} {
+		if {[catch { ::scidc::misc::setLogFile $LogFile } err]} {
 			set Options(stderrToFile) 0
 			set LogFile ""
 			after idle [list tk_messageBox -type ok -icon error \
-				-title $::scidb::app \
+				-title $::scidc::app \
 				-message "Stderr-Protokollierung fehlgeschlagen:\n$err"]
 		}
 	} else {
-		catch { ::scidb::misc::setLogFile "" }
+		catch { ::scidc::misc::setLogFile "" }
 		set LogFile ""
 	}
 }
@@ -85,7 +85,7 @@ proc buildMenu {m} {
 	variable Options
 
 	# Build mode info (read-only status line)
-	set mode [expr {[::scidb::misc::debug?] ? $mc::DebugBuild : $mc::ReleaseBuild}]
+	set mode [expr {[::scidc::misc::debug?] ? $mc::DebugBuild : $mc::ReleaseBuild}]
 	$m add command \
 		-label " [format $mc::BuildMode $mode]" \
 		-state disabled \

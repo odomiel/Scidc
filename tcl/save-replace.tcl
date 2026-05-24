@@ -288,7 +288,7 @@ proc open {parent base variant position {number 0}} {
 	incr number -1
 
 	set characteristicsOnly [expr {[llength $position] == 0}]
-	set codec [::scidb::db::get codec $base $variant]
+	set codec [::scidc::db::get codec $base $variant]
 	if {$codec eq "si4" || $codec eq "si5"} { set codec "si3" }
 	if {$codec eq "sci"} {
 		set characteristics 0
@@ -311,9 +311,9 @@ proc open {parent base variant position {number 0}} {
 	array set TagOrder [array get DefaultTagOrder]
 
 	if {$characteristicsOnly} {
-		set Priv(tags) [::scidb::db::get tags $number $base $variant]
+		set Priv(tags) [::scidc::db::get tags $number $base $variant]
 	} else {
-		set Priv(tags) [::scidb::game::tags $position -userSuppliedOnly yes]
+		set Priv(tags) [::scidc::game::tags $position -userSuppliedOnly yes]
 	}
 
 	set Priv(game-eco) ""
@@ -340,7 +340,7 @@ proc open {parent base variant position {number 0}} {
 	}
 
 	foreach attr {player event site annotator} {
-		set maxUsage [::scidb::db::get maxUsage $base $variant $attr]
+		set maxUsage [::scidc::db::get maxUsage $base $variant $attr]
 		set digits [expr {int(ceil(log10(max(1, $maxUsage)))) + 1}]
 		$Priv(table:$attr) configcol freq -width $digits
 		$Priv(table:$attr) resize
@@ -357,9 +357,9 @@ proc open {parent base variant position {number 0}} {
 
 	# Finalization ############################################
 	if {[llength $position]} {
-		set idn [::scidb::game::query $position idn]
+		set idn [::scidc::game::query $position idn]
 	} else {
-		set idn [::scidb::db::get idn $number $base $variant]
+		set idn [::scidc::db::get idn $number $base $variant]
 	}
 	if {$idn > 0 && $idn != 518} {
 		$dlg.top.white-rating.type set IPS
@@ -390,12 +390,12 @@ proc open {parent base variant position {number 0}} {
 
 
 proc checkIfWriteable {parent base variant position number} {
-	if {[::scidb::db::get readonly? $base $variant]} {
+	if {[::scidc::db::get readonly? $base $variant]} {
 		set msg [format $mc::CurrentBaseIsReadonly [::util::databaseName $base]]
 		::dialog::info -parent $parent -message $msg -title [GetTitle $base $position $number]
 		return 0
 	}
-	if {[::scidb::game::query trial]} {
+	if {[::scidc::game::query trial]} {
 		set msg [format $mc::CurrentGameHasTrialMode [::util::databaseName $base]]
 		set shortcut "$::mc::Key(Ctrl)-$::application::board::mc::Accel(trial-mode)"
 		set detail [format $mc::LeaveTrialModeHint $shortcut]
@@ -446,14 +446,14 @@ proc Build {dlg base variant position number} {
 	set Priv(twoRatings) $twoRatings
 	set Priv(format) [expr {$twoRatings ? "sci" : "si3"}]
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 
 	set top [ttk::frame $dlg.top -takefocus 0]
 	set ltrow 1
 	set rtrow 1
-	set minYear [::scidb::db::get minYear $base $variant]
-	set maxYear [::scidb::db::get maxYear $base $variant]
+	set minYear [::scidc::db::get minYear $base $variant]
+	set maxYear [::scidc::db::get maxYear $base $variant]
 	set rows {}
 	set charwidth [font measure TkTextFont "0"]
 	set maxlen [expr {$MaxColumnLength/$charwidth}]
@@ -1173,7 +1173,7 @@ proc UpdateName {top nameField fideIdField} {
 
 	set fideId [$top.$fideIdField value]
 	if {[string length $fideId] && [string length [$top.$nameField get]] == 0} {
-		$top.$nameField set [::scidb::misc::lookup player $fideId -unicode $Options(unicode)]
+		$top.$nameField set [::scidc::misc::lookup player $fideId -unicode $Options(unicode)]
 	}
 }
 
@@ -1301,7 +1301,7 @@ proc EditTag {t x y} {
 proc NewTag {t item {name ""}} {
 	if {$name eq "PlyCount"} {
 		$t item element configure $item name elemText -text $name
-		$t item element configure $item value elemText -text [::scidb::game::count length]
+		$t item element configure $item value elemText -text [::scidc::game::count length]
 		FinishEditTag $t $item value
 	} else {
 		if {[string length $name] == 0} {
@@ -1854,7 +1854,7 @@ proc VisitMatch {lb data} {
 					set attr site
 					set name [lindex $data [lsearch $Attrs(site) name]]
 					set country [lindex $data [lsearch $Attrs(site) country]]
-					set aliases [::scidb::app::lookup siteAlias $name $country]
+					set aliases [::scidc::app::lookup siteAlias $name $country]
 				}
 
 				white-name - black-name {
@@ -1864,7 +1864,7 @@ proc VisitMatch {lb data} {
 					} else { ;# show aliases
 						set attr player
 						set name [lindex $data [lsearch $Attrs(player) name]]
-						set aliases [::scidb::app::lookup playerAlias $name]
+						set aliases [::scidc::app::lookup playerAlias $name]
 					}
 				}
 			}
@@ -2072,7 +2072,7 @@ proc UpdateMatchList {top field item args} {
 		set matches $History($attr)
 		set title $mc::History
 	} else {
-		set matches [::scidb::db::match \
+		set matches [::scidc::db::match \
 			$attr $base $variant 10 $Priv($field) $Priv(ratingType) $Priv(twoRatings)]
 		set title [set mc::[string toupper $attr 0 0]Base]
 	}
@@ -2509,9 +2509,9 @@ proc SetupTags {top base variant idn position number} {
 	if {[info exists Lookup(BlackType)] && $Lookup(BlackType) eq "program"} { $top.black-sex set c }
 
 	if {[llength $position]} {
-		lassign [::scidb::game::query $position ratingTypes] ratingType(White) ratingType(Black)
+		lassign [::scidc::game::query $position ratingTypes] ratingType(White) ratingType(Black)
 	} else {
-		lassign [::scidb::db::get ratingTypes $number $base $variant] ratingType(White) ratingType(Black)
+		lassign [::scidc::db::get ratingTypes $number $base $variant] ratingType(White) ratingType(Black)
 	}
 
 	foreach rating $::ratingbox::ratings(all) {
@@ -2546,9 +2546,9 @@ proc SetupTags {top base variant idn position number} {
 				set Priv(game-eco-flag) 1
 			} else {
 				if {[llength $position]} {
-					set eco [::scidb::game::query $position eco]
+					set eco [::scidc::game::query $position eco]
 				} else {
-					set eco [::scidb::db::get eco $number $base $variant]
+					set eco [::scidc::db::get eco $number $base $variant]
 				}
 				$top.game-eco set $eco
 				set Priv(game-eco-flag) 0
@@ -2607,7 +2607,7 @@ proc Save {top fields} {
 	if {$rc} {
 		::widget::busyCursor on
 		if {$Priv(characteristics-only)} {
-			::scidb::db::update $base $variant $number [array get Tags] 
+			::scidc::db::update $base $variant $number [array get Tags] 
 		} else {
 			::log::open $title
 			::log::delay
@@ -2615,7 +2615,7 @@ proc Save {top fields} {
 				[list %white $Tags(White) %black $Tags(Black) %event $Tags(Event) %base $base] \
 				$mc::SavingGameLogInfo]
 			set replace [expr {$number >= 0}]
-			set cmd [list ::scidb::game::save \
+			set cmd [list ::scidc::game::save \
 				$base \
 				$variant \
 				[array get Tags] \
@@ -3026,7 +3026,7 @@ proc CheckFields {top title fields} {
 						}
 
 						WhiteTeamCountry - BlackTeamCountry {
-							set code [::scidb::misc::lookup countryCode $value]
+							set code [::scidc::misc::lookup countryCode $value]
 							if {[string length $code] == 0} {
 								set error [format $mc::ExtraTag $tag]
 								append error [format $mc::InvalidCountryCode $value]
@@ -3078,7 +3078,7 @@ proc CheckFields {top title fields} {
 								set error [format $mc::ExtraTag $tag]
 								append error [format $mc::InvalidPlyCount $value]
 							} else {
-								set plyCount [::scidb::game::count halfmoves]
+								set plyCount [::scidc::game::count halfmoves]
 								if {$plyCount != $value} {
 									set error [format $mc::ExtraTag $tag]
 									append error [format $mc::IncorrectPlyCount $value $plyCount]

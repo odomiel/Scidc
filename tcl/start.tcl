@@ -26,12 +26,12 @@
 
 #set tcl_traceExec 1
 
-namespace eval scidb {
+namespace eval scidc {
 
 set revision 83 ;# first revision ever
 
-variable clipbaseName		[::scidb::db::get clipbase name]
-variable scratchbaseName	[::scidb::db::get scratchbase name]
+variable clipbaseName		[::scidc::db::get clipbase name]
+variable scratchbaseName	[::scidc::db::get scratchbase name]
 variable mergebaseName		"Mergebase"
 
 namespace eval intern { variable tclStack "" }
@@ -93,7 +93,7 @@ if {![file isdirectory $user]} {
 		file copy  [file join $share themes] $user
 	} err]} {
 		tk_messageBox -type ok -icon error \
-			-title "$::scidb::app: startup error" \
+			-title "$::scidc::app: startup error" \
 			-message "Cannot create user directory '$user': $err"
 		exit 1
 	}
@@ -101,7 +101,7 @@ if {![file isdirectory $user]} {
 	set setup 0
 }
 
-# AppRun creates ~/.scidb-beta/engines/bin/ before first launch, so the user
+# AppRun creates ~/.scidc-beta/engines/bin/ before first launch, so the user
 # directory exists but options.dat has never been written.  Treat this as a
 # first run so the language-selection dialog is shown.
 if {$setup == 0 && ![file exists [file join $config options.dat]]} {
@@ -111,7 +111,7 @@ if {$setup == 0 && ![file exists [file join $config options.dat]]} {
 if {![file isdirectory $config]} {
 	if {[catch {file mkdir $config} err]} {
 		tk_messageBox -type ok -icon error \
-			-title "$::scidb::app: startup error" \
+			-title "$::scidc::app: startup error" \
 			-message "Cannot create config directory '$config': $err"
 		exit 1
 	}
@@ -174,7 +174,7 @@ proc update {} {
 			{Ocean|1262882648418|yellow.color|gregor}
 			{Primus|1368794511290|yellow.color|gregor}
 			{Sand|1228828282840|yellow.color|gregor}
-			{Scidb|1251901638256|yellow.color|gregor}
+			{Scidc|1251901638256|yellow.color|gregor}
 			{Staunton|1355510748081|yellow.color|gregor}
 			{Virtual - Blue|1381593501788|purple|gregor}
 			{Virtual - Brown|1423390755270|purple|gregor}
@@ -237,7 +237,7 @@ proc update {} {
 			{Ocean|1262882896027|yellow.color|gregor}
 			{Primus|1368794504056|yellow.color|gregor}
 			{Sand|1228820287277|yellow.color|gregor}
-			{Scidb|1251901586671|yellow.color|gregor}
+			{Scidc|1251901586671|yellow.color|gregor}
 			{Seagreen|1355510010833|yellow.color|gregor}
 			{Stone|1243792087778|yellow.color|gregor}
 			{Sycomore|1243762745547|yellow.color|gregor}
@@ -255,9 +255,9 @@ proc update {} {
 	set Updated 1
 
 	foreach dir {{} piece square} {
-		set themesDir [file join $::scidb::dir::user themes $dir]
+		set themesDir [file join $::scidc::dir::user themes $dir]
 		file mkdir $themesDir
-		foreach file [glob -nocomplain -directory [file join $::scidb::dir::share themes $dir] *.dat] {
+		foreach file [glob -nocomplain -directory [file join $::scidc::dir::share themes $dir] *.dat] {
 			if {[::process::testOption update-themes]} {
 				set ignore 0
 			} else {
@@ -306,29 +306,29 @@ proc update {} {
 
 
 # --- Initialization ------------------------------------------------------------
-proc util::place::getWmFrameExtents {w} { return [::scidb::tk::wm extents $w] }
-proc util::place::getWmWorkArea {w} { return [::scidb::tk::wm workarea $w] }
+proc util::place::getWmFrameExtents {w} { return [::scidc::tk::wm extents $w] }
+proc util::place::getWmWorkArea {w} { return [::scidc::tk::wm workarea $w] }
 # ------------------------------------------------------------------------------
 
 if {[::process::testOption version]} {
-	puts "$::scidb::app version $::scidb::version"
-	if {[file readable $::scidb::file::options]} {
-		puts "option file: $::scidb::file::options"
+	puts "$::scidc::app version $::scidc::version"
+	if {[file readable $::scidc::file::options]} {
+		puts "option file: $::scidc::file::options"
 	}
-	puts "exec directory: $::scidb::dir::exec"
-	puts "share directory: $::scidb::dir::share"
+	puts "exec directory: $::scidc::dir::exec"
+	puts "share directory: $::scidc::dir::share"
 	exit 0
 }
 
 if {[::process::testOption print-recovery-files]} {
-	foreach file [glob -directory $::scidb::dir::backup -nocomplain game-*.pgn] {
+	foreach file [glob -directory $::scidc::dir::backup -nocomplain game-*.pgn] {
 		if {[file readable $file]} { puts $file }
 	}
 	exit 0
 }
 
 if {[::process::testOption delete-recovery-files]} {
-	foreach file [glob -directory $::scidb::dir::backup -nocomplain game-*.pgn] {
+	foreach file [glob -directory $::scidc::dir::backup -nocomplain game-*.pgn] {
 		file rename -force $file $file.bak
 	}
 	exit 0
@@ -341,7 +341,7 @@ if {[::process::testOption recover-options]} {
 	::process::setOption dont-recover-files
 	::process::setOption initial-layout
 	::process::setOption reset-fonts
-	set ::scidb::dir::setup 1
+	set ::scidc::dir::setup 1
 }
 
 
@@ -349,15 +349,15 @@ namespace eval mc {}
 
 tk appname $scidb::app
 
-tk::toplevel .application -class $::scidb::app
-::scidb::tk::wm startup .
+tk::toplevel .application -class $::scidc::app
+::scidc::tk::wm startup .
 wm withdraw .application
 # TODO: does this emergency handling work?
 bind .application <Alt-F11> { catch {ttk::releaseGrab [grab current]} }
 
-if {[::scidb::misc::debug?]} {
+if {[::scidc::misc::debug?]} {
 	::process::setOption single-process
-	if {[tk windowingsystem] eq "x11"} { ::scidb::tk::wm sync }
+	if {[tk windowingsystem] eq "x11"} { ::scidc::tk::wm sync }
 	if {![::process::testOption force-grab]} { proc grab {args} {} }
 }
 
@@ -566,17 +566,17 @@ set SelectionOwnerDidntRespond   "Timeout during drop action: selection owner di
 set Extensions		{.sci .scv .si5 .si4 .si3 .cbh .cbf .CBF .pgn .PGN .zip}
 set clipbaseName	Clipbase
 
-set shiftMask		[::scidb::tk::misc shiftMask?]
-set lockMask		[::scidb::tk::misc lockMask?]
-set controlMask	[::scidb::tk::misc controlMask?]
-set altMask			[::scidb::tk::misc altMask?]
+set shiftMask		[::scidc::tk::misc shiftMask?]
+set lockMask		[::scidc::tk::misc lockMask?]
+set controlMask	[::scidc::tk::misc controlMask?]
+set altMask			[::scidc::tk::misc altMask?]
 set keyStateMask	[expr {$shiftMask | $lockMask | $controlMask | $altMask}]
 
 
 proc databaseName {base {withExtension 1}} {
 	variable clipbaseName
 
-	if {$base eq [::scidb::db::get clipbase name]} {
+	if {$base eq [::scidc::db::get clipbase name]} {
 		return $clipbaseName
 	}
 
@@ -785,7 +785,7 @@ proc openBases {pathList} {
 } ;# namespace remote
 
 
-namespace eval scidb {
+namespace eval scidc {
 
 proc bgerror {err args} {
 	global errorCode errorInfo
@@ -851,6 +851,6 @@ proc bgerror {err args} {
 
 } ;# namespace scidb
 
-interp bgerror {} ::scidb::bgerror
+interp bgerror {} ::scidc::bgerror
 
 # vi:set ts=3 sw=3:

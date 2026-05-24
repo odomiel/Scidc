@@ -72,7 +72,7 @@ init(Tcl_Interp* ti)
 		return TCL_ERROR;
 
 	zlib_init(ti);
-	return Tcl_PkgProvide(ti, "tclscidb", "1.0");
+	return Tcl_PkgProvide(ti, "tclscidc", "1.0");
 }
 
 

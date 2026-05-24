@@ -520,13 +520,13 @@ set Vars(switcher) $switcher
 
 	set Vars(subscribe) [list tree \
 		[list [namespace current]::Update $tb] [list [namespace current]::Close $tb]]
-	after idle [list ::scidb::db::subscribe {*}$Vars(subscribe)]
-	::scidb::tree::init [namespace current]::Tick $tb
-	::scidb::tree::switch [expr {!$Options(base:lock)}]
+	after idle [list ::scidc::db::subscribe {*}$Vars(subscribe)]
+	::scidc::tree::init [namespace current]::Tick $tb
+	::scidc::tree::switch [expr {!$Options(base:lock)}]
 
 	bind $mw <Configure> [namespace code PlaceMessage]
 	after idle [namespace code startSearch]
-	SetSwitcher [::scidb::tree::get] [::scidb::app::variant]
+	SetSwitcher [::scidc::tree::get] [::scidc::app::variant]
 }
 
 
@@ -543,7 +543,7 @@ proc closed {w} {
 	variable Vars
 
 	catch { after cancel $Vars(after) }
-	::scidb::db::unsubscribe {*}$Vars(subscribe)
+	::scidc::db::unsubscribe {*}$Vars(subscribe)
 	DeleteBars
 #	set i [lsearch $Tables $Vars(twm)]
 #	set Tables [lreplace $Tables $i $i]
@@ -579,25 +579,25 @@ proc startSearch {} {
 	variable Vars
 
 	if {![winfo exists $Vars(table)]} { return }
-	if {![::scidb::game::query open?]} { return }
+	if {![::scidc::game::query open?]} { return }
 
 ### VARIANTS ####################################
-if {[::scidb::game::query mainvariant?] ne "Normal"} { return }
+if {[::scidc::game::query mainvariant?] ne "Normal"} { return }
 #################################################
 
-	if {[llength [::scidb::tree::get]] == 0} {
+	if {[llength [::scidc::tree::get]] == 0} {
 		return [ShowMessage NoGamesAvailable]
 	}
 
 	if {$Vars(searching)} {
 		set Vars(searching) 0
-		::scidb::tree::stop
+		::scidc::tree::stop
 		place forget $Vars(progress)
 		ConfigSearchButton $Vars(table) Start
 		# show "interrupted by user"
 	} else {
-		set variant [::scidb::game::query mainvariant?]
-		set n [::scidb::db::count games [::scidb::tree::get] $variant]
+		set variant [::scidc::game::query mainvariant?]
+		set n [::scidc::db::count games [::scidc::tree::get] $variant]
 		if {$n == 0} {
 			ShowMessage NoGamesAvailable
 		} else {
@@ -613,18 +613,18 @@ proc update {position} {
 
 	if {![[namespace parent]::exists? tree]} { return }
 
-	if {[::scidb::tree::isUpToDate?]} {
+	if {[::scidc::tree::isUpToDate?]} {
 		Enabled true
 		return
 	}
 
-	if {$Options(search:automatic) && [llength [::scidb::tree::get]]} {
-		set variant [::scidb::game::query $position mainvariant?]
+	if {$Options(search:automatic) && [llength [::scidc::tree::get]]} {
+		set variant [::scidc::game::query $position mainvariant?]
 ### VARIANTS ####################################
 if {$variant eq "Normal"} {
 ::toolbar::childconfigure $Vars(switcher) -state readonly
 #################################################
-		set n [::scidb::db::count games [::scidb::tree::get] $variant]
+		set n [::scidc::db::count games [::scidc::tree::get] $variant]
 		if {$n == 0} {
 			ShowMessage NoGamesAvailable
 		} else {
@@ -681,7 +681,7 @@ proc Enabled {flag} {
 
 
 proc View {pane base variant} {
-	set view [::scidb::tree::view]
+	set view [::scidc::tree::view]
 	if {$view == -1} { return 0 }
 	return $view
 }
@@ -702,18 +702,18 @@ proc Update {table base variant} {
 	variable Options
 
 ### VARIANTS ####################################
-if {[::scidb::game::query mainvariant?] eq "Normal"} {
+if {[::scidc::game::query mainvariant?] eq "Normal"} {
 ::toolbar::childconfigure $Vars(switcher) -state readonly
 #################################################
 	if {![[namespace parent]::exists? tree]} { return }
-	if {[::scidb::tree::isUpToDate?]} { return }
+	if {[::scidc::tree::isUpToDate?]} { return }
 
 	if {[string length $base]} {
 		if {$base ne $Vars(current:base) || $variant ne $Vars(current:variant)} {
 			SetSwitcher $base $variant
 		}
 
-		if {[::scidb::db::count games [::scidb::tree::get] $variant] == 0} {
+		if {[::scidc::db::count games [::scidc::tree::get] $variant] == 0} {
 			ShowMessage NoGamesAvailable
 		} elseif {$Options(search:automatic)} {
 			after cancel $Vars(after)
@@ -741,10 +741,10 @@ proc DoSearch {table} {
 	variable Colors
 
 ### VARIANTS ####################################
-if {[::scidb::game::query mainvariant?] ne "Normal"} { return }
+if {[::scidc::game::query mainvariant?] ne "Normal"} { return }
 #################################################
 
-	if {[::scidb::tree::update $Options(rating:type) $Options(search:mode) $Options(search:variations)]} {
+	if {[::scidc::tree::update $Options(rating:type) $Options(search:mode) $Options(search:variations)]} {
 		if {$Vars(searching)} {
 			$Vars(progress) configure -background [::colors::lookup $Colors(progress:finished)]
 			place $Vars(progress) -x 1 -y 1 -width 127
@@ -762,7 +762,7 @@ if {[::scidb::game::query mainvariant?] ne "Normal"} { return }
 
 
 proc Close {table base variant} {
-	if {$base eq [::scidb::tree::get] && $variant eq [::scidb::app::variant]} {
+	if {$base eq [::scidc::tree::get] && $variant eq [::scidc::app::variant]} {
 		return [ShowMessage NoGamesAvailable]	}
 }
 
@@ -772,7 +772,7 @@ proc Tick {table n} {
 	variable Options
 	variable Colors
 
-	if {[llength [::scidb::tree::get]] == 0} { return }
+	if {[llength [::scidc::tree::get]] == 0} { return }
 
 	if {$n == 0} {
 		if {$Vars(searching)} {
@@ -802,7 +802,7 @@ proc Tick {table n} {
 
 
 proc InvalidateSearch {table} {
-	::scidb::tree::invalidate
+	::scidc::tree::invalidate
 	AutomaticSearch $table
 }
 
@@ -811,7 +811,7 @@ proc AutomaticSearch {table} {
 	variable Options
 
 	if {$Options(search:automatic)} {
-		Update $table [::scidb::tree::get] [::scidb::app::variant]
+		Update $table [::scidc::tree::get] [::scidc::app::variant]
 	}
 }
 
@@ -898,7 +898,7 @@ proc VisitItem {table data} {
 			}
 
 			eco {
-				set opening [::scidb::app::lookup ecoCode $value]
+				set opening [::scidc::app::lookup ecoCode $value]
 				lassign $opening long short
 				set vars [lrange $opening 2 end]
 				if {[llength $vars]} {
@@ -973,7 +973,7 @@ proc ShowPlayerInfo {table x y} {
 	if {$id ne "bestPlayer" && $id ne "frequentPlayer"} { return }
 	::table::activate $table $row 1
 	if {$row == $nrows} { incr row -1 }
-	set info [::scidb::tree::player $row $id $Options(rating:type)]
+	set info [::scidc::tree::player $row $id $Options(rating:type)]
 	::playercard::popupInfo $table $info
 }
 
@@ -1032,7 +1032,7 @@ proc RefreshRatingLabel {} {
 	set side white
 	switch $Options(score:side) {
 		black			{ set side black }
-		sideToMove	{ if {[::scidb::pos::stm] eq "b"} { set side black } }
+		sideToMove	{ if {[::scidc::pos::stm] eq "b"} { set side black } }
 	}
 
 	if {$Vars(side) != $side} {
@@ -1062,7 +1062,7 @@ proc FetchResult {table {force false}} {
 	set table $Vars(table)
 
 ### VARIANTS ####################################
-if {[::scidb::game::query mainvariant?] ne "Normal"} { return }
+if {[::scidc::game::query mainvariant?] ne "Normal"} { return }
 if {$Vars(force)} { set force true }
 #################################################
 
@@ -1072,7 +1072,7 @@ if {$Vars(force)} { set force true }
 	if {[llength $Options(sort:column)]} {
 		lappend options -sort [columnIndex $Options(sort:column)]
 	}
-	set state [::scidb::tree::finish \
+	set state [::scidc::tree::finish \
 		$Options(rating:type) \
 		$Options(search:mode) \
 		$Options(search:variations) \
@@ -1080,12 +1080,12 @@ if {$Vars(force)} { set force true }
 	]
 
 	if {$force || $state ne "unchanged"} {
-		set Vars(data) [::scidb::tree::fetch]
+		set Vars(data) [::scidc::tree::fetch]
 		set nrows [llength $Vars(data)]
 
 		if {$nrows == 0} {
-			set variant [::scidb::game::query mainvariant?]
-			set n [::scidb::db::count games [::scidb::tree::get] $variant]
+			set variant [::scidc::game::query mainvariant?]
+			set n [::scidc::db::count games [::scidc::tree::get] $variant]
 			if {$n == 0} { set msg NoGamesAvailable } else { set msg NoGamesFound }
 			ShowMessage $msg
 		} else {
@@ -1189,9 +1189,9 @@ proc FillTable {table} {
 
 	set total [lindex $Vars(data) end [columnIndex frequency]]
 	set nrows [llength $Vars(data)]
-	set stm [::scidb::pos::stm]
+	set stm [::scidc::pos::stm]
 	set row 1
-	set nextMove [::scidb::game::next move]
+	set nextMove [::scidc::game::next move]
 	set Vars(nextmove) -1
 
 	RefreshRatingLabel
@@ -1309,13 +1309,13 @@ proc MakeBar {table id item} {
 	if {[info exists Bars($width:$color)]} { return $Bars($width:$color) }
 	set h [expr {max(8, [::table::linespace $table] - 6)}]
 	set img [image create photo -width 51 -height [expr {$h + 1}]]
-	::scidb::tk::image recolor black $img -composite set
+	::scidc::tk::image recolor black $img -composite set
 	if {$Options(bar:transparent)} {
-		::scidb::tk::image alpha 0.0 $img -composite set -area 1 1 50 $h
+		::scidc::tk::image alpha 0.0 $img -composite set -area 1 1 50 $h
 	} else {
-		::scidb::tk::image recolor white $img -composite set -area 1 1 50 $h
+		::scidc::tk::image recolor white $img -composite set -area 1 1 50 $h
 	}
-	::scidb::tk::image recolor $color $img -composite set -area 1 1 $width $h 
+	::scidc::tk::image recolor $color $img -composite set -area 1 1 $width $h 
 	return [set Bars($width:$color) $img]
 }
 
@@ -1333,18 +1333,18 @@ proc MakeThreeBar {table whiteResult blackResult drawResult} {
 	if {[info exists ThreeBars($white:$draws)]} { return $ThreeBars($white:$draws) }
 	set h [expr {max(8, [::table::linespace $table] - 6)}]
 	set img [image create photo -width 51 -height [expr {$h + 1}]]
-	::scidb::tk::image recolor black $img -composite set
+	::scidc::tk::image recolor black $img -composite set
 	if {$Options(bar:transparent)} {
-		::scidb::tk::image alpha 0.0 $img -composite set -area 1 1 50 $h
+		::scidc::tk::image alpha 0.0 $img -composite set -area 1 1 50 $h
 	} else {
-		::scidb::tk::image recolor white $img -composite set -area 1 1 50 $h
+		::scidc::tk::image recolor white $img -composite set -area 1 1 50 $h
 	}
 	set style $Options(result:style)
-	::scidb::tk::image recolor [::colors::lookup $Colors(result:white:$style)] $img \
+	::scidc::tk::image recolor [::colors::lookup $Colors(result:white:$style)] $img \
 		-composite set -area 1 1 $white $h 
-	::scidb::tk::image recolor [::colors::lookup $Colors(result:remis:$style)] $img \
+	::scidc::tk::image recolor [::colors::lookup $Colors(result:remis:$style)] $img \
 		-composite set -area $white 1 $draws $h 
-	::scidb::tk::image recolor [::colors::lookup $Colors(result:black:$style)] $img \
+	::scidc::tk::image recolor [::colors::lookup $Colors(result:black:$style)] $img \
 		-composite set -area $draws 1 50 $h 
 	return [set ThreeBars($white:$draws) $img]
 }
@@ -1367,7 +1367,7 @@ proc ComputeValue {id value total} {
 					set value [expr {1000 - $value}]
 				}
 				sideToMove {
-					if {[::scidb::pos::stm] eq "b"} {
+					if {[::scidc::pos::stm] eq "b"} {
 						set value [expr {1000 - $value}]
 					}
 				}
@@ -1406,7 +1406,7 @@ proc Select {table x y} {
 		set nrows [llength $Vars(data)]
 
 		if {0 <= $row && ($nrows == 1 || $row < $nrows - 1)} {
-			set move [::scidb::tree::move $row]
+			set move [::scidc::tree::move $row]
 			if {[string length $move]} {
 				set Vars(selected) $row
 				::table::select $table $row
@@ -1517,7 +1517,7 @@ proc Activate {table} {
 	set Vars(activated) 1
 	
 	if {$Vars(selected) == [::table::selection $table]} {
-		set move [::scidb::tree::move $Vars(selected)]
+		set move [::scidc::tree::move $Vars(selected)]
 		if {[string length $move]} {
 			set action [::move::addMove menu $move \
 				-nomovecmd [list set [namespace current]::Vars(activated) 0] \
@@ -1536,11 +1536,11 @@ proc Activate {table} {
 
 
 proc LoadFirstGame {table row move} {
-	set index [::scidb::tree::gameIndex $row]
-	set fen [::scidb::tree::position $move]
-	set base [::scidb::tree::get]
-	set variant [::scidb::app::variant]
-	set view [::scidb::tree::view]
+	set index [::scidc::tree::gameIndex $row]
+	set fen [::scidc::tree::position $move]
+	set base [::scidc::tree::get]
+	set variant [::scidc::app::variant]
+	set view [::scidc::tree::view]
 
 	::game::new $table -base $base -variant $variant -view $view -number $index -fen $fen
 }
@@ -1564,7 +1564,7 @@ proc Scrollbar {table state} {
 
 
 proc SetReferenceBase {w} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
 	set index [[::toolbar::realpath $w] current]
@@ -1575,7 +1575,7 @@ proc SetReferenceBase {w} {
 		set base [lindex $Vars(list) [expr {$index - 1}] 1]
 	}
 
-	::scidb::tree::set $base
+	::scidc::tree::set $base
 }
 
 
@@ -1588,11 +1588,11 @@ proc FillSwitcher {w} {
 	$w listinsert [list $::util::clipbaseName]
 
 	set list {}
-	foreach base [::scidb::tree::list] { lappend list [list [::util::databaseName $base] $base] }
+	foreach base [::scidc::tree::list] { lappend list [list [::util::databaseName $base] $base] }
 ### VARIANTS ####################################
 set l {}
 foreach entry $list {
-	if {"Normal" in [::scidb::db::get variants [lindex $entry 1]]} { lappend l $entry }
+	if {"Normal" in [::scidc::db::get variants [lindex $entry 1]]} { lappend l $entry }
 }
 set list $l
 #################################################
@@ -1608,7 +1608,7 @@ set list $l
 
 
 proc SetSwitcher {base variant} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
 	set Vars(current:base) $base
@@ -1620,13 +1620,13 @@ proc SetSwitcher {base variant} {
 
 
 proc LanguageChanged {} {
-	SetSwitcher [::scidb::tree::get] [::scidb::app::variant]
+	SetSwitcher [::scidc::tree::get] [::scidc::app::variant]
 }
 
 
 proc LockBase {} {
 	variable Options
-	::scidb::tree::switch [expr {!$Options(base:lock)}]
+	::scidc::tree::switch [expr {!$Options(base:lock)}]
 }
 
 
@@ -1664,7 +1664,7 @@ proc ToggleView {table} {
 
 
 proc PopupMenu {table x y} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 	variable Options
 	variable _Current
@@ -1679,8 +1679,8 @@ proc PopupMenu {table x y} {
 	if {$row >= 0} {
 		::table::activate $table $row true
 		after idle [list ::table::activate $table $row true]
-		set move [::scidb::tree::move $row]
-		if {[string length $move] && $move ne [::scidb::game::next move]} {
+		set move [::scidc::tree::move $row]
+		if {[string length $move] && $move ne [::scidc::game::next move]} {
 			::move::addActionsToMenu $m [namespace code [list DoAction $table $row $move]] {append load}
 			$m add separator
 		}
@@ -1750,7 +1750,7 @@ proc PopupMenu {table x y} {
 	$m add cascade -menu $n -label $mc::ChooseReferenceBase
 
 	set list {}
-	foreach base [::scidb::tree::list] {
+	foreach base [::scidc::tree::list] {
 		if {$base eq $Vars(current:base)} { set _Current $base }
 		lappend list [list [::util::databaseName $base] $base]
 	}
@@ -1763,7 +1763,7 @@ proc PopupMenu {table x y} {
 		-label $text \
 		-value $clipbaseName \
 		-variable [namespace current]::_Current \
-		-command [list ::scidb::tree::set $clipbaseName] \
+		-command [list ::scidc::tree::set $clipbaseName] \
 		;
 	::theme::configureRadioEntry $n $text
 	foreach base [lsort -dictionary -index 0 $list] {
@@ -1772,7 +1772,7 @@ proc PopupMenu {table x y} {
 			-label $text \
 			-value $value \
 			-variable [namespace current]::_Current \
-			-command [list ::scidb::tree::set $value] \
+			-command [list ::scidc::tree::set $value] \
 			;
 		::theme::configureRadioEntry $n
 	}
@@ -1788,7 +1788,7 @@ proc PopupMenu {table x y} {
 # 	set top $dlg.top
 # 	set tb $top.table
 # 	set exists [winfo exists $dlg]
-# 	set lines [::scidb::game::lines]
+# 	set lines [::scidc::game::lines]
 # 
 # 	if {$exists} {
 # 		$tb clear

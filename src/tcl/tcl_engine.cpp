@@ -50,31 +50,31 @@ using namespace db;
 using namespace tcl;
 
 
-static char const* CmdActivate		= "::scidb::engine::activate";
-static char const* CmdAnalyze			= "::scidb::engine::analyze";
-static char const* CmdBind				= "::scidb::engine::bind";
-static char const* CmdBound			= "::scidb::engine::bound?";
-static char const* CmdClearHash		= "::scidb::engine::clearHash";
-static char const* CmdCountLines		= "::scidb::engine::countLines";
-static char const* CmdEmpty			= "::scidb::engine::empty?";
-static char const* CmdInfo				= "::scidb::engine::info";
-static char const* CmdInvoke			= "::scidb::engine::invoke";
-static char const* CmdActive			= "::scidb::engine::active?";
-static char const* CmdKill				= "::scidb::engine::kill";
-static char const* CmdList				= "::scidb::engine::list";
-static char const* CmdLog				= "::scidb::engine::log";
-static char const* CmdMultiPV			= "::scidb::engine::multiPV";
-static char const* CmdOrdering		= "::scidb::engine::ordering";
-static char const* CmdPause			= "::scidb::engine::pause";
-static char const* CmdPriority		= "::scidb::engine::priority";
-static char const* CmdProbe			= "::scidb::engine::probe";
-static char const* CmdResume			= "::scidb::engine::resume";
-static char const* CmdSetFeatures	= "::scidb::engine::setFeatures";
-static char const* CmdSetOptions		= "::scidb::engine::setOptions";
-static char const* CmdSnapshot		= "::scidb::engine::snapshot";
-static char const* CmdStart			= "::scidb::engine::start";
-static char const* CmdStop				= "::scidb::engine::stop";
-static char const* CmdVariant			= "::scidb::engine::variant";
+static char const* CmdActivate		= "::scidc::engine::activate";
+static char const* CmdAnalyze			= "::scidc::engine::analyze";
+static char const* CmdBind				= "::scidc::engine::bind";
+static char const* CmdBound			= "::scidc::engine::bound?";
+static char const* CmdClearHash		= "::scidc::engine::clearHash";
+static char const* CmdCountLines		= "::scidc::engine::countLines";
+static char const* CmdEmpty			= "::scidc::engine::empty?";
+static char const* CmdInfo				= "::scidc::engine::info";
+static char const* CmdInvoke			= "::scidc::engine::invoke";
+static char const* CmdActive			= "::scidc::engine::active?";
+static char const* CmdKill				= "::scidc::engine::kill";
+static char const* CmdList				= "::scidc::engine::list";
+static char const* CmdLog				= "::scidc::engine::log";
+static char const* CmdMultiPV			= "::scidc::engine::multiPV";
+static char const* CmdOrdering		= "::scidc::engine::ordering";
+static char const* CmdPause			= "::scidc::engine::pause";
+static char const* CmdPriority		= "::scidc::engine::priority";
+static char const* CmdProbe			= "::scidc::engine::probe";
+static char const* CmdResume			= "::scidc::engine::resume";
+static char const* CmdSetFeatures	= "::scidc::engine::setFeatures";
+static char const* CmdSetOptions		= "::scidc::engine::setOptions";
+static char const* CmdSnapshot		= "::scidc::engine::snapshot";
+static char const* CmdStart			= "::scidc::engine::start";
+static char const* CmdStop				= "::scidc::engine::stop";
+static char const* CmdVariant			= "::scidc::engine::variant";
 
 
 namespace {

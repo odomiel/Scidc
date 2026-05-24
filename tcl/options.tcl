@@ -108,8 +108,8 @@ proc unhookWriter {callback {file options}} {
 
 
 proc writeHeader {chan file} {
-	puts $chan "# Scidb $file file"
-	puts $chan "# Version: $::scidb::version"
+	puts $chan "# Scidc $file file"
+	puts $chan "# Version: $::scidc::version"
 	puts $chan "# Syntax: Tcl language format"
 	puts $chan ""
 }
@@ -138,7 +138,7 @@ proc saveOptionsFile {} {
 	variable fd_
 
 	foreach file [array names WriteCallbacks] {
-		set filename [set ::scidb::file::$file]
+		set filename [set ::scidc::file::$file]
 		set fd_($filename) [set chan [open $filename.$TempSuffix w]]
 		fconfigure $chan -encoding utf-8
 		writeHeader $chan $file
@@ -269,10 +269,10 @@ proc SaveToolbarOptions {chan variant toolbarIds} {
 
 
 proc MakeFilename {{variant ""}} {
-	set filename $::scidb::file::options
+	set filename $::scidc::file::options
 	if {[string length $variant]} {
-		set dir [file join [file dirname $::scidb::file::options] $variant]
-		set filename [file join $dir [file tail $::scidb::file::options]]
+		set dir [file join [file dirname $::scidc::file::options] $variant]
+		set filename [file join $dir [file tail $::scidc::file::options]]
 	}
 	return $filename
 }

@@ -115,7 +115,7 @@ proc open {parent base variant info view index {fen {}}} {
 	set position [::game::nextGamePosition]
 	set dlg $parent.browser$position
 	lappend Priv($base:$variant:$number:$view) $dlg
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	if {[tk windowingsystem] eq "x11"} {
 		bind $dlg <Button-4> [namespace code [list Goto $position -1]]
 		bind $dlg <Button-5> [namespace code [list Goto $position +1]]
@@ -351,7 +351,7 @@ proc open {parent base variant info view index {fen {}}} {
 
 	SetupStyle $position no
 	$rt.header tag configure bold -font $::font::text(browser:bold)
-	NextGame $dlg $position	;# too early for ::scidb::game::go
+	NextGame $dlg $position	;# too early for ::scidc::game::go
 
 	bind $rt.header <<LanguageChanged>> [namespace code [list LanguageChanged $position]]
 	bind $rt.header <Configure> [namespace code [list ConfigureHeader $position]]
@@ -364,21 +364,21 @@ proc open {parent base variant info view index {fen {}}} {
 											[list [namespace current]::Close $position]]
 	set Vars(subscribe:close) [list [namespace current]::Close $base $variant $position]
 
-	::scidb::game::subscribe board {*}$Vars(subscribe:board)
-	::scidb::game::subscribe pgn {*}$Vars(subscribe:pgn)
-	::scidb::view::subscribe {*}$Vars(subscribe:close)
-	::scidb::db::subscribe gameList {*}$Vars(subscribe:list)
-	::scidb::db::subscribe gameInfo {*}$Vars(subscribe:info)
-	::scidb::db::subscribe gameData {*}$Vars(subscribe:data)
+	::scidc::game::subscribe board {*}$Vars(subscribe:board)
+	::scidc::game::subscribe pgn {*}$Vars(subscribe:pgn)
+	::scidc::view::subscribe {*}$Vars(subscribe:close)
+	::scidc::db::subscribe gameList {*}$Vars(subscribe:list)
+	::scidc::db::subscribe gameInfo {*}$Vars(subscribe:info)
+	::scidc::db::subscribe gameData {*}$Vars(subscribe:data)
 
-	if {$variant == [::scidb::app::variant] && $view == [::scidb::tree::view $base]} {
+	if {$variant == [::scidc::app::variant] && $view == [::scidc::tree::view $base]} {
 		set Vars(subscribe:tree) [list [namespace current]::UpdateTreeBase $position]
-		::scidb::db::subscribe tree $Vars(subscribe:tree)
+		::scidc::db::subscribe tree $Vars(subscribe:tree)
 	}
 
 	update idletasks
-	::scidb::game::layout $position
-	::scidb::game::go $position position $Vars(fen)
+	::scidc::game::layout $position
+	::scidc::game::go $position position $Vars(fen)
 
 	set Priv(minWidth) [expr {[winfo width $dlg] - [winfo width $lt]}]
 	set Priv(minHeight) $Priv(minWidth)
@@ -441,8 +441,8 @@ proc updatePosition {parent position flip key {state 0}} {
 		return [showPosition $parent $position $flip $key $state]
 	}
 
-	if {[llength $key] == 0} { set key [::scidb::game::query start] }
-	set fen [::scidb::game::board $position $key]
+	if {[llength $key] == 0} { set key [::scidc::game::query start] }
+	set fen [::scidc::game::board $position $key]
 	# show pawn structure if shift key is held down (or shift key is locked)
 	set mask [expr {$::util::shiftMask | $::util::lockMask}]
 	if {($state & $mask) == $::util::shiftMask || ($state & $mask) == $::util::lockMask} {
@@ -477,7 +477,7 @@ proc refresh {{unused -1}} {
 		variable ${position}::Vars
 		::pgn::setup::setupStyle browser $position
 		::pgn::setup::configureText $Vars(frame)
-		::scidb::game::refresh $position -immediate
+		::scidc::game::refresh $position -immediate
 	}
 
 	::widget::busyCursor off
@@ -617,7 +617,7 @@ proc SetupStyle {position {refresh yes}} {
 		variable ${pos}::Vars
 		::pgn::setup::setupStyle browser $pos
 		::pgn::setup::configureText $Vars(frame)
-		if {$refresh} { ::scidb::game::refresh $pos -immediate }
+		if {$refresh} { ::scidc::game::refresh $pos -immediate }
 	}
 
 	if {$position >= 100} {
@@ -655,8 +655,8 @@ proc Update {position id base variant {view -1} {index -1}} {
 		&& ($Vars(view) == $view || $Vars(view) == 0)} {
 		if {$Vars(closed)} {
 			set index $Vars(index:last)
-			if {[::scidb::view::count games $base $variant $Vars(view)] <= $index} { return }
-			set info [::scidb::db::get gameInfo $index $Vars(view) $base $variant]
+			if {[::scidc::view::count games $base $variant $Vars(view)] <= $index} { return }
+			set info [::scidc::db::get gameInfo $index $Vars(view) $base $variant]
 			if {$info ne $Vars(info)} { return }
 			set Vars(index) $index
 			set Vars(closed) false
@@ -673,7 +673,7 @@ proc Update2 {position} {
 
 	if {![namespace exists [namespace current]::${position}]} { return }
 	set index [expr {$Vars(number) - 1}]
-	set Vars(index) [::scidb::db::get gameIndex $index $Vars(view) $Vars(base) $Vars(variant)]
+	set Vars(index) [::scidc::db::get gameIndex $index $Vars(view) $Vars(base) $Vars(variant)]
 	ConfigureButtons $position
 }
 
@@ -685,7 +685,7 @@ proc UpdateInfo {position id} {
 	variable ${position}::Vars
 	variable Options
 
-	set sink [::scidb::game::sink? $position]
+	set sink [::scidc::game::sink? $position]
 	lset sink 1 [::util::toMainVariant [lindex $sink 1]]
 
 	if {$Vars(link) eq $sink} {
@@ -772,7 +772,7 @@ proc NextGame {parent position {step 0}} {
 	set index [expr {$Vars(index) + $step}]
 	if {$index < 0 || $index == $count} { return }
 	set Vars(index) $index
-	set Vars(info) [::scidb::db::get gameInfo $index $Vars(view) $Vars(base) $Vars(variant)]
+	set Vars(info) [::scidc::db::get gameInfo $index $Vars(view) $Vars(base) $Vars(variant)]
 	set Vars(result) [list [::util::formatResult [::gamestable::column $Vars(info) result]] ""]
 	set Vars(number) [::gamestable::column $Vars(info) number]
 	set key "$Vars(base):$Vars(variant):$number:$Vars(view)"
@@ -783,7 +783,7 @@ proc NextGame {parent position {step 0}} {
 	lappend Priv($key) [winfo toplevel $parent]
 	ConfigureButtons $position
 	SetTitle $position
-	set number [::scidb::db::get gameNumber $Vars(base) $Vars(variant) $index $Vars(view)]
+	set number [::scidc::db::get gameNumber $Vars(base) $Vars(variant) $index $Vars(view)]
 	::widget::busyOperation {
 		::game::load $parent $position $Vars(base) \
 			-number $number \
@@ -791,7 +791,7 @@ proc NextGame {parent position {step 0}} {
 			-view $Vars(view) \
 			;
 	}
-	::scidb::game::go $position position $Vars(fen)
+	::scidc::game::go $position position $Vars(fen)
 	if {$Vars(modified)} {
 		$Vars(header) configure -background [::colors::lookup $Options(background:header)]
 		set Vars(modified) 0
@@ -800,8 +800,8 @@ proc NextGame {parent position {step 0}} {
 		::pgn::setup::setupStyle browser $position
 		set Vars(setup) 0
 	}
-	::scidb::game::refresh $position -immediate
-	set Vars(link) [lrange [::scidb::game::link? $position] 0 2]
+	::scidc::game::refresh $position -immediate
+	set Vars(link) [lrange [::scidc::game::link? $position] 0 2]
 	lset Vars(link) 1 [::util::toMainVariant [lindex $Vars(link) 1]]
 }
 
@@ -823,10 +823,10 @@ proc Goto {position step} {
 	variable ${position}::Vars
 	variable Options
 
-	::scidb::game::go $position $step
+	::scidc::game::go $position $step
 
 	if {$Vars(autoplay)} {
-		if {[::scidb::game::position $position atEnd?]} {
+		if {[::scidc::game::position $position atEnd?]} {
 			ToggleAutoPlay $position
 		} else {
 			after cancel $Vars(afterid)
@@ -839,7 +839,7 @@ proc Goto {position step} {
 proc LanguageChanged {position} {
 	variable ${position}::Vars
 
-	if {[::scidb::game::query $position length] == 0} {
+	if {[::scidc::game::query $position length] == 0} {
 		set w $Vars(pgn)
 		$w delete begin end
 		PrintResult $w $position
@@ -898,7 +898,7 @@ proc UpdateHeader {position} {
 	set data $Vars(data)
 
 	if {[lindex $data 0] == 0} {
-		lset data 1 [::scidb::game::query $position fen]
+		lset data 1 [::scidc::game::query $position fen]
 	}
 
 	if {[llength $white] == 0} { set white "?" }
@@ -942,7 +942,7 @@ proc UpdateHeader {position} {
 		}
 	}
 
-	set variant [::scidb::game::query $position variant?]
+	set variant [::scidc::game::query $position variant?]
 
 	switch $variant {
 		Normal {
@@ -1127,7 +1127,7 @@ proc UpdatePGN {position data {w {}}} {
 				set moves [lindex $node 2]
 
 				if {[llength $moves] == 0} {
-					if {![::scidb::game::query $position empty?]} {
+					if {![::scidc::game::query $position empty?]} {
 						$w mark set $key insert left
 						#$w insert insert "\u200b" m:move XXX
 					}
@@ -1164,7 +1164,7 @@ proc UpdatePGN {position data {w {}}} {
 			}
 
 			result {
-				set reason [::scidb::game::query $position termination]
+				set reason [::scidc::game::query $position termination]
 				if {[info exists Vars(variant)]} { set variant $Vars(variant) } else { set variant Normal }
 				set Vars(result) [makeResult {*}[lrange $node 1 end] $reason $variant]
 				PrintResult $w $position
@@ -1191,12 +1191,12 @@ proc UpdatePGN {position data {w {}}} {
 					set Vars(previous) $key
 					set nextkey [$w tag nextrange $key 1.0]
 					if {[llength $nextkey]} { $w see [lindex $nextkey 0] }
-					set Vars(next:move) [::scidb::game::next keys $position]
+					set Vars(next:move) [::scidc::game::next keys $position]
 					if {[llength $Vars(next:move)]} {
 						$w tag add h:next {*}[FindRange $w [lindex $Vars(next:move) 0] $position]
 					}
 					if {[info exists Vars(holding:w)]} {
-						lassign [::scidb::pos::inHand? $position] matw matb
+						lassign [::scidc::pos::inHand? $position] matw matb
 						::board::holding::update $Vars(holding:w) $matw
 						::board::holding::update $Vars(holding:b) $matb
 					}
@@ -1211,7 +1211,7 @@ proc PrintResult {w position} {
 	variable ${position}::Vars
 	variable ::pgn::browser::Options
 
-	if {[::scidb::game::query $position length] == 0} {
+	if {[::scidc::game::query $position length] == 0} {
 		$w insert end "<$::application::pgn::mc::EmptyGame>" empty
 	}
 	if {[llength $Vars(result)]} {
@@ -1251,7 +1251,7 @@ proc FindKey {w attr} {
 
 
 proc FindRange {w key position} {
-	if {	[::scidb::game::position $position startKey] eq $key
+	if {	[::scidc::game::position $position startKey] eq $key
 		|| [llength [set range [$w tag nextrange m:move $key]]] == 0} { ;# shouldn't happen, but who knows?
 		return {end end}
 	}
@@ -1263,7 +1263,7 @@ proc GotoMove {position} {
 	variable ${position}::Vars
 
 	if {[string length $Vars(active)]} {
-		::scidb::game::moveto $position $Vars(active)
+		::scidc::game::moveto $position $Vars(active)
 	}
 }
 
@@ -1361,14 +1361,14 @@ proc Destroy {dlg w position} {
 	variable Priv
 
 #	XXX
-#	::scidb::game::unsubscribe board {*}$Vars(subscribe:board)
-#	::scidb::game::unsubscribe pgn {*}$Vars(subscribe:pgn)
-	::scidb::db::unsubscribe gameInfo {*}$Vars(subscribe:info)
-	::scidb::db::unsubscribe gameList {*}$Vars(subscribe:list)
-	::scidb::view::unsubscribe {*}$Vars(subscribe:close)
+#	::scidc::game::unsubscribe board {*}$Vars(subscribe:board)
+#	::scidc::game::unsubscribe pgn {*}$Vars(subscribe:pgn)
+	::scidc::db::unsubscribe gameInfo {*}$Vars(subscribe:info)
+	::scidc::db::unsubscribe gameList {*}$Vars(subscribe:list)
+	::scidc::view::unsubscribe {*}$Vars(subscribe:close)
 
 	if {[info exists Vars(subscribe:tree)]} {
-		::scidb::db::unsubscribe tree $Vars(subscribe:tree)
+		::scidc::db::unsubscribe tree $Vars(subscribe:tree)
 	}
 
 	set key "$Vars(base):$Vars(variant):$Vars(number):$Vars(view)"
@@ -1376,7 +1376,7 @@ proc Destroy {dlg w position} {
 	if {$i >= 0} { set Priv($key) [lreplace $Priv($key) $i $i] }
 	if {[llength $Priv($key)] == 0} { array unset Priv $key }
 
-	::scidb::game::release $position
+	::scidc::game::release $position
 	::pgn::setup::closeText $Vars(frame) browser
 	namespace delete [namespace current]::${position}
 	array unset Active $position
@@ -1469,11 +1469,11 @@ proc PopupMenu {parent board position {what ""}} {
 			-label " $mc::LoadGame" \
 			-image $::icon::16x16::document \
 			-compound left \
-			-command [namespace code [list LoadGame $dlg $position [::scidb::game::fen $position]]] \
+			-command [namespace code [list LoadGame $dlg $position [::scidc::game::fen $position]]] \
 			-state $state \
 			;
-		if {[::scidb::game::current] < 9} { set state normal } else { set state disabled }
-		if {[::merge::alreadyMerged [::scidb::game::current] $position]} { set state disabled }
+		if {[::scidc::game::current] < 9} { set state normal } else { set state disabled }
+		if {[::merge::alreadyMerged [::scidc::game::current] $position]} { set state disabled }
 		$menu add command \
 			-label " $::merge::mc::MergeGameFrom..." \
 			-image $::icon::16x16::merge \
@@ -1632,10 +1632,10 @@ proc ConfigureBrowser {parent} {
 	set Vars(next:move) {}
 	set Vars(current) {}
 	set Vars(previous) {}
-	::scidb::game::new 11
+	::scidc::game::new 11
 	::pgn::setup::openSetupDialog [winfo toplevel $parent] browser 11
-	::scidb::game::release 11
-	::scidb::tree::freeze 0
+	::scidc::game::release 11
+	::scidc::tree::freeze 0
 	namespace delete [namespace current]::11
 }
 
@@ -1669,7 +1669,7 @@ proc ReloadGame {parent position} {
 	variable ${position}::Vars
 	variable Options
 
-	set Vars(info) [::scidb::db::get gameInfo $Vars(index) $Vars(view) $Vars(base) $Vars(variant)]
+	set Vars(info) [::scidc::db::get gameInfo $Vars(index) $Vars(view) $Vars(base) $Vars(variant)]
 
 	::widget::busyOperation {
 		::game::load $parent $position $Vars(base) \
@@ -1687,7 +1687,7 @@ proc ReloadGame {parent position} {
 			-foreground [::colors::lookup $Options(foreground:header)] \
 			;
 	}
-	::scidb::game::refresh $position -immediate
+	::scidc::game::refresh $position -immediate
 }
 
 

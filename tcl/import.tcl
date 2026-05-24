@@ -182,7 +182,7 @@ proc openEdit {parent position args} {
 		set opts(-mode) game
 	}
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	set top [ttk::frame $dlg.top]
 	set vlb [ttk::label $top.variantsText -textvariable ::mc::Variant]
 	if {$opts(-mode) eq "game"} {
@@ -459,7 +459,7 @@ proc Open {parent file msg encoding type} {
 	::log::info $msg
 	set info "$::mc::File: [file tail $file]"
 	set options [list -message $msg -log yes -interrupt yes -information $info]
-	set cmd [list ::scidb::db::open $file [namespace current]::Log log]
+	set cmd [list ::scidc::db::open $file [namespace current]::Log log]
 	set cmd [list ::progress::start $parent $cmd [list -encoding $encoding -description 1] $options 0]
 
 	if {[catch { ::util::catchException $cmd result } rc options]} {
@@ -495,7 +495,7 @@ proc Open {parent file msg encoding type} {
 		logResult $total $illegal $mc::NoGamesImported $mc::ImportedGames $accepted $rejected $unsupported
 	}
 
-	set cmd [list ::scidb::db::save $file]
+	set cmd [list ::scidc::db::save $file]
 	set rc [::util::catchException { ::progress::start $parent $cmd {} {} 1 }]
 	if {$rc == 1} {
 		::log::error $mc::AbortedDueToIoError
@@ -514,7 +514,7 @@ proc Import {parent base files msg encoding} {
 	set Priv(ok) 1
 	set Priv(gameNo) 1
 
-	set codec [::scidb::db::get codec $base]
+	set codec [::scidc::db::get codec $base]
 	if {[llength $encoding] == 0} {
 		switch $codec {
 			sci - si3 - si4 - si5	{ set encoding utf-8 }
@@ -525,7 +525,7 @@ proc Import {parent base files msg encoding} {
 	::log::open $mc::DatabaseImport
 	switch $codec {
 		si3 - si4 - si5 {
-			set fileEncoding [::scidb::db::get encoding $base]
+			set fileEncoding [::scidc::db::get encoding $base]
 			if {$encoding ne $::encoding::autoEncoding && $encoding ne $fileEncoding} {
 				set ask [string map [list %src $encoding %dst $fileEncoding] $mc::DifferentEncoding]
 				set reply [::dialog::warning \
@@ -552,7 +552,7 @@ proc Import {parent base files msg encoding} {
 		set info "$::mc::File: [file tail $file]"
 		if {$numFiles > 1} { append info " ($logCount/$numFiles)" }
 		set options [list -message $msg -log yes -interrupt yes -information $info]
-		set cmd [list ::scidb::db::import $base $file [namespace current]::Log log]
+		set cmd [list ::scidc::db::import $base $file [namespace current]::Log log]
 		switch [file extension $file] {
 			.sci - .si3 - .si4 - .si5	{ set encoding utf-8 }
 			default					{ set encoding auto }
@@ -593,7 +593,7 @@ proc Import {parent base files msg encoding} {
 		if {$rc == -1} { break }
 	}
 
-	set cmd [list ::scidb::db::save $base]
+	set cmd [list ::scidc::db::save $base]
 	set rc [::util::catchException { ::progress::start $parent $cmd {} {} 1 }]
 	if {$rc == 1} {
 		::log::error $mc::AbortedDueToIoError
@@ -709,7 +709,7 @@ proc AskAbort {position closeButton} {
 	if {[string length $content] > 0} {
 		if {[dialog::question \
 				-parent [winfo toplevel $closeButton] \
-				-title $::scidb::app \
+				-title $::scidc::app \
 				-message $mc::AbortImport] eq "yes"} {
 			Close $position [winfo toplevel $closeButton]
 		}
@@ -749,7 +749,7 @@ proc ConvertPastedText {position w str} {
 	set encoding $Priv($position:encoding)
 
 	if {$encoding eq $::encoding::autoEncoding} {
-		set encoding [::scidb::misc::encoding $str]
+		set encoding [::scidc::misc::encoding $str]
 		if {[string length $encoding] == 0} {
 			set encoding iso8859-1
 		} else {
@@ -805,7 +805,7 @@ proc SetTitle {dlg position} {
 		set title [format $mc::ImportPgnVariation $::mc::Variation]
 	}
 	set number [expr {[::gamebar::getIndex [::application::pgn::gamebar] $position] + 1}]
-	wm title $dlg "$::scidb::app - $title ($number)"
+	wm title $dlg "$::scidc::app - $title ($number)"
 }
 
 
@@ -1045,7 +1045,7 @@ proc DoImport {position dlg} {
 		foreach entry $Priv($position:sets) {
 			lassign $entry code _ figurine
 
-			set state [::scidb::game::import \
+			set state [::scidc::game::import \
 				$position \
 				$content \
 				-variant $variant \
@@ -1111,7 +1111,7 @@ proc DoImport {position dlg} {
 		}
 	}
 
-	set state [::scidb::game::import \
+	set state [::scidc::game::import \
 		$position \
 		$content \
 		[namespace current]::Log import \
@@ -1145,14 +1145,14 @@ proc DoImport {position dlg} {
 				Show info $mc::ImportOK
 				$log configure -state disabled -takefocus 0
 				set Priv($position:used) 1
-				::scidb::game::go $position end
+				::scidc::game::go $position end
 				Close $position $dlg
 			} elseif {$Priv(first) >= 0} {
 				$log selection set $Priv(first)
 				ListboxSelect $position
 				set Priv($position:used) 1
 			}
-			::scidb::game::switch $position ;# because the variant may have changed
+			::scidc::game::switch $position ;# because the variant may have changed
 		}
 	} else {
 		Show info [format $mc::UnsupportedVariantRejected $state]

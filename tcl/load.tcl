@@ -106,7 +106,7 @@ proc load {msg type path} {
 
 	set currentFile $path
 
-	if {[catch {::scidb::app::load $type $path} err]} {
+	if {[catch {::scidc::app::load $type $path} err]} {
 		set msg [format $mc::FileIsCorrupt $path]
 		if {$type eq "eco"} {
 			append str $mc::SevereError .\n $msg \n\n $mc::ProgramAborting
@@ -114,7 +114,7 @@ proc load {msg type path} {
 			if {$type eq "eco"} {
 				append detail "This error may occur due to a defect executable, caused by a broken linker."
 				append detail "\n\n"
-				append detail "Please change to your installation directory of Scidb and invoke"
+				append detail "Please change to your installation directory of Scidc and invoke"
 				append detail "\n   > make check-build\n"
 				append detail "for further details."
 			}
@@ -187,7 +187,7 @@ load::load	[format $load::mc::Loading $load::mc::EngineFile] \
 				;
 
 # --- Load FIDE players ------------------------------------------------
-# Prefer user-updated list (~/.scidb-beta/players_list.zip) over bundled one
+# Prefer user-updated list (~/.scidc-beta/players_list.zip) over bundled one
 set _fide_user_zip [file join $scidb::dir::user players_list.zip]
 set _fide_zip [expr {[file exists $_fide_user_zip]
 	? $_fide_user_zip
@@ -202,7 +202,7 @@ unset _fide_zip
 if {![::process::testOption elo-only]} {
 
 # --- Load DWZ players -------------------------------------------------
-# Only load user-updated list (~/.scidb-beta/dwz-ratings.txt).
+# Only load user-updated list (~/.scidc-beta/dwz-ratings.txt).
 # The bundled data/dwz-ratings.txt uses a legacy format and is not loaded.
 set _dwz_user [file join $scidb::dir::user dwz-ratings.txt]
 if {[file exists $_dwz_user]} {
@@ -230,7 +230,7 @@ if {[file readable $file]} {
 }
 
 # --- Load piece sets --------------------------------------------------
-foreach file [glob -directory [file join $::scidb::dir::share pieces] -nocomplain *.tcl] {
+foreach file [glob -directory [file join $::scidc::dir::share pieces] -nocomplain *.tcl] {
 	load::source $file -message [format $load::mc::Loading $load::mc::PieceSet]
 }
 
@@ -239,49 +239,49 @@ set msg [format $load::mc::Loading $load::mc::Theme]
 # --- Load themes ------------------------------------------------------
 ### Upgrade #######################################
 set update 0
-if {	[file exists [file join $::scidb::dir::user themes StonyGlass.dat]]
-	|| [file exists [file join $::scidb::dir::user themes Mayan-1.dat]]} {
-	file delete [file join $::scidb::dir::user themes BlueMono.dat]
-	file delete [file join $::scidb::dir::user themes Blue.dat]
-	file delete [file join $::scidb::dir::user themes Glassy&Red.dat]
-	file delete [file join $::scidb::dir::user themes Marble.dat]
-	file delete [file join $::scidb::dir::user themes Marmor.dat]
-	file delete [file join $::scidb::dir::user themes Mayan-1.dat]
-	file delete [file join $::scidb::dir::user themes Mayan-2.dat]
-	file delete [file join $::scidb::dir::user themes Phoenix.dat]
-	file delete [file join $::scidb::dir::user themes StonyGlass.dat]
-	file delete [file join $::scidb::dir::user themes Wood.dat]
-	file delete [file join $::scidb::dir::user themes square Blue.dat]
-	file delete [file join $::scidb::dir::user themes square BlueMono.dat]
-	file delete [file join $::scidb::dir::user themes square Marble-Classic.dat]
-	file delete [file join $::scidb::dir::user themes square Marble-Red.dat]
-	file delete [file join $::scidb::dir::user themes square Wood-Green.dat]
-	file delete [file join $::scidb::dir::user themes piece MayanRed.dat]
-	file delete [file join $::scidb::dir::user themes piece Yellow.dat]
+if {	[file exists [file join $::scidc::dir::user themes StonyGlass.dat]]
+	|| [file exists [file join $::scidc::dir::user themes Mayan-1.dat]]} {
+	file delete [file join $::scidc::dir::user themes BlueMono.dat]
+	file delete [file join $::scidc::dir::user themes Blue.dat]
+	file delete [file join $::scidc::dir::user themes Glassy&Red.dat]
+	file delete [file join $::scidc::dir::user themes Marble.dat]
+	file delete [file join $::scidc::dir::user themes Marmor.dat]
+	file delete [file join $::scidc::dir::user themes Mayan-1.dat]
+	file delete [file join $::scidc::dir::user themes Mayan-2.dat]
+	file delete [file join $::scidc::dir::user themes Phoenix.dat]
+	file delete [file join $::scidc::dir::user themes StonyGlass.dat]
+	file delete [file join $::scidc::dir::user themes Wood.dat]
+	file delete [file join $::scidc::dir::user themes square Blue.dat]
+	file delete [file join $::scidc::dir::user themes square BlueMono.dat]
+	file delete [file join $::scidc::dir::user themes square Marble-Classic.dat]
+	file delete [file join $::scidc::dir::user themes square Marble-Red.dat]
+	file delete [file join $::scidc::dir::user themes square Wood-Green.dat]
+	file delete [file join $::scidc::dir::user themes piece MayanRed.dat]
+	file delete [file join $::scidc::dir::user themes piece Yellow.dat]
 	set update 1
 }
-if {[file exists [file join $::scidb::dir::user themes square Brown-Wood.dat]]} {
-	file delete [file join $::scidb::dir::user themes square Brown-Wood.dat]
+if {[file exists [file join $::scidc::dir::user themes square Brown-Wood.dat]]} {
+	file delete [file join $::scidc::dir::user themes square Brown-Wood.dat]
 	set update 1
 }
-if {[file exists [file join $::scidb::dir::user themes BlueTheme.dat]]} {
-	file delete [file join $::scidb::dir::user themes BlueTheme.dat]
-	file delete [file join $::scidb::dir::user themes square BlueTheme.dat]
+if {[file exists [file join $::scidc::dir::user themes BlueTheme.dat]]} {
+	file delete [file join $::scidc::dir::user themes BlueTheme.dat]
+	file delete [file join $::scidc::dir::user themes square BlueTheme.dat]
 	set update 1
 }
-if {[file exists [file join $::scidb::dir::user themes Virtual.dat]]} {
-	file delete [file join $::scidb::dir::user themes Virtual.dat]
-	file delete [file join $::scidb::dir::user themes VirtualColored.dat]
-	file delete [file join $::scidb::dir::user themes VirtualBlue.dat]
+if {[file exists [file join $::scidc::dir::user themes Virtual.dat]]} {
+	file delete [file join $::scidc::dir::user themes Virtual.dat]
+	file delete [file join $::scidc::dir::user themes VirtualColored.dat]
+	file delete [file join $::scidc::dir::user themes VirtualBlue.dat]
 }
-if {[file exists [file join $::scidb::dir::user themes VirtualBrown.dat]]} {
-	file delete [file join $::scidb::dir::user themes VirtualBrown.dat]
+if {[file exists [file join $::scidc::dir::user themes VirtualBrown.dat]]} {
+	file delete [file join $::scidc::dir::user themes VirtualBrown.dat]
 }
-if {	![file exists [file join $::scidb::dir::user themes Primus.dat]]
-	|| ![file exists [file join $::scidb::dir::user themes Country-Style.dat]]
-	|| ![file exists [file join $::scidb::dir::user themes Blackjack.dat]]
-	|| ![file exists [file join $::scidb::dir::user themes Burnt.dat]]
-	|| ![file exists [file join $::scidb::dir::user themes Creepy.dat]]} {
+if {	![file exists [file join $::scidc::dir::user themes Primus.dat]]
+	|| ![file exists [file join $::scidc::dir::user themes Country-Style.dat]]
+	|| ![file exists [file join $::scidc::dir::user themes Blackjack.dat]]
+	|| ![file exists [file join $::scidc::dir::user themes Burnt.dat]]
+	|| ![file exists [file join $::scidc::dir::user themes Creepy.dat]]} {
 	set update 1
 }
 if {[::process::testOption first-time]} {
@@ -290,35 +290,35 @@ if {[::process::testOption first-time]} {
 if {[::process::testOption update-themes]} {
 	set update 1
 }
-if {$update} { ::scidb::themes::update }
-if {[file exists [file join $::scidb::dir::user themes square Wood-Green.dat]]} {
-	file delete [file join $::scidb::dir::user themes square Wood-Green.dat]
+if {$update} { ::scidc::themes::update }
+if {[file exists [file join $::scidc::dir::user themes square Wood-Green.dat]]} {
+	file delete [file join $::scidc::dir::user themes square Wood-Green.dat]
 }
-if {[file exists [file join $::scidb::dir::user themes square Brown-Wood.dat]]} {
-	file delete [file join $::scidb::dir::user themes square Brown-Wood.dat]
+if {[file exists [file join $::scidc::dir::user themes square Brown-Wood.dat]]} {
+	file delete [file join $::scidc::dir::user themes square Brown-Wood.dat]
 }
 unset update
 ###################################################
 
 foreach subdir {piece square {}} {
-	foreach file [glob -directory [file join $::scidb::dir::user themes {*}$subdir] -nocomplain *.dat] {
+	foreach file [glob -directory [file join $::scidc::dir::user themes {*}$subdir] -nocomplain *.dat] {
 		load::source $file -message $msg
 	}
 }
 
-set file [file join $::scidb::dir::share textures preferences.dat]
+set file [file join $::scidc::dir::share textures preferences.dat]
 if {[file readable $file]} { load::source $file }
 
 ###################################################
 
 set msg [format $load::mc::Loading "Ttk $load::mc::Theme"]
-foreach file [glob -directory [file join $::scidb::dir::share themes ttk] -nocomplain *.tcl] {
+foreach file [glob -directory [file join $::scidc::dir::share themes ttk] -nocomplain *.tcl] {
 	load::source $file -message $msg
 }
 
 # --- Load done --------------------------------------------------------
 unset file subdir msg
-::scidb::app::load done
+::scidc::app::load done
 
 #puts "[expr {[clock microseconds] - $t}] micro-secs"
 #unset t

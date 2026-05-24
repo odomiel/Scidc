@@ -271,7 +271,7 @@ proc StartDrag {w x y state piece} {
 	set Vars(dragging) 0
 	set Vars(n) 0
 
-	if {[llength $Vars(piecetypes)] == 5 && [::scidb::pos::stm] ne $Vars(color)} { return }
+	if {[llength $Vars(piecetypes)] == 5 && [::scidc::pos::stm] ne $Vars(color)} { return }
 	if {[llength $Vars(dragcursor)]} { $w configure -cursor $Vars(dragcursor) }
 	if {$Vars(color) eq "w"} { set piece [string toupper $piece] }
 
@@ -347,7 +347,7 @@ proc FinishDrag {w x y state} {
 			set x [expr {$x - $Vars(dx)}]
 			set y [expr {$y - $Vars(dy)}]
 			event generate $w <<InHandPieceDrop>> -x $x -y $y -state $state -data $Vars(piece)
-		} elseif {[llength $Vars(piecetypes)] == 6 || [::scidb::pos::stm] eq $Vars(color)} {
+		} elseif {[llength $Vars(piecetypes)] == 6 || [::scidc::pos::stm] eq $Vars(color)} {
 			if {[string toupper $Vars(selection)] eq [string toupper $Vars(piece)]} {
 				deselect $w
 				event generate $w <<InHandSelection>> -data " "

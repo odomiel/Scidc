@@ -76,7 +76,7 @@ proc open {parent} {
 
 	set Vars(dialog) $dlg
 	set Vars(hidden) 0
-	tk::toplevel $dlg -class Scidb -relief solid
+	tk::toplevel $dlg -class Scidc -relief solid
 	wm withdraw $dlg
 	set title $mc::MarksPalette
 
@@ -243,7 +243,7 @@ proc open {parent} {
 		wm attributes $dlg -toolwindow
 		wm title $dlg $title
 	} else {
-		::scidb::tk::wm frameless $dlg
+		::scidc::tk::wm frameless $dlg
 	}
 	Init $dlg
 	wm deiconify $dlg
@@ -309,8 +309,8 @@ proc pressSquare {x y} {
 			set State(erase) $State(square1)
 			set type arrow
 		}
-		set key [::scidb::game::position key]
-		::scidb::game::update marks $key $type $State(markColor) $State(square1) $square
+		set key [::scidc::game::position key]
+		::scidc::game::update marks $key $type $State(markColor) $State(square1) $square
 		set State(square1) -1
 	}
 }
@@ -452,7 +452,7 @@ proc Focus {dlg mode} {
 
 proc LanguageChanged {dlg w} {
 	if {$dlg eq $w} {
-		$dlg.top.decor configure -text "$::scidb::app: $mc::MarksPalette"
+		$dlg.top.decor configure -text "$::scidc::app: $mc::MarksPalette"
 	}
 }
 

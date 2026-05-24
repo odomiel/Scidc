@@ -1,5 +1,5 @@
 # \
-exec ../src/tkscidb-beta "$0" ${1+"$@"}
+exec ../src/tkscidc-beta "$0" ${1+"$@"}
 
 option add *Menu.tearOff 0
 option add *Menu.activeBackground #678db2
@@ -10,7 +10,7 @@ namespace eval util { proc source {args} {} }
 namespace eval load { set currentFile "" }
 namespace eval tooltip { proc tooltip {args} {} }
 
-namespace eval scidb {
+namespace eval scidc {
 	namespace eval dir {
 		set home  [file nativename "~"]
 		set user  [file nativename "."]
@@ -38,18 +38,18 @@ source board-options.tcl
 source widgets/tlistbox.tcl
 source contrib/treectrl.tcl
 
-proc util::place::getWmFrameExtents {w} { return [::scidb::tk::wm extents $w] }
-proc util::place::getWmWorkArea {w} { return [::scidb::tk::wm workarea $w] }
+proc util::place::getWmFrameExtents {w} { return [::scidc::tk::wm extents $w] }
+proc util::place::getWmWorkArea {w} { return [::scidc::tk::wm workarea $w] }
 proc tlistbox::lookupColor {color} { return [::colors::lookup $color] }
 
 foreach subdir {piece square {}} {
-	foreach file [glob -directory [file join $::scidb::dir::user themes {*}$subdir] -nocomplain *.dat] {
+	foreach file [glob -directory [file join $::scidc::dir::user themes {*}$subdir] -nocomplain *.dat] {
 		set load::currentFile $file
 		source $file
 	}
 }
 
-foreach file [glob -directory [file join $::scidb::dir::user pieces] -nocomplain *.tcl] {
+foreach file [glob -directory [file join $::scidc::dir::user pieces] -nocomplain *.tcl] {
 	source $file
 }
 
@@ -69,7 +69,7 @@ namespace eval mc {
 		set langID [set ::mc::lang$Language]
 		set encoding [set ::mc::encoding$Language]
 
-		set file [file join $::scidb::dir::share lang $mc::input($Language)]
+		set file [file join $::scidc::dir::share lang $mc::input($Language)]
 		if {[file readable $file]} {
 			set f [open $file r]
 			chan configure $f -encoding $encoding
@@ -93,7 +93,7 @@ namespace eval mc {
 
 wm withdraw .
 set dlg .board
-tk::toplevel $dlg -class Scidb
+tk::toplevel $dlg -class Scidc
 wm withdraw $dlg
 set top [ttk::frame $dlg.top]
 pack $top -fill both -expand yes
@@ -132,7 +132,7 @@ if {$theme == "" && $pieceset == ""} { ::board::setTheme Default }
 
 wm protocol $dlg WM_DELETE_WINDOW [list exit 0]
 wm resizable $dlg no no
-wm title $dlg "Scidb - Board"
+wm title $dlg "Scidc - Board"
 wm deiconify $dlg
 
 ::board::diagram::update $board
@@ -166,7 +166,7 @@ proc SelectTheme {} {
 	variable ::board::theme::styleNames
 
 	set dlg .board.themeselection
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set w $dlg.themes
 
@@ -212,7 +212,7 @@ proc SetTheme {w} {
 
 proc SelectPieceSet {} {
 	set dlg .board.pieceselection
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $top -fill both -expand yes
@@ -244,7 +244,7 @@ proc PieceSetSelected {pieceSet} {
 
 proc SelectSquares {} {
 	set dlg .board.squareselection
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set w [ttk::frame $dlg.white]
 	set b [ttk::frame $dlg.black]
@@ -282,7 +282,7 @@ proc TunePieceSet {} {
 	PieceSetChanged
 
 	set dlg .board.tuning
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set f [ttk::frame $dlg.top]
 	pack $f -expand 1 -fill both
@@ -744,7 +744,7 @@ proc PreviewDialog {} {
 	set Size 34
 
 	set dlg .board.preview
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 
 	::board::registerSize $Size
@@ -846,7 +846,7 @@ proc SaveImage {w} {
 
 proc ShowDimensions {} {
 	set dlg .board.dim
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 
 	set top [ttk::frame $dlg.top]

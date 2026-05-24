@@ -212,14 +212,14 @@ variable CurrentBase		""
 
 array set Positions		{}
 
-set Types(sci)				[::scidb::db::get types sci]
-set Types(si3)				[::scidb::db::get types si3]
-set Types(si4)				[::scidb::db::get types si4]
-set Types(si5)				[::scidb::db::get types si4]
+set Types(sci)				[::scidc::db::get types sci]
+set Types(si3)				[::scidc::db::get types si3]
+set Types(si4)				[::scidc::db::get types si4]
+set Types(si5)				[::scidc::db::get types si4]
 
 
 proc build {tab width height} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Variants
 	variable Vars
 	variable Tabs
@@ -247,7 +247,7 @@ proc build {tab width height} {
 	$main add $contents
 
 	foreach tab $Tabs {
-		::ttk::frame $contents.$tab -class Scidb
+		::ttk::frame $contents.$tab -class Scidc
 		set var [namespace parent]::mc::Tab($tab)
 		$contents add $contents.$tab -sticky nsew -compound right
 		if {$Vars(showDisabled)} { $contents tab $contents.$tab -image $icon::16x16::undock_disabled }
@@ -345,14 +345,14 @@ proc build {tab width height} {
 		]
 	}
 
-	::scidb::db::subscribe gameList [namespace current]::Update
+	::scidc::db::subscribe gameList [namespace current]::Update
 	after idle [namespace code [list ToolbarShow $switcher]]
 
 	bind $contents <<NotebookTabChanged>> [namespace code TabChanged]
 	bind $contents <<LanguageChanged>> [namespace code LanguageChanged]
 
-	$Vars(switcher) add $::scidb::clipbaseName [::scidb::db::get clipbase type] no
-	$Vars(switcher) current $::scidb::clipbaseName
+	$Vars(switcher) add $::scidc::clipbaseName [::scidc::db::get clipbase type] no
+	$Vars(switcher) current $::scidc::clipbaseName
 	SetClipbaseDescription
 	bind $contents <<LanguageChanged>> +[namespace code SetClipbaseDescription]
 	switchToBase $clipbaseName
@@ -422,7 +422,7 @@ proc activate {w flag} {
 	::marks::hide $flag
 
 	set twm $w.twm
-	if {[::scidb::tk::twm exists $twm]} {
+	if {[::scidc::tk::twm exists $twm]} {
 		set cmd [expr {$flag ? "show" : "hide"}]
 		foreach w [$twm floats] { if {[$twm get! $w hide 0]} { $twm $cmd $w } }
 	}
@@ -453,7 +453,7 @@ proc openBase {parent file byUser args} {
 
 	set file [file normalize $file]
 	if {[string length [set ext [file extension $file]]]} {
-		set ext [::scidb::misc::mapExtension $ext]
+		set ext [::scidc::misc::mapExtension $ext]
 		set file "[file rootname $file].$ext"
 	} else {
 		set ext [string range $ext 1 end]
@@ -483,7 +483,7 @@ proc openBase {parent file byUser args} {
 	if {![$Vars(switcher) contains? $file]} {
 		foreach base [$Vars(switcher) bases] {
 			if {$ext eq [$Vars(switcher) extension $base]} {
-				if {[::scidb::misc::hardLinked? $file $base]} {
+				if {[::scidc::misc::hardLinked? $file $base]} {
 					set msg [string map [list "%file1" $file "%file2" $base] $mc::HardLinkDetected]
 					::dialog::error \
 						-parent .application \
@@ -523,7 +523,7 @@ proc openBase {parent file byUser args} {
 				}
 				set args [list -readonly $opts(-readonly)]
 				if {[llength $opts(-encoding)]} { lappend args -encoding $opts(-encoding) }
-				set cmd [list ::scidb::db::load $file]
+				set cmd [list ::scidc::db::load $file]
 				set options [list -message $msg -interrupt yes]
 				set rc [::util::catchException { ::progress::start $parent $cmd $args $options }]
 				if {$rc != 0} { return 0 }
@@ -536,7 +536,7 @@ proc openBase {parent file byUser args} {
 				set cmd [list ::import::open $parent $file $msg $opts(-encoding) $type]
 				set rc [::util::catchException $cmd]
 				if {$rc != 0} {
-					catch { ::scidb::db::close $file }
+					catch { ::scidc::db::close $file }
 					return 0
 				}
 				if {$opts(-readonly) == -1} {
@@ -544,12 +544,12 @@ proc openBase {parent file byUser args} {
 				}
 			}
 		}
-		if {![::scidb::db::get open? $file]} {
+		if {![::scidc::db::get open? $file]} {
 			::dialog::error -parent $parent -message [format $mc::CannotOpenFile $file]
 			return 0
 		}
 		set readonly $opts(-readonly)
-		if {$ext == "sci" && [::scidb::db::get upgrade? $file]} {
+		if {$ext == "sci" && [::scidc::db::get upgrade? $file]} {
 			set opts(-readonly) 1
 			set rc [::dialog::question \
 				-parent $parent \
@@ -557,24 +557,24 @@ proc openBase {parent file byUser args} {
 				-detail $mc::UpgradeDatabaseDetail \
 			]
 			if {$rc eq "yes"} {
-				set cmd [list ::scidb::db::upgrade $file]
+				set cmd [list ::scidc::db::upgrade $file]
 				set options [list -message [format $mc::UpgradeMessage $name]]
 				set rc [::util::catchException { ::progress::start $parent $cmd {} $options }]
-				::scidb::db::close $file
+				::scidc::db::close $file
 				if {$rc != 0} { return 0 }
-				set cmd [list ::scidb::db::load $file]
+				set cmd [list ::scidc::db::load $file]
 				set options [list -message $msg -interrupt yes]
 				set rc [::util::catchException { ::progress::start $parent $cmd {} $options }]
 				if {$rc != 0} { return 0 }
 				set opts(-readonly) $readonly
 			}
 		}
-		if {![::scidb::db::get writable? $file]} { set opts(-readonly) 1 }
-		::scidb::db::set readonly $file $opts(-readonly)
-		set type [::scidb::db::get type $file]
+		if {![::scidc::db::get writable? $file]} { set opts(-readonly) 1 }
+		::scidc::db::set readonly $file $opts(-readonly)
+		set type [::scidc::db::get type $file]
 		$Vars(switcher) add $file $type $opts(-readonly) $opts(-encoding)
 		AddRecentFile $type $file $opts(-encoding) $readonly
-		CheckEncoding $parent $file [::scidb::db::get usedencoding $file]
+		CheckEncoding $parent $file [::scidc::db::get usedencoding $file]
 	} else {
 		$Vars(switcher) see $file
 		if {$byUser} {
@@ -601,13 +601,13 @@ proc prepareClose {} {
 	variable Vars
 	variable PreOpen
 
-	set current [::scidb::db::get name]
+	set current [::scidc::db::get name]
 	set active ""
 
 	set PreOpen {}
 
 	foreach base [$Vars(switcher) bases] {
-		if {[$Vars(switcher) type $base] ne [::scidb::db::get clipbase type]} {
+		if {[$Vars(switcher) type $base] ne [::scidc::db::get clipbase type]} {
 			lappend PreOpen $base
 		}
 	}
@@ -616,10 +616,10 @@ proc prepareClose {} {
 
 proc closeBase {parent {file {}}} {
 	if {[string length $file] == 0} {
-		set file [::scidb::db::get name]
+		set file [::scidc::db::get name]
 	}
 
-	if {[::scidb::db::get unsaved? $file]} {
+	if {[::scidc::db::get unsaved? $file]} {
 		append msg $mc::UnsavedFiles "\n\n"
 		append msg $::application::mc::ThrowAwayAllChanges
 		set reply [::dialog::question -parent $parent -message $msg -default no]
@@ -644,9 +644,9 @@ proc newBase {parent variant file {encoding ""}} {
 	set ext [string tolower [file extension $file]]
 	if {$ext in {.pgn .pgn.gz}} { set type PGNFile } else { set type Unspecific }
 	::widget::busyCursor on
-	::scidb::db::new $file $variant [lookupType $type] {*}$encoding
-	::scidb::db::attach $file $file
-	set encoding [::scidb::db::get encoding $file]
+	::scidc::db::new $file $variant [lookupType $type] {*}$encoding
+	::scidc::db::attach $file $file
+	set encoding [::scidc::db::get encoding $file]
 	$Vars(switcher) add $file $type no $encoding
 	AddRecentFile $type $file $encoding no
 	::widget::busyCursor off
@@ -665,7 +665,7 @@ proc lookupType {type} {
 proc refreshBase {base} {
 	variable Vars
 
-	::scidb::db::switch $base [$Vars(switcher) variant?]
+	::scidc::db::switch $base [$Vars(switcher) variant?]
 	$Vars(switcher) update $base
 }
 
@@ -678,7 +678,7 @@ proc switchToBase {filename} {
 		return
 	}
 	[namespace parent]::twm::switchLayout $Vars(variant) db
-	::scidb::db::switch $filename $Vars(variant)
+	::scidc::db::switch $filename $Vars(variant)
 	UpdateAfterSwitch $filename $Vars(variant)
 }
 
@@ -692,8 +692,8 @@ proc recentFiles {} {
 		set file [lindex $entry 1]
 		if {![$Vars(switcher) contains? $file]} {
 			lassign $entry type file encoding readonly
-			if {[string match $::scidb::dir::home* $file]} {
-				set file [string replace $file 0 [expr {[string length $::scidb::dir::home] - 1}] "~"]
+			if {[string match $::scidc::dir::home* $file]} {
+				set file [string replace $file 0 [expr {[string length $::scidc::dir::home] - 1}] "~"]
 			}
 			set name [::util::databaseName $file]
 			lappend recentFiles [list $type $file $name $encoding $readonly]
@@ -708,7 +708,7 @@ proc removeRecentFile {file} {
 	variable RecentFiles
 
 	if {[string index $file 0] eq "~"} {
-		set file $::scidb::dir::home[string range $file 1 end]
+		set file $::scidc::dir::home[string range $file 1 end]
 	}
 	if {[set index [FindRecentFile $file]] >= 0} {
 		set RecentFiles [lreplace $RecentFiles $index $index]
@@ -862,7 +862,7 @@ proc OpenArchive {parent file byUser args} {
 	}
 
 	set dlg $parent.__choose__
-	toplevel $dlg -class Scidb
+	toplevel $dlg -class Scidc
 	bind $dlg <Escape> [list $dlg.cancel invoke]
 	wm protocol $dlg WM_DELETE_WINDOW [list destroy $dlg]
 	wm transient $dlg [winfo toplevel $parent]
@@ -932,17 +932,17 @@ proc OpenBase {file readonly} {
 
 proc CloseBase {parent file} {
 	variable Vars
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 
 	if {[llength $file] == 0} {
-		set file [::scidb::db::get name]
+		set file [::scidc::db::get name]
 		if {$file eq $clipbaseName} { return }
 	}
 
 	if {[::game::releaseAll $parent $file]} {
 		::widget::busyCursor on
 		$Vars(switcher) remove $file
-		::scidb::db::close $file
+		::scidc::db::close $file
 		if {![file exists $file]} {
 			removeRecentFile $file
 		}
@@ -966,13 +966,13 @@ proc SwitchVariant {variant} {
 
 	set Vars(variant) $variant
 	$Vars(switcher) variant $variant
-	::scidb::db::switch [$Vars(switcher) current?] $variant
+	::scidc::db::switch [$Vars(switcher) current?] $variant
 }
 
 
 proc SetClipbaseDescription {} {
-	variable ::scidb::clipbaseName
-	::scidb::db::set description $clipbaseName $mc::ClipbaseDescription
+	variable ::scidc::clipbaseName
+	::scidc::db::set description $clipbaseName $mc::ClipbaseDescription
 }
 
 
@@ -1002,11 +1002,11 @@ proc TabChanged {} {
 	}
 
 	set twm $Vars($curTab).twm
-	if {[::scidb::tk::twm exists $twm]} {
+	if {[::scidc::tk::twm exists $twm]} {
 		foreach w [$twm collect floats] { $twm hide $w }
 	}
 	set twm $Vars($newTab).twm
-	if {[::scidb::tk::twm exists $twm]} {
+	if {[::scidc::tk::twm exists $twm]} {
 		foreach w [$twm collect floats] { $twm show $w }
 	}
 	set Vars(twm) $twm
@@ -1052,7 +1052,7 @@ proc UpdateVariants {{variant ""}} {
 
 	if {[string length $variant]} { set Vars(variant) $variant }
 
-	set usedVariants [::scidb::app::activeVariants]
+	set usedVariants [::scidc::app::activeVariants]
 	foreach variant $Variants {
 		if {$variant ni $usedVariants} {
 			::toolbar::remove $Vars(widget:$variant)
@@ -1062,27 +1062,27 @@ proc UpdateVariants {{variant ""}} {
 	}
 
 	if {$Vars(variant) ni $usedVariants} {
-		SwitchVariant [lindex [::scidb::db::get variants [$Vars(switcher) current?]] 0]
+		SwitchVariant [lindex [::scidc::db::get variants [$Vars(switcher) current?]] 0]
 	}
 
-	UpdateAfterSwitch [::scidb::db::get name] $Vars(variant)
+	UpdateAfterSwitch [::scidc::db::get name] $Vars(variant)
 }
 
 
 proc UpdateAfterSwitch {filename variant} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 	variable Tabs
 
 	if {$filename ne $clipbaseName} { set CurrentBase $filename }
-	set readonly [::scidb::db::get readonly? $filename]
+	set readonly [::scidc::db::get readonly? $filename]
 
 	if {$filename eq $clipbaseName} { set closeState disabled } else { set closeState normal }
-	if {$filename eq $clipbaseName || ![::scidb::db::get writable? $filename]} {
+	if {$filename eq $clipbaseName || ![::scidc::db::get writable? $filename]} {
 		set roState disabled
 	} else {
 		switch [string tolower [file extension $filename]] {
-			.pgn - .pgn.gz	{ set roState [::makeState ![::scidb::db::get unsaved? $filename]] }
+			.pgn - .pgn.gz	{ set roState [::makeState ![::scidc::db::get unsaved? $filename]] }
 			.sci				{ set roState normal }
 			default			{ set roState disabled }
 		}
@@ -1113,10 +1113,10 @@ proc UpdateAfterSwitch {filename variant} {
 
 
 proc CheckSaveState {base} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
-	if {$base eq $clipbaseName || ![::scidb::db::get unsaved? $base]} {
+	if {$base eq $clipbaseName || ![::scidc::db::get unsaved? $base]} {
 		set state disabled
 	} else {
 		set state normal
@@ -1128,7 +1128,7 @@ proc CheckSaveState {base} {
 proc CheckTabState {} {
 	variable Vars
 
-	set codec [::scidb::db::get codec]
+	set codec [::scidc::db::get codec]
 
 	if {[winfo toplevel $Vars(annotator)] ne $Vars(annotator)} {
 		if {$codec eq "sci" || $codec eq "cbh"} { set state normal } else { set state hidden }
@@ -1168,13 +1168,13 @@ proc RefreshSwitcher {} {
 proc LanguageChanged {} {
 	variable Vars
 	variable Variants
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 
 	set ::util::clipbaseName [set [namespace current]::mc::T_Clipbase]
-	$Vars(switcher) update $clipbaseName [::scidb::db::get variant? $clipbaseName]
+	$Vars(switcher) update $clipbaseName [::scidc::db::get variant? $clipbaseName]
 	set base [$Vars(switcher) current?]
 
-	if {[::scidb::db::get readonly? $base]} {
+	if {[::scidc::db::get readonly? $base]} {
 		set str $mc::SetWriteable
 	} else {
 		set str $mc::SetReadonly
@@ -1186,7 +1186,7 @@ proc LanguageChanged {} {
 	foreach t $Vars(windows) {
 		set var [namespace parent]::mc::Tab([lindex [split $t .] end])
 		if {[winfo toplevel $t] eq $t} {
-			wm title $t "$::scidb::app - [::mc::stripAmpersand [set $var]]"
+			wm title $t "$::scidc::app - [::mc::stripAmpersand [set $var]]"
 		} else {
 			::widget::notebookSetLabel $Vars(contents) $t [set $var]
 		}
@@ -1309,7 +1309,7 @@ proc Configure {main contents switcher height} {
 
 
 proc PopupMenu {parent x y {base ""}} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Types
 	variable Vars
 	variable ::table::options
@@ -1329,7 +1329,7 @@ proc PopupMenu {parent x y {base ""}} {
 	set isSciFormat 1
 
 	if {[string length $base] > 0 && [$Vars(switcher) active? $base]} {
-		set readonly [::scidb::db::get readonly? $base]
+		set readonly [::scidc::db::get readonly? $base]
 		if {$readonly} { set readonlyState disabled } else { set readonlyState normal }
 		set ext [$Vars(switcher) extension $base]
 		set type [$Vars(switcher) type $base]
@@ -1421,7 +1421,7 @@ proc PopupMenu {parent x y {base ""}} {
 			}
 
 			if {$isSciFormat} {
-				set count [::scidb::db::count games $base $Vars(variant)]
+				set count [::scidc::db::count games $base $Vars(variant)]
 				if {$count} { set state $readonlyState } else { set state disabled }
 				$maint add command \
 					-label " $mc::FileStripMoveInfo..." \
@@ -1438,7 +1438,7 @@ proc PopupMenu {parent x y {base ""}} {
 					-state $state \
 					;
 
-				if {[::scidb::db::get compact? $base $Vars(variant)]} {
+				if {[::scidc::db::get compact? $base $Vars(variant)]} {
 					set state normal
 				} else {
 					set state disabled
@@ -1459,7 +1459,7 @@ proc PopupMenu {parent x y {base ""}} {
 				-compound left \
 				-command [namespace code [list closeBase $parent $base]] \
 				;
-			if {[::scidb::db::get unsaved? $base]} {
+			if {[::scidc::db::get unsaved? $base]} {
 				$menu add command \
 					-label " $mc::FileSaveChanges..." \
 					-image $::icon::16x16::save \
@@ -1468,7 +1468,7 @@ proc PopupMenu {parent x y {base ""}} {
 					;
 			}
 		} else {
-			set count [::scidb::db::count games $base $Vars(variant)]
+			set count [::scidc::db::count games $base $Vars(variant)]
 			if {$count} { set state normal } else { set state disabled }
 			$menu add command \
 				-label " $mc::EmptyClipbase" \
@@ -1480,7 +1480,7 @@ proc PopupMenu {parent x y {base ""}} {
 		}
 		switch $ext {
 			si3 - si4 - si5 - cbh - cbf - pgn - pgn.gz - bpgn - bpgn.gz {
-				if {[file readable $base] && ![::scidb::db::get unsaved? $base]} {
+				if {[file readable $base] && ![::scidc::db::get unsaved? $base]} {
 					set state normal
 				} else {
 					set state disabled
@@ -1499,8 +1499,8 @@ proc PopupMenu {parent x y {base ""}} {
 
 		if {!$isClipbase && ($ext eq "sci" || $ext eq "pgn" || $ext eq "pgn.gz")} {
 			variable ReadOnly_
-			set ReadOnly_ [::scidb::db::get readonly? $base]
-			if {![::scidb::db::get writable? $base] || [::scidb::db::get unsaved? $base]} {
+			set ReadOnly_ [::scidc::db::get readonly? $base]
+			if {![::scidc::db::get writable? $base] || [::scidc::db::get unsaved? $base]} {
 				set state disabled
 			} else {
 				set state normal
@@ -1553,9 +1553,9 @@ proc PopupMenu {parent x y {base ""}} {
 		;
 	::menu::addVariantsToMenu $top $menu.mFileNew 1
 
-#	if {$index == -1 && [::scidb::db::get name] ne $clipbaseName} {
+#	if {$index == -1 && [::scidc::db::get name] ne $clipbaseName} {
 #		$menu add separator
-#		set name [::util::databaseName [::scidb::db::get name]]
+#		set name [::util::databaseName [::scidc::db::get name]]
 #		set text [format [set [namespace current]::mc::Close] $name]
 #		set cmd [namespace code [list closeBase $parent]]
 #		$menu add command -label " $text" -image $::icon::16x16::close -compound left -command $cmd
@@ -1596,16 +1596,16 @@ proc ToggleReadOnly {var {base ""}} {
 	variable RecentFiles
 
 	set readonly [set $var]
-	if {[string length $base] == 0} { set base [::scidb::db::get name] }
+	if {[string length $base] == 0} { set base [::scidc::db::get name] }
 
-	if {![::scidb::db::set readonly $base $readonly]} {
+	if {![::scidc::db::set readonly $base $readonly]} {
 		set $var [expr {!$readonly}]
 		append msg $mc::ReadWriteFailed " " $::util::mc::IOError(NotOriginalVersion) "."
 		::dialog::error -parent [winfo toplevel $Vars(switcher)] -message $msg
 		return
 	}
 
-	if {[::scidb::db::get name] eq $base} { set Vars(flag:readonly) $readonly }
+	if {[::scidc::db::get name] eq $base} { set Vars(flag:readonly) $readonly }
 	SwitchVariant [$Vars(switcher) readonly $base $readonly]
 
 	set k [FindRecentFile $base]
@@ -1617,12 +1617,12 @@ proc ToggleReadOnly {var {base ""}} {
 
 
 proc EmptyClipbase {parent} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
 	if {[::game::releaseAll $parent $clipbaseName $Vars(variant)]} {
 		::widget::busyCursor on
-		::scidb::db::clear $clipbaseName $Vars(variant)
+		::scidc::db::clear $clipbaseName $Vars(variant)
 		::widget::busyCursor off
 	}
 }
@@ -1696,7 +1696,7 @@ proc DoSaveChanges {parent base} {
 		CheckSaveState $base
 
 		set i [FindRecentFile $base]
-		if {$i >= 0} { lset RecentFiles $i 2 [::scidb::db::get usedencoding $base] }
+		if {$i >= 0} { lset RecentFiles $i 2 [::scidc::db::get usedencoding $base] }
 
 		# TODO
 		switch $result {
@@ -1715,7 +1715,7 @@ proc DoSaveChanges {parent base} {
 proc EditDescription {parent file} {
 	variable Vars
 
-	set s [::scidb::db::get description $file]
+	set s [::scidc::db::get description $file]
 	set s [string map {"\r\n" "\\n"} $s]
 	set s [string map {"\t" "\\t" "\n" "\\n" "\r" ""} $s]
 	set Vars(description) $s
@@ -1748,7 +1748,7 @@ proc SetDescription {dlg file} {
 
 	set Vars(description) [string trim $Vars(description)]
 	set s [string map {"\\t" "\t" "\\n" "\n"} $Vars(description)]
-	set length [::scidb::db::set description $file $s]
+	set length [::scidc::db::set description $file $s]
 
 	if {$length == 0} {
 		CheckSaveState $file
@@ -1844,7 +1844,7 @@ proc CheckOkButton {btn} {
 
 
 proc DoStripMoveInfo {dlg file} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable MoveInfoAttrs
 	variable Vars
 
@@ -1857,7 +1857,7 @@ proc DoStripMoveInfo {dlg file} {
 	}
 
 	set name [::util::databaseName $file]
-	set cmd [list ::scidb::view::strip moveInfo $file $Vars(variant) 0 $attrs]
+	set cmd [list ::scidc::view::strip moveInfo $file $Vars(variant) 0 $attrs]
 	set title [format $mc::StripMoveInfo $name]
 	set options [list -message $title]
 	set n [::progress::start $parent $cmd {} $options]
@@ -1871,12 +1871,12 @@ proc DoStripMoveInfo {dlg file} {
 	::log::info $info
 	::log::close
 
-	set total [::scidb::db::count total $file]
+	set total [::scidc::db::count total $file]
 
 	if {$file ne $clipbaseName && ($n >= 1000 || ($total > 1000 && $n >= ($total + $n)/3))} {
 		::dialog::info \
 			-parent $parent \
-			-title "$::scidb::app: $mc::Maintenance" \
+			-title "$::scidc::app: $mc::Maintenance" \
 			-message $mc::CompactionRecommended \
 			;
 	}
@@ -1886,7 +1886,7 @@ proc DoStripMoveInfo {dlg file} {
 proc StripPGNTags {parent file} {
 	variable Vars
 
-	set cmd [list ::scidb::view::enumTags $file $Vars(variant) 0]
+	set cmd [list ::scidc::view::enumTags $file $Vars(variant) 0]
 	set title $mc::SearchPGNTags
 	set options [list -message $title -interrupt yes]
 	set tags [::progress::start $parent $cmd {} $options]
@@ -1972,7 +1972,7 @@ proc CheckTagSelection {btn tags} {
 
 
 proc DoStripPGNTags {dlg file tags} {
-	variable ::scidb::clipbaseName
+	variable ::scidc::clipbaseName
 	variable Vars
 
 	set parent [winfo parent $dlg]
@@ -1985,7 +1985,7 @@ proc DoStripPGNTags {dlg file tags} {
 	}
 
 	set name [::util::databaseName $file]
-	set cmd [list ::scidb::view::strip tags $file $Vars(variant) 0 $attrs]
+	set cmd [list ::scidc::view::strip tags $file $Vars(variant) 0 $attrs]
 	set title [format $mc::StripPGNTags $name]
 	set options [list -message $title]
 	set n [::progress::start $parent $cmd {} $options]
@@ -1999,12 +1999,12 @@ proc DoStripPGNTags {dlg file tags} {
 	::log::info $info
 	::log::close
 
-	set total [::scidb::db::count total $file]
+	set total [::scidc::db::count total $file]
 
 	if {$file ne $clipbaseName && ($n >= 1000 || ($total > 1000 && $n >= ($total + $n)/3))} {
 		::dialog::info \
 			-parent $parent \
-			-title "$::scidb::app: $mc::Maintenance" \
+			-title "$::scidc::app: $mc::Maintenance" \
 			-message $mc::CompactionRecommended \
 			;
 	}
@@ -2021,7 +2021,7 @@ proc Compact {parent file} {
 	foreach entry [::game::gameList] {
 		lassign $entry base _ number
 		if {$base eq $file} {
-			if {[::scidb::game::query $pos modified?]} {
+			if {[::scidc::game::query $pos modified?]} {
 				lappend modifiedGames $pos
 			} else {
 				lappend openGames $pos
@@ -2043,7 +2043,7 @@ proc Compact {parent file} {
 	}
 
 	set msg [format $mc::ReallyCompact [::util::databaseName $file]]
-	set n [lindex [::scidb::db::get stats $file] 0]
+	set n [lindex [::scidc::db::get stats $file] 0]
 	switch $n {
 		0			{ set detail $mc::RemoveSpace }
 		1			{ set detail $mc::ReallyCompactDetail(1) }
@@ -2051,7 +2051,7 @@ proc Compact {parent file} {
 	}
 	set reply [::dialog::question \
 		-parent $parent \
-		-title "$::scidb::app: $mc::Maintenance" \
+		-title "$::scidc::app: $mc::Maintenance" \
 		-message $msg \
 		-detail $detail \
 		-buttons {yes no} \
@@ -2080,10 +2080,10 @@ proc Compact {parent file} {
 		}
 	}
 
-	set variant [::scidb::app::variant]
+	set variant [::scidc::app::variant]
 	::browser::closeAll $file $variant
 	::overview::closeAll $file $variant
-	set cmd [list ::scidb::db::compact $file]
+	set cmd [list ::scidc::db::compact $file]
 	set options [list -message $title]
 	::progress::start $parent $cmd {} $options
 	switch $n {
@@ -2101,7 +2101,7 @@ proc Recode {file parent} {
 	variable RecentFiles
 	variable Vars
 
-	set enc [::scidb::db::get usedencoding $file]
+	set enc [::scidc::db::get usedencoding $file]
 	set ext [string tolower [$Vars(switcher) extension $file]]
 	switch $ext {
 		cbh 		{ set defaultEncoding $::encoding::windowsEncoding }
@@ -2126,11 +2126,11 @@ proc Recode {file parent} {
 
 		default {
 			lappend options -message $msg
-			::progress::start $parent [list ::scidb::db::recode $file $encoding] {} $options
+			::progress::start $parent [list ::scidc::db::recode $file $encoding] {} $options
 		}
 	}
 
-	set count [::scidb::db::count total $file]
+	set count [::scidc::db::count total $file]
 	::log::info [format $mc::RecodedGames [::locale::formatNumber $count]]
 	::log::close
 
@@ -2140,13 +2140,13 @@ proc Recode {file parent} {
 
 	if {![string match *pgn $ext]} {
 		# openBase ic already checking the encoding status
-		CheckEncoding $parent $file [::scidb::db::get usedencoding $file]
+		CheckEncoding $parent $file [::scidc::db::get usedencoding $file]
 	}
 }
 
 
 proc CheckEncoding {parent file encoding} {
-	if {[::scidb::db::get encodingState $file] eq "failed"} {
+	if {[::scidc::db::get encodingState $file] eq "failed"} {
 		::dialog::warning -parent $parent -buttons {ok} -message [format $mc::EncodingFailed $encoding]
 	}
 }
@@ -2226,7 +2226,7 @@ proc SetIcon {w typeList file} {
 	set selection [lsearch -exact $Types(sci) $type]
 	set type [lindex $Types(sci) $selection]
 	$Vars(switcher) type $file $type
-	::scidb::db::set type $file $selection
+	::scidc::db::set type $file $selection
 	destroy [winfo toplevel $w]
 	lset RecentFiles [FindRecentFile $file] 0 $type
 	[namespace parent]::information::update
@@ -2453,7 +2453,7 @@ proc Undock {nb index {geometry {}}} {
 			set ht [winfo height $v]
 		}
 	}
-	::scidb::tk::twm release $w
+	::scidc::tk::twm release $w
 	update idle ;# is reducing flickering
 	if {[string length $geometry] == 0} {
 		wm geometry $w ${wd}x${ht}
@@ -2467,7 +2467,7 @@ proc Undock {nb index {geometry {}}} {
 	set minheight [expr {8*$linespace + $overhang}]
 #	wm transient $w [winfo toplevel $nb]
 	wm minsize $w 500 $minheight
-	wm title $w "$::scidb::app - $title"
+	wm title $w "$::scidc::app - $title"
 	wm state $w normal
 	wm protocol $w WM_DELETE_WINDOW [namespace code [list Dock $nb $w]]
 }
@@ -2480,7 +2480,7 @@ proc Dock {nb w} {
 	if {[llength [$nb tabs]] == $Vars(mintabs)} {
 		$nb tab [$nb select] -image $icon::16x16::undock
 	}
-	::scidb::tk::twm capture $w
+	::scidc::tk::twm capture $w
 	set id [lindex [split $w .] end]
 	set indices {}
 	foreach t [$nb tabs] {
@@ -2538,7 +2538,7 @@ set undock_sunken [image create photo -data {
 }]
 
 set undock_disabled [image create photo -width 16 -height 16]
-::scidb::tk::image disable $undock $undock_disabled
+::scidc::tk::image disable $undock $undock_disabled
 
 } ;# namespace 16x16
 } ;# namespace icon

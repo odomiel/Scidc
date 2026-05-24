@@ -89,7 +89,7 @@ proc showTrace {path text useHorzScroll closeCmd} {
 		$txt configure -state normal
 		$txt delete 1.0 end
 	} else {
-		tk::toplevel $path -class Scidb
+		tk::toplevel $path -class Scidc
 		set f [::ttk::frame $path.f -takefocus 0]
 
 		if {$useHorzScroll} {
@@ -577,7 +577,7 @@ proc busyCursor {w {state on}} {
 
 	foreach toplevel {.application .setupEngine .help .playerDict .mergeDialog} {
 		if {[winfo exists $toplevel]} {
-			catch { ::scidb::tk::busy $action $toplevel }
+			catch { ::scidc::tk::busy $action $toplevel }
 
 			if {[tk windowingsystem] eq "x11"} {
 				foreach tlv [winfo children $toplevel] {
@@ -761,7 +761,7 @@ proc GetIcon {type} {
 proc BusyCursor {action w ignore} {
 	if {$w ne $ignore} {
 		if {[winfo toplevel $w] eq $w} {
-			catch { ::scidb::tk::busy $action $w }
+			catch { ::scidc::tk::busy $action $w }
 		}
 		foreach tlv [winfo children $w] {
 			BusyCursor $action $tlv $ignore

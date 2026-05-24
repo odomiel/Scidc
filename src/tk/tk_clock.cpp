@@ -437,7 +437,7 @@ tkClock(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 void
 tk::clockInit(Tcl_Interp* ti)
 {
-	tcl::createCommand(ti, "::scidb::tk::clock", tkClock);
+	tcl::createCommand(ti, "::scidc::tk::clock", tkClock);
 }
 
 // vi:set ts=3 sw=3:

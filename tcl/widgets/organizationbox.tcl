@@ -36,7 +36,7 @@ namespace eval organizationbox {
 namespace import ::tcl::mathfunc::max
 
 set organizations {FIDE DSB ECF ICCF}
-#set organizations {FIDE DSB ECF ACF ICCF Scidb}
+#set organizations {FIDE DSB ECF ACF ICCF Scidc}
 
 
 proc Build {w args} {

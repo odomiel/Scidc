@@ -134,7 +134,7 @@ install-app-icons:
 	@echo "Install desktop application icons"
 	@for size in 16 22 32 48 64 128; do                                                           \
 		if [ -f scidb-$$size.png ]; then                                                           \
-			xdg-icon-resource install --noupdate --novendor --size $$size ./scidb-$$size.png scidb; \
+			xdg-icon scidc; \
 		fi;                                                                                        \
 	done
 	@if [ -z "$(XDGDIR)" ]; then      \
@@ -145,7 +145,7 @@ uninstall-app-icons:
 	@echo "Uninstall desktop application icons"
 	@for size in 16 22 32 48 64 128; do                                                  \
 		if [ -f scidb-$$size.png ]; then                                                  \
-			xdg-icon-resource uninstall --noupdate --size $$size ./scidb-$$size.png scidb; \
+			xdg-icon scidc; \
 		fi;                                                                               \
 	done
 	@if [ -z "$(XDGDIR)" ]; then      \
@@ -155,15 +155,15 @@ uninstall-app-icons:
 install-desktop-menu-entry:
 	@echo "Install desktop menu"
 	@if [ -z "$(XDGDIR)" ]; then                                  \
-		xdg-desktop-menu install --novendor scidb.desktop;         \
+		xdg-desktop-menu install --novendor scidc.desktop;         \
 		xdg-desktop-menu forceupdate;                              \
 	else                                                          \
-		install -m 644 scidb.desktop $(XDGDIR)/share/applications; \
+		install -m 644 scidc.desktop $(XDGDIR)/share/applications; \
 	fi
 
 uninstall-desktop-menu-entry:
 	@echo "Uninstall desktop menu"
-	@xdg-desktop-menu uninstall scidb.desktop
+	@xdg-desktop-menu uninstall scidc.desktop
 	@if [ -z "$(XDGDIR)" ]; then     \
 		xdg-desktop-menu forceupdate; \
 	fi

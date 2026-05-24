@@ -31,7 +31,7 @@ namespace eval mc {
 
 set Theme							"Theme"
 set ColorScheme					"Color Scheme"
-set CustomStyleMenu				"Scidb's Style Menu"
+set CustomStyleMenu				"Scidc's Style Menu"
 set DefaultStyleMenu				"Default Style Menu"
 set OrdinaryMonitor				"Ordinary Monitor"
 set HighQualityMonitor			"High Quality Monitor"
@@ -55,7 +55,7 @@ set PGNArchives					"PGN archives"
 set Language						"&Language"
 set Toolbars						"&Toolbars"
 set ShowLog							"&Show Log"
-set AboutScidb						"&About Scidb"
+set AboutScidb						"&About Scidc"
 set TipOfTheDay					"Tip of the &Day"
 set Fullscreen						"&Full-Screen"
 set LeaveFullscreen				"Leave &Full-Screen"
@@ -98,8 +98,8 @@ set Data								"%s data"
 
 # Default Application
 set Assign							"assign"
-set FailedSettingDefaultApp	"Failed to set Scidb as a default application for %s."
-set SuccessSettingDefaultApp	"Successfully set Scidb as a default application for %s."
+set FailedSettingDefaultApp	"Failed to set Scidc as a default application for %s."
+set SuccessSettingDefaultApp	"Successfully set Scidc as a default application for %s."
 set CommandFailed					"Command '%s' failed."
 
 # does not need translation
@@ -649,8 +649,8 @@ proc dbOpen {parent} {
 
 
 proc dbCreateArchive {parent {base ""}} {
-	if {[string length $base] == 0} { set base [::scidb::db::get name] }
-	if {$base eq $::scidb::clipbaseName} { set name $::util::clipbaseName } else { set name $base}
+	if {[string length $base] == 0} { set base [::scidc::db::get name] }
+	if {$base eq $::scidc::clipbaseName} { set name $::util::clipbaseName } else { set name $base}
 	set filetypes [list	[list $mc::ScidbArchives {.scv}]]
 	set result [::dialog::saveFile \
 		-parent $parent \
@@ -667,13 +667,13 @@ proc dbCreateArchive {parent {base ""}} {
 	if {[llength $result]} {
 		set arch [lindex $result 0]
 		set progress $parent.__p__
-		if {[::scidb::db::get open? $base] && [::scidb::db::get memoryOnly? $base]} {
+		if {[::scidc::db::get open? $base] && [::scidc::db::get memoryOnly? $base]} {
 			::dialog::progressbar::open $progress \
 				-mode indeterminate \
 				-message [format $mc::BuildArchive [file rootname [file tail $arch]]] \
 				;
 			set streams {}
-			foreach ext [::scidb::misc::suffixes "$base.sci"] { lappend streams "$base.$ext" }
+			foreach ext [::scidc::misc::suffixes "$base.sci"] { lappend streams "$base.$ext" }
 			set cmd [list ::archive::packStreams \
 				$arch \
 				[file dirname $base] \
@@ -681,7 +681,7 @@ proc dbCreateArchive {parent {base ""}} {
 				{sci} \
 				zlib \
 				[clock seconds] \
-				[::scidb::db::count total $base] \
+				[::scidc::db::count total $base] \
 				[namespace current]::archive::Write \
 				[namespace current]::archive::getName \
 				$progress \
@@ -693,7 +693,7 @@ proc dbCreateArchive {parent {base ""}} {
 				;
 			set files {}
 			set rootname [file rootname $base]
-			foreach ext [::scidb::misc::suffixes $base] {
+			foreach ext [::scidc::misc::suffixes $base] {
 				set f "$rootname.$ext"
 				if {[file exists $f]} { lappend files [file tail $f] }
 			}
@@ -705,7 +705,7 @@ proc dbCreateArchive {parent {base ""}} {
 							[namespace current]::archive::GetCompressionMethod \
 							[namespace current]::archive::getName \
 							[namespace current]::archive::GetCount \
-							::scidb::misc::mapExtension \
+							::scidc::misc::mapExtension \
 						]
 		}
 		if {[catch {{*}$cmd} err options]} {
@@ -758,7 +758,7 @@ proc dbImport {parent base fileTypes} {
 	if {[llength $result]} {
 		lassign $result files encoding
 		::import::import $parent $base $files $title $encoding
-		if {$base eq [::scidb::db::get name]} {
+		if {$base eq [::scidc::db::get name]} {
 			::application::database::refreshBase $base
 		}
 	}
@@ -772,8 +772,8 @@ proc dbClose {parent} {
 
 proc gameNew {parent {variant Normal}} {
 	if {[::game::new $parent -variant $variant] >= 0} {
-		set fen [::scidb::game::query 9 fen]
-		::scidb::game::clear $fen
+		set fen [::scidc::game::query 9 fen]
+		::scidc::game::clear $fen
 		::application::switchTab board
 	}
 }
@@ -1044,7 +1044,7 @@ proc GetCompressionMethod {ext} {
 proc GetCount {file} {
 	switch [string tolower [file extension $file]] {
 		.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
-			return [::scidb::misc::size $file]
+			return [::scidc::misc::size $file]
 		}
 	}
 	return 0
@@ -1055,7 +1055,7 @@ proc Write {file chan progress} {
 	set ext [file extension $file]
 	set base [file rootname $file]
 
-	return [::scidb::db::write \
+	return [::scidc::db::write \
 		$base \
 		[string range $ext 1 end] \
 		$chan \

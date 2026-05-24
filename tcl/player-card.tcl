@@ -83,7 +83,7 @@ proc show {base variant args} {
 	variable Options
 	variable Counter
 
-	set info [::scidb::db::playerInfo $base $variant {*}$args]
+	set info [::scidc::db::playerInfo $base $variant {*}$args]
 	set key [MakeKey $base $variant $info]
 	if {[string length $key] == 0} { return }
 	set name [lindex $info 0]
@@ -93,7 +93,7 @@ proc show {base variant args} {
 			::widget::dialogRaise $Vars($key)
 		} else {
 			set Vars($key:open) 1
-			set id [::scidb::db::get playerKey $base $variant {*}$args]
+			set id [::scidc::db::get playerKey $base $variant {*}$args]
 			UpdateContent $Vars($key).content $id $key $base $variant $name $args
 		}
 		return
@@ -101,8 +101,8 @@ proc show {base variant args} {
 
 	::widget::busyCursor on
 
-	::scidb::db::subscribe dbInfo {} [list [namespace current]::Close $key]
-	set dlg [tk::toplevel .application.__card__[incr Counter] -class Scidb]
+	::scidc::db::subscribe dbInfo {} [list [namespace current]::Close $key]
+	set dlg [tk::toplevel .application.__card__[incr Counter] -class Scidc]
 	set Vars($key) $dlg
 	set Vars($key:open) 1
 	bind $dlg <Destroy> [namespace code [list Destroy $dlg $key %W 1]]
@@ -110,7 +110,7 @@ proc show {base variant args} {
 
 	::font::html::setupFonts playercard
 	set css [DefaultCSS]
-	set dir [file join $::scidb::dir::share scripts]
+	set dir [file join $::scidc::dir::share scripts]
 	set html $dlg.content
 	::html $html \
 		-fontsize [::font::html::fontSize playercard] \
@@ -136,7 +136,7 @@ proc show {base variant args} {
 	bind $html <<FontSizeChanged>> [namespace code [list FontSizeChanged %W $html $key]]
 	pack $html -fill both -expand yes
 	bind $html <Destroy> [list array unset [namespace current]::Vars $key*]
-	set id [::scidb::db::get playerKey $base $variant {*}$args]
+	set id [::scidc::db::get playerKey $base $variant {*}$args]
 	set arguments [list $html $id $key $base $variant $name $args]
 	set updateCmd [list UpdatePlayer {*}$arguments]
 	bind $html <<LanguageChanged>> [namespace code $updateCmd]
@@ -275,7 +275,7 @@ proc setupPrivateCard {parent} {
 	# Photo
 
 	set dlg $parent.setupPrivateCard
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $top -fill both -expand yes
@@ -543,7 +543,7 @@ proc ChangeFontSize {w key size} {
 
 proc UpdatePlayer {w id key base variant name playerCardArgs} {
 	if {[llength $playerCardArgs] == 1} {
-		set pos [::scidb::db::find player $base $variant $id]
+		set pos [::scidc::db::find player $base $variant $id]
 		if {$pos == -1} {
 			destroy [winfo toplevel $w]
 			return
@@ -598,9 +598,9 @@ proc UpdateContent {w id key base variant name playerCardArgs} {
 		\\def\\Label-White-Most-Played{$mc::WhiteMostPlayed}
 		\\def\\Label-Black-Most-Played{$mc::BlackMostPlayed}
 	"
-	set searchDir [file join $::scidb::dir::share scripts]
+	set searchDir [file join $::scidc::dir::share scripts]
 	set script "player-card.eXt"
-	set result [::scidb::db::playerCard $searchDir $script $preamble $base $variant {*}$playerCardArgs]
+	set result [::scidc::db::playerCard $searchDir $script $preamble $base $variant {*}$playerCardArgs]
 	lassign $result html log
 
 	set i [string first "%date%(" $html]
@@ -676,7 +676,7 @@ proc MouseEnter {w variant nodes} {
 		set eco [$node attribute -default {} eco]
 		if {[string length $eco]} {
 			set Vars($w:tooltip) $node
-			set opening [::scidb::misc::lookup opening $eco $variant]
+			set opening [::scidc::misc::lookup opening $eco $variant]
 			lassign $opening long short
 			set vars [lrange $opening 2 end]
 			if {[llength $vars]} {
@@ -848,7 +848,7 @@ proc Destroy {dlg key w unsubscribe} {
 	catch { destroy $dlg.html }
 	catch { destroy $dlg.log }
 
-	::scidb::db::unsubscribe dbInfo {} [list [namespace current]::Close $key]
+	::scidc::db::unsubscribe dbInfo {} [list [namespace current]::Close $key]
 }
 
 

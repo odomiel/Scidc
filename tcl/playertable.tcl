@@ -490,7 +490,7 @@ proc popupMenu {menu base variant info {playerCard {}}} {
 		$menu entryconfigure end -state disabled
 	}
 
-#	if {![::scidb::db::get readonly? $base $variant]} {
+#	if {![::scidc::db::get readonly? $base $variant]} {
 #		$menu add separator
 #		$menu add command \
 #			-label " $::mc::Edit..." \
@@ -558,7 +558,7 @@ proc TableSelected {path index} {
 		set base [::scrolledtable::base $path.table]
 		set variant [::scrolledtable::variant $path.table]
 		set view [{*}$Vars(viewcmd) $base $variant]
-		set Vars($base:$variant:index) [::scidb::db::get playerIndex $index $view $base $variant]
+		set Vars($base:$variant:index) [::scidc::db::get playerIndex $index $view $base $variant]
 		{*}$Vars(selectcmd) $base $variant $view
 		::widget::busyCursor off
 	}
@@ -578,7 +578,7 @@ proc TableFill {path args} {
 
 	lassign [lindex $args 0] table base variant start first last columns
 
-	set codec [::scidb::db::get codec $base $variant]
+	set codec [::scidc::db::get codec $base $variant]
 	set view [{*}$Vars(viewcmd) $base $variant]
 	set last [expr {min($last, [scidb::view::count players $base $variant $view] - $start)}]
 	set ratings [list $Options(rating1:type) $Options(rating2:type)]
@@ -731,7 +731,7 @@ proc TableVisit {path data} {
 
 	set view [{*}$Vars(viewcmd) $base $variant]
 	set row  [::scrolledtable::rowToIndex $table $row]
-	set item [::scidb::db::get playerInfo $row $view $base $variant $col]
+	set item [::scidc::db::get playerInfo $row $view $base $variant $col]
 
 	if {[string length $item] == 0} { return }
 
@@ -770,12 +770,12 @@ proc SortColumn {path id dir} {
 	if {$selection >= 0 && [::scrolledtable::selectionIsVisible? $table]} { set see 1 }
 	switch $dir {
 		reverse {
-			::scidb::db::reverse player $base $variant $view
+			::scidc::db::reverse player $base $variant $view
 		}
 		cancel {
 			set columnNo [::scrolledtable::columnNo $path lastName]
 			if {$columnNo > 1} { decr columnNo }
-			::scidb::db::sort player $base $variant $columnNo $view -ascending -reset
+			::scidc::db::sort player $base $variant $columnNo $view -ascending -reset
 		}
 		default {
 			set options [list -ratings $ratings]
@@ -784,11 +784,11 @@ proc SortColumn {path id dir} {
 			}
 			set columnNo [::scrolledtable::columnNo $table $id]
 			if {$columnNo > 1} { decr columnNo }
-			::scidb::db::sort player $base $variant $columnNo $view {*}$options -$dir
+			::scidc::db::sort player $base $variant $columnNo $view {*}$options -$dir
 		}
 	}
 	if {$selection >= 0} {
-		set selection [::scidb::db::get lookupPlayer $selection $view $base $variant]
+		set selection [::scidc::db::get lookupPlayer $selection $view $base $variant]
 	}
 	::widget::busyCursor off
 	::scrolledtable::updateColumn $table $selection $see
@@ -803,7 +803,7 @@ proc Find {path mode name} {
 	set variant [::scrolledtable::variant $path.table]
 	set view [{*}$Vars(viewcmd) $base $variant]
 	if {$mode eq "next"} { set lastIndex [::scrolledtable::active $path.table] } else { set lastIndex -1 }
-	set i [::scidb::view::find player $base $variant $view "$name*" $lastIndex]
+	set i [::scidc::view::find player $base $variant $view "$name*" $lastIndex]
 	if {$i >= 0} {
 		::scrolledtable::see $path.table $i
 		::scrolledtable::activate $path.table $i

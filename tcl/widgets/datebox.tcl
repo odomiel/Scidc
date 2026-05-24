@@ -110,7 +110,7 @@ proc tooltip {args} {}
 
 
 proc Build {w args} {
-	array set opts [list -minYear [::scidb::misc::minYear] -maxYear [::scidb::misc::maxYear]]
+	array set opts [list -minYear [::scidc::misc::minYear] -maxYear [::scidc::misc::maxYear]]
 	set opts(-tooltip) [namespace current]::mc::Today
 	set opts(-usetoday) 0
 	set opts(-skipspace) 0

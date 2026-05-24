@@ -199,7 +199,7 @@ set Nag(151)	"White has a pair of Bishops"
 set Nag(152)	"Black has a  pair of Bishops"
 set Nag(153)	"Bishops of opposite color"
 set Nag(154)	"Bishops of same color"
-# suffix annotation (Scidb specific)
+# suffix annotation (Scidc specific)
 set Nag(155)	"Diagram"						;# Scid 3
 set Nag(156)	"Diagram from black's perspective"
 set Nag(157)	"Isolated pawns"				;# Scid 3
@@ -359,9 +359,9 @@ proc open {parent} {
 
 	set Vars(needUpdate) 1
 	set Vars(dialog) $dlg
-	tk::toplevel $dlg -class Scidb -relief solid
+	tk::toplevel $dlg -class Scidc -relief solid
 	wm withdraw $dlg
-	set title "$::scidb::app: $mc::AnnotationEditor"
+	set title "$::scidc::app: $mc::AnnotationEditor"
 
 	set top [::ttk::frame $dlg.top -relief raised -borderwidth 2]
 	pack $dlg.top -fill both -expand yes
@@ -517,7 +517,7 @@ proc open {parent} {
 		wm attributes $dlg -toolwindow
 		wm title $dlg $title
 	} else {
-		::scidb::tk::wm frameless $dlg
+		::scidc::tk::wm frameless $dlg
 	}
 	wm deiconify $dlg
 	update
@@ -540,13 +540,13 @@ proc update {{key ""}} {
 	variable Vars
 
 	if {[string length $key] == 0} {
-		set key [::scidb::game::position key]
+		set key [::scidc::game::position key]
 	}
 	set Vars(key) $key
 
 	if {[open?]} {
-		set Vars(stm) [string index [::scidb::game::query stm] 0]
-		lassign [::scidb::game::query annotation] Vars(infix) Vars(prefix) Vars(suffix)
+		set Vars(stm) [string index [::scidc::game::query stm] 0]
+		lassign [::scidc::game::query annotation] Vars(infix) Vars(prefix) Vars(suffix)
 		Init $Vars(dialog)
 		set Vars(needUpdate) 0
 	} else {
@@ -601,7 +601,7 @@ proc setNags {args} {
 	if {[llength $args] == 2} {
 		lassign $args key nags
 	} else {
-		set key [::scidb::game::position key]
+		set key [::scidc::game::position key]
 		set nags [lindex $args 0]
 	}
 
@@ -612,14 +612,14 @@ proc setNags {args} {
 		append text "\$[lindex $nags $i]"
 	}
 
-	::scidb::game::update annotation $key $text
-	::scidb::game::variation unfold -force
+	::scidc::game::update annotation $key $text
+	::scidc::game::variation unfold -force
 }
 
 
 proc addNag {group nag} {
-	::scidb::game::update $group [::scidb::game::position key] "\$$nag"
-	::scidb::game::variation unfold -force
+	::scidc::game::update $group [::scidc::game::position key] "\$$nag"
+	::scidc::game::variation unfold -force
 }
 
 
@@ -655,7 +655,7 @@ proc Init {dlg} {
 
 	set Value(155) 0	;# hack
 	set Value(156) 0	;# hack
-	if {[::scidb::game::current] == 9} {
+	if {[::scidc::game::current] == 9} {
 		for {set i 0} {$i < $MaxNags} {incr i} {
 			$Vars(cb:$i) configure -state disabled
 		}
@@ -670,7 +670,7 @@ proc Init {dlg} {
 			ConfigureButtons $dlg $type $entered
 		}
 
-		set atStart [::scidb::game::position atStart?]
+		set atStart [::scidc::game::position atStart?]
 
 		if {$atStart != $Vars(atStart)} {
 			set Vars(atStart) $atStart
@@ -876,7 +876,7 @@ proc Tooltip {w args} {
 
 		if {[$w cget -state] eq "disabled"} { return }
 		lassign $args nag row col
-		if {[::scidb::pos::stm] eq "w"} { set stm "b" } else { set stm "w" }
+		if {[::scidc::pos::stm] eq "w"} { set stm "b" } else { set stm "w" }
 		set nag [lindex $Annotations($stm) $row $col]
 		::tooltip::show $w "[string toupper $mc::Nag($nag) 0 0] (\$$nag)"
 	} elseif {[string match *Combobox [winfo class $w]]} {
@@ -931,7 +931,7 @@ proc LanguageChanged {dlg w} {
 	variable Vars
 
 	if {$dlg ne $w} { return }
-	$dlg.top.decor configure -text "${::scidb::app}: $mc::AnnotationEditor"
+	$dlg.top.decor configure -text "${::scidc::app}: $mc::AnnotationEditor"
 
 	for {set i 0} {$i < 7} {incr i} {
 		SetValues $Vars(cb:$i) 

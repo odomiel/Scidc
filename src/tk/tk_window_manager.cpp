@@ -692,7 +692,7 @@ setResult(Tcl_Interp* ti, Rect& rect)
 static int
 cmdWM(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 {
-	char const* Usage =	"Usage: ::scidb::tk::wm (frameless | splash | toolbar | menu | grid "
+	char const* Usage =	"Usage: ::scidc::tk::wm (frameless | splash | toolbar | menu | grid "
 								"| setLeader | map | raise | sync | desktop | ondesktop) <window> ...";
 
 	if (objc < 2)
@@ -713,7 +713,7 @@ cmdWM(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 	if (strcasecmp(subcmd, "grid") == 0)
 	{
-		char const* Usage =	"Usage: ::scidb::tk::wm grid <window> <baseWidth> "
+		char const* Usage =	"Usage: ::scidc::tk::wm grid <window> <baseWidth> "
 									"<baseHeight> <widthInc> <heightInc>";
 
 		if (objc != 7)
@@ -866,7 +866,7 @@ cmdWM(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 void
 tk::window_manager_init(Tcl_Interp* ti)
 {
-	tk_cmd = Tcl_CreateObjCommand(ti, "::scidb::tk::wm", cmdWM, 0, 0);
+	tk_cmd = Tcl_CreateObjCommand(ti, "::scidc::tk::wm", cmdWM, 0, 0);
 }
 
 // vi:set ts=3 sw=3:

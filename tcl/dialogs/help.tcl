@@ -162,9 +162,9 @@ proc open {parent {file ""} args} {
 	set Priv(history:index) -1
 	set Priv(extend) [expr {[string length $file] > 0}]
 
-	::scidb::misc::html cache on
+	::scidc::misc::html cache on
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm protocol $dlg WM_DELETE_WINDOW [namespace code Destroy]
 	wm withdraw $dlg
 
@@ -351,7 +351,7 @@ proc FullPath {file} {
 
 	if {[string length $file] == 0} { return "" }
 	if {[string length [file extension $file]] == 0} { append file ".html" }
-	if {[string match ${::scidb::dir::help}* $file]} { return $file }
+	if {[string match ${::scidc::dir::help}* $file]} { return $file }
 
 	if {[file extension $file] eq ".html"} {
 		set lang [helpLanguage]
@@ -360,7 +360,7 @@ proc FullPath {file} {
 	} else {
 		set lang [helpLanguage]
 	}
-	return [file normalize [file join $::scidb::dir::help $lang $file]]
+	return [file normalize [file join $::scidc::dir::help $lang $file]]
 }
 
 
@@ -380,14 +380,14 @@ proc CheckLanguage {parent helpFile} {
 	}
 
 	set lang $::mc::langID
-	set file [file normalize [file join $::scidb::dir::help $lang $helpFile]]
+	set file [file normalize [file join $::scidc::dir::help $lang $helpFile]]
 	if {[file readable $file]} {
 		set Options(lang) {}
 		return "found"
 	}
 
 	if {[string length $Options(lang)]} {
-		set file [file normalize [file join $::scidb::dir::help $Options(lang) $helpFile]]
+		set file [file normalize [file join $::scidc::dir::help $Options(lang) $helpFile]]
 		if {[file readable $file]} { return "found" }
 	}
 
@@ -395,7 +395,7 @@ proc CheckLanguage {parent helpFile} {
 	foreach lang [lsort [array names ::mc::input]] {
 		if {[string length $lang]} {
 			set code [set ::mc::lang$lang]
-			set file [file normalize [file join $::scidb::dir::help $code $helpFile]]
+			set file [file normalize [file join $::scidc::dir::help $code $helpFile]]
 			if {[file readable $file]} { lappend codes $code }
 		}
 	}
@@ -407,7 +407,7 @@ proc CheckLanguage {parent helpFile} {
 
 	set Options(lang) {}
 	set dlg $parent.lang
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
 	set top [ttk::frame $dlg.top]
 	pack $top
@@ -511,7 +511,7 @@ proc Destroy {} {
 	}
 
 	destroy $Priv(dlg)
-	::scidb::misc::html cache off
+	::scidc::misc::html cache off
 }
 
 
@@ -950,7 +950,7 @@ proc Search {t} {
 
 	array unset Priv match:*
 	set lang [[namespace parent]::helpLanguage]
-	set directory [file normalize [file join $::scidb::dir::help $lang]]
+	set directory [file normalize [file join $::scidc::dir::help $lang]]
 	set results {}
 	set exceededMsg 0
 	set activate 1
@@ -967,7 +967,7 @@ proc Search {t} {
 
 		if {$file ne "Overview.html" && [file readable $path]} {
 			set content [::file::read $path -encoding utf-8]
-			lassign [::scidb::misc::html search {*}$options $search $content] rc exceeded title positions
+			lassign [::scidc::misc::html search {*}$options $search $content] rc exceeded title positions
 			if {!$rc} {
 				::log::error [format [set [namespace parent]::mc::ParserError] [file join $lang $file]]
 			}
@@ -1121,7 +1121,7 @@ proc TabChanged {nb} {
 proc UpdateTitle {} {
 	variable Priv
 
-	append title $::scidb::app
+	append title $::scidc::app
 	append title ": "
 	append title $mc::Help
 
@@ -1585,7 +1585,7 @@ proc MouseEnter {nodes} {
 			if {[$node dynamic get user3]} {
 				::tooltip::show $Priv(html) $mc::PageNotAvailable
 			} elseif {[$node dynamic get user]} {
-				::tooltip::show $Priv(html) [::scidb::misc::url unescape [$node attribute href]]
+				::tooltip::show $Priv(html) [::scidc::misc::url unescape [$node attribute href]]
 			}
 			return
 		}
@@ -2074,7 +2074,7 @@ proc Parse {file {wantedFile {}} {match {}} {position {}}} {
 		set content [string map $Priv(pieceletters) $content]
 	}
 	set content [::html::hyphenate $lang $content]
-	if {$Priv(latinligatures)} { set content [::scidb::misc::html ligatures $content] }
+	if {$Priv(latinligatures)} { set content [::scidc::misc::html ligatures $content] }
 
 	set expr {\|(::)?([a-zA-Z_]+::)*[a-zA-Z_]+(\([a-zA-Z_:-]*\))?\|[^|]+\|}
 	set start 0

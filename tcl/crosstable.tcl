@@ -190,11 +190,11 @@ proc open {parent base variant index view source} {
 	variable Key
 
 	if {$source eq "game"} {
-		set number [::scidb::db::get gameNumber $base $variant $index $view]
-		set info [::scidb::db::fetch eventInfo $number $base $variant -card]
+		set number [::scidc::db::get gameNumber $base $variant $index $view]
+		set info [::scidc::db::fetch eventInfo $number $base $variant -card]
 	} else { ;# $source eq "event"
-		set info [::scidb::db::get eventInfo $index $view $base $variant -card]
-		set number [::scidb::db::get eventIndex $index $view $base $variant]
+		set info [::scidc::db::get eventInfo $index $view $base $variant -card]
+		set number [::scidc::db::get eventIndex $index $view $base $variant]
 	}
 
 	lassign $info title type date mode timeMode country site
@@ -207,8 +207,8 @@ proc open {parent base variant index view source} {
 			::widget::dialogRaise $dlg
 		} else {
 			set Vars(open) 1
-			::scidb::crosstable::release $Vars(tableId) $Vars(viewId)
-			set Vars(tableId) [::scidb::crosstable::make $base $variant $Vars(viewId)]
+			::scidc::crosstable::release $Vars(tableId) $Vars(viewId)
+			set Vars(tableId) [::scidc::crosstable::make $base $variant $Vars(viewId)]
 			UpdateContent $dlg 1
 		}
 		return
@@ -230,9 +230,9 @@ proc open {parent base variant index view source} {
 	set html $canv.html
 
 	if {[info exists Vars(tableId)]} {
-		::scidb::crosstable::release $Vars(tableId) $Vars(viewId)
+		::scidc::crosstable::release $Vars(tableId) $Vars(viewId)
 		if {$Vars(open)} {
-			::scidb::view::close $Vars(base) $Vars(variant) $Vars(viewId)
+			::scidc::view::close $Vars(base) $Vars(variant) $Vars(viewId)
 		}
 		array unset Vars viewId
 	}
@@ -253,17 +253,17 @@ proc open {parent base variant index view source} {
 	set Vars(tooltip) ""
 
 	if {![info exists Vars(viewId)]} {
-		set Vars(viewId) [::scidb::view::new $base $variant unused unused unused unused unused slave]
+		set Vars(viewId) [::scidc::view::new $base $variant unused unused unused unused unused slave]
 	}
 	if {$source eq "game"} { set search gameevent } else { set search event }
-	::scidb::view::search $base $variant $Vars(viewId) null none [list $search $number]
+	::scidc::view::search $base $variant $Vars(viewId) null none [list $search $number]
 
 	if {[winfo exists $dlg]} {
 		::widget::dialogRaise $dlg
-		set Vars(tableId) [::scidb::crosstable::make $base $variant $Vars(viewId)]
-		::scidb::view::unsubscribe {*}$Vars(subscribe)
+		set Vars(tableId) [::scidc::crosstable::make $base $variant $Vars(viewId)]
+		::scidc::view::unsubscribe {*}$Vars(subscribe)
 		set Vars(subscribe) [list [namespace current]::Close $base $variant $dlg]
-		::scidb::view::subscribe {*}$Vars(subscribe)
+		::scidc::view::subscribe {*}$Vars(subscribe)
 		ConfigureToolbar $dlg normal
 		::toolbar::childconfigure $Vars(toolbar:refresh) -state disabled
 		::toolbar::childconfigure $Vars(toolbar:reset) -state disabled
@@ -273,9 +273,9 @@ proc open {parent base variant index view source} {
 
 	set Vars(options) {}
 	set Vars(subscribe) [list [namespace current]::Close $base $variant $dlg]
-	::scidb::view::subscribe {*}$Vars(subscribe)
+	::scidc::view::subscribe {*}$Vars(subscribe)
 
-	tk::toplevel $dlg -class Scidb
+	tk::toplevel $dlg -class Scidc
 	bind $dlg <Destroy> [namespace code [list Destroy $dlg %W 1]]
 	wm withdraw $dlg
 
@@ -283,7 +283,7 @@ proc open {parent base variant index view source} {
 	ttk::frame $canv
 	::font::html::setupFonts crosstable
 	set css [DefaultCSS]
-	set dir [file join $::scidb::dir::share scripts]
+	set dir [file join $::scidc::dir::share scripts]
 	::html $html \
 		-imagecmd [namespace code GetImage] \
 		-delay 10 \
@@ -444,7 +444,7 @@ proc open {parent base variant index view source} {
 	}
 
 	::update
-	set Vars(tableId) [::scidb::crosstable::make $base $variant $Vars(viewId)]
+	set Vars(tableId) [::scidc::crosstable::make $base $variant $Vars(viewId)]
 	UpdateContent $dlg 1
 
 	lassign {0 0} w h
@@ -503,16 +503,16 @@ proc RecordGeometry {dlg} {
 proc NextEvent {dlg step} {
 	variable ${dlg}::Vars
 
-	::scidb::crosstable::release $Vars(tableId) $Vars(viewId)
+	::scidc::crosstable::release $Vars(tableId) $Vars(viewId)
 	incr Vars(index) $step
 	set view $Vars(view)
 	set base $Vars(base)
 	set variant  $Vars(variant)
 	set index $Vars(index)
-	set number [::scidb::db::get eventIndex $index $view $base $variant]
-	::scidb::view::search $base $variant $Vars(viewId) null none [list event $number]
-	set Vars(info) [::scidb::db::get eventInfo $index $Vars(viewId) $base $variant -card]
-	set Vars(tableId) [::scidb::crosstable::make $base $variant $Vars(viewId)]
+	set number [::scidc::db::get eventIndex $index $view $base $variant]
+	::scidc::view::search $base $variant $Vars(viewId) null none [list event $number]
+	set Vars(info) [::scidc::db::get eventInfo $index $Vars(viewId) $base $variant -card]
+	set Vars(tableId) [::scidc::crosstable::make $base $variant $Vars(viewId)]
 	set Vars(warning) 0
 	set Vars(lastMode) ""
 	set Vars(prevMode) ""
@@ -580,7 +580,7 @@ proc LanguageChanged {dlg w} {
 
 proc SetTitle {dlg} {
 	variable ${dlg}::Vars
-	wm title $dlg "$::scidb::app: $mc::TournamentTable$Vars(eventName)"
+	wm title $dlg "$::scidc::app: $mc::TournamentTable$Vars(eventName)"
 }
 
 
@@ -702,7 +702,7 @@ proc UpdateContent {dlg {setup 0}} {
 			if {$i >= 0} {
 				lassign [lindex $MostRecentHistory $i 1] bestMode tiebreaks scoring
 			} else {
-				set bestMode [::scidb::crosstable::get bestMode $Vars(tableId) $viewId]
+				set bestMode [::scidc::crosstable::get bestMode $Vars(tableId) $viewId]
 				set bestMode [string tolower $bestMode 0 0]
 				set tiebreaks $RecentlyUsedTiebreaks($bestMode)
 				set scoring $RecentlyUsedScoring($bestMode)
@@ -739,7 +739,7 @@ proc UpdateContent {dlg {setup 0}} {
 	set scoring $Vars(scoring)
 	set tiebreaks $Vars(tiebreaks)
 	set bestMode $Vars(bestMode)
-	set searchDir [file join $::scidb::dir::share scripts]
+	set searchDir [file join $::scidc::dir::share scripts]
 	set script $Scripts($bestMode)
 	if {$Options(fmt:pyramid)} { set knockoutOrder pyramid } else { set knockoutOrder triangle }
 
@@ -771,7 +771,7 @@ proc UpdateContent {dlg {setup 0}} {
 		set id [list $base $variant $Vars(viewId)]
 
 		if {$Vars(warning) ne $id} {
-			set playerCount [::scidb::crosstable::get playerCount $Vars(tableId) $viewId]
+			set playerCount [::scidc::crosstable::get playerCount $Vars(tableId) $viewId]
 
 			if {$playerCount > $Defaults(crosstableLimit)} {
 				set detail ""
@@ -788,7 +788,7 @@ proc UpdateContent {dlg {setup 0}} {
 				if {$rc eq "cancel"} {
 					set Vars(bestMode) $Vars(lastMode)
 					if {[string length $Vars(prevMode)] == 0} {
-						set Vars(bestMode) [::scidb::crosstable::get bestMode $Vars(tableId) $viewId]
+						set Vars(bestMode) [::scidc::crosstable::get bestMode $Vars(tableId) $viewId]
 						set Vars(bestMode) [string tolower $Vars(bestMode) 0 0]
 						if {$Vars(bestMode) eq "crosstable"} { set Vars(bestMode) rankingList }
 						set Vars(value:type) \
@@ -807,7 +807,7 @@ proc UpdateContent {dlg {setup 0}} {
 	set Vars(lastMode) $Vars(bestMode)
 
 	::widget::busyCursor on
-	set result [::scidb::crosstable::emit \
+	set result [::scidc::crosstable::emit \
 		$Vars(tableId) $viewId $searchDir $script $bestMode $order \
 		$knockoutOrder $scoring $tiebreaks $preamble \
 	]
@@ -935,11 +935,11 @@ proc Destroy {dlg w unsubscribe} {
 	catch { destroy $dlg.html }
 	catch { destroy $dlg.log }
 
-	if {$unsubscribe} { ::scidb::view::unsubscribe {*}$Vars(subscribe) }
-	::scidb::crosstable::release $Vars(tableId) $Vars(viewId)
+	if {$unsubscribe} { ::scidc::view::unsubscribe {*}$Vars(subscribe) }
+	::scidc::crosstable::release $Vars(tableId) $Vars(viewId)
 	if {$Vars(open)} {
 		set Vars(open) 0
-		::scidb::view::close $Vars(base) $Vars(variant) $Vars(viewId)
+		::scidc::view::close $Vars(base) $Vars(variant) $Vars(viewId)
 	}
 	namespace delete [namespace current]::$dlg
 	array unset Key $dlg
@@ -954,7 +954,7 @@ proc Open {dlg which gameIndex} {
 	set base $Vars(base)
 	set variant $Vars(variant)
 
-	if {![::scidb::db::get open? $base $variant]} {
+	if {![::scidc::db::get open? $base $variant]} {
 		return [::dialog::error -parent $dlg -message $mc::BaseIsClosed]
 	}
 
@@ -965,8 +965,8 @@ proc Open {dlg which gameIndex} {
 		::widget::busyOperation \
 			{ ::game::new $path -base $base -variant $variant -view $viewId -number $gameIndex }
 	} else {
-		set index [::scidb::view::map game $base $variant $viewId $gameIndex]
-		set info [::scidb::db::get gameInfo $index $viewId $base $variant]
+		set index [::scidc::view::map game $base $variant $viewId $gameIndex]
+		set info [::scidc::db::get gameInfo $index $viewId $base $variant]
 		set Vars(${which}Id) [::widget::busyOperation \
 			[list ::${which}::load $path $base $variant $info $viewId $index $Vars(${which}Id)]]
 	}
@@ -977,7 +977,7 @@ proc ShowPlayerCard {dlg rank} {
 	variable ${dlg}::Vars
 
 	Tooltip $dlg hide
-	lassign [::scidb::crosstable::get playerId $Vars(tableId) $Vars(viewId) $rank]] gameIndex side
+	lassign [::scidc::crosstable::get playerId $Vars(tableId) $Vars(viewId) $rank]] gameIndex side
 	::playercard::show $Vars(base) $Vars(variant) $gameIndex $side
 }
 
@@ -1019,7 +1019,7 @@ proc MouseEnter {dlg nodes} {
 			set rank [$node attribute -default {} player]
 			if {[llength $rank]} {
 				set Vars(tooltip) $node
-				Tooltip $dlg [::scidb::crosstable::get playerName $Vars(tableId) $Vars(viewId) $rank]
+				Tooltip $dlg [::scidc::crosstable::get playerName $Vars(tableId) $Vars(viewId) $rank]
 				return
 			}
 		}
@@ -1166,7 +1166,7 @@ proc Mouse2Down {dlg nodes} {
 			set rank [$node attribute -default {} rank]
 			if {[string length $rank]} {
 				MouseEnter $dlg $node
-				set info [::scidb::crosstable::get playerInfo $Vars(tableId) $Vars(viewId) $rank]
+				set info [::scidc::crosstable::get playerInfo $Vars(tableId) $Vars(viewId) $rank]
 				::playercard::popupInfo $dlg $info
 			} else {
 				set id [$node attribute -default {} recv]
@@ -1214,7 +1214,7 @@ proc Mouse3Down {dlg nodes} {
 
 	set base $Vars(base)
 	set variant $Vars(variant)
-	set isOpen [expr {[::scidb::db::get open? $base $variant]}]
+	set isOpen [expr {[::scidc::db::get open? $base $variant]}]
 
 	if {$isOpen} {
 		if {[llength $rank]} {
@@ -1243,7 +1243,7 @@ proc Mouse3Down {dlg nodes} {
 				-label " $::browser::mc::LoadGame" \
 				-command [namespace code [list Open $dlg pgn $gameIndex]] \
 				;
-			if {[::scidb::game::current] < 9} { set state normal } else { set state disabled }
+			if {[::scidc::game::current] < 9} { set state normal } else { set state disabled }
 			variable ${dlg}::Vars
 			set secondary [list $Vars(base) $Vars(variant) $Vars(viewId) $gameIndex]
 			$m add command \
@@ -1277,7 +1277,7 @@ proc BuildMenu {dlg m} {
 	set sub [menu $m.display]
 	set base $Vars(base)
 	set variant $Vars(variant)
-	set isOpen [expr {[::scidb::db::get open? $base $variant]}]
+	set isOpen [expr {[::scidc::db::get open? $base $variant]}]
 
 	if {$isOpen} {
 		if {$Vars(bestMode) in {knockout simultan}} { set state disabled } else { set state normal }
@@ -1456,7 +1456,7 @@ proc SaveAsHTML {dlg} {
 	set save [::dialog::saveFile \
 		-parent $dlg \
 		-class crosstable \
-		-initialdir $::scidb::dir::home \
+		-initialdir $::scidc::dir::home \
 		-initialfile $eventName.html \
 		-filetypes $filetypes \
 		-needencoding no \
