@@ -59,6 +59,9 @@ echo "Aktualisiere Programmdateien..."
 # Sprachdateien aus dem Source-Tree synchronisieren
 cp tcl/lang/*.tcl "$SHAREDIR/lang/"
 
+# Engines-Konfiguration synchronisieren
+cp tcl/engines/engines.dat "$SHAREDIR/engines/engines.dat"
+
 # Engines retten, bevor bin/ geleert wird
 mkdir -p /tmp/_scidc_engine_backup
 for engine in stockfish-scidc fairy-stockfish-scidc; do

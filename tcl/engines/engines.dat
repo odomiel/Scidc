@@ -1,14 +1,14 @@
-# Scidb engines file
-# Version: 1.0 BETA
+# Scidc engines file
+# Version: 1.1.126 BETA
 # Syntax: Tcl language format
 
 set ::engine::Engines {
 	{
 		Name Stockfish
-		Identifier "Stockfish 18 scidb"
+		Identifier "Stockfish 18 scidc"
 		Author "The Stockfish developers"
 		Url https://stockfishchess.org
-		Command stockfish-scidb
+		Command stockfish-scidc
 		Protocol UCI
 		Variants {standard chess960}
 		Features:UCI {
@@ -41,10 +41,10 @@ set ::engine::Engines {
 	}
 	{
 		Name {Fairy-Stockfish}
-		Identifier "Fairy-Stockfish 14 scidb"
+		Identifier "Fairy-Stockfish 14 scidc"
 		Author "Fabian Fichter and Stockfish developers"
 		Url https://github.com/fairy-stockfish/Fairy-Stockfish
-		Command fairy-stockfish-scidb
+		Command fairy-stockfish-scidc
 		Protocol UCI
 		Variants {standard chess960 3check crazyhouse antichess suicide giveaway losers bughouse}
 		Features:UCI {
