@@ -23,7 +23,7 @@ SRCBIN="src/tkscidc-beta"
 TCLSCRIPT="tcl/scidc-beta"
 SHAREDIR="$APPDIR/usr/share/scidc-beta"
 
-echo "=== SciDC AppImage Builder ==="
+echo "=== Scidc AppImage Builder ==="
 
 # --- Voraussetzungen prüfen --------------------------------------------------
 if [ ! -f "$SRCBIN" ]; then
