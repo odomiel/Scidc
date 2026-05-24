@@ -72,10 +72,15 @@ cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 # --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
 echo "Kopiere Schach-Engines..."
 for engine in stockfish-scidc fairy-stockfish-scidc; do
-    # Bevorzuge aktuelle Version aus /usr/local/games, sonst gesicherter Stand
+    # Suche: /usr/local/games → engines/ im Source-Tree → gesicherter AppImage-Stand
+    engname="${engine%-scidc}"   # stockfish oder fairy-stockfish
+    local_engine="engines/$engname/$engine"
     if [ -f "/usr/local/games/$engine" ]; then
         cp "/usr/local/games/$engine" "$APPDIR/usr/bin/"
         echo "  $engine (aktualisiert aus /usr/local/games)"
+    elif [ -f "$local_engine" ]; then
+        cp "$local_engine" "$APPDIR/usr/bin/"
+        echo "  $engine (aus engines/)"
     elif [ -f "/tmp/_scidc_engine_backup/$engine" ]; then
         cp "/tmp/_scidc_engine_backup/$engine" "$APPDIR/usr/bin/"
         echo "  $engine (aus vorherigem Build übernommen)"
