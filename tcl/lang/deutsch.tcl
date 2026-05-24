@@ -271,8 +271,8 @@
 ::menu::mc::NightMode					"Nachtmodus (Dunkel)"
 ::menu::mc::RestartRequired				"Ein Neustart dieser Applikation ist erforderlich bevor diese Änderung durchgehend angewendet werden kann."
 
-::menu::mc::AllScidbFiles					"Alle Scidb Dateien"
-::menu::mc::AllScidbBases					"Alle Scidb Datenbanken"
+::menu::mc::AllScidbFiles					"Alle Scidc Dateien"
+::menu::mc::AllScidbBases					"Alle Scidc Datenbanken"
 ::menu::mc::ScidBases						"Scid Datenbanken"
 ::menu::mc::ScidbBases						"Scidb Datenbanken"
 ::menu::mc::ChessBaseBases					"ChessBase Datenbanken"
@@ -329,8 +329,8 @@
 ::menu::mc::PgnOptions						"&PGN-Export-Einstellungen konfigurieren"
 ::menu::mc::PrivatePlayerCard				"Private &Spielerkarteikarte"
 
-::menu::mc::OpenFile							"Eine Scidb-Datei öffnen"
-::menu::mc::NewFile							"Eine Scidb-Datei anlegen"
+::menu::mc::OpenFile							"Eine Scidc-Datei öffnen"
+::menu::mc::NewFile							"Eine Scidc-Datei anlegen"
 ::menu::mc::Archiving						"Archivieren"
 ::menu::mc::CreateArchive					"Ein Archiv anlegen"
 ::menu::mc::BuildArchive					"Archiv %s erzeugen"
@@ -875,8 +875,8 @@
 ::database::switcher::mc::None								"keine"
 ::database::switcher::mc::Failed								"fehlgeschlagen"
 
-::database::switcher::mc::UriRejectedDetail(open)		"Nur Scidb-Datenbanken können geöffnet werden:"
-::database::switcher::mc::UriRejectedDetail(import)	"Nur Scidb-Datenbanken, aber keine ChessBase-Datenbanken, können importiert werden:"
+::database::switcher::mc::UriRejectedDetail(open)		"Nur Scidc-Datenbanken können geöffnet werden:"
+::database::switcher::mc::UriRejectedDetail(import)	"Nur Scidc-Datenbanken, aber keine ChessBase-Datenbanken, können importiert werden:"
 ::database::switcher::mc::EmptyUriList						"Der Drop-Inhalt ist leer."
 ::database::switcher::mc::CopyGames							"Partien kopieren"
 ::database::switcher::mc::CopyGamesFromTo					"Partien kopieren von '%src' nach '%dst'"

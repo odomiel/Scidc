@@ -272,8 +272,8 @@
 ::menu::mc::NightMode					"Nattl�ge (m�rkt)"
 ::menu::mc::RestartRequired				"A restart of the application is required before this change can be applied everyplace." ;# NEW
 
-::menu::mc::AllScidbFiles					"Alla Scidb filer"
-::menu::mc::AllScidbBases					"Alla Scidb databaser"
+::menu::mc::AllScidbFiles					"Alla Scidc filer"
+::menu::mc::AllScidbBases					"Alla Scidc databaser"
 ::menu::mc::ScidBases						"Scid databaser"
 ::menu::mc::ScidbBases						"Scidb databaser"
 ::menu::mc::ChessBaseBases					"ChessBase databaser"
@@ -322,8 +322,8 @@
 ::menu::mc::PgnOptions					"Inställningar för &PGN-export"
 ::menu::mc::PrivatePlayerCard			"&Private Player Card" ;# NEW
 
-::menu::mc::OpenFile							"Öppna Scidb fil"
-::menu::mc::NewFile							"Skapa Scidb fil"
+::menu::mc::OpenFile							"Öppna Scidc fil"
+::menu::mc::NewFile							"Skapa Scidc fil"
 ::menu::mc::Archiving						"Arkiverar"
 ::menu::mc::CreateArchive					"Skapa arkiv"
 ::menu::mc::BuildArchive					"Skapa arkiver %s"
@@ -436,7 +436,7 @@
 ::application::mc::CancelLogout				"Avbryt utloggning"
 ::application::mc::AbortWriteOperation		"Avbryt skrivningar"
 
-::application::mc::WriteOperationInProgress "Skrivningar pågår: närvarande modifierar / skriver Scidb databasen '% s'."
+::application::mc::WriteOperationInProgress "Skrivningar pågår: närvarande modifierar / skriver Scidc databasen '% s'."
 ::application::mc::LogoutNotPossible		"Utloggning är för tillfället inte möjligt, resultatet skulle bli en skadad databas."
 ::application::mc::RestartLogout				"Att avbryta skrivoperationen kommer starta utloggningen."
 ::application::mc::UnsavedFiles				"Följande PGN-filer är inte sparade:"
@@ -871,8 +871,8 @@
 ::database::switcher::mc::None								"ingen"
 ::database::switcher::mc::Failed								"misslyckades"
 
-::database::switcher::mc::UriRejectedDetail(open)		"Bara Scidb databaser kan öppnas:"
-::database::switcher::mc::UriRejectedDetail(import)	"Bara Scidb databaser, men inga ChessBase databaser, kan importeras:"
+::database::switcher::mc::UriRejectedDetail(open)		"Bara Scidc databaser kan öppnas:"
+::database::switcher::mc::UriRejectedDetail(import)	"Bara Scidc databaser, men inga ChessBase databaser, kan importeras:"
 ::database::switcher::mc::EmptyUriList						"Innehåll som släpps är tomt."
 ::database::switcher::mc::CopyGames							"Kopiera partier"
 ::database::switcher::mc::CopyGamesFromTo					"Kopiera partier från '%src' till '%dst'"

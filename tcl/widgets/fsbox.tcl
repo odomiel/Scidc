@@ -23,6 +23,7 @@ package require choosedir
 package require tcombobox
 package require entrybuttonbox
 package require messagebox
+package require msgcat
 catch { package require tkDND 2.3 }
 if {[catch { package require tkpng }]} { package require Img }
 package provide fxbox 1.0

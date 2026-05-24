@@ -265,15 +265,15 @@
 ### menu ###############################################################
 ::menu::mc::Theme								"Tema"
 ::menu::mc::ColorScheme						"Schema Colori"
-::menu::mc::CustomStyleMenu				"Stile Menu di Scidb"
+::menu::mc::CustomStyleMenu				"Stile Menu di Scidc"
 ::menu::mc::DefaultStyleMenu				"Stile Menu di Default"
 ::menu::mc::OrdinaryMonitor				"Monitor Normale"
 ::menu::mc::HighQualityMonitor			"Monitor di Alta Qualità"
 ::menu::mc::NightMode					"Modalit� notte (scura)"
 ::menu::mc::RestartRequired				"Il riavvio dell'applicazione è necessario prima che sia possibile applicare le modifiche"
 
-::menu::mc::AllScidbFiles					"Tutti i file Scidb"
-::menu::mc::AllScidbBases					"Tutti i Database Scidb"
+::menu::mc::AllScidbFiles					"Tutti i file Scidc"
+::menu::mc::AllScidbBases					"Tutti i Database Scidc"
 ::menu::mc::ScidBases						"Database Scid"
 ::menu::mc::ScidbBases						"Database Scidb"
 ::menu::mc::ChessBaseBases					"Database ChessBase"
@@ -322,8 +322,8 @@
 ::menu::mc::PgnOptions						"Imposta opzioni di esportazione &PGN"
 ::menu::mc::PrivatePlayerCard				"Profilo &Privato del Giocatore"
 
-::menu::mc::OpenFile							"Apri un file Scidb"
-::menu::mc::NewFile							"Crea un file Scidb"
+::menu::mc::OpenFile							"Apri un file Scidc"
+::menu::mc::NewFile							"Crea un file Scidc"
 ::menu::mc::Archiving						"Archiviazione"
 ::menu::mc::CreateArchive					"Crea Archivio"
 ::menu::mc::BuildArchive					"Crea Archivio %s"
@@ -331,8 +331,8 @@
 
 # Default Application
 ::menu::mc::Assign							"assegna"
-::menu::mc::FailedSettingDefaultApp		"Tentativo di impostare Scidb come applicazione di default fallito per %s."
-::menu::mc::SuccessSettingDefaultApp	"Impostato Scidb come applicazione di default per %s con successo"
+::menu::mc::FailedSettingDefaultApp		"Tentativo di impostare Scidc come applicazione di default fallito per %s."
+::menu::mc::SuccessSettingDefaultApp	"Impostato Scidc come applicazione di default per %s con successo"
 ::menu::mc::CommandFailed					"Comando '%s' fallito"
 
 ### load ###############################################################
@@ -436,7 +436,7 @@
 ::application::mc::CancelLogout				"Annulla Logout"
 ::application::mc::AbortWriteOperation		"Annulla operazione di scrittura"
 
-::application::mc::WriteOperationInProgress "Operazione di scrittura in corso: al momento Scidb sta modificando\scrivendo il database '%s'."
+::application::mc::WriteOperationInProgress "Operazione di scrittura in corso: al momento Scidc sta modificando\scrivendo il database '%s'."
 ::application::mc::LogoutNotPossible		"Il logout non è possibile al momento, il risultato sarebbe un database corrotto."
 ::application::mc::RestartLogout				"Annullare l'operazione di scrittura riavvierà il processo di logout."
 ::application::mc::UnsavedFiles				"I seguenti file PGN non sono salvati:"
@@ -871,8 +871,8 @@
 ::database::switcher::mc::None								"nessuno"
 ::database::switcher::mc::Failed								"fallito"
 
-::database::switcher::mc::UriRejectedDetail(open)		"Solo database Scidb possono essere aperti:"
-::database::switcher::mc::UriRejectedDetail(import)	"Solo database Scidb, ma non database ChessBase, possono essere importati"
+::database::switcher::mc::UriRejectedDetail(open)		"Solo database Scidc possono essere aperti:"
+::database::switcher::mc::UriRejectedDetail(import)	"Solo database Scidc, ma non database ChessBase, possono essere importati"
 ::database::switcher::mc::EmptyUriList						"Gli archivi trascinati sono vuoti."
 ::database::switcher::mc::CopyGames							"Copia partite"
 ::database::switcher::mc::CopyGamesFromTo					"Copia partite da '%src' a '%dst'"

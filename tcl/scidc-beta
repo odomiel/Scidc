@@ -66826,6 +66826,7 @@ package require choosedir
 package require tcombobox
 package require entrybuttonbox
 package require messagebox
+package require msgcat
 catch { package require tkDND 2.3 }
 if {[catch { package require tkpng }]} { package require Img }
 package provide fxbox 1.0
@@ -85304,7 +85305,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 		set col 3
 		foreach deg {0 90 180 270} {
 			set Browser($deg,$which) [ttk::checkbutton $rot.b$deg \
-				-text "$deg°" \
+				-text "$degï¿½" \
 				-variable [namespace current]::${canv}::Browser(rotation) \
 				-onvalue $deg \
 				-command [namespace code [list SendSelected $top.container]] \
@@ -86686,7 +86687,7 @@ proc SelectTexture {parent which} {
 	foreach deg {0 90 180 270} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton $lt.b$deg \
-				-text "$deg°" \
+				-text "$degï¿½" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \
@@ -88400,7 +88401,7 @@ proc MakeSquareFrame {f which} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton \
 				$rot.b$deg \
-				-text "$deg°" \
+				-text "$degï¿½" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \

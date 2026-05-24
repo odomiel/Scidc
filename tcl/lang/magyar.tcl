@@ -273,8 +273,8 @@
 ::menu::mc::NightMode					"�jszakai m�d (s�t�t)"
 ::menu::mc::RestartRequired		"A restart of the application is required before this change can be applied everyplace." ;# NEW
 
-::menu::mc::AllScidbFiles		"Minden Scidb fájl"
-::menu::mc::AllScidbBases		"Minde Scidb adatbázis"
+::menu::mc::AllScidbFiles		"Minden Scidc fájl"
+::menu::mc::AllScidbBases		"Minde Scidc adatbázis"
 ::menu::mc::ScidBases			"Scid adatbázisok"
 ::menu::mc::ScidbBases			"Scidb adatbázisok"
 ::menu::mc::ChessBaseBases		"ChessBase adatbázisok"
@@ -323,8 +323,8 @@
 ::menu::mc::PgnOptions			"Setup &PGN export options" ;# NEW
 ::menu::mc::PrivatePlayerCard		"&Private Player Card" ;# NEW
 
-::menu::mc::OpenFile			"Scidb fájl megnyitása"
-::menu::mc::NewFile			"Scidb fájl létrehozása"
+::menu::mc::OpenFile			"Scidc fájl megnyitása"
+::menu::mc::NewFile			"Scidc fájl létrehozása"
 ::menu::mc::Archiving			"Archíválás"
 ::menu::mc::CreateArchive		"Archívum készítése"
 ::menu::mc::BuildArchive		"Archívum %s készítése"
@@ -873,8 +873,8 @@
 ::database::switcher::mc::None				"nincs"
 ::database::switcher::mc::Failed			"meghiúsult"
 
-::database::switcher::mc::UriRejectedDetail(open)	"Csak Scidb adabázisok nyithatóak meg:"
-::database::switcher::mc::UriRejectedDetail(import)	"Only Scidb databases, but no ChessBase databases, can be imported:" ;# NEW
+::database::switcher::mc::UriRejectedDetail(open)	"Csak Scidc adabázisok nyithatóak meg:"
+::database::switcher::mc::UriRejectedDetail(import)	"Only Scidc databases, but no ChessBase databases, can be imported:" ;# NEW
 ::database::switcher::mc::EmptyUriList			"Drop content is empty." ;# NEW
 ::database::switcher::mc::CopyGames			"Játszmák másolása"
 ::database::switcher::mc::CopyGamesFromTo		"Játszmák másolása '%src'-ból/-ből '%dst'-ba/-be"
