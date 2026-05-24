@@ -264,7 +264,7 @@
 ### menu ###############################################################
 ::menu::mc::Theme								"Thema"
 ::menu::mc::ColorScheme						"Farbschema"
-::menu::mc::CustomStyleMenu				"Scidb's Menüstil"
+::menu::mc::CustomStyleMenu				"Scidc's Menüstil"
 ::menu::mc::DefaultStyleMenu				"Standard-Menüstil"
 ::menu::mc::OrdinaryMonitor				"Gewöhnlicher Monitor"
 ::menu::mc::HighQualityMonitor			"Hochwertiger Monitor"
@@ -338,8 +338,8 @@
 
 # Default Application
 ::menu::mc::Assign							"zuordnen"
-::menu::mc::FailedSettingDefaultApp		"Scidb als Standardapplikation für %s zu bestimmen misslang."
-::menu::mc::SuccessSettingDefaultApp	"Scidb wurde erfolgreich als Standardapplikation für %s bestimmt."
+::menu::mc::FailedSettingDefaultApp		"Scidc als Standardapplikation für %s zu bestimmen misslang."
+::menu::mc::SuccessSettingDefaultApp	"Scidc wurde erfolgreich als Standardapplikation für %s bestimmt."
 ::menu::mc::CommandFailed					"Der Befehl '%s' schlug fehl."
 
 ### load ###############################################################
@@ -400,7 +400,7 @@
 ::tips::mc::CouldNotFindAnyTip	"Es konnte kein Tip gefunden werden."
 ::tips::mc::RepeatAllTips			"Alle Tips wiederholen (erneut von vorne starten)"
 ::tips::mc::NextTip					"Nächster Tip"
-::tips::mc::FirstTip					"<p>Die Tip-des-Tages-Informationen dienen zu einem besseren Verständnis zur Arbeitsweise mit dieser Applikation. Weiterhin werden nützliche Hinweise gegeben, um zu wissen was mit Scidb möglich ist.</p><p color='darkgreen'><b>Viel Freude mit Scidb!</b></p>"
+::tips::mc::FirstTip					"<p>Die Tip-des-Tages-Informationen dienen zu einem besseren Verständnis zur Arbeitsweise mit dieser Applikation. Weiterhin werden nützliche Hinweise gegeben, um zu wissen was mit Scidc möglich ist.</p><p color='darkgreen'><b>Viel Freude mit Scidc!</b></p>"
 
 ::tips::mc::Choice(everytime)					"Immer anzeigen"
 ::tips::mc::Choice(periodically)				"Periodisch anzeigen"
@@ -444,7 +444,7 @@
 ::application::mc::CancelLogout				"Logout beenden"
 ::application::mc::AbortWriteOperation		"Schreiboperation abbrechen"
 
-::application::mc::WriteOperationInProgress "Eine Schreiboperation ist im Fortgang: zur Zeit modfiziert/schreibt Scidb die Datenbank '%s'."
+::application::mc::WriteOperationInProgress "Eine Schreiboperation ist im Fortgang: zur Zeit modfiziert/schreibt Scidc die Datenbank '%s'."
 ::application::mc::LogoutNotPossible		"Ein Logout ist jetzt nicht möglich, das Resultat wäre eine korrupte Datenbank."
 ::application::mc::RestartLogout				"Der Abbruch der Schreiboperation wird den Logout-Prozess erneut starten."
 ::application::mc::UnsavedFiles				"Die folgenden PGN-Dateien sind ungesichert:"
@@ -568,7 +568,7 @@
 ::application::information::mc::RemoveSelectedDatabase	"Die selektierte Datenbank aus der Historie entfernen"
 ::application::information::mc::ClearHistory				"Gesamte Historie löschen"
 ::application::information::mc::NewsAvailable				"Es sind aktuelle Informationen verfügbar"
-::application::information::mc::NoInternetConnection		"Information: Scidb kann keine Verbindung zum Internet herstellen."
+::application::information::mc::NoInternetConnection		"Information: Scidc kann keine Verbindung zum Internet herstellen."
 
 ### application::database ##############################################
 ::application::database::mc::FileOpen							"Datenbank öffnen"
@@ -2409,7 +2409,7 @@ set ::playerdict::mc::WebSource			"Webquelle"
 
 ::info::mc::Version					"Version"
 ::info::mc::Distributed				"Dieses Program wurde unter den Bedingungen der GNU General Public License verbreitet."
-::info::mc::Inspired					"Scidb wurde inspiriert durch Scid 3.6.1, Copyright \u00A9 1999-2003 Shane Hudson."
+::info::mc::Inspired					"Scidc wurde inspiriert durch Scid 3.6.1, Copyright \u00A9 1999-2003 Shane Hudson."
 ::info::mc::SpecialThanks			"Besonderen Dank an %s für seine fantastische Arbeit. Seine Leistung ist Basis für diese Applikation."
 
 ### comment ############################################################

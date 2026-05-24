@@ -147234,10 +147234,10 @@ proc DisplayAbout {w} {
 		<link/>
 		<table border='0' style='font-family: Final Frontier, $fam; font-size: 16pt;' color='$tableColor'>
 			<tr>
-				<td><img src='Scidc-Logo-128'/></td>
+				<td><img src='Scidb-Logo-128'/></td>
 				<td width='30px'></td>
 				<td align='center'>
-					<font style='font-size: 48pt;'><font color='$accentColor'>S</font>cidb</font><br/>
+					<font style='font-size: 48pt;'><font color='$accentColor'>S</font>cidc</font><br/>
 					is a
 					<font color='$accentColor'>C</font>hess
 					<font color='$accentColor'>I</font>nformation
