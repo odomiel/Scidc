@@ -29,7 +29,7 @@ Scidc unterstützt folgende Formate:
 <dir>
   <li>
     <img src="../images/ft-scidb.png" />
-    <a href="#Scidc">Scidc</a>
+    <a href="#Scidb">Scidb</a>
   </li>
   <li>
     <img src="../images/ft-scid.png" />
@@ -49,13 +49,13 @@ Scidc unterstützt folgende Formate:
   </li>
 </dir>
 
-<h2 id="Scidc">
+<h2 id="Scidb">
 <img src="../images/ft-scidb.png" />
-Scidc (<abbr>.sci</abbr>)
+Scidb (<abbr>.sci</abbr>)
 </h2>
 
 <p>
-Dies ist Scidc's eigenes Datenbankformat und wird ausdrücklich
+Dies ist Scidb's eigenes Datenbankformat und wird ausdrücklich
 zur Verwendung mit Scidc empfohlen. Nur mit diesem Format ist der volle Umfang von
 Scidc verfügbar, und es garantiert optimale Verarbeitungsgeschwindigkeit.
 </p>
@@ -281,7 +281,7 @@ Datenbankarchiv (<abbr>.scv</abbr>)
 </h2>
 
 <p>
-Scidc's Datenbankarchiv stützt sich auf ein unabhängiges Archivformat, und
+Scidb's Datenbankarchiv stützt sich auf ein unabhängiges Archivformat, und
 enthält eine Datenbank (oder sogar mehrere) in archivierter Form. Dies ermöglicht
 eine Versendung der Datenbank(en), die ansonsten aus mehreren Dateien besteht, über
 das Internet. Dieses Datenbankarchiv ist an kein spezielles Datenbankformat

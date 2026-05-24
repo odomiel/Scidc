@@ -135,7 +135,7 @@ Menüpunkt verwendet.
 <p>
 <menuitem>%::application::database::mc::FileNew%</menuitem>
 Eine neue Datenbank einer anderen <a href="Chess-Variants.html">Schachform</a>
-anlegen. In diesem Fall können nur Scidc-Datenbanken neu angelegt werden.
+anlegen. In diesem Fall können nur Scidb-Datenbanken neu angelegt werden.
 </p>
 
 <p>
@@ -166,7 +166,7 @@ Dieses Untermenü bietet Funktionalitäten um Datenbanken zu verwalten:
 <p id="ChangeIcon">
 <menuitem>%::application::database::mc::ChangeIcon%</menuitem>
 Ein neues Piktogramm für diese Datenbank auswählen. Es öffnet sich ein Auswahldialog,
-der auch die Auswahl eigener Bilddateien zuläßt (nur für das Scidc-Datenformat).
+der auch die Auswahl eigener Bilddateien zuläßt (nur für das Scidb-Datenformat).
 Es müssen Bilddateien im PNG-Format in den Auflösungen 16x16, 24x24, 32x32 und 48x48
 vorliegen.
 <note/>Dies ist nicht für die <a href="Clipbase.html">Ablage-Datenbank</a> möglich.

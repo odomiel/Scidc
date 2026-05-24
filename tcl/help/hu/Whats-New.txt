@@ -108,7 +108,7 @@ Third public preview version
   <li class="space">Move input: pressing middle mouse button (or spacebar) alternates the move suggestion</li>
   <li class="space">New database tab: list of sites</li>
   <li class="space">Full-screen mode tweaked</li>
-  <li class="space">Command line tool cdb2sci added for conversion of databases to Scidc format (.sci)</li>
+  <li class="space">Command line tool cdb2sci added for conversion of databases to Scidb format (.sci)</li>
   <li class="space">HTML widget reworked: saving resources in a highly significant way</li>
   <li class="space">Swedish localisation integrated (thanks to Lars Ekman)</li>
   <li class="space">Spanish translation reactivated (thanks to Juan Carlos Vásquez)</li>

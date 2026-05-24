@@ -19,7 +19,7 @@
 TITLE Datenbankarchiv
 
 <p>
-Scidc's Datenbankarchiv stützt sich auf ein unabhängiges Archivformat, für das die
+Scidb's Datenbankarchiv stützt sich auf ein unabhängiges Archivformat, für das die
 generelle Dateiendung "<abbr>.ive</abbr>" vorgesehen ist. Scidc benutzt jedoch die
 spezielle Dateiendung "<abbr>.scv</abbr>". Dieses Archivformat enthält Informationen
 über die enthaltenen Dateien wie Name, Größe, Komprimierungsmethode, etc.
@@ -166,7 +166,7 @@ UserInfo    = { LF Attributes } ;
 Attributes  =
   "&lt;Format&gt;" { Space } Formats
   [ "&lt;Count&gt;" { Space } Number ] ;
-Format      = 'sci'  |                   # Scidc-Datenbank
+Format      = 'sci'  |                   # Scidb-Datenbank
               'si3'  | 'si4'  |          # Scid-Datenbank
               'cbh'  | 'cbf'  |          # ChessBase-Datenbank
               'cdp'  |                   # Chess Assistant-Datenbank

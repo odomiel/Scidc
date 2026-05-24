@@ -267,7 +267,7 @@ müssen jedoch, anders als bei Datenbanken, explizit gespeichert werden.
 <p>
 Diese Funktionalität unterstützt <abbr>u. a.</abbr> einen Schriftverkehr
 über Partien im Internet, mittels des PGN-Formats. Im allgemeinen wird
-aber empfohlen, insbesondere bei größere Dateien, in das Scidc Format
+aber empfohlen, insbesondere bei größere Dateien, in das Scidb-Format
 umzuwandeln.
 </p>
 

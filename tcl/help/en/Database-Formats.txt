@@ -29,7 +29,7 @@ Scidc supports the following formats:
 <dir>
   <li>
     <img src="../images/ft-scidb.png" />
-    <a href="#Scidc">Scidc</a>
+    <a href="#Scidb">Scidb</a>
   </li>
   <li>
     <img src="../images/ft-scid.png" />
@@ -49,13 +49,13 @@ Scidc supports the following formats:
   </li>
 </dir>
 
-<h2 id="Scidc">
+<h2 id="Scidb">
 <img src="../images/ft-scidb.png" />
-Scidc (<abbr>.sci</abbr>)
+Scidb (<abbr>.sci</abbr>)
 </h2>
 
 <p>
-This is Scidc's own database format. Use of this format is strongly
+This is Scidb's own database format. Use of this format is strongly
 recommended because of speed and feature completeness considerations.
 </p>
 
@@ -278,7 +278,7 @@ Database archive (<abbr>.scv</abbr>)
 </h2>
 
 <p>
-Scidc's database archive is based on an independent archive format,
+Scidb's database archive is based on an independent archive format,
 and contains one (or perhaps several) databases in archived form. This
 facilitates the shipment of databases through the internet, because it
 is a single file instead of several ones. This database archive is not

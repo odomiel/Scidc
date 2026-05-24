@@ -256,7 +256,7 @@ explicitly.
 <p>
 This functionality supports, among other things, correspondence about games
 via Internet, with the use of the PGN format. But in general it is
-recommended to convert PGN files into Scidc's format, especially if the
+recommended to convert PGN files into Scidb's format, especially if the
 archive is large.
 </p>
 
@@ -391,7 +391,7 @@ Scidc is detecting automatically how to start an executable.
 <p>
 Scidc is also reading ChessBase files, the new format (.cbh), as well as
 the old DOS format (.cbf). Though it's not possible to use ChessBase databases
-as reference bases it is recommended to export into Scidc's format (.sci).
+as reference bases it is recommended to export into Scidb's format (.sci).
 For this purpose you may use the additional program <em>cdbsci</em>, but the
 use of the graphical interface is also possible.
 </p>
