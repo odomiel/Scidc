@@ -16,12 +16,12 @@
 * (at your option) any later version.
 *********************************************************************** -->
 
-TITLE Welcome to Scidb!
+TITLE Welcome to Scidc!
 
 <p>
-This is a preliminary version of Scidb for try-out and testing. The first
+This is a preliminary version of Scidc for try-out and testing. The first
 full version will be released after a sufficiently long test period. Please
-consider while experimenting with Scidb:
+consider while experimenting with Scidc:
 </p>
 
 <ol>
@@ -41,7 +41,7 @@ consider while experimenting with Scidb:
   </li>
 
   <li class="space">
-    The current Scidb format (.sci) will be finished at latest with the first
+    The current Scidc format (.sci) will be finished at latest with the first
     full version (i.e. it will reach version 1.0 later, the current version
     is 0.93). Nevertheless the current format is already fully usable, and there
     will be offered an upgrade capability.
@@ -58,7 +58,7 @@ consider while experimenting with Scidb:
 </ol>
 
 <p>
-Have a lot of fun with Scidb, whose development has already taken nine years!
+Have a lot of fun with Scidc, whose development has already taken nine years!
 </p>
 
 <h2>Links</h2>

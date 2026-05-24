@@ -68,7 +68,7 @@ auch die Applikation Scid kann diese Probleme nicht lösen.
 Bei der Umwandlung von ChessBase-Datenbanken werden beide Markierungen
 <em>%::gametable::mc::GameFlags(s)%</em> und
 <em>%::gametable::mc::GameFlags(t)%</em> auf die gemeinsame
-Markierung <em>%::gametable::mc::GameFlags(?)%</em> abgebildet, Scidb
+Markierung <em>%::gametable::mc::GameFlags(?)%</em> abgebildet, Scidc
 unterscheidet nicht zwischen diesen beiden Typen.
 </p>
 

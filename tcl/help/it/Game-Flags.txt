@@ -47,7 +47,7 @@ denota la presenza di una partita recentemente aggiunta al database. Questi ulti
 </p>
 
 <p>
-Quando si modifica partite dai database di Scid (.si4) Scidb supporta i sei codici speciali definiti dall'utente (1..6). Ma non è raccomandato usare questi codici, perché appariranno problemi insolvibili quando le partite saranno copiate in altri database; neanche il programma Scid può risolvere questi problemi.
+Quando si modifica partite dai database di Scid (.si4) Scidc supporta i sei codici speciali definiti dall'utente (1..6). Ma non è raccomandato usare questi codici, perché appariranno problemi insolvibili quando le partite saranno copiate in altri database; neanche il programma Scid può risolvere questi problemi.
 </p>
 
 <p>
@@ -55,7 +55,7 @@ Quando si leggono database ChessBase entrambi i codici
 <em>%::gametable::mc::GameFlags(s)%</em> e
 <em>%::gametable::mc::GameFlags(t)%</em>
 saranno mappati al codice comune <em>%::gametable::mc::GameFlags(?)%</em>.
-Scidb non distingue tra queste due caratteristiche.
+Scidc non distingue tra queste due caratteristiche.
 </p>
 
 END

@@ -23,13 +23,13 @@ INDEX Archivio#Archivio-Database
 TITLE Formati Database
 
 <p>
-Scidb supporta i seguenti formati:
+Scidc supporta i seguenti formati:
 </p>
 
 <ul>
   <li>
     <img src="../images/ft-scidb.png" />
-    <a href="#Scidb">Scidb</a>
+    <a href="#Scidc">Scidc</a>
   </li>
   <li>
     <img src="../images/ft-scid.png" />
@@ -49,15 +49,15 @@ Scidb supporta i seguenti formati:
   </li>
 </ul>
 
-<h2 id="Scidb">
+<h2 id="Scidc">
 <img src="../images/ft-scidb.png" />
-Scidb (<abbr>.sci</abbr>)
+Scidc (<abbr>.sci</abbr>)
 </h2>
 
-Questo è il formato proprio di Scidb. L'uso di questo formato è fortemente raccomandato, dato che le funzioni di Scidb sono pienamente supportate solo in questo formato e fornirà un'ottima velocità nell'uso.
+Questo è il formato proprio di Scidc. L'uso di questo formato è fortemente raccomandato, dato che le funzioni di Scidc sono pienamente supportate solo in questo formato e fornirà un'ottima velocità nell'uso.
 
 <p>
-Solo il formato Scidb (e il formato PGN) possono contenere partite di diverse varianti degli scacchi
+Solo il formato Scidc (e il formato PGN) possono contenere partite di diverse varianti degli scacchi
 (<see/> <a href="Chess-Variants.html">Varianti degli scacchi supportate</a>).
 Un database può contenere solo una variante degli scacchi (la <a href="Clipbase.html">Clipbase</a>
 è un'eccezione).
@@ -71,13 +71,13 @@ e
 </p>
 
 <p>
-I database Scidb sono sempre codificati con il set caratteri <nobr>UTF-8</nobr>. Per questo
+I database Scidc sono sempre codificati con il set caratteri <nobr>UTF-8</nobr>. Per questo
 i database possono essere usati senza complicazioni su tutti i sistemi e con tutte
 le localizzazioni.
 </p>
 
 <p>
-Un database nel formato Scidb è diviso in diversi file:
+Un database nel formato Scidc è diviso in diversi file:
 </p>
 
 <box>
@@ -102,10 +102,10 @@ Un database nel formato Scidb è diviso in diversi file:
 Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
 </h2>
 
-Questo è il formato database di Scid e data la sua ampia distribuzione è supportato sia in lettura sia in scrittura. Usando questo formato non sarà possibile usare tutte le funzioni disponibili in Scidb.
+Questo è il formato database di Scid e data la sua ampia distribuzione è supportato sia in lettura sia in scrittura. Usando questo formato non sarà possibile usare tutte le funzioni disponibili in Scidc.
 
 <annotation>
-I database di Scidb saranno aperti in modalità di sola lettura.
+I database di Scidc saranno aperti in modalità di sola lettura.
 </annotation>
 
 <p>
@@ -119,7 +119,7 @@ avere successo.
 </p>
 
 <p>
-Questo formato ricorda per struttura il formato Scidb:
+Questo formato ricorda per struttura il formato Scidc:
 </p>
 
 <box>
@@ -146,7 +146,7 @@ Questo formato ricorda per struttura il formato Scidb:
 <note>I file con estensione <code>.sso</code> (Scid Search Option File),
 <code>.sor</code> (Scid Repertoire File), e <code>.stm</code>
 (Scid Tree Mask File) non appartengono esplicitamente al database
-e non saranno considerati da Scidb.
+e non saranno considerati da Scidc.
 Allo stesso modo ogni lista di partite salvate (suffisso <code>.txt</code>) non sarà considerata.</note>
 
 <h2 id="ChessBase">
@@ -219,7 +219,7 @@ Opening a <abbr>PGN</abbr> file will be done in reading mode, but it is
 possible to set it writeable if the file has writing permission.
 </NEW>
 Se si hanno grandi collezioni di partite in questo formato si consiglia di
-convertirle nel formato di Scidb.
+convertirle nel formato di Scidc.
 
 <p>
 Secondo lo
@@ -254,7 +254,7 @@ Archivio Database (<abbr>.scv</abbr>)
 </h2>
 
 <p>
-L'archivio database di Scidb è basato su un formato archivio indipendente,
+L'archivio database di Scidc è basato su un formato archivio indipendente,
 e contiene uno (o più) database nella forma archiviata. Questo facilita
 il trasferimento di database su internet, perché si tratta di un singolo file
 invece di molti. Questo archivio database non è limitato a uno specifico formato database.

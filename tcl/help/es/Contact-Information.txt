@@ -24,7 +24,7 @@ TITLE Información de contacto
 
 <h2>Página de inicio</h2>
 
-La página Web de Scidb está situada en
+La página Web de Scidc está situada en
 <a href="http://scidb.sourceforge.net/">http://scidb.sourceforge.net/</a>.
 
 <h2>Ayuda</h2>
@@ -32,7 +32,7 @@ La página Web de Scidb está situada en
 Son bienvenidos los voluntarios para:
 
 <ul>
-  <li>Probar Scidb</li>
+  <li>Probar Scidc</li>
   <li>La traducción a otros idiomas</li>
   <li>Escribir las páginas de ayuda</li>
 </ul>
@@ -59,7 +59,7 @@ Cómo debe enviarse un mensaje:
 <h2>Enlaces</h2>
   
 <p>
-Los usuarios de Scidb hallarán interesantes los siguientes sitios web:
+Los usuarios de Scidc hallarán interesantes los siguientes sitios web:
 </p>
 
 <ul>
@@ -75,22 +75,22 @@ Los usuarios de Scidb hallarán interesantes los siguientes sitios web:
     <a href="http://sourceforge.net/p/scidb/bugs/?source=navbar"
        style="line-height: 150%;">
     Tracker: Bugs</a><br/>
-    Comunique problemas con Scidb.
+    Comunique problemas con Scidc.
   </p></li>
 
   <li><p>
     <a href="http://sourceforge.net/projects/scidb/reviews/"
        style="line-height: 150%;">
-    Reviews for Scidb</a><br/>
-    Este sitio Web ofrece la oportunidad de dejar una reseña acerca de Scidb.
+    Reviews for Scidc</a><br/>
+    Este sitio Web ofrece la oportunidad de dejar una reseña acerca de Scidc.
   </p></li>
 
   <li><p>
     <a href="https://lists.sourceforge.net/lists/listinfo/scidb-users"
        style="line-height: 150%;">
-    Subscribe Scidb Users Mailing List</a><br/>
+    Subscribe Scidc Users Mailing List</a><br/>
     En este lugar usted puede poner una entrada en la lista de miembros de la "Lista
-    de Correos de los Usuarios de Scidb". Esta lista de usuarios proporciona 
+    de Correos de los Usuarios de Scidc". Esta lista de usuarios proporciona 
     información, novedades y propuestas. Los miembros de la lista pueden enviar mensajes 
     que se distribuirán entre todos los miembros automáticamente.
   </p></li>
@@ -98,7 +98,7 @@ Los usuarios de Scidb hallarán interesantes los siguientes sitios web:
   <li><p>
     <a href="http://sourceforge.net/apps/aguestbook/scidb/sign.php"
        style="line-height: 150%;">
-    Scidb Guestbook</a><br/>
+    Scidc Guestbook</a><br/>
     En este sitio se encuentra disponible el libro de visitas.
   </p></li>
 
@@ -108,7 +108,7 @@ Los usuarios de Scidb hallarán interesantes los siguientes sitios web:
     ftp://ftp.cis.uab.edu/pub/hyatt/</a><br/>
     El legendario motor de ajedrez Crafty. El subdirectorio llamado TB tiene muchos
     archivos de tablas de finales en formato Nalimov que usted puede utilizar en varios
-    programas de ajedrez y en (una versión ulterior de) Scidb. 
+    programas de ajedrez y en (una versión ulterior de) Scidc. 
   </p></li>
 
   <li><p>

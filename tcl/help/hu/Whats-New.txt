@@ -79,7 +79,7 @@ Fourth public preview version
   <li class="space">New themes added: "Blackjack" and "Country Style" (thanks to José Carlos Martins)</li>
   <li class="space">Problem with slow down in game editor eliminated</li>
   <li class="space">Upgrade of engine Stockfish to version 4</li>
-  <li class="space">Session management implemented: now Scidb will intervene if the user is doing a session shutdown while Scidb is writing/updating a database</li>
+  <li class="space">Session management implemented: now Scidc will intervene if the user is doing a session shutdown while Scidc is writing/updating a database</li>
   <li class="space">Copy game to clipboard implemented</li>
   <li class="space">Export of current game implemented (for example to PGN file)</li>
   <li class="space">New option in tree window: show next game move with bold font</li>
@@ -88,7 +88,7 @@ Fourth public preview version
   <li class="space">Help dialog: CQL help pages completed</li>
   <li class="space">freedesktop.org requirements implemented:
     <ul>
-      <li class="space">Desktop menu entry for Scidb will be installed</li>
+      <li class="space">Desktop menu entry for Scidc will be installed</li>
       <li class="space">Opening databases with a file manager is possible</li>
     </ul>
   </li>
@@ -108,7 +108,7 @@ Third public preview version
   <li class="space">Move input: pressing middle mouse button (or spacebar) alternates the move suggestion</li>
   <li class="space">New database tab: list of sites</li>
   <li class="space">Full-screen mode tweaked</li>
-  <li class="space">Command line tool cdb2sci added for conversion of databases to Scidb format (.sci)</li>
+  <li class="space">Command line tool cdb2sci added for conversion of databases to Scidc format (.sci)</li>
   <li class="space">HTML widget reworked: saving resources in a highly significant way</li>
   <li class="space">Swedish localisation integrated (thanks to Lars Ekman)</li>
   <li class="space">Spanish translation reactivated (thanks to Juan Carlos Vásquez)</li>

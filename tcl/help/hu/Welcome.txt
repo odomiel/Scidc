@@ -16,10 +16,10 @@
 * (at your option) any later version.
 *********************************************************************** -->
 
-TITLE Üdvözöljük a Scidb-ben!
+TITLE Üdvözöljük a Scidc-ben!
 
 <p>
-Ez egy előzetes verzió tesztelés és ismerkedés céljaira. Az első teljes verzió egy kellően hosszú tesztelési időszak után kerül kiadásra. Kérlek legyél tekintettel az alábbiakra, miközben a Scidb-vel ismerkedsz:
+Ez egy előzetes verzió tesztelés és ismerkedés céljaira. Az első teljes verzió egy kellően hosszú tesztelési időszak után kerül kiadásra. Kérlek legyél tekintettel az alábbiakra, miközben a Scidc-vel ismerkedsz:
 </p>
 
 <ol>
@@ -38,7 +38,7 @@ Ez egy előzetes verzió tesztelés és ismerkedés céljaira. Az első teljes v
 -->
 
   <li class="space">
-    Az aktuális Scidb formátum (.sci) legkésőbb az első teljes verzió megjelenésekor véglesedik (Ami az 1.0-ás verzió lesz. A jelenlegi verziószám 0.94). Mindazonáltal a jelenlegi formátum már teljes értékű és a későbbi változatások csupán új funkciók hozzáadására korlátozódnak.
+    Az aktuális Scidc formátum (.sci) legkésőbb az első teljes verzió megjelenésekor véglesedik (Ami az 1.0-ás verzió lesz. A jelenlegi verziószám 0.94). Mindazonáltal a jelenlegi formátum már teljes értékű és a későbbi változatások csupán új funkciók hozzáadására korlátozódnak.
   </li>
 
   <li class="space">
@@ -51,7 +51,7 @@ Ez egy előzetes verzió tesztelés és ismerkedés céljaira. Az első teljes v
 </ol>
 
 <p><!-- NEW: replace 'three years' with 'four years' -->
-Jó szórakozást kívánunk a Scidb használatához, melynek fejlesztése immáron kilenc éve tart!
+Jó szórakozást kívánunk a Scidc használatához, melynek fejlesztése immáron kilenc éve tart!
 </p>
 
 <h2>Links</h2>

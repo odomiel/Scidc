@@ -61,7 +61,7 @@ Both markers will be lost as soon as the database is closed.
 </NEW>
 
 <p>
-Cuando se editan partidas de bases de datos Scid (.si4) Scidb soporta los seis marcadores
+Cuando se editan partidas de bases de datos Scid (.si4) Scidc soporta los seis marcadores
 definidos por el ususario (1..6). Pero se recomienda no utilizar estos marcadores ya que
 ocurrirán problemas insolubles al copiar partidas a otras bases de datos; incluso la
 aplicación Scid es incapaz de resolver estos problemas.
@@ -72,7 +72,7 @@ Cuando se leen bases de datos ChessBase los marcadores
 <em>%::gametable::mc::GameFlags(s)%</em> y
 <em>%::gametable::mc::GameFlags(t)%</em>
 se unificarán bajo el marcador común <em>%::gametable::mc::GameFlags(?)%</em>.
-Scidb no distingue entre estas dos características.
+Scidc no distingue entre estas dos características.
 </p>
 
 END

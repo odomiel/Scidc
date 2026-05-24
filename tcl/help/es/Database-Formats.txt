@@ -22,14 +22,14 @@ TITLE Formatos de bases de datos
 
 <NEW>
 <p>
-Scidb supports following formats:
+Scidc supports following formats:
 </p>
 </NEW>
 
 <ul>
   <li>
     <img src="../images/ft-scidb.png" />
-    <a href="#Scidb">Scidb</a>
+    <a href="#Scidc">Scidc</a>
   </li>
   <li>
     <img src="../images/ft-scid.png" />
@@ -49,19 +49,19 @@ Scidb supports following formats:
   </li>
 </ul>
 
-<h2 id="Scidb">
+<h2 id="Scidc">
 <img src="../images/ft-scidb.png" />
-Scidb (<abbr>.sci</abbr>)
+Scidc (<abbr>.sci</abbr>)
 </h2>
 
 <p>
-Este es el formato de bases de datos propietario de Scidb. Se recomienda decididamente utilizar 
+Este es el formato de bases de datos propietario de Scidc. Se recomienda decididamente utilizar 
 este formato debido a que es más veloz y explota todas las características del programa.
 </p>
 
 <NEW>
 <p>
-Only Scidb's format (and PGN format) is storing games of various chess variants
+Only Scidc's format (and PGN format) is storing games of various chess variants
 (<see/> <a href="Chess-Variants.html">Supported chess variants</a>).
 A database is fixed to one chess variant (the <a href="Clipbase.html">Clipbase</a>
 is an exception).
@@ -77,12 +77,12 @@ in all chess variants.
 </NEW>
 
 <p>
-Las bases de datos Scidb siempre se codificarán con el grupo de caracteres <nobr>UTF-8</nobr>. De este modo
+Las bases de datos Scidc siempre se codificarán con el grupo de caracteres <nobr>UTF-8</nobr>. De este modo
 dichas bases se pueden utilizar sin complicaciones en todos los sistemas y ubicaciones geográficas.
 </p>
 
 <p>
-Una base en formato Scidb está conformada por varios archivos:
+Una base en formato Scidc está conformada por varios archivos:
 </p>
 
 <box>
@@ -109,7 +109,7 @@ Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
 
 <p>
 El formato de bases de datos Scid está completamente soportado debido a su amplia
-adopción, pero con este formato usted no utilizará todas las capacidades de Scidb.
+adopción, pero con este formato usted no utilizará todas las capacidades de Scidc.
 </p>
 
 <annotation>
@@ -128,7 +128,7 @@ detección automática del grupo de caracteres funcionará en forma correcta.
 </p>
 
 <p>
-Este formato se parece estructuralmente al formato Scidb:
+Este formato se parece estructuralmente al formato Scidc:
 </p>
 
 <box>
@@ -155,7 +155,7 @@ Este formato se parece estructuralmente al formato Scidb:
 <note>Los archivos con los sufijos <code>.sso</code> (Scid Search Option File),
 <code>.sor</code> (Scid Repertoire File), y <code>.stm</code> (Scid Tree Mask File)
 no pertenecen explícitamente a una base de datos y no serán tenidos en cuenta por
-Scidb.
+Scidc.
 <NEW>Likewise any saved game list (file suffix <code>.txt</code>) will be
 disregarded.</NEW></note>
 
@@ -235,7 +235,7 @@ Opening a <abbr>PGN</abbr> file will be done in reading mode, but it is
 possible to set it writeable if the file has writing permission.
 </NEW>
 Se recomienda convertir las grandes colecciones de partidas <abbr>PGN</abbr> al
-formato Scidb.
+formato Scidc.
 </p>
 
 <p>
@@ -274,7 +274,7 @@ Archivo de base de datos (<abbr>.scv</abbr>)
 </h2>
 
 <p>
-El archivo de base de datos Scidb está basado en un formato de archivo independiente
+El archivo de base de datos Scidc está basado en un formato de archivo independiente
 y contiene una (o quizás varias) bases de datos en forma de archivo único. Esto
 facilita el envío de bases de datos por Internet ya que es un archivo único
 en lugar de varios archivos. Este archivo de base de datos no se limita

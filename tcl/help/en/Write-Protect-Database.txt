@@ -24,7 +24,7 @@ TITLE Write protection of databases
 
 <p>
 A database can be set read-only or write protected. This is possible only for
-Scidb databases (<abbr>.sci</abbr>) and PGN archives (<abbr>.pgn</abbr>,
+Scidc databases (<abbr>.sci</abbr>) and PGN archives (<abbr>.pgn</abbr>,
 <abbr>.pgn.gz</abbr>). Scid databases (<abbr>.si3</abbr>, <abbr>.si4</abbr>),
 ChessBase databases (<abbr>.cbh</abbr>, <abbr>.cbf</abbr>), and Zip archives
 (<abbr>.zip</abbr>) are always write protected.

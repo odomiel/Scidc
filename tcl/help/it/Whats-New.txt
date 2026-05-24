@@ -82,7 +82,7 @@ Quarta release pubblica
   <li class="space">Aggiunti nuovi temi: "Blackjack" e "Country Style" (grazie a José Carlos Martins)</li>
   <li class="space">Sistemati problemi con rallentamento dell'editor della partita</li>
   <li class="space">Aggiornato motore Stockfish alla versione 4</li>
-  <li class="space">Implementato gestore di sessione: ora Scidb interverrà se l'utente sta chiudendo una sessione mentre Scidb sta scrivendo\aggiornando un database</li>
+  <li class="space">Implementato gestore di sessione: ora Scidc interverrà se l'utente sta chiudendo una sessione mentre Scidc sta scrivendo\aggiornando un database</li>
   <li class="space">Implementata copia partita nella clipboard</li>
   <li class="space">Esportazione partita corrente implementata (per esempio in file PGN)</li>
   <li class="space">Nuova opzione nel menu contestuale: mostra mossa successiva in grassetto</li>
@@ -91,7 +91,7 @@ Quarta release pubblica
   <li class="space">Dialog di Aiuto: completate le pagine sul CQL</li>
   <li class="space">Richieste di freedesktop.org implementate:
     <ul>
-      <li class="space">Verrà installata una voce al menu Desktop per Scidb</li>
+      <li class="space">Verrà installata una voce al menu Desktop per Scidc</li>
       <li class="space">È possibile aprire un database con il file manager</li>
     </ul>
   </li>
@@ -111,7 +111,7 @@ Third public preview version
   <li class="space">Inserimento Mosse: premendo il tasto centrale del mouse (o la barra spaziatrice) si alternano i suggerimenti di mossa</li>
   <li class="space">Nuova tab database: lista dei luoghi</li>
   <li class="space">Modificata modalità a tutto schermo</li>
-  <li class="space">Tool da linea di comando cdb2sci aggiunto per la conversione di database al formato Scidb (.sci)</li>
+  <li class="space">Tool da linea di comando cdb2sci aggiunto per la conversione di database al formato Scidc (.sci)</li>
   <li class="space">Widget HTML rivisitato: notevole risparmio di risorse</li>
   <li class="space">Integrata localizzazione in svedese (grazie a Lars Ekman)</li>
   <li class="space">Traduzione in spagnolo ripristinata (grazie a Juan Carlos Vásquez)</li>

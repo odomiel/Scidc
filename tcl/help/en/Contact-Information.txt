@@ -24,7 +24,7 @@ TITLE Contact information
 
 <h2 id="Homepage">Homepage</h2>
 
-The web page of Scidb is located at
+The web page of Scidc is located at
 <a href="http://scidb.sourceforge.net/">scidb.sourceforge.net</a>.
 
 <h2>Help</h2>
@@ -32,7 +32,7 @@ The web page of Scidb is located at
 Volunteers are welcome for:
 
 <ul>
-  <li>Testing Scidb</li>
+  <li>Testing Scidc</li>
   <li>Translation into other languages</li>
   <li>Writing help pages</li>
 </ul>
@@ -60,7 +60,7 @@ How a message can be sent:
 <h2>Links</h2>
   
 <p>
-Scidb users may find the following websites interesting:
+Scidc users may find the following websites interesting:
 </p>
 
 <ul>
@@ -76,22 +76,22 @@ Scidb users may find the following websites interesting:
     <a href="http://sourceforge.net/p/scidb/bugs/?source=navbar"
        style="line-height: 150%;">
     Tracker: Bugs</a><br/>
-    Report problems with Scidb.
+    Report problems with Scidc.
   </p></li>
 
   <li><p>
     <a href="http://sourceforge.net/projects/scidb/reviews/"
        style="line-height: 150%;">
-    Reviews for Scidb</a><br/>
-    This website offers the opportunity for a review about Scidb.
+    Reviews for Scidc</a><br/>
+    This website offers the opportunity for a review about Scidc.
   </p></li>
 
   <li><p>
     <a href="https://lists.sourceforge.net/lists/listinfo/scidb-users"
        style="line-height: 150%;">
-    Subscribe Scidb Users Mailing List</a><br/>
+    Subscribe Scidc Users Mailing List</a><br/>
     At this place you may do an entry into the member list of the
-    "Scidb Users Mailing List". This user list provides information, news,
+    "Scidc Users Mailing List". This user list provides information, news,
     and proposals. Members of this list may send messages which will be
     distributed to all members automatically.
   </p></li>
@@ -102,7 +102,7 @@ Scidb users may find the following websites interesting:
     ftp://ftp.cis.uab.edu/pub/hyatt/</a><br/>
     The legendary chess engine Crafty. The subdirectory there named TB has many
     Nalimov-format tablebase files that you can use in several chess programs and
-    in (a later version of) Scidb. 
+    in (a later version of) Scidc. 
   </p></li>
 
   <li><p>

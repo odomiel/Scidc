@@ -20,7 +20,7 @@ INDEX Clipbase
 TITLE The Clipbase database
 
 <p>
-Scidb provides an open Clipbase database at program start, which is just like any other
+Scidc provides an open Clipbase database at program start, which is just like any other
 database, except that it exists in memory only and has no files for permanent storage.
 This means that the capacity of this database is limited. The pre-defined name
 for this database is <b>%::application::database::mc::T_Clipbase%</b>.
@@ -39,7 +39,7 @@ The Clipbase cannot be closed. It exists a menu function for emptying the Clipba
 </p>
 
 <p>
-The Clipbase keeps data in Scidb's native format and is an exception, because
+The Clipbase keeps data in Scidc's native format and is an exception, because
 it may contain various <a href="Chess-Variants.html">chess variants</a>
 concurrently. But administrative operations
 (<see/> <a href="Database-Switcher.html#Maintenance">

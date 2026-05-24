@@ -122,12 +122,12 @@ se han guardado se mostrará un aviso de seguridad antes de cerrar la base.
 <menuitem>%::database::switcher::mc::ReadOnly%</menuitem>
 Establecer esta base como de sólo-lectura o editable.
 <NEW><!-- Replace old content:
-Esto sólo es posible para las bases Scidb y Scid
+Esto sólo es posible para las bases Scidc y Scid
 (<abbr>.sci</abbr>, <abbr>.si4</abbr>, <abbr>.si3</abbr>).
 <note/>Los archivos <abbr>PGN</abbr> y las bases ChessBase siempre son de sólo-lectura.
 <note/>La <a href="Clipbase.html">Base temporal</a> no puede establecerse como de sólo-lectura.
 --><!-- with new content: -->
-This is possibly only for Scidb and Scid databases
+This is possibly only for Scidc and Scid databases
 (<abbr>.sci</abbr>, <abbr>.si4</abbr>, <abbr>.si3</abbr>),
 and PGN archives (<abbr>.pgn</abbr>, <abbr>.pgn.gz</abbr>).
 <note/>ChessBase databases and Zip archives (<abbr>.zip</abbr>)
@@ -147,7 +147,7 @@ Abre una base de datos a través del historial de bases de datos.
 
 <p>
 <menuitem>%::application::database::mc::FileNew%</menuitem>
-Crea una nueva base de datos. Sólo pueden crearse bases Scidb y Scid
+Crea una nueva base de datos. Sólo pueden crearse bases Scidc y Scid
 (<abbr>.sci</abbr>, <abbr>.si4</abbr>, <abbr>.si3</abbr>).
 <NEW>
 If the database should store games of any
@@ -159,7 +159,7 @@ If the database should store games of any
 <p>
 <menuitem>%::application::database::mc::FileNew%</menuitem>
 Create a new database of any <a href="Chess-Variants.html">chess variant</a>.
-Only Scidb databases can be created in this case.
+Only Scidc databases can be created in this case.
 </p>
 </NEW>
 

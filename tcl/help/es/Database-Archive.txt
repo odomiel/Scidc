@@ -23,8 +23,8 @@
 TITLE Archivo de base de datos
 
 <p>
-El Archivo de base de datos de Scidb está basado en un formato de archivo independiente
-con el sufijo general de archivo "<abbr>.ive</abbr>". Scidb utilizará el sufijo especial
+El Archivo de base de datos de Scidc está basado en un formato de archivo independiente
+con el sufijo general de archivo "<abbr>.ive</abbr>". Scidc utilizará el sufijo especial
 de archivo "<abbr>.scv</abbr>". Este formato de archivo contiene información acerca de los
 archivos incluidos, tal como el nombre, el tamaño, el método de compresión, etc.
 </p>

@@ -108,7 +108,7 @@ which are not yet saved, a security prompt will be done before closing the datab
 <p>
 <menuitem>%::database::switcher::mc::ReadOnly%</menuitem>
 Set this database read-only or writeable.
-This is possibly only for Scidb and Scid databases
+This is possibly only for Scidc and Scid databases
 (<abbr>.sci</abbr>, <abbr>.si4</abbr>, <abbr>.si3</abbr>),
 and PGN archives (<abbr>.pgn</abbr>, <abbr>.pgn.gz</abbr>).
 <note/>ChessBase databases and Zip archives (<abbr>.zip</abbr>)
@@ -129,7 +129,7 @@ Open a database via the database history.
 
 <p>
 <menuitem>%::application::database::mc::FileNew% (%::mc::VariantName(Normal)%)</menuitem>
-Create a new database. Only Scidb and Scid databases
+Create a new database. Only Scidc and Scid databases
 (<abbr>.sci</abbr>, <abbr>.si4</abbr>, <abbr>.si3</abbr>)
 can be created.
 If the database should store games of any
@@ -139,7 +139,7 @@ If the database should store games of any
 <p>
 <menuitem>%::application::database::mc::FileNew%</menuitem>
 Create a new database of any <a href="Chess-Variants.html">chess variant</a>.
-Only Scidb databases can be created in this case.
+Only Scidc databases can be created in this case.
 </p>
 
 <p>
@@ -170,7 +170,7 @@ This sub-menu provides functionality for the maintenance of databases.
 <p id="ChangeIcon">
 <menuitem>%::application::database::mc::ChangeIcon%</menuitem>
 Select an icon for this database. A selection dialog will be opened
-which allows also the selection of image files (Scidb databases only).
+which allows also the selection of image files (Scidc databases only).
 The image files must be PNG files in the resolutions of 16x16, 24x24,
 32x32, and 48x48.
 <note/>This is not possible for the <a href="Clipbase.html">Clipbase</a>.
