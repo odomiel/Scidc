@@ -289,7 +289,7 @@
 ::menu::mc::Language							"&Lingua"
 ::menu::mc::Toolbars							"&Barre strumenti"
 ::menu::mc::ShowLog							"Mostra &Log"
-::menu::mc::AboutScidb						"S&u Scidb"
+::menu::mc::AboutScidb						"S&u Scidc"
 ::menu::mc::TipOfTheDay						"Tip of the &Day" ;# NEW
 ::menu::mc::Fullscreen						"&Schermo intero"
 ::menu::mc::LeaveFullscreen				"Esci da &Schermo intero"

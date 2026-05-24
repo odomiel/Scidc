@@ -290,7 +290,7 @@
 ::menu::mc::Language			"N&yelv"
 ::menu::mc::Toolbars			"&Eszköztár"
 ::menu::mc::ShowLog			"&Log fájl mutatása"
-::menu::mc::AboutScidb			"Scidb &Névjegy"
+::menu::mc::AboutScidb			"Scidc &Névjegy"
 ::menu::mc::TipOfTheDay			"Tip of the &Day" ;# NEW
 ::menu::mc::Fullscreen			"&Teljes képernyő"
 ::menu::mc::LeaveFullscreen		"Leave &Teljes képernyő" ;# NEW "Leave Full-Screen"
