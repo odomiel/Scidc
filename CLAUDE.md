@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Projekt
-- Chess-Datenbank-App: ~102k LOC C++, ~92k LOC Tcl/Tk
+- **Scidc** – Chess-Datenbank-App, geforkt von Scidb r1531: ~102k LOC C++, ~92k LOC Tcl/Tk
 - 3-Tier-Architektur: C++ DB-Layer → C++ App-Layer → Tcl/Tk UI
 - Mindestanforderung: **Tcl/Tk 8.6** (8.5-Kompatibilitätscode entfernt)
 - Keine Test-Suite – Testing ist manuell
@@ -15,9 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Niemals `make` aufrufen** – User baut manuell
 - `./configure` überschreibt `Makefile.in` – persistente Änderungen müssen **auch in `configure`** gemacht werden
 - **Versionsnummer** bei jedem Code-Commit in 3 Dateien synchron erhöhen:
-  - `Makefile.version`
-  - `src/tcl/tcl_misc.cpp` (CODEBLOCKS-Block, Zeile ~72)
-  - `tcl/exec.tcl` (Zeile ~41)
+  - `Makefile.version` (Zeile `SCIDB_VERSION`)
+  - `src/tcl/tcl_misc.cpp` (CODEBLOCKS-Block, Zeile ~72: `# define SCIDB_VERSION`)
+  - `tcl/exec.tcl` (Zeile ~41: `set version "..."` im `namespace eval scidc` Block)
 - Standard: **C++14** (`-std=c++14`), keine C++17-Features
 
 ---
@@ -27,20 +27,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Bundle-Synchronisation
 - **Individuelle `.tcl`-Dateien** bearbeiten (Git-Quelle)
 - Da `make` nicht aufgerufen wird, muss das Bundle **immer manuell mitgepflegt** werden:
-  - `tcl/scidb-beta` – genutzt von `./run-scidb.sh` **und** Quelle für AppImage
-  - `AppDir/usr/bin/scidb-beta` wird automatisch von `build-appimage.sh` aus `tcl/scidb-beta` kopiert – **nicht** separat bearbeiten
+  - `tcl/scidc-beta` – genutzt von `./run-scidb.sh` **und** Quelle für AppImage
+  - `AppDir/usr/bin/scidc-beta` wird automatisch von `build-appimage.sh` aus `tcl/scidc-beta` kopiert – **nicht** separat bearbeiten
 - Bundle-Zeilen entsprechen den Source-Zeilen (gleiche Zeilennummern, verifizieren vor Edit)
-- Version in `tcl/scidb-beta` (Zeile 41: `set version "..."`) ebenfalls anpassen
+- Version in `tcl/scidc-beta` (Zeile ~41: `set version "..."`) ebenfalls anpassen
 
 ### Weitere Fallen
 - `proc open` shadowing: In Namespaces mit eigenem `proc open` immer **`::open`** für Datei-Öffnungen nutzen
 - **Alle 6 `tcl/lang/*.tcl` sind ISO-8859-1** – niemals direkt mit dem Edit-Tool bearbeiten, immer Python Binary-I/O verwenden
 - Beim Entfernen eines Features alle 6 Sprachdateien bereinigen – sonst Startup-Crash
+- `package require msgcat` muss explizit aufgerufen werden, bevor `::msgcat::mc` genutzt wird – `messagebox.tcl` lädt es lazy; andere Widgets (`fsbox.tcl`) müssen es selbst requiren
+
+### Namespace `::scidc::` (ehemals `::scidb::`)
+Die C++/Tcl-Bridge registriert Befehle als `::scidc::db::*`, `::scidc::game::*`, `::scidc::misc::*`, `::scidc::tk::twm` etc. Beim Schreiben von Tcl-Code drei Muster beachten:
+- `"::scidc::..."` – in C++-Stringliteralen (tcl_*.cpp, tk_*.cpp)
+- `$scidc::var` – Tcl-Variablenzugriff ohne `::` prefix
+- `scidc::command` – Bare Command-Aufruf in Tcl
 
 ### TWM SetupTheme – Timing-Falle
 `SetupTheme` wird beim TWM-Erstellen UND bei `<<ThemeChanged>>` aufgerufen. Das `after idle [$twm refresh]` darf **nur** bei echten Theme-Wechseln geplant werden. Korrekte Reihenfolge:
 ```tcl
-if {[::scidb::tk::twm exists $twm]} {
+if {[::scidc::tk::twm exists $twm]} {
     # ... Hintergründe setzen ...
     if {[info exists Vars(theme)] && $Vars(theme) ne $::ttk::currentTheme} {
         after idle [list $twm refresh]   ; # nur bei Theme-Wechsel
@@ -52,13 +59,19 @@ Bedingungslos geplantes `after idle` feuert während `perform()` via `update idl
 
 ---
 
-## 3 Share-Verzeichnisse für Ressourcen – synchron halten
+## Verzeichnisstruktur – synchron halten
 | Pfad | Zweck |
 |------|-------|
-| `AppDir/usr/share/scidb-beta/` | AppImage / `./run-scidb.sh` (via `SCIDB_SHAREDIR`) |
-| `/usr/local/share/scidb-beta/` | System-Install (braucht `sudo`) |
+| `AppDir/usr/share/scidc-beta/` | AppImage / `./run-scidb.sh` (via `SCIDB_SHAREDIR`) |
+| `/usr/local/share/scidc-beta/` | System-Install (braucht `sudo`) |
 
 `tcl/` ist die Git-Quelle für die Bundles, enthält aber keine installierten Ressourcen.
+
+`build-appimage.sh` synchronisiert bei jedem Build automatisch:
+- `tcl/lang/*.tcl` → `AppDir/usr/share/scidc-beta/lang/`
+- `tcl/engines/engines.dat` → `AppDir/usr/share/scidc-beta/engines/engines.dat`
+
+Benutzerdaten liegen in `~/.scidc-beta/` (abgeleitet aus dem Executable-Namen `tkscidc-beta`).
 
 ---
 
@@ -73,12 +86,13 @@ Bedingungslos geplantes `after idle` feuert während `perform()` via `update idl
 | `src/sys/` | System: UTF-8, VFS, File-I/O |
 | `src/mstl/` | Math/STL-Erweiterungen |
 
-Die Bridge (`src/tcl/`) ist kein Auto-Binding – jede exponierte Funktion ist explizit als C-Wrapper codiert. Tcl-Commands: `::scidb::db::*`, `::scidb::game::*`, `::scidb::misc::*` etc.
+Die Bridge (`src/tcl/`) ist kein Auto-Binding – jede exponierte Funktion ist explizit als C-Wrapper codiert.
 
 ---
 
 ## Datenbank-Codecs
 - SI3/SI4/SI5 via `si3::Codec`, SCI nativ, CBH/CBF read-only
+- **SCI/SCV sind Scidb-Formate** – Formatbeschreibungen in UI und Dokumentation bleiben „Scidb" (nicht umbenennen)
 - **SI5-Schreiben**: Nachträglich implementiert – mehrere kritische Stellen in Codec, `tcl_tree.cpp`, `db_common.ipp`, `app-database.tcl`, `export.tcl`
 
 ### SI5 vs. SI3/SI4 – NameList/Namebase ID-Falle (kritisch)
@@ -101,8 +115,8 @@ Daraus folgen drei konkrete Regeln für SI5-Write-Pfade:
 ---
 
 ## Tcl Startup-Sequenz
-1. **`exec.tcl`** – Prüft Version-Match C++ ↔ Tcl, startet Remote-Single-Process-Guard
-2. **`start.tcl`** – Initialisiert `::scidb::dir::*` (share, user, config, layout), legt `~/.scidb-beta/` an
+1. **`exec.tcl`** – Prüft Version-Match C++ ↔ Tcl (`::scidc::misc::version`), startet Remote-Single-Process-Guard
+2. **`start.tcl`** – Initialisiert `::scidc::dir::*` (share, user, config, layout), legt `~/.scidc-beta/` an
 3. **`load.tcl`** – Splash-Screen, lazy-lädt ECO, Themes, Engines
 4. **`end.tcl`** – Finalisiert UI, registriert Options-Write-Callbacks, aktiviert Event-Handler
 
@@ -111,6 +125,16 @@ Options werden vor der UI gelesen (`::options::sourceFile`) und nach Programmend
 proc WriteOptions {chan} { ::options::writeItem $chan MyVar }
 ::options::hookWriter WriteOptions
 ```
+
+---
+
+## Engines
+- Konfiguration: `tcl/engines/engines.dat` (Git-Quelle), synchronisiert nach `AppDir/usr/share/scidc-beta/engines/engines.dat` via `build-appimage.sh`
+- Binaries in `~/.scidc-beta/engines/bin/`, Daten in `~/.scidc-beta/engines/<name>/`
+- `AppRun` deployt Engines aus `usr/bin/` → `~/.scidc-beta/engines/bin/` beim AppImage-Start
+- Engine-Namen in `engines.dat`: `Command` enthält nur den Dateinamen (kein Pfad); `LoadSharedConfiguration` setzt den vollen Pfad
+- UCI-Variantnamen müssen gemappt werden (z.B. `"Three-Check"` → `"3check"`)
+- `SaveEngine`: `lset Engines $sel ...` **innerhalb** des `if {$sel >= 0}` Blocks
 
 ---
 
@@ -199,13 +223,6 @@ Der Default-Background-Fallback muss **vor** dem CSS-Preamble-Block stehen, dami
 
 ---
 
-## Engines
-- Binaries in `~/.scidb-beta/engines/bin/`, Daten in `~/.scidb-beta/engines/<name>/`
-- UCI-Variantnamen müssen gemappt werden (z.B. `"Three-Check"` → `"3check"`)
-- `SaveEngine`: `lset Engines $sel ...` **innerhalb** des `if {$sel >= 0}` Blocks
-
----
-
 ## `::util::catchException` Rückgabewerte
 | Wert | Bedeutung |
 |------|-----------|
@@ -232,6 +249,7 @@ Ersetzt den klassischen minizip 1.01e – API ist **vollständig verschieden**.
 - Hilfetexte als `.txt`-Quellen → per `make_html.tcl` zu `.html` konvertiert
 - Inhaltsverzeichnis: `tcl/help/de/Contents.dat` (und je Sprache analog)
 - Sprachen: `de/` (vollständigste), `en/`, `es/`, `it/`, `hu/`, `sv/`
+- SCI/SCV-Formatbeschreibungen bleiben „Scidb" (das ist der Formatinhaber)
 
 **Stand der Dokumentation** (analysiert 2026-05-21):
 - **13 Einträge in `Contents.dat` ohne .txt-Quelldatei** (geplant aber nie geschrieben): Listenfenster (Partienliste, Spielerliste, Orteliste, Veranstaltungsliste, Kommentatorenliste), Fenster (Partietext, Partienhistorie, Schachbrett, Zugbaum, Zugbaumpartienliste, Kreuztabelle), Dialoge (Partienimport, Datenbankenexport)
@@ -247,17 +265,18 @@ Ersetzt den klassischen minizip 1.01e – API ist **vollständig verschieden**.
 bash build-tcltk.sh        # → deps/tcltk/
 
 # 2. AppDir/usr/share/ befüllen (einmalig; bleibt bei späteren Builds erhalten):
-make && sudo make install   # installiert nach AppDir/usr/share/scidb-beta/
+make && sudo make install   # installiert nach AppDir/usr/share/scidc-beta/
 
 # 3. Normale Entwicklungsiteration:
 make
-bash build-appimage.sh     # → Scidb-x86_64.AppImage
+bash build-appimage.sh     # → Scidc-x86_64.AppImage
 ```
 
 ### Wichtige Details
-- `build-appimage.sh` kopiert `tcl/scidb-beta` → `AppDir/usr/bin/scidb-beta` (nicht separate Pflege nötig)
-- `build-appimage.sh` preserviert `AppDir/usr/share/` – **nicht** aus `/usr/local/` regenerieren
+- `build-appimage.sh` kopiert `tcl/scidc-beta` → `AppDir/usr/bin/scidc-beta` (nicht separate Pflege nötig)
+- `build-appimage.sh` synchronisiert auch lang/ und engines.dat – preserviert `AppDir/usr/share/` ansonsten
 - Tcl/Tk-Module (msgcat etc.) liegen im Source-Build unter `deps/tcltk/lib/tcl8/{ver}/` (nicht `lib/tcl8.6/tcl8/` wie bei Ubuntu-Paketen); `AppRun` setzt `TCL8_6_TM_PATH` entsprechend
-- FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidb-beta/`
-- Engines werden via `AppRun` nach `~/.scidb-beta/engines/bin/` deployt
-- `run-scidb.sh` läuft direkt aus dem Source-Tree (kein FUSE): `src/tkscidb-beta tcl/scidb-beta`
+- FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidc-beta/`
+- Engines werden via `AppRun` nach `~/.scidc-beta/engines/bin/` deployt
+- `run-scidb.sh` läuft direkt aus dem Source-Tree (kein FUSE): `src/tkscidc-beta tcl/scidc-beta`
+- Nach Änderungen an `~/.scidc-beta/config/engines.dat` (z.B. leere Datei durch fehlgeschlagenen Start): Datei löschen, damit die App beim nächsten Start `engines.dat` aus Share neu lädt
