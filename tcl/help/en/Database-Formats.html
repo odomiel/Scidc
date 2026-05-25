@@ -51,7 +51,11 @@ Scidc supports the following formats:
   </li>
   <li>
     <img src="../images/ft-scid.png" alt="" />
-    <a href="#Scid">Scid</a>
+    <a href="#Scid5">Scid (.si5)</a>
+  </li>
+  <li>
+    <img src="../images/ft-scid.png" alt="" />
+    <a href="#Scid">Scid (.si4, .si3)</a>
   </li>
   <li>
     <img src="../images/ft-chessbase.png" alt="" />
@@ -73,8 +77,10 @@ Scidb (<abbr>.sci</abbr>)
 </h2>
 
 <p>
-This is Scidb's own database format. Use of this format is strongly
-recommended because of speed and feature completeness considerations.
+The Scidb format is fully supported by Scidc. However, it is not the
+default format for new databases &ndash; the new default format is the
+<abbr>.si5</abbr> format from Scid
+(&#x21d2; <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <p>
@@ -136,14 +142,46 @@ The icon set (.scj) will be created when image files are selected inside the sel
 for the database icon (&#x21d2; <a href="Database-Switcher.html#ChangeIcon">database switcher</a>
 </p>
 
-<h2 id="Scid">
+<h2 id="Scid5">
 <img src="../images/ft-scid.png" alt="" />
-Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
+Scid (<abbr>.si5</abbr>) &ndash; Default Format
 </h2>
 
 <p>
-Scid's database format is fully supported because of it's wide adoption.
-But with this format you cannot use the full capability of Scidc.
+The <abbr>.si5</abbr> format is the new default format of Scidc. It is the current
+database format of the Scid project. Support in Scidc is still under development.
+</p>
+
+<p>
+A Scid 5 database consists of the following files:
+</p>
+
+<div class='box'>
+  <table style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.si5</kbd></td><td>=&nbsp;</td>
+      <td>Game data</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sg5</kbd></td><td>=&nbsp;</td>
+      <td>Game moves, comments, annotations and PGN tags</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sn5</kbd></td><td>=&nbsp;</td>
+      <td>Player/event/site/round data</td>
+    </tr>
+  </table>
+</div>
+
+<h2 id="Scid">
+<img src="../images/ft-scid.png" alt="" />
+Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; older format
+</h2>
+
+<p>
+The older Scid format (.si4/.si3) is supported by Scidc in read-only mode.
+For new databases the <abbr>.si5</abbr> format is recommended
+(&#x21d2; <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <div class='annotation'><img src='../images/annotation.png' style='float:left; margin:0 1em 0 0' alt='annotation' />

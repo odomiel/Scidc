@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.25 Beta"
+	set version "26.05.25 b1 Beta"
 }
 
 
@@ -146249,7 +146249,7 @@ proc DisplayContributions {w} {
 		<div class='box'>
 			<h1>$mc::AIAssistance</h1>
 			<hr/>
-			<p>[Name {Claude · Anthropic}]</p>
+			<p>[Name {Claude Â· Anthropic}]</p>
 		</div>
 		<div class='box'>
 			<h1>$mc::Development</h1>

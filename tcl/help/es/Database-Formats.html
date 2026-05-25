@@ -53,7 +53,11 @@ Scidc supports following formats:
   </li>
   <li>
     <img src="../images/ft-scid.png" alt="" />
-    <a href="#Scid">Scid</a>
+    <a href="#Scid5">Scid (.si5)</a>
+  </li>
+  <li>
+    <img src="../images/ft-scid.png" alt="" />
+    <a href="#Scid">Scid (.si4, .si3)</a>
   </li>
   <li>
     <img src="../images/ft-chessbase.png" alt="" />
@@ -75,8 +79,10 @@ Scidb (<abbr>.sci</abbr>)
 </h2>
 
 <p>
-Este es el formato de bases de datos propietario de Scidc. Se recomienda decididamente utilizar
-este formato debido a que es más veloz y explota todas las características del programa.
+El formato Scidb está completamente soportado por Scidc. Sin embargo, no es el formato
+predeterminado para nuevas bases de datos &ndash; el nuevo formato predeterminado es el formato
+<abbr>.si5</abbr> de Scid
+(&#x21d2; <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <span class='NEW'>
@@ -122,14 +128,46 @@ Una base en formato Scidc está conformada por varios archivos:
   </table>
 </div>
 
-<h2 id="Scid">
+<h2 id="Scid5">
 <img src="../images/ft-scid.png" alt="" />
-Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
+Scid (<abbr>.si5</abbr>) &ndash; Formato predeterminado
 </h2>
 
 <p>
-El formato de bases de datos Scid está completamente soportado debido a su amplia
-adopción, pero con este formato usted no utilizará todas las capacidades de Scidc.
+El formato <abbr>.si5</abbr> es el nuevo formato predeterminado de Scidc. Es el formato
+de base de datos actual del proyecto Scid. El soporte en Scidc aún está en desarrollo.
+</p>
+
+<p>
+Una base de datos Scid 5 consta de los siguientes archivos:
+</p>
+
+<div class='box'>
+  <table style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.si5</kbd></td><td>=&nbsp;</td>
+      <td>Información de la partida</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sg5</kbd></td><td>=&nbsp;</td>
+      <td>Jugadas, comentarios, anotaciones y etiquetas PGN</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sn5</kbd></td><td>=&nbsp;</td>
+      <td>Datos de Jugador/Torneo/Lugar/Ronda</td>
+    </tr>
+  </table>
+</div>
+
+<h2 id="Scid">
+<img src="../images/ft-scid.png" alt="" />
+Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; formato anterior
+</h2>
+
+<p>
+El formato Scid anterior (.si4/.si3) es soportado por Scidc en modo de solo lectura.
+Para nuevas bases de datos se recomienda el formato <abbr>.si5</abbr>
+(&#x21d2; <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <div class='annotation'><img src='../images/annotation.png' style='float:left; margin:0 1em 0 0' alt='annotation' />

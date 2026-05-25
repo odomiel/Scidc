@@ -33,7 +33,11 @@ Scidc supporta i seguenti formati:
   </li>
   <li>
     <img src="../images/ft-scid.png" />
-    <a href="#Scid">Scid</a>
+    <a href="#Scid5">Scid (.si5)</a>
+  </li>
+  <li>
+    <img src="../images/ft-scid.png" />
+    <a href="#Scid">Scid (.si4, .si3)</a>
   </li>
   <li>
     <img src="../images/ft-chessbase.png" />
@@ -54,7 +58,10 @@ Scidc supporta i seguenti formati:
 Scidb (<abbr>.sci</abbr>)
 </h2>
 
-Questo è il formato proprio di Scidc. L'uso di questo formato è fortemente raccomandato, dato che le funzioni di Scidc sono pienamente supportate solo in questo formato e fornirà un'ottima velocità nell'uso.
+Il formato Scidb è completamente supportato da Scidc. Tuttavia, non è il formato
+predefinito per i nuovi database &ndash; il nuovo formato predefinito è il formato
+<abbr>.si5</abbr> di Scid
+(<see/> <a href="#Scid5">Scid (.si5)</a>).
 
 <p>
 Solo il formato Scidc (e il formato PGN) possono contenere partite di diverse varianti degli scacchi
@@ -97,12 +104,45 @@ Un database nel formato Scidc è diviso in diversi file:
   </table>
 </box>
 
-<h2 id="Scid">
+<h2 id="Scid5">
 <img src="../images/ft-scid.png" />
-Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
+Scid (<abbr>.si5</abbr>) &ndash; Formato predefinito
 </h2>
 
-Questo è il formato database di Scid e data la sua ampia distribuzione è supportato sia in lettura sia in scrittura. Usando questo formato non sarà possibile usare tutte le funzioni disponibili in Scidc.
+<p>
+Il formato <abbr>.si5</abbr> è il nuovo formato predefinito di Scidc. È il formato database
+corrente del progetto Scid. Il supporto in Scidc è ancora in sviluppo.
+</p>
+
+<p>
+Un database Scid 5 è composto dai seguenti file:
+</p>
+
+<box>
+  <table style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.si5</kbd></td><td>=&nbsp;</td>
+      <td>Informazioni partita</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sg5</kbd></td><td>=&nbsp;</td>
+      <td>Mosse, commenti, annotazioni e tag PGN</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sn5</kbd></td><td>=&nbsp;</td>
+      <td>Dati relativi a Giocatore/Evento/Luogo/Turno</td>
+    </tr>
+  </table>
+</box>
+
+<h2 id="Scid">
+<img src="../images/ft-scid.png" />
+Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; formato meno recente
+</h2>
+
+Il formato Scid meno recente (.si4/.si3) è supportato da Scidc in modalità di sola lettura.
+Per i nuovi database è raccomandato il formato <abbr>.si5</abbr>
+(<see/> <a href="#Scid5">Scid (.si5)</a>).
 
 <annotation>
 I database di Scidc saranno aperti in modalità di sola lettura.
