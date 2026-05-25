@@ -19,53 +19,24 @@
 TITLE Benvenuto su Scidc!
 
 <p>
-Questa è una versione preliminare di Scidc per prove e test. La prima
-versione completa sarà rilasciata dopo un periodo sufficientemente
-lungo di test. Tieni a mente le seguenti cose quando fai esperimenti con
-Scidc:
+Scidc è ancora in fase beta. Sono possibili errori e funzionalità incomplete
+&ndash; i commenti sono benvenuti.
 </p>
 
-<ol>
-  <li class="space">
-    Questa versione contiene molte informazioni di debugging ed è quindi
-    lenta in diversi punti.
-  </li>
+<h2>Note importanti</h2>
 
-<!--
+<ul>
   <li class="space">
-    Il supporto al formato database di Scid (.si3/.si4) è reso possibile
-    da una emulazione piuttosto complessa che non è stata ancora testata
-    a sufficienza.
-	  <annotation>
-    Quindi per favore non modificare i tuoi database originali in formato
-    Scid con questo programma.
-    </annotation>
-    Per default i database Scid saranno aperti in modalità sola-lettura,
-    che ovviamente non comporta problemi.
-  </li>
--->
-
-  <li class="space">
-    Il formato di Scidb attuale (.sci) sarà finito al più tardi con il
-    rilascio della prima versione completa (cioè quando sarà raggiunta
-    la versione 1.0 o superiore, la versione corrente è la 0.94).
-    Nonostante ciò il formato attuale è del tutto utilizzabile, e sarà
-    possibile aggiornarlo in futuro.
+    Il formato Scidb (<abbr>.sci</abbr>/<abbr>.scv</abbr>) non sarà ulteriormente sviluppato
+    e viene congelato allo stato attuale.
+    Il nuovo formato predefinito è il formato <abbr>.si5</abbr> di Scid.
   </li>
 
   <li class="space">
-    Il supporto al formato database di Chessbase (.cbh) non è ancora finito.
-    Ad oggi questo programma non può aprire partite di Scacchi 960.
+    Anche il supporto al formato ChessBase (<abbr>.cbh</abbr>) viene
+    congelato allo stato attuale e non sarà ulteriormente esteso.
   </li>
-
-  <li class="space">
-    Col tempo saranno rilasciate nuove versioni di test.
-  </li>
-</ol>
-
-<p>
-Divertitevi con Scidc, il cui sviluppo ha richiesto già nove anni!
-</p>
+</ul>
 
 <h2>Links</h2>
 

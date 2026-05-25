@@ -1,4 +1,4 @@
- <!-- ======================================================================
+<!-- ======================================================================
 * Author : $Author$
 * Version: $Revision$
 * Date   : $Date$
@@ -19,49 +19,24 @@
 TITLE Welcome to Scidc!
 
 <p>
-This is a preliminary version of Scidc for try-out and testing. The first
-full version will be released after a sufficiently long test period. Please
-consider when experimenting with Scidc:
+Scidc is still in beta stage. Bugs and incomplete features are
+possible &ndash; feedback is welcome.
 </p>
 
-<ol>
-  <li class="space">
-    This version contains a lot of debugging information and is accordingly
-    slow in several places.
-  </li>
+<h2>Important Notes</h2>
 
-<!--
+<ul>
   <li class="space">
-    The support of Scid databases (.si3/.si4) is performed by a quite complex
-    emulation which is not yet sufficiently tested.
-	  <annotation>
-    Therefore please do not edit your original Scid databases with this program.
-    </annotation>
-    Per default the Scid databases will be opened in read-only mode, which is
-    of course uncritical.
-  </li>
--->
-
-  <li class="space">
-    The current Scidb format (.sci) will be finished at latest with the first
-    full version (i.e. it will reach version 1.0 later, the current version
-    is 0.94). Nevertheless the current format is already fully usable, and there
-    will be offered an upgrade capability.
+    The Scidb format (<abbr>.sci</abbr>/<abbr>.scv</abbr>) will no longer be developed
+    further and is frozen at its current state.
+    The new default format is the <abbr>.si5</abbr> format from Scid.
   </li>
 
   <li class="space">
-    The support of the ChessBase format (.cbh) is not yet finished. Currently
-    this application cannot open Chess 960 games.
+    Support for the ChessBase format (<abbr>.cbh</abbr>) is also
+    frozen at its current state and will not be extended further.
   </li>
-
-  <li class="space">
-    From time to time a newer test version will be released.
-  </li>
-</ol>
-
-<p>
-Have a lot of fun with Scidc, whose development has already taken nine years!
-</p>
+</ul>
 
 <h2>Links</h2>
 

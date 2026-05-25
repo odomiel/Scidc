@@ -19,50 +19,24 @@
 TITLE ¡Bienvenido a Scidc!
 
 <p>
-Esta es una versión preliminar de prueba de Scidc. La primera versión completa
-será liberada luego de un período de testeo suficientemente prolongado. Por favor,
-tenga en cuenta al experimentar con Scidc:
+Scidc se encuentra todavía en etapa beta. Son posibles errores y funciones incompletas
+&ndash; los comentarios son bienvenidos.
 </p>
 
-<ol>
-  <li style="margin-top: 0.5em; ">
-    Que esta versión contiene gran cantidad de información de depurado y, por lo tanto,
-    será lenta en algunas partes.
-  </li>
+<h2>Notas importantes</h2>
 
-<!--
+<ul>
   <li style="margin-top: 0.5em; ">
-    Que el soporte de las bases de datos de Scid (.si3/.si4) se realiza mediante una 
-    emulación bastante compleja que aún no ha sido probada en forma suficiente.
-	  <annotation>
-    Debido a esto, por favor, no edite sus bases de datos originales de Scid con este 
-    programa.
-    </annotation>
-    Que en forma predeterminada las bases de datos Scid se abrirán en modo de 
-    sólo-lectura, el cual es - por supuesto - más seguro.
-  </li>
--->
-
-  <li style="margin-top: 0.5em; ">
-    Que el actual formato Scidc (.sci) estará terminado, a más tardar, para la primera
-    versión completa (i.e. cuando se alcance la versión 1.0, la actual es la 0.94). 
-    No obstante, el formato actual ya es completamente utilizable y se ofrecerá la 
-    capacidad de actualizarlo en el futuro.
+    El formato Scidb (<abbr>.sci</abbr>/<abbr>.scv</abbr>) no se desarrollará más
+    y queda congelado en su estado actual.
+    El nuevo formato estándar es el formato <abbr>.si5</abbr> de Scid.
   </li>
 
   <li style="margin-top: 0.5em; ">
-    Que el soporte del formato ChessBase (.cbh) aún no está terminado. Actualmente
-    esta aplicación no puede abrir partidas de ajedrez Chess 960.
+    El soporte del formato ChessBase (<abbr>.cbh</abbr>) también queda
+    congelado en su estado actual y no se ampliará más.
   </li>
-
-  <li style="margin-top: 0.5em; ">
-    Que de vez en cuando se liberará una nueva versión de prueba.
-  </li>
-</ol>
-
-<p>
-¡Diviértase mucho con Scidc, cuyo desarrollo ya ha tomado nueve años!
-</p>
+</ul>
 
 <h2>Links</h2>
 

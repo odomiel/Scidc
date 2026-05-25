@@ -19,49 +19,24 @@
 TITLE Willkommen zu Scidc!
 
 <p>
-Dies ist eine Vorabversion von Scidc zum Ausprobieren und Testen. Die erste Vollversion
-wird erst nach einer genügend langen Testphase erscheinen. Beim Ausprobieren dieser
-Version sollte folgendes berücksichtigt werden:
+Scidc befindet sich noch im Beta-Stadium. Fehler und unvollständige Funktionen sind
+möglich &ndash; Rückmeldungen sind willkommen.
 </p>
 
-<ol>
-  <li class="space">
-    Diese Version enthält viele Debugging-Informationen und ist an einigen Stellen
-    noch entsprechend langsam.
-  </li>
+<h2>Wichtige Hinweise</h2>
 
-<!--
+<ul>
   <li class="space">
-    Die Unterstützung der Scid-Datenbanken (<abbr>.si3</abbr>/<abbr>.si4</abbr>) erfolgt
-    durch eine recht komplexe Emulation, die noch nicht genügend ausgetestet ist.
-	  <annotation>
-      Also bitte nicht die Original-Scid-Datenbanken mit diesem Programm bearbeiten.
-    </annotation>
-    Standardmäßig werden die Scid-Datenbanken nur im Lesemodus, der natürlich unkritisch
-    ist, geöffnet.
-  </li>
--->
-
-  <li class="space">
-    Das aktuelle Scidb-Format (<abbr>.sci</abbr>) wird spätestens mit der ersten Vollversion
-    vollendet (d.h. Versionsnummer 1.0 erreichen, die aktuelle Versionsnummer ist 0.94). Das
-    aktuelle Format ist aber bereits voll einsetzbar und es wird eine Upgrade-Möglichkeit
-    geben.
+    Das Scidb-Format (<abbr>.sci</abbr>/<abbr>.scv</abbr>) wird nicht mehr weiterentwickelt
+    und bleibt auf dem aktuellen Stand eingefroren.
+    Das neue Standardformat ist das <abbr>.si5</abbr>-Format von Scid.
   </li>
 
   <li class="space">
-    Die Unterstützung des ChessBase-Formats (<abbr>.cbh</abbr>) ist noch nicht vollendet. Zur Zeit
-    können z.B. keine Schach-960 Partien gelesen werden.
+    Die Unterstützung des ChessBase-Formats (<abbr>.cbh</abbr>) wird ebenfalls
+    auf dem aktuellen Stand eingefroren und nicht weiter ausgebaut.
   </li>
-
-  <li class="space">
-    Von Zeit zu Zeit wird eine aktuellere Testversion veröffentlicht werden.
-  </li>
-</ol>
-
-<p>
-Viel Freude mit Scidc, dessen Entwicklung bisher bereits neun Jahre in Anspruch genommen hat!
-</p>
+</ul>
 
 <h2>Links</h2>
 
