@@ -62,6 +62,13 @@ cp tcl/lang/*.tcl "$SHAREDIR/lang/"
 # Engines-Konfiguration synchronisieren
 cp tcl/engines/engines.dat "$SHAREDIR/engines/engines.dat"
 
+# Hilfe-HTML-Dateien synchronisieren
+find tcl/help -name "*.html" | while read f; do
+    rel="${f#tcl/help/}"
+    dest="$SHAREDIR/help/$rel"
+    [ -f "$dest" ] && cp "$f" "$dest"
+done
+
 # Engines retten, bevor bin/ geleert wird
 mkdir -p /tmp/_scidc_engine_backup
 for engine in stockfish-scidc fairy-stockfish-scidc; do

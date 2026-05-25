@@ -70,6 +70,7 @@ Bedingungslos geplantes `after idle` feuert während `perform()` via `update idl
 `build-appimage.sh` synchronisiert bei jedem Build automatisch:
 - `tcl/lang/*.tcl` → `AppDir/usr/share/scidc-beta/lang/`
 - `tcl/engines/engines.dat` → `AppDir/usr/share/scidc-beta/engines/engines.dat`
+- `tcl/help/**/*.html` → `AppDir/usr/share/scidc-beta/help/` (nur existierende Dateien)
 
 Benutzerdaten liegen in `~/.scidc-beta/` (abgeleitet aus dem Executable-Namen `tkscidc-beta`).
 
