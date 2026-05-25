@@ -47,6 +47,7 @@ set BoardThemeDesign		"Board theme design"
 set FlagsDesign			"Miniature flags design"
 set IconDesign				"Icon design"
 set ScidcDevelopment		"Scidc Development"
+set AIAssistance			"AI-assisted Development"
 set Development			"Scidb Development"
 set DevelopmentOfUnCBV	"Development of unzipping CBV archives"
 set Programming			"Programming"
@@ -330,6 +331,11 @@ proc DisplayContributions {w} {
 			<h1>$mc::ScidcDevelopment</h1>
 			<hr/>
 			<p>[Name {Mirik}]</p>
+		</div>
+		<div class='box'>
+			<h1>$mc::AIAssistance</h1>
+			<hr/>
+			<p>[Name {Claude · Anthropic}]</p>
 		</div>
 		<div class='box'>
 			<h1>$mc::Development</h1>

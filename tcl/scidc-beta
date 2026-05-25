@@ -85305,7 +85305,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 		set col 3
 		foreach deg {0 90 180 270} {
 			set Browser($deg,$which) [ttk::checkbutton $rot.b$deg \
-				-text "$degï¿½" \
+				-text "$deg°" \
 				-variable [namespace current]::${canv}::Browser(rotation) \
 				-onvalue $deg \
 				-command [namespace code [list SendSelected $top.container]] \
@@ -86687,7 +86687,7 @@ proc SelectTexture {parent which} {
 	foreach deg {0 90 180 270} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton $lt.b$deg \
-				-text "$degï¿½" \
+				-text "$deg°" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \
@@ -88401,7 +88401,7 @@ proc MakeSquareFrame {f which} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton \
 				$rot.b$deg \
-				-text "$degï¿½" \
+				-text "$deg°" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \
@@ -145962,6 +145962,7 @@ set BoardThemeDesign		"Board theme design"
 set FlagsDesign			"Miniature flags design"
 set IconDesign				"Icon design"
 set ScidcDevelopment		"Scidc Development"
+set AIAssistance			"AI-assisted Development"
 set Development			"Scidb Development"
 set DevelopmentOfUnCBV	"Development of unzipping CBV archives"
 set Programming			"Programming"
@@ -146244,6 +146245,11 @@ proc DisplayContributions {w} {
 			<h1>$mc::ScidcDevelopment</h1>
 			<hr/>
 			<p>[Name {Mirik}]</p>
+		</div>
+		<div class='box'>
+			<h1>$mc::AIAssistance</h1>
+			<hr/>
+			<p>[Name {Claude · Anthropic}]</p>
 		</div>
 		<div class='box'>
 			<h1>$mc::Development</h1>
