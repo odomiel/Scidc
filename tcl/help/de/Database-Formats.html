@@ -51,7 +51,11 @@ Scidc unterstützt folgende Formate:
   </li>
   <li>
     <img src="../images/ft-scid.png" alt="" />
-    <a href="#Scid">Scid</a>
+    <a href="#Scid5">Scid (.si5)</a>
+  </li>
+  <li>
+    <img src="../images/ft-scid.png" alt="" />
+    <a href="#Scid">Scid (.si4, .si3)</a>
   </li>
   <li>
     <img src="../images/ft-chessbase.png" alt="" />
@@ -76,7 +80,7 @@ Scidb (<abbr>.sci</abbr>)
 Das Scidb-Format wird von Scidc vollständig unterstützt. Es ist jedoch nicht das
 Standardformat für neue Datenbanken &ndash; als Standardformat wird das
 <abbr>.si5</abbr>-Format von Scid empfohlen
-(<see/> <a href="#Scid">Scid (.si5)</a>).
+(<see/> <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <p>
@@ -138,15 +142,47 @@ Der Piktogrammsatz (.scj) wird angelegt, sobald im Auswahldialog für das Datenb
 ausgewählt werden.
 </p>
 
-<h2 id="Scid">
+<h2 id="Scid5">
 <img src="../images/ft-scid.png" alt="" />
-Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>)
+Scid (<abbr>.si5</abbr>) &ndash; Standardformat
 </h2>
 
 <p>
-Dies ist Scid's Datenbankformat und wird aufgrund des hohen
-Verbreitungsgrades vollständig unterstützt. Es kann mit diesem Format jedoch nicht
-der volle Umfang von Scidc genutzt werden.
+Das <abbr>.si5</abbr>-Format ist das neue Standardformat von Scidc. Es handelt sich um
+das aktuelle Datenbankformat des Scid-Projekts. Die Unterstützung in Scidc befindet
+sich noch in der Entwicklung.
+</p>
+
+<p>
+Eine Datenbank im Scid-5-Format besteht aus folgenden Dateien:
+</p>
+
+<div class='box'>
+  <table style="margin-top: 0.5em; margin-bottom: 0.5em;">
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.si5</kbd></td><td>=&nbsp;</td>
+      <td>Partiendaten</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sg5</kbd></td><td>=&nbsp;</td>
+      <td>Partiezüge, Kommentare, Anmerkungen und PGN-Tags</td>
+    </tr>
+    <tr valign="top">
+      <td nowrap="nowrap"><kbd>.sn5</kbd></td><td>=&nbsp;</td>
+      <td>Spieler/Ereignis/Ort/Runden-Daten</td>
+    </tr>
+  </table>
+</div>
+
+<h2 id="Scid">
+<img src="../images/ft-scid.png" alt="" />
+Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; älteres Format
+</h2>
+
+<p>
+Das ältere Scid-Format (.si4/.si3) wird von Scidc im Lesemodus unterstützt.
+Für neue Datenbanken wird das <abbr>.si5</abbr>-Format empfohlen
+(<see/> <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
 <div class='annotation'><img src='../images/annotation.png' style='float:left; margin:0 1em 0 0' alt='annotation' />
