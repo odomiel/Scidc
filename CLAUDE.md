@@ -14,10 +14,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **CRITICAL: Jede Codeänderung sofort committen** – niemals mehrere Änderungen ohne Commit ansammeln
 - **Niemals `make` aufrufen** – User baut manuell
 - `./configure` überschreibt `Makefile.in` – persistente Änderungen müssen **auch in `configure`** gemacht werden
-- **Versionsnummer** bei jedem Code-Commit in 3 Dateien synchron erhöhen:
+- **Versionsnummer** bei jedem Code-Commit in **4 Dateien** synchron erhöhen:
   - `Makefile.version` (Zeile `SCIDB_VERSION`)
   - `src/tcl/tcl_misc.cpp` (CODEBLOCKS-Block, Zeile ~72: `# define SCIDB_VERSION`)
   - `tcl/exec.tcl` (Zeile ~41: `set version "..."` im `namespace eval scidc` Block)
+  - `tcl/scidc-beta` (Zeile ~41: `set version "..."` – Bundle, via Python Binary-I/O da mixed-encoding)
 - Standard: **C++14** (`-std=c++14`), keine C++17-Features
 
 ---
@@ -248,9 +249,23 @@ Ersetzt den klassischen minizip 1.01e – API ist **vollständig verschieden**.
 ## Hilfe-System (`tcl/help/`)
 
 - Hilfetexte als `.txt`-Quellen → per `make_html.tcl` zu `.html` konvertiert
+- Da `make` nicht aufgerufen wird: **`.txt` UND `.html` immer manuell synchron bearbeiten**
 - Inhaltsverzeichnis: `tcl/help/de/Contents.dat` (und je Sprache analog)
 - Sprachen: `de/` (vollständigste), `en/`, `es/`, `it/`, `hu/`, `sv/`
 - SCI/SCV-Formatbeschreibungen bleiben „Scidb" (das ist der Formatinhaber)
+
+### Encodings der Hilfedateien
+- `tcl/help/de/*.txt` – **ISO-8859-1** (Latin-1) → Python Binary-I/O verwenden
+- `tcl/help/en/*.txt`, `es/*.txt`, `it/*.txt`, `hu/*.txt`, `sv/*.txt` – **UTF-8**
+- `.html`-Dateien: immer **UTF-8** (alle Sprachen)
+
+### AppDir-Sync für Hilfe-HTML
+`build-appimage.sh` kopiert nur Dateien, die **bereits in AppDir existieren** (`[ -f "$dest" ] && cp`).  
+Bei **neuen** Hilfe-Dateien muss der erste Kopiervorgang manuell erfolgen:
+```bash
+cp tcl/help/de/NeueDatei.html AppDir/usr/share/scidc-beta/help/de/
+```
+Danach übernimmt `build-appimage.sh` automatisch.
 
 **Stand der Dokumentation** (analysiert 2026-05-21):
 - **13 Einträge in `Contents.dat` ohne .txt-Quelldatei** (geplant aber nie geschrieben): Listenfenster (Partienliste, Spielerliste, Orteliste, Veranstaltungsliste, Kommentatorenliste), Fenster (Partietext, Partienhistorie, Schachbrett, Zugbaum, Zugbaumpartienliste, Kreuztabelle), Dialoge (Partienimport, Datenbankenexport)
