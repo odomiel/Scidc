@@ -30,6 +30,7 @@ Scidc è ancora in fase beta. Sono possibili errori e funzionalità incomplete
     Il formato Scidb (<abbr>.sci</abbr>/<abbr>.scv</abbr>) non sarà ulteriormente sviluppato
     e viene congelato allo stato attuale.
     Il nuovo formato predefinito è il formato <abbr>.si5</abbr> di Scid.
+    Tuttavia, il supporto è ancora in fase di sviluppo.
   </li>
 
   <li class="space">

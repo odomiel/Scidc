@@ -30,6 +30,7 @@ möglich &ndash; Rückmeldungen sind willkommen.
     Das Scidb-Format (<abbr>.sci</abbr>/<abbr>.scv</abbr>) wird nicht mehr weiterentwickelt
     und bleibt auf dem aktuellen Stand eingefroren.
     Das neue Standardformat ist das <abbr>.si5</abbr>-Format von Scid.
+    Die Unterstützung befindet sich jedoch noch in der Entwicklung.
   </li>
 
   <li class="space">

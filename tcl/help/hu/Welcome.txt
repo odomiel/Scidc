@@ -30,6 +30,7 @@ A Scidc még béta stádiumban van. Hibák és hiányos funkciók lehetségesek
     A Scidb formátum (<abbr>.sci</abbr>/<abbr>.scv</abbr>) továbbiakban nem kerül fejlesztésre
     és jelenlegi állapotában befagyasztásra kerül.
     Az új alapértelmezett formátum a Scid <abbr>.si5</abbr> formátuma.
+    A támogatás azonban még fejlesztés alatt áll.
   </li>
 
   <li class="space">
