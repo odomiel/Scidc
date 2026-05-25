@@ -63,6 +63,10 @@ El formato Scidb está completamente soportado por Scidc. Sin embargo, no es el
 formato predeterminado para nuevas bases de datos &ndash; el nuevo formato predeterminado
 es el formato <abbr>.si5</abbr> de Scid
 (<see/> <a href="#Scid5">Scid (.si5)</a>).
+
+<annotation>
+El formato Scidb (.sci) ya no está en desarrollo activo y permanece congelado en su estado actual.
+</annotation>
 </p>
 
 <NEW>
@@ -208,6 +212,10 @@ contempla el modo sólo-lectura. No toda la información de las partidas puede s
 leída en forma correcta; en algunas partidas puede aparecer el mensaje de 
 decodificación fallida.
 </p>
+
+<annotation>
+El soporte del formato ChessBase (.cbh) está congelado en su estado actual y no se desarrollará más.
+</annotation>
 
 <annotation>
 Las bases de datos ChessBase no podrán utilizarse como bases de referencia.

@@ -65,6 +65,10 @@ Standardformat für neue Datenbanken &ndash; als Standardformat wird das
 (<see/> <a href="#Scid5">Scid (.si5)</a>).
 </p>
 
+<annotation>
+Das Scidb-Format (.sci) wird nicht mehr weiterentwickelt und bleibt auf dem aktuellen Stand eingefroren.
+</annotation>
+
 <p>
 Nur das Scidb-Format (sowie das PGN-Format) speichert Partien verschiedener Schachformen
 (<see/> <a href="Chess-Variants.html">Unterstützte Schachformen</a>).
@@ -219,6 +223,10 @@ ChessBase (<abbr>.cbh</abbr>, <abbr>.cbf</abbr>)
 <p>
 Es werden beide Formate unterstützt; das neue Format <abbr>.cbh</abbr> sowie das alte Format <abbr>.cbf</abbr>.
 </p>
+
+<annotation>
+Die Unterstützung des ChessBase-Formats (.cbh) wird auf dem aktuellen Stand eingefroren und nicht weiter ausgebaut.
+</annotation>
 
 <p>
 Die Firma <a href="http://www.chessbase.de">ChessBase</a> hält das Format dieser

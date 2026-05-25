@@ -63,6 +63,10 @@ predefinito per i nuovi database &ndash; il nuovo formato predefinito è il form
 <abbr>.si5</abbr> di Scid
 (<see/> <a href="#Scid5">Scid (.si5)</a>).
 
+<annotation>
+Il formato Scidb (.sci) non è più in sviluppo attivo e rimane congelato al suo stato attuale.
+</annotation>
+
 <p>
 Solo il formato Scidc (e il formato PGN) possono contenere partite di diverse varianti degli scacchi
 (<see/> <a href="Chess-Variants.html">Varianti degli scacchi supportate</a>).
@@ -209,6 +213,10 @@ Generalmente, questo database ha codifica con set caratteri CP1252
 set caratteri durante l'apertura del database può essere necessaria, per assicurare
 una corretta visualizzazione dei nomi e di altro testo.
 </p>
+
+<annotation>
+Il supporto per il formato ChessBase (.cbh) è congelato al suo stato attuale e non verrà ulteriormente sviluppato.
+</annotation>
 
 <p>
 Il formato database di ChessBase è diviso in diversi file separati, quelli più importanti sono:
