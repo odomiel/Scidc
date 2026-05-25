@@ -42,7 +42,6 @@ möglich &ndash; Rückmeldungen sind willkommen.
 
 <dir>
   <li><a href="Whats-New.html">Was ist neu?</a></li>
-  <li><a href="Development-Roadmap.html">Entwicklungsplanung</a></li>
 </dir>
 
 <!-- END -->

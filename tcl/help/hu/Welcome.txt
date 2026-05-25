@@ -42,7 +42,6 @@ A Scidc még béta stádiumban van. Hibák és hiányos funkciók lehetségesek
 
 <dir>
   <li><a href="Whats-New.html">What's new?</a></li>
-  <li><a href="Development-Roadmap.html">Development roadmap</a></li>
 </dir>
 
 <!-- END -->
