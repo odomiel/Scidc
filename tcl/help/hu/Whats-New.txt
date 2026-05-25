@@ -18,15 +18,39 @@
 
 TITLE Mi újság?
 
-<h3>Scidc 26.05.25 Beta</h3>
+<p>A Scidc a Scidb r1531 forkja. A következők kerültek hozzáadásra, módosításra
+vagy javításra a fork óta:</p>
+
+<h3>Új Funkciók</h3>
 
 <ul style="padding: 5px;">
-  <li class="space">A Scidc a Scidb r1531 forkja.</li>
-  <li class="space">Az új alapértelmezett formátum a Scid <abbr>.si5</abbr> formátuma.</li>
-  <li class="space">A Scidb formátum (<abbr>.sci</abbr>/<abbr>.scv</abbr>) befagyasztva, nem fejlesztik tovább.</li>
-  <li class="space">A ChessBase formátum (<abbr>.cbh</abbr>) támogatása befagyasztva.</li>
-  <li class="space">Javítva a fájlkiválasztó párbeszédablak összeomlása.</li>
-  <li class="space">Hiányzó motorbejegyzések pótolva.</li>
+  <li class="space"><abbr>.si5</abbr> formátum: olvasás, írás, exportálás és új adatbázisok létrehozása (a támogatás még fejlesztés alatt áll)</li>
+  <li class="space">Éjszakai mód (sötét mód): új TTK téma sötét színsémával</li>
+  <li class="space">A Stockfish 18 és a Fairy-Stockfish 14 felváltja a korábbi Sjeng motort</li>
+  <li class="space">FIDE játékos szótár: egyetlen kattintással frissíthető közvetlenül az alkalmazásban</li>
+  <li class="space">DWZ értékelések (német sakk-értékelés) adatforrásként integrálva</li>
+  <li class="space">Antichess (Losers sakk) hozzáadva sakkvariánsként</li>
+  <li class="space">"Teljes előzmény törlése" opció a kezdőképernyő helyi menüjében</li>
+  <li class="space"><abbr>.si5</abbr> hozzáadva a fájltípus-hozzárendelési párbeszédablakhoz</li>
+  <li class="space">Hibakeresési almenü a Beállítások alatt</li>
+</ul>
+
+<h3>Eltávolított Funkciók</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Játékos fotók alrendszer eltávolítva</li>
+  <li class="space">Motor konzol eltávolítva a menüből</li>
+  <li class="space">Motor szótár eltávolítva</li>
+</ul>
+
+<h3>Hibajavítások</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Javítva a fájlkiválasztó párbeszédablak összeomlása</li>
+  <li class="space">Hiányzó motorbejegyzések pótolva</li>
+  <li class="space">Különböző SI5 exportálási és importálási hibák javítva</li>
+  <li class="space">Számos sötét módú megjelenítési hiba javítva</li>
+  <li class="space">Az első indításkori nyelvválasztó párbeszédablak javítva</li>
 </ul>
 
 END

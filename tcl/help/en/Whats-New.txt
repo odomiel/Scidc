@@ -18,15 +18,39 @@
 
 TITLE What's new?
 
-<h3>Scidc 26.05.25 Beta</h3>
+<p>Scidc is a fork of Scidb r1531. The following has been added, changed,
+or fixed since the fork:</p>
+
+<h3>New Features</h3>
 
 <ul style="padding: 5px;">
-  <li class="space">Scidc is a fork of Scidb r1531.</li>
-  <li class="space">New default format is the <abbr>.si5</abbr> format from Scid.</li>
-  <li class="space">The Scidb format (<abbr>.sci</abbr>/<abbr>.scv</abbr>) is frozen and will no longer be developed.</li>
-  <li class="space">Support for the ChessBase format (<abbr>.cbh</abbr>) is frozen.</li>
-  <li class="space">Fixed crash in file selection dialog.</li>
-  <li class="space">Fixed missing engine entries.</li>
+  <li class="space"><abbr>.si5</abbr> format: read, write, export and create new databases (support still under development)</li>
+  <li class="space">Night Mode (dark mode): new TTK theme with dark color scheme</li>
+  <li class="space">Stockfish 18 and Fairy-Stockfish 14 replace the former Sjeng engine</li>
+  <li class="space">FIDE player dictionary: one-click update directly in the app</li>
+  <li class="space">DWZ ratings (German chess rating) integrated as data source</li>
+  <li class="space">Antichess added as chess variant</li>
+  <li class="space">"Clear entire history" option in start screen context menu</li>
+  <li class="space"><abbr>.si5</abbr> added to file type assignment dialog</li>
+  <li class="space">Debugging submenu under Settings</li>
+</ul>
+
+<h3>Removed Features</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Player photos subsystem removed</li>
+  <li class="space">Engine console removed from menu</li>
+  <li class="space">Engine dictionary removed</li>
+</ul>
+
+<h3>Bug Fixes</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Fixed crash in file selection dialog</li>
+  <li class="space">Fixed missing engine entries</li>
+  <li class="space">Various SI5 export and import bugs fixed</li>
+  <li class="space">Numerous dark mode rendering issues fixed</li>
+  <li class="space">First-run language selection dialog fixed</li>
 </ul>
 
 END

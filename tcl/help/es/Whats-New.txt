@@ -18,15 +18,39 @@
 
 TITLE ¿Qué hay de nuevo?
 
-<h3>Scidc 26.05.25 Beta</h3>
+<p>Scidc es un fork de Scidb r1531. Lo siguiente ha sido añadido, cambiado
+o corregido desde el fork:</p>
+
+<h3>Nuevas Funciones</h3>
 
 <ul style="padding: 5px;">
-  <li class="space">Scidc es un fork de Scidb r1531.</li>
-  <li class="space">El nuevo formato predeterminado es el formato <abbr>.si5</abbr> de Scid.</li>
-  <li class="space">El formato Scidb (<abbr>.sci</abbr>/<abbr>.scv</abbr>) está congelado y no se desarrollará más.</li>
-  <li class="space">El soporte del formato ChessBase (<abbr>.cbh</abbr>) está congelado.</li>
-  <li class="space">Corrección de un fallo en el diálogo de selección de archivos.</li>
-  <li class="space">Corrección de entradas de motor faltantes.</li>
+  <li class="space">Formato <abbr>.si5</abbr>: leer, escribir, exportar y crear nuevas bases de datos (soporte aún en desarrollo)</li>
+  <li class="space">Modo nocturno (modo oscuro): nuevo tema TTK con esquema de color oscuro</li>
+  <li class="space">Stockfish 18 y Fairy-Stockfish 14 reemplazan al antiguo motor Sjeng</li>
+  <li class="space">Diccionario de jugadores FIDE: actualización con un clic directamente en la app</li>
+  <li class="space">Puntuaciones DWZ (clasificación alemana de ajedrez) integradas como fuente de datos</li>
+  <li class="space">Antiajedrez añadido como variante de ajedrez</li>
+  <li class="space">Opción "Borrar todo el historial" en el menú contextual de la pantalla de inicio</li>
+  <li class="space"><abbr>.si5</abbr> añadido al diálogo de asignación de tipos de archivo</li>
+  <li class="space">Submenú de depuración bajo Ajustes</li>
+</ul>
+
+<h3>Funciones Eliminadas</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Subsistema de fotos de jugadores eliminado</li>
+  <li class="space">Consola de motor eliminada del menú</li>
+  <li class="space">Diccionario de motores eliminado</li>
+</ul>
+
+<h3>Errores Corregidos</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Corregido un fallo en el diálogo de selección de archivos</li>
+  <li class="space">Corregidas entradas de motor faltantes</li>
+  <li class="space">Varios errores de exportación e importación SI5 corregidos</li>
+  <li class="space">Numerosos problemas de visualización en modo oscuro corregidos</li>
+  <li class="space">Corregido el diálogo de selección de idioma en el primer inicio</li>
 </ul>
 
 END

@@ -18,15 +18,39 @@
 
 TITLE Novità
 
-<h3>Scidc 26.05.25 Beta</h3>
+<p>Scidc è un fork di Scidb r1531. Le seguenti funzionalità sono state aggiunte,
+modificate o corrette dal fork:</p>
+
+<h3>Nuove Funzionalità</h3>
 
 <ul style="padding: 5px;">
-  <li class="space">Scidc è un fork di Scidb r1531.</li>
-  <li class="space">Il nuovo formato predefinito è il formato <abbr>.si5</abbr> di Scid.</li>
-  <li class="space">Il formato Scidb (<abbr>.sci</abbr>/<abbr>.scv</abbr>) è congelato e non sarà più sviluppato.</li>
-  <li class="space">Il supporto al formato ChessBase (<abbr>.cbh</abbr>) è congelato.</li>
-  <li class="space">Risolto un crash nella finestra di selezione dei file.</li>
-  <li class="space">Aggiunte voci di motore mancanti.</li>
+  <li class="space">Formato <abbr>.si5</abbr>: lettura, scrittura, esportazione e creazione di nuovi database (supporto ancora in sviluppo)</li>
+  <li class="space">Modalità notte (modalità scura): nuovo tema TTK con schema di colori scuro</li>
+  <li class="space">Stockfish 18 e Fairy-Stockfish 14 sostituiscono il precedente motore Sjeng</li>
+  <li class="space">Dizionario giocatori FIDE: aggiornamento con un clic direttamente nell'app</li>
+  <li class="space">Valutazioni DWZ (classificazione scacchistica tedesca) integrate come fonte dati</li>
+  <li class="space">Antiscacchi aggiunto come variante degli scacchi</li>
+  <li class="space">Opzione "Cancella intera cronologia" nel menu contestuale della schermata iniziale</li>
+  <li class="space"><abbr>.si5</abbr> aggiunto alla finestra di assegnazione tipi di file</li>
+  <li class="space">Sottomenu di debug sotto Impostazioni</li>
+</ul>
+
+<h3>Funzionalità Rimosse</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Sottosistema foto giocatori rimosso</li>
+  <li class="space">Console motore rimossa dal menu</li>
+  <li class="space">Dizionario motori rimosso</li>
+</ul>
+
+<h3>Correzioni di Bug</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Risolto un crash nella finestra di selezione dei file</li>
+  <li class="space">Aggiunte voci di motore mancanti</li>
+  <li class="space">Vari bug di esportazione e importazione SI5 corretti</li>
+  <li class="space">Numerosi problemi di visualizzazione in modalità scura corretti</li>
+  <li class="space">Corretta la finestra di selezione della lingua al primo avvio</li>
 </ul>
 
 END

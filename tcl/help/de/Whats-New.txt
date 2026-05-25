@@ -18,15 +18,39 @@
 
 TITLE Was ist neu?
 
-<h3>Scidc 26.05.25 Beta</h3>
+<p>Scidc ist ein Fork von Scidb r1531. Folgendes wurde seit dem Fork hinzugefügt,
+geändert oder behoben:</p>
+
+<h3>Neue Funktionen</h3>
 
 <ul style="padding: 5px;">
-  <li class="space">Scidc ist ein Fork von Scidb r1531.</li>
-  <li class="space">Neues Standardformat ist das <abbr>.si5</abbr>-Format von Scid.</li>
-  <li class="space">Das Scidb-Format (<abbr>.sci</abbr>/<abbr>.scv</abbr>) ist eingefroren und wird nicht mehr weiterentwickelt.</li>
-  <li class="space">Die Unterstützung des ChessBase-Formats (<abbr>.cbh</abbr>) ist eingefroren.</li>
-  <li class="space">Absturz beim Dateiauswahldialog behoben.</li>
-  <li class="space">Fehlende Engine-Einträge ergänzt.</li>
+  <li class="space"><abbr>.si5</abbr>-Format: Lesen, Schreiben, Exportieren und neue Datenbanken erstellen (Unterstützung noch in Entwicklung)</li>
+  <li class="space">Night Mode (Dunkelmodus): neues TTK-Theme mit dunklem Farbschema</li>
+  <li class="space">Stockfish 18 und Fairy-Stockfish 14 ersetzen den bisherigen Sjeng-Motor</li>
+  <li class="space">FIDE-Spielerlexikon: Aktualisierung per Knopfdruck direkt in der App</li>
+  <li class="space">DWZ-Ratings (Deutsche Wertungszahl) als Datenquelle integriert</li>
+  <li class="space">Antischach (Antichess) als Schachvariante ergänzt</li>
+  <li class="space">&bdquo;Gesamten Verlauf löschen&ldquo;-Option im Startbildschirm-Kontextmenü</li>
+  <li class="space"><abbr>.si5</abbr> in Dateitypen-Zuordnungsdialog aufgenommen</li>
+  <li class="space">Debugging-Untermenü unter Einstellungen</li>
+</ul>
+
+<h3>Entfernte Funktionen</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Spielerfotos-Subsystem entfernt</li>
+  <li class="space">Engine-Konsole aus dem Menü entfernt</li>
+  <li class="space">Motorenlexikon entfernt</li>
+</ul>
+
+<h3>Behobene Fehler</h3>
+
+<ul style="padding: 5px;">
+  <li class="space">Absturz beim Dateiauswahldialog behoben</li>
+  <li class="space">Fehlende Motor-Einträge ergänzt</li>
+  <li class="space">Diverse SI5-Export- und Import-Fehler behoben</li>
+  <li class="space">Zahlreiche Dark-Mode-Darstellungsfehler behoben</li>
+  <li class="space">Erster-Start-Sprachauswahl-Dialog korrigiert</li>
 </ul>
 
 END
