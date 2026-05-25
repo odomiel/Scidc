@@ -46,6 +46,7 @@ set ChessPieceDesign		"chess piece design"
 set BoardThemeDesign		"Board theme design"
 set FlagsDesign			"Miniature flags design"
 set IconDesign				"Icon design"
+set ScidcDevelopment		"Scidc Development"
 set Development			"Development"
 set DevelopmentOfUnCBV	"Development of unzipping CBV archives"
 set Programming			"Programming"
@@ -55,7 +56,6 @@ set TheMissingOnes		"the missing ones"
 
 set Version					"Version"
 set Distributed			"This program is distributed under the terms of the GNU General Public License."
-set Inspired				"Scidc is inspired by Scid 3.6.1, copyrighted \u00A9 1999-2003 by Shane Hudson."
 set SpecialThanks			"Special thanks to %s for his terrific work. His effort is the basis for this application."
 
 } ;# namespace mc
@@ -166,10 +166,10 @@ proc DisplayAbout {w} {
 		<br/><br/>
 		<font style='font-family: $fam; font-size: 12pt;'>
 			$mc::Version $::scidc::version<br/>
-			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/><br/>
+			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/>
+			Copyright &#x00A9; 2026 Mirik<br/><br/>
 			[Url http://scidb.sourceforge.net]<br/><br/>
 			$mc::Distributed<br/><br/>
-			<font style='font-size: 10pt;'>$mc::Inspired</font>
 		</font>
 	"
 }
@@ -326,6 +326,11 @@ proc BuildContributionsFrame {w} {
 
 proc DisplayContributions {w} {
 	$w parse "
+		<div class='box'>
+			<h1>$mc::ScidcDevelopment</h1>
+			<hr/>
+			<p>[Name {Mirik}]</p>
+		</div>
 		<div class='box'>
 			<h1>$mc::Development</h1>
 			<hr/>

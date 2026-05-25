@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "1.1.126 BETA"
+	set version "26.05.25 Beta"
 }
 
 

@@ -2400,7 +2400,6 @@
 
 ::info::mc::Version					"Version"
 ::info::mc::Distributed				"This program is distributed under the terms of the GNU General Public License."
-::info::mc::Inspired					"Scidc is inspired by Scid 3.6.1, copyrighted \u00A9 1999-2003 by Shane Hudson."
 ::info::mc::SpecialThanks			"Special thanks to %s for his terrific work. His effort is the basis for this application."
 
 ### comment ############################################################
