@@ -3,10 +3,20 @@
 *.a
 *.so
 src/tkscidb-beta
+src/tkscidc-beta
+src/tclscidb-beta
+src/tclscidc-beta
 src/cdb2sci
 src/cbh2si4
 build.log
 Scidb-x86_64.AppImage
+Scidc-x86_64.AppImage
 appimagetool-x86_64.AppImage
 AppDir/
 deps/
+
+# Temporary / local files
+debug.txt
+&1
+lizenzübersicht.txt
+fehler/
