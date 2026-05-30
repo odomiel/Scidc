@@ -1103,10 +1103,11 @@ rename ::tk::PostOverPoint ::tk::_PostOverPoint_application
 proc ::tk::PostOverPoint {menu x y {entry {}}} {
 	variable ::application::Vars
 
-	if {$Vars(menu:main) eq $menu} {
+	if {[string match "$Vars(menu:main).*" $menu]} {
 		set rx [winfo rootx .application]
 		set mw [winfo reqwidth $menu]
 		set x [expr {min($rx + [winfo width .application] - $mw, $x)}]
+		if {$x < $rx} { set x $rx }
 	}
 
 	::tk::_PostOverPoint_application $menu $x $y $entry
