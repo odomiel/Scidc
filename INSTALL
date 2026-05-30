@@ -27,12 +27,13 @@ Building
 
     bash build-tcltk.sh
 
-2. Compile the C++ code:
+2. Configure the build system (required on every fresh clone):
+
+    ./configure
+
+3. Compile the C++ code:
 
     make
-
-   If Makefile.in is missing or the system configuration has changed,
-   run ./configure first to regenerate it.
 
 3. Place the chess engine binaries (optional, for analysis features):
 

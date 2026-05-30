@@ -39,7 +39,11 @@ Aus dem Quellcode bauen
 
     bash build-tcltk.sh
 
-2. Kompilieren:
+2. Konfigurieren (bei jedem frischen Clone erforderlich):
+
+    ./configure
+
+3. Kompilieren:
 
     make
 

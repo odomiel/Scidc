@@ -39,7 +39,11 @@ Building from source
 
     bash build-tcltk.sh
 
-2. Compile:
+2. Configure (required on every fresh clone):
+
+    ./configure
+
+3. Compile:
 
     make
 
