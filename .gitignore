@@ -16,6 +16,7 @@ AppDir/
 deps/
 
 Makefile.in
+CLAUDE.md
 
 # Engine binaries (too large for git, build separately)
 engines/stockfish/stockfish-scidc
