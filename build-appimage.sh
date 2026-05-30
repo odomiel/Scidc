@@ -82,6 +82,8 @@ cp "$SRCBIN"    "$APPDIR/usr/bin/tkscidc-beta"
 cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 
 # --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
+ENGINE_RELEASE_URL="https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
+
 echo "Kopiere Schach-Engines..."
 for engine in stockfish-scidc fairy-stockfish-scidc; do
     engname="${engine%-scidc}"   # stockfish oder fairy-stockfish
@@ -96,7 +98,16 @@ for engine in stockfish-scidc fairy-stockfish-scidc; do
         cp "/tmp/_scidc_engine_backup/$engine" "$APPDIR/usr/bin/"
         echo "  $engine (aus vorherigem Build übernommen)"
     else
-        echo "  WARNUNG: $engine nicht gefunden — Engine fehlt im AppImage"
+        echo "  $engine nicht gefunden — lade von Codeberg herunter..."
+        if wget -q --show-progress \
+               "$ENGINE_RELEASE_URL/$engine" \
+               -O "$local_engine"; then
+            chmod +x "$local_engine"
+            cp "$local_engine" "$APPDIR/usr/bin/"
+            echo "  $engine (heruntergeladen)"
+        else
+            echo "  WARNUNG: $engine konnte nicht heruntergeladen werden — Engine fehlt im AppImage"
+        fi
     fi
 done
 rm -rf /tmp/_scidc_engine_backup
