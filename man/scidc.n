@@ -1,4 +1,4 @@
-.TH scidc 1 "February 1, 2012" scidc "Linux User's Manual"
+.TH scidc 1 "May 30, 2026" scidc "Linux User's Manual"
 .\" ==========================================================================
 .SH NAME
 .\" --------------------------------------------------------------------------
@@ -146,24 +146,9 @@ initialization, and change to the board tab.
 .\" ==========================================================================
 .SH AUTHOR
 .\" --------------------------------------------------------------------------
-Gregor Cramer
+Original Scidb author: Gregor Cramer.
 .br
-.ul
-http://scidc.sourceforge.net
-.\" ==========================================================================
-.SH BUGS
-.\" --------------------------------------------------------------------------
-For bug reports visit
-.br
-.ul
-http://sourceforge.net/p/scidc/bugs
-.\" ==========================================================================
-.SH FEATURE REQUESTS
-.\" --------------------------------------------------------------------------
-For feature requests visit
-.br
-.ul
-http://sourceforge.net/p/scidc/feature-requests
+Scidc is a fork of Scidb r1531.
 .\" ==========================================================================
 .SH FILES
 .\" --------------------------------------------------------------------------
@@ -187,7 +172,7 @@ File containing the saved options from last session.
 .\" ==========================================================================
 .SH LICENSE
 .\" --------------------------------------------------------------------------
-Copyright (c) Gregor Cramer, 2011-2013.
+Copyright (c) Gregor Cramer, 2011-2013 (original Scidb).
 .P
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

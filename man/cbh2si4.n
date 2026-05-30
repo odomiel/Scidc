@@ -1,4 +1,4 @@
-.TH cbh2si4 1 "February 1, 2012" cbh2si4 "Linux User's Manual"
+.TH cbh2si4 1 "May 30, 2026" cbh2si4 "Linux User's Manual"
 .\" ==========================================================================
 .SH NAME
 .\" --------------------------------------------------------------------------
@@ -120,24 +120,9 @@ List all usual tags, this includes the mandatory tags.
 .\" ==========================================================================
 .SH AUTHOR
 .\" --------------------------------------------------------------------------
-Gregor Cramer
+Original Scidb author: Gregor Cramer.
 .br
-.ul
-http://scidb.sourceforge.net
-.\" ==========================================================================
-.SH BUGS
-.\" --------------------------------------------------------------------------
-For bug reports visit
-.br
-.ul
-http://sourceforge.net/p/scidb/bugs
-.\" ==========================================================================
-.SH FEATURE REQUESTS
-.\" --------------------------------------------------------------------------
-For feature requests visit
-.br
-.ul
-http://sourceforge.net/p/scidb/feature-requests
+Scidc is a fork of Scidb r1531.
 .\" ==========================================================================
 .SH FILES
 .\" --------------------------------------------------------------------------
@@ -153,7 +138,7 @@ is not working without this file.
 .\" ==========================================================================
 .SH LICENSE
 .\" --------------------------------------------------------------------------
-Copyright (c) Gregor Cramer, 2011-2013.
+Copyright (c) Gregor Cramer, 2011-2013 (original Scidb).
 .P
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

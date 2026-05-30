@@ -1,9 +1,10 @@
-Scidb is licenced under the GNU General public License, details of which 
-are below. 
+Scidc is licenced under the GNU General Public License, details of which
+are below.
 
-Copyright (C) 2008-2011 Gregor Cramer
+Scidc is a fork of Scidb (r1531).
+Copyright (C) 2008-2011 Gregor Cramer (original Scidb)
 
-Other copyrights exists for some parts of Scidb too. See COPYRIGHT.
+Other copyrights exist for some parts of Scidc. See COPYRIGHT.
 
 ---------------------------------------------------------------------------
 
