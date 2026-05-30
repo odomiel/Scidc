@@ -1071,38 +1071,41 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		catch { $w configure -state disabled }
 	}
 
+	# Determine download tool (wget or curl)
+	set downloader ""
+	if {![catch {exec wget --version}]} {
+		set downloader wget
+	} elseif {![catch {exec curl --version}]} {
+		set downloader curl
+	}
+
+	if {$downloader eq ""} {
+		$statusLbl configure -foreground red \
+			-text "wget oder curl nicht gefunden. Bitte manuell installieren."
+		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
+		return
+	}
+
 	set failed {}
 	foreach e $engines {
 		if {![info exists Vars(engsel:$e)] || !$Vars(engsel:$e)} continue
 
 		$statusLbl configure -text [format $mc::EngineDownloading $e]
-		update idletasks
+		update
 
-		set dest [file join $engDir $e]
+		set dest    [file join $engDir $e]
 		set tmpDest "${dest}.tmp"
+		set url     "$baseUrl/$e"
 
 		if {[catch {
-			package require http
-			set url "$baseUrl/$e"
-			set fh [open $tmpDest wb]
-			set tok [::http::geturl $url \
-				-channel $fh \
-				-timeout 120000 \
-				-blocksize 65536 \
-				]
-			close $fh
-			set status [::http::status $tok]
-			set ncode  [::http::ncode  $tok]
-			::http::cleanup $tok
-
-			if {$status ne "ok" || $ncode != 200} {
-				file delete -force $tmpDest
-				error "HTTP $ncode"
+			if {$downloader eq "wget"} {
+				exec wget -q -L -O $tmpDest $url
+			} else {
+				exec curl -sS -L -o $tmpDest $url
 			}
 			file rename -force $tmpDest $dest
 			file attributes $dest -permissions 0755
 		} err]} {
-			catch { close $fh }
 			catch { file delete -force $tmpDest }
 			lappend failed "$e: $err"
 		}
