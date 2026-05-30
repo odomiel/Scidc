@@ -70,13 +70,6 @@ find tcl/help -name "*.html" | while read f; do
     [ -f "$dest" ] && cp "$f" "$dest"
 done
 
-# Engines retten, bevor bin/ geleert wird
-mkdir -p /tmp/_scidc_engine_backup
-for engine in stockfish-scidc fairy-stockfish-scidc; do
-    [ -f "$APPDIR/usr/bin/$engine" ] && \
-        cp "$APPDIR/usr/bin/$engine" /tmp/_scidc_engine_backup/ || true
-done
-
 rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 
@@ -84,36 +77,8 @@ cp "$SRCBIN"    "$APPDIR/usr/bin/tkscidc-beta"
 strip           "$APPDIR/usr/bin/tkscidc-beta"
 cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 
-# --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
-ENGINE_RELEASE_URL="https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
-
-echo "Kopiere Schach-Engines..."
-for engine in stockfish-scidc fairy-stockfish-scidc; do
-    engname="${engine%-scidc}"   # stockfish oder fairy-stockfish
-    local_engine="engines/$engname/$engine"
-    if [ -f "/usr/local/games/$engine" ]; then
-        cp "/usr/local/games/$engine" "$APPDIR/usr/bin/"
-        echo "  $engine (aktualisiert aus /usr/local/games)"
-    elif [ -f "$local_engine" ]; then
-        cp "$local_engine" "$APPDIR/usr/bin/"
-        echo "  $engine (aus engines/)"
-    elif [ -f "/tmp/_scidc_engine_backup/$engine" ]; then
-        cp "/tmp/_scidc_engine_backup/$engine" "$APPDIR/usr/bin/"
-        echo "  $engine (aus vorherigem Build übernommen)"
-    else
-        echo "  $engine nicht gefunden — lade von Codeberg herunter..."
-        if wget -q --show-progress \
-               "$ENGINE_RELEASE_URL/$engine" \
-               -O "$local_engine"; then
-            chmod +x "$local_engine"
-            cp "$local_engine" "$APPDIR/usr/bin/"
-            echo "  $engine (heruntergeladen)"
-        else
-            echo "  WARNUNG: $engine konnte nicht heruntergeladen werden — Engine fehlt im AppImage"
-        fi
-    fi
-done
-rm -rf /tmp/_scidc_engine_backup
+# Engines werden nicht ins AppImage gebündelt – das Programm bietet beim
+# ersten Start an sie von Codeberg herunterzuladen.
 
 # --- Schritt 3a: Tcl/Tk 8.6 aus lokalem Build --------------------------------
 echo "Kopiere Tcl/Tk 8.6..."
@@ -159,19 +124,6 @@ export TK_LIBRARY="$HERE/usr/lib/tk8.6"
 export TCLLIBPATH="$HERE/usr/share/scidc-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
 export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidc-beta"
-
-# Engine-Binaries bei Bedarf ins User-Verzeichnis deployen.
-ENGINES_USER="$HOME/.scidc-beta/engines/bin"
-mkdir -p "$ENGINES_USER"
-for engine in stockfish-scidc fairy-stockfish-scidc; do
-    src="$HERE/usr/bin/$engine"
-    dst="$ENGINES_USER/$engine"
-    if [ -f "$src" ] && { [ ! -f "$dst" ] || [ "$src" -nt "$dst" ]; }; then
-        rm -rf "$dst"
-        cp -p "$src" "$dst"
-        chmod +x "$dst"
-    fi
-done
 
 exec "$HERE/usr/bin/tkscidc-beta" "$HERE/usr/bin/scidc-beta" "$@"
 APPRUN

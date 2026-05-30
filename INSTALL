@@ -35,16 +35,7 @@ Building
 
     make
 
-3. Place the chess engine binaries (optional, for analysis features):
-
-    engines/stockfish/stockfish-scidc
-    engines/fairy-stockfish/fairy-stockfish-scidc
-
-   Download these from the Releases page of this repository and copy
-   them to the paths above. Without them the AppImage works but has
-   no engine analysis.
-
-4. Create the AppImage:
+3. Create the AppImage:
 
     bash build-appimage.sh
 
@@ -52,6 +43,9 @@ Building
    automatically from the source tree. No sudo is required.
 
    The resulting file is Scidc-x86_64.AppImage.
+
+   Chess engines (Stockfish, Fairy-Stockfish) are not bundled.
+   On first start the application offers to download them automatically.
 
 Running
 -------
