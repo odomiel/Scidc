@@ -532,6 +532,8 @@ proc ClearHistory {} {
 proc FetchNews {lang update} {
 	variable URL
 
+	if {[string length $URL] == 0} return
+
 	::web::downloadURL .application [format $URL $lang] \
 		-successcmd [namespace code [list Response $lang $update]] \
 		-failedcmd [namespace code [list Failed $lang $update]] \

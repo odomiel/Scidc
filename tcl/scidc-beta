@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b4 Beta"
+	set version "26.05.30 b5 Beta"
 }
 
 
@@ -103920,7 +103920,7 @@ array set Options {
 	welcome	1
 }
 
-set URL "http://scidb.sourceforge.net/%s/news.html"
+set URL ""
 
 
 proc build {tab width height} {
@@ -104391,6 +104391,8 @@ proc ClearHistory {} {
 
 proc FetchNews {lang update} {
 	variable URL
+
+	if {[string length $URL] == 0} return
 
 	::web::downloadURL .application [format $URL $lang] \
 		-successcmd [namespace code [list Response $lang $update]] \
@@ -146104,8 +146106,7 @@ proc DisplayAbout {w} {
 			$mc::Version $::scidc::version<br/>
 			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/>
 			Copyright &#x00A9; 2026 Mirik<br/><br/>
-			[Url http://scidb.sourceforge.net]<br/><br/>
-			$mc::Distributed<br/><br/>
+$mc::Distributed<br/><br/>
 		</font>
 	"
 }
