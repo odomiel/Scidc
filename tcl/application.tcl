@@ -50,6 +50,16 @@ set Changed						"Games changed: %d"
 set Added						"Games added: %d"
 set DescriptionHasChanged	"Description has changed"
 
+set EngineDownloadTitle		"Chess Engine Download"
+set EngineDownloadMsg		"The following chess engines are available for download.\nEngines are used for game analysis."
+set EngineDownloadBtn		"Download"
+set EngineSkipBtn			"Skip"
+set EngineDownloading		"Downloading %s..."
+set EngineDownloadDone		"Done."
+set EngineDownloadFailed	"Download failed: %s"
+set EngineDesc(stockfish-scidc)        "Stockfish — strong engine for game analysis"
+set EngineDesc(fairy-stockfish-scidc)  "Fairy-Stockfish — engine for chess variants"
+
 } ;# namespace mc
 
 namespace import ::tcl::mathfunc::abs
@@ -984,11 +994,139 @@ proc Startup {main args} {
 }
 
 
+proc OfferEngineDownload {parent} {
+	if {!$::scidc::dir::setup} return
+
+	set engDir  $::scidc::dir::engines
+	set baseUrl "https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
+	set engines {stockfish-scidc fairy-stockfish-scidc}
+
+	# Only offer engines that are not yet installed
+	set missing {}
+	foreach e $engines {
+		if {![file exists [file join $engDir $e]]} { lappend missing $e }
+	}
+	if {[llength $missing] == 0} return
+
+	# --- Build dialog -------------------------------------------------------
+	set dlg $parent.engdl
+	tk::toplevel $dlg -class Scidc
+	wm withdraw $dlg
+	wm title $dlg $mc::EngineDownloadTitle
+	wm resizable $dlg no no
+	wm transient $dlg $parent
+
+	set f [tk::frame $dlg.f -padx 16 -pady 12]
+	pack $f -fill both -expand yes
+
+	tk::label $f.msg -text $mc::EngineDownloadMsg -justify left -wraplength 380
+	pack $f.msg -anchor w -pady {0 10}
+
+	# One checkbox per missing engine
+	array set sel {}
+	foreach e $missing { set sel($e) 1 }
+	foreach e $missing {
+		set desc [expr {[info exists mc::EngineDesc($e)] ? $mc::EngineDesc($e) : $e}]
+		ttk::checkbutton $f.cb_$e \
+			-text $desc \
+			-variable [namespace current]::Vars(engsel:$e) \
+			;
+		set [namespace current]::Vars(engsel:$e) 1
+		pack $f.cb_$e -anchor w -pady 2
+	}
+
+	# Status label (shown during download)
+	tk::label $f.status -text "" -justify left -foreground [::colors::lookup information,html:link]
+	pack $f.status -anchor w -pady {8 0}
+
+	# Buttons
+	set bf [tk::frame $f.bf]
+	pack $bf -pady {10 0} -anchor e
+
+	set downloadBtn [ttk::button $bf.dl \
+		-text $mc::EngineDownloadBtn \
+		-command [namespace code [list DoEngineDownload $dlg $f.status $missing $engDir $baseUrl]] \
+		]
+	ttk::button $bf.skip \
+		-text $mc::EngineSkipBtn \
+		-command [list destroy $dlg] \
+		;
+	pack $bf.dl $bf.skip -side left -padx 4
+
+	::util::place $dlg -parent $parent -position center
+	wm deiconify $dlg
+	focus $bf.dl
+	::ttk::grabWindow $dlg
+	vwait [namespace current]::Vars(engdl:done)
+	::ttk::releaseGrab $dlg
+	catch { destroy $dlg }
+}
+
+
+proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
+	variable Vars
+
+	# Disable buttons during download
+	foreach w [winfo children [winfo parent $statusLbl].bf] {
+		catch { $w configure -state disabled }
+	}
+
+	set failed {}
+	foreach e $engines {
+		if {![info exists Vars(engsel:$e)] || !$Vars(engsel:$e)} continue
+
+		$statusLbl configure -text [format $mc::EngineDownloading $e]
+		update idletasks
+
+		set dest [file join $engDir $e]
+		set tmpDest "${dest}.tmp"
+
+		if {[catch {
+			package require http
+			set url "$baseUrl/$e"
+			set fh [open $tmpDest wb]
+			set tok [::http::geturl $url \
+				-channel $fh \
+				-timeout 120000 \
+				-blocksize 65536 \
+				]
+			close $fh
+			set status [::http::status $tok]
+			set ncode  [::http::ncode  $tok]
+			::http::cleanup $tok
+
+			if {$status ne "ok" || $ncode != 200} {
+				file delete -force $tmpDest
+				error "HTTP $ncode"
+			}
+			file rename -force $tmpDest $dest
+			file attributes $dest -permissions 0755
+		} err]} {
+			catch { close $fh }
+			catch { file delete -force $tmpDest }
+			lappend failed "$e: $err"
+		}
+	}
+
+	if {[llength $failed]} {
+		$statusLbl configure \
+			-foreground red \
+			-text [format $mc::EngineDownloadFailed [join $failed ", "]]
+		after 3000 [list set [namespace current]::Vars(engdl:done) 1]
+	} else {
+		$statusLbl configure -text $mc::EngineDownloadDone
+		after 1000 [list set [namespace current]::Vars(engdl:done) 1]
+	}
+}
+
+
 proc Startup2 {} {
 	set app .application
 	set nb $app.nb
 
 	ChooseLanguage $app
+	set Vars(engdl:done) 0
+	OfferEngineDownload $app
 	::load::writeLog
 	update idletasks
 	set ::scidc::intern::blocked 0

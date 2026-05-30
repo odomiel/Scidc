@@ -450,6 +450,15 @@
 ::application::mc::Changed						"Veränderte Partien: %d"
 ::application::mc::Added						"Hinzugefügte Partien: %d"
 ::application::mc::DescriptionHasChanged	"Die Beschreibung wurde verändert"
+::application::mc::EngineDownloadTitle	"Schachengines herunterladen"
+::application::mc::EngineDownloadMsg	"Die folgenden Schachengines können heruntergeladen werden.\nEngines werden für die Partienanalyse benötigt."
+::application::mc::EngineDownloadBtn	"Herunterladen"
+::application::mc::EngineSkipBtn	"Überspringen"
+::application::mc::EngineDownloading	"%s wird heruntergeladen..."
+::application::mc::EngineDownloadDone	"Fertig."
+::application::mc::EngineDownloadFailed	"Download fehlgeschlagen: %s"
+::application::mc::EngineDesc(stockfish-scidc)	"Stockfish - starke Engine für Partienanalyse"
+::application::mc::EngineDesc(fairy-stockfish-scidc)	"Fairy-Stockfish - Engine für Schachvarianten"
 
 ### application::twm ###################################################
 ::application::twm::mc::Notebook						"Kartei"
