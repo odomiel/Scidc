@@ -2,8 +2,8 @@ Scidc - Schachdatenbank
 =======================
 
 Scidc ist eine Schachdatenbank-Anwendung, geforkt von Scidb r1531.
-Das Programm unterstützt mehrere Datenbankformate und enthält eine
-integrierte Schachengine-Anbindung für Partienanalysen.
+Das Programm unterstützt mehrere Datenbankformate und enthält
+Stockfish und Fairy-Stockfish für die Partienanalyse.
 
 Unterstützte Formate
 --------------------
