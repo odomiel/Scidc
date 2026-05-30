@@ -1117,6 +1117,10 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 			-text [format $mc::EngineDownloadFailed [join $failed ", "]]
 		after 3000 [list set [namespace current]::Vars(engdl:done) 1]
 	} else {
+		# Reload engine list: remove local engines.dat so setup() re-reads
+		# the share config and picks up the newly downloaded binaries.
+		catch { file delete $::scidc::file::engines }
+		catch { ::engine::setup }
 		$statusLbl configure -text $mc::EngineDownloadDone
 		after 1000 [list set [namespace current]::Vars(engdl:done) 1]
 	}
