@@ -24,12 +24,8 @@ all: Makefile.in check-mtime
 	@$(MAKE) -C tcl
 	@if [ $$? != 0 ]; then exit 1; fi
 	@echo ""
-	@case $(BINDIR) in         \
-		/home/* ) make="make";; \
-		* ) make="sudo make";;  \
-	esac;                      \
-	echo "Now type \"$$make install\" for installation."; \
-	echo "Alternatively, run \"./build-appimage.sh\" to create a portable AppImage."
+	@echo "Build erfolgreich. AppImage erstellen mit:"
+	@echo "  bash build-appimage.sh"
 
 check-mtime:
 	@if [ Makefile.in -ot configure ]; then                    \
@@ -63,74 +59,9 @@ dist-clean: clean-subdirs
 	@echo "Clean `pwd`"
 	@rm -f Makefile.in Makefile.in.bak
 
-install: check-mtime install-subdirs install-xdg # update-magic
-
-cleanup:
-	@if [ -d $(SHAREDIR) ]; then                                        \
-		if [ "`find $(SHAREDIR) -type d -empty`" = "$(SHAREDIR)" ]; then \
-			rmdir $(SHAREDIR);                                            \
-		fi;                                                              \
-	fi
-
-uninstall: uninstall-subdirs uninstall-xdg cleanup # update-magic
-
-uninstall-photos: cleanup-photos cleanup
-
-cleanup-photos:
-	@$(MAKE) -C tcl uninstall-photos;
-
 Makefile.in:
 	@echo "****** Please use the 'configure' script before building Scidb ******"
 	@exit 1
-
-install-subdirs:
-	@$(MAKE) -C man install
-	@$(MAKE) -C src install
-	@$(MAKE) -C engines install
-	@$(MAKE) -C tcl install
-	@$(MAKE) -C tcl setup-fonts
-
-uninstall-subdirs:
-	@$(MAKE) -C man uninstall
-	@$(MAKE) -C src uninstall
-	@$(MAKE) -C engines uninstall
-	@$(MAKE) -C tcl uninstall
-
-install-xdg:
-	@if [ "$(FREEDESKTOP)" = "yes" ]; then                                \
-		if [ -n "$(shell xdg-icon-resource --version 2>/dev/null)" ]; then \
-			if [ -n "$(shell xdg-mime --version 2>/dev/null)" ]; then       \
-				$(MAKE) -C freedesktop.org install-mime;                     \
-			else                                                            \
-				echo "SKIP - xdg-utils not installed";                       \
-			fi;                                                             \
-		fi;                                                                \
-		if [ -n "$(shell xdg-desktop-menu --version 2>/dev/null)" ]; then  \
-			$(MAKE) -C freedesktop.org install-desktop-menu;                \
-		else                                                               \
-			echo "SKIP - desktop-file-utils not installed";                 \
-		fi;                                                                \
-	elif [ -n "$(XDGDIR)" ]; then                                         \
-		$(MAKE) -C freedesktop.org distribute;                             \
-	fi
-
-uninstall-xdg:
-	@if [ "$(FREEDESKTOP)" = "yes" ]; then                                \
-		if [ -n "$(shell xdg-icon-resource --version 2>/dev/null)" ]; then \
-			if [ -n "$(shell xdg-mime --version 2>/dev/null)" ]; then       \
-				$(MAKE) -C freedesktop.org uninstall-mime;                   \
-			else                                                            \
-				echo "SKIP - xdg-utils not installed";                       \
-			fi;                                                             \
-		fi;                                                                \
-		if [ -n "$(shell xdg-desktop-menu --version 2>/dev/null)" ]; then  \
-			$(MAKE) -C freedesktop.org uninstall-desktop-menu;              \
-		else                                                               \
-			echo "SKIP - desktop-file-utils not installed";                 \
-		fi;                                                                \
-	elif [ -n "$(XDGDIR)" ]; then                                         \
-		$(MAKE) -C freedesktop.org remove;                                 \
-	fi;
 
 update-magic:
 	@echo "Update magic file"

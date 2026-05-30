@@ -64,7 +64,6 @@ Bedingungslos geplantes `after idle` feuert während `perform()` via `update idl
 | Pfad | Zweck |
 |------|-------|
 | `AppDir/usr/share/scidc-beta/` | AppImage / `./run-scidb.sh` (via `SCIDB_SHAREDIR`) |
-| `/usr/local/share/scidc-beta/` | System-Install (braucht `sudo`) |
 
 `tcl/` ist die Git-Quelle für die Bundles, enthält aber keine installierten Ressourcen.
 
@@ -275,17 +274,15 @@ Danach übernimmt `build-appimage.sh` automatisch.
 
 ## AppImage
 
-### Build-Workflow (einmalig / nach Bedarf)
+### Build-Workflow
 ```bash
 # 1. Tcl/Tk 8.6.18 lokal bauen (einmalig; überspringt sich selbst wenn aktuell):
 bash build-tcltk.sh        # → deps/tcltk/
 
-# 2. AppDir/usr/share/ befüllen (einmalig; bleibt bei späteren Builds erhalten):
-make && sudo make install   # installiert nach AppDir/usr/share/scidc-beta/
-
-# 3. Normale Entwicklungsiteration:
+# 2. Normale Entwicklungsiteration:
 make
 bash build-appimage.sh     # → Scidc-x86_64.AppImage
+# Beim ersten Aufruf befüllt build-appimage.sh AppDir/usr/share/ automatisch.
 ```
 
 ### Wichtige Details

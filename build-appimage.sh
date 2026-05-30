@@ -2,16 +2,14 @@
 # =============================================================================
 # build-appimage.sh - Erstellt ein AppImage für SciDC
 #
-# Voraussetzungen:
-#   1. Einmalig (nur beim ersten Mal oder nach make install-Änderungen):
-#         make && sudo make install
-#      Danach ist AppDir/usr/share/scidc-beta/ befüllt und bleibt erhalten.
-#   2. Bei jeder Änderung nur noch:
+# Workflow:
+#   1. Einmalig: ./configure && make
+#   2. Bei jeder Änderung:
 #         make
 #         bash build-appimage.sh
 #
-# Für die normale Systeminstallation gilt weiterhin:
-#         make && sudo make install
+# Das Skript befüllt AppDir/usr/share/scidc-beta/ beim ersten Aufruf
+# automatisch aus dem Source-Tree (kein 'sudo make install' nötig).
 # =============================================================================
 
 set -e
@@ -38,19 +36,20 @@ if [ ! -f "$TCLSCRIPT" ]; then
     exit 1
 fi
 
-if [ ! -d "$SHAREDIR" ]; then
-    echo "FEHLER: $SHAREDIR nicht gefunden!"
-    echo "Beim ersten Mal bitte einmalig ausführen:"
-    echo "  make && sudo make install"
-    echo "Danach ist AppDir/usr/share/scidc-beta/ befüllt und wird bei"
-    echo "zukünftigen Builds nicht mehr angefasst."
+if [ ! -f "$TCLTKDIR/lib/libtcl8.6.so" ] || [ ! -f "$TCLTKDIR/lib/libtk8.6.so" ]; then
+    echo "FEHLER: Tcl/Tk 8.6 nicht gefunden in $TCLTKDIR"
+    echo "Bitte zuerst ausführen: bash build-tcltk.sh"
     exit 1
 fi
 
-if [ ! -f "$TCLTKDIR/lib/libtcl8.6.so" ] || [ ! -f "$TCLTKDIR/lib/libtk8.6.so" ]; then
-    echo "FEHLER: Tcl/Tk 8.6.18 nicht gefunden in $TCLTKDIR"
-    echo "Bitte zuerst ausführen: bash build-tcltk.sh"
-    exit 1
+# --- Schritt 0: AppDir/usr/share/ beim ersten Mal aus Source-Tree befüllen --
+if [ ! -d "$SHAREDIR" ]; then
+    echo "Erstmaliger Build: befülle AppDir/usr/share/scidc-beta/ ..."
+    mkdir -p "$SHAREDIR"
+    make -C tcl install \
+        SHAREDIR="$SHAREDIR" \
+        BINDIR="$APPDIR/usr/bin"
+    echo "AppDir/usr/share/scidc-beta/ angelegt."
 fi
 
 # --- Schritt 1: Nur bin/ und lib/ neu aufbauen; share/ bleibt erhalten -------
@@ -79,13 +78,12 @@ done
 rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 
-cp "$SRCBIN"   "$APPDIR/usr/bin/tkscidc-beta"
+cp "$SRCBIN"    "$APPDIR/usr/bin/tkscidc-beta"
 cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 
 # --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
 echo "Kopiere Schach-Engines..."
 for engine in stockfish-scidc fairy-stockfish-scidc; do
-    # Suche: /usr/local/games → engines/ im Source-Tree → gesicherter AppImage-Stand
     engname="${engine%-scidc}"   # stockfish oder fairy-stockfish
     local_engine="engines/$engname/$engine"
     if [ -f "/usr/local/games/$engine" ]; then
@@ -103,8 +101,8 @@ for engine in stockfish-scidc fairy-stockfish-scidc; do
 done
 rm -rf /tmp/_scidc_engine_backup
 
-# --- Schritt 3a: Tcl/Tk 8.6.18 aus lokalem Build ----------------------------
-echo "Kopiere Tcl/Tk 8.6.18..."
+# --- Schritt 3a: Tcl/Tk 8.6 aus lokalem Build --------------------------------
+echo "Kopiere Tcl/Tk 8.6..."
 cp -L  "$TCLTKDIR/lib/libtcl8.6.so" "$APPDIR/usr/lib/"
 cp -L  "$TCLTKDIR/lib/libtk8.6.so"  "$APPDIR/usr/lib/"
 cp -rL "$TCLTKDIR/lib/tcl8.6"       "$APPDIR/usr/lib/"
@@ -149,15 +147,13 @@ export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidc-beta"
 
 # Engine-Binaries bei Bedarf ins User-Verzeichnis deployen.
-# Das Programm sucht Engines in ~/.scidc-beta/engines/ (start.tcl default).
 ENGINES_USER="$HOME/.scidc-beta/engines/bin"
 mkdir -p "$ENGINES_USER"
 for engine in stockfish-scidc fairy-stockfish-scidc; do
     src="$HERE/usr/bin/$engine"
     dst="$ENGINES_USER/$engine"
-    # Kopieren wenn das gebündelte Binary neuer ist oder das Ziel fehlt
     if [ -f "$src" ] && { [ ! -f "$dst" ] || [ "$src" -nt "$dst" ]; }; then
-        rm -rf "$dst"   # entfernt ggf. ein Verzeichnis gleichen Namens
+        rm -rf "$dst"
         cp -p "$src" "$dst"
         chmod +x "$dst"
     fi
