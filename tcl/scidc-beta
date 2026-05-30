@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b5 Beta"
+	set version "26.05.30 b6 Beta"
 }
 
 
@@ -104068,7 +104068,6 @@ proc activate {w flag} {
 				if {[string match {*-- END --*} $line]} { break }
 				append content $line " "
 			}
-			set Options(welcome) 0
 		}
 	} elseif {[string length $Priv(news)]} {
 		append content $Priv(news)

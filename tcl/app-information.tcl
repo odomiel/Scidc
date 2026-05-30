@@ -206,7 +206,6 @@ proc activate {w flag} {
 				if {[string match {*-- END --*} $line]} { break }
 				append content $line " "
 			}
-			set Options(welcome) 0
 		}
 	} elseif {[string length $Priv(news)]} {
 		append content $Priv(news)
