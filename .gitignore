@@ -15,8 +15,13 @@ appimagetool-x86_64.AppImage
 AppDir/
 deps/
 
+# Engine binaries (too large for git, build separately)
+engines/stockfish/stockfish-scidc
+engines/fairy-stockfish/fairy-stockfish-scidc
+
 # Temporary / local files
 debug.txt
 &1
 lizenzübersicht.txt
 fehler/
+Makefile.in.bak
