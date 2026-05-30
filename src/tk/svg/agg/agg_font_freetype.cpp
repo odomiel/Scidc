@@ -158,7 +158,7 @@ namespace agg
 
         FT_Vector*  point;
         FT_Vector*  limit;
-        unsigned char* tags;
+        unsigned char* tags; /* FT_Outline.tags is char* on older FreeType, unsigned char* on newer */
 
         int   n;         // index of contour in outline
         int   first;     // index of first point in contour
@@ -179,7 +179,7 @@ namespace agg
             v_control = v_start;
 
             point = outline.points + first;
-            tags  = outline.tags  + first;
+            tags  = reinterpret_cast<unsigned char*>(outline.tags  + first);
             tag   = FT_CURVE_TAG(tags[0]);
 
             // A contour cannot start with a cubic control point!

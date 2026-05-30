@@ -81,6 +81,7 @@ rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 
 cp "$SRCBIN"    "$APPDIR/usr/bin/tkscidc-beta"
+strip           "$APPDIR/usr/bin/tkscidc-beta"
 cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 
 # --- Schritt 2: Engines wiederherstellen / aktualisieren ---------------------
