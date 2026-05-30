@@ -1878,7 +1878,7 @@ proc checkFontConfig {} {
 
     if {![file exists testfontconfig]} {
         puts "\n"
-        puts "Cannot install Scidb because library fontconfig"
+        puts "Cannot install Scidc because library fontconfig"
         puts "cannot be found."
         set result 0
     } else {
@@ -1894,8 +1894,8 @@ proc checkFontConfig {} {
             if {$version == 30800} {
                 puts ""
                 puts "Your system has fontconfig version 3.8 installed, this library version is"
-                puts "broken, Scidb is not working with this version. Please upgrade to library"
-                puts "version 3.9 or higher before installing Scidb."
+                puts "broken, Scidc is not working with this version. Please upgrade to library"
+                puts "version 3.9 or higher before installing Scidc."
                 set result 0
             }
         }
@@ -2021,7 +2021,7 @@ proc writeMakefile {success} {
         if {[string length $basedir] == 0 && ![file isdirectory $prefix/share/fonts]} {
             set dir "~/.fonts"
         } else {
-            set dir $prefix/share/fonts/truetype/Scidb
+            set dir $prefix/share/fonts/truetype/Scidc
         }
     }
     set option(FONTDIR) [file normalize $basedir$dir]
@@ -2076,11 +2076,11 @@ proc writeMakefile {success} {
         if {[file readable tcl/tkscidc$configure(program-suffix)]} {
             puts -nonewline "make clean; "
         }
-        puts "make\" to compile Scidb."
+        puts "make\" to compile Scidc."
     } else {
         puts "Not all settings could be determined!"
         puts "The default Makefile.in was written."
-        puts "You will need to edit it before you can compile Scidb."
+        puts "You will need to edit it before you can compile Scidc."
 
         if {![info exists option(TCL_INCLUDE)] || ![info exists option(TK_INCLUDE)]} {
             puts ""
@@ -2224,7 +2224,7 @@ set configure(program-suffix) "-beta"
 
 if {[lsearch $argv -h] >= 0 || [lsearch $argv --help] >= 0} { usage 0 }
 
-puts "configure: Makefile configuration program for Scidb"
+puts "configure: Makefile configuration program for Scidc"
 
 # Parse command-line arguments:
 foreach arg $argv {
@@ -2371,7 +2371,7 @@ if {[string length $gxxVer]} {
         puts "-------------------------------------------------------------------------------"
         puts "On this insane system debugging of own processes is not allowed due to the"
         puts "kernel hardening paranoia. You might change this behaviour, see"
-        puts "<http://sourceforge.net/p/scidb/mailman/message/28418675/>, and then configure"
+        puts "and then configure"
         puts "again, otherwise you will not see useful error messages in case of internal"
         puts "errors."
     }
@@ -2388,9 +2388,9 @@ if {[string length $gxxVer]} {
         puts ""
         puts "IMPORTANT NOTE:"
         puts "-------------------------------------------------------------------------------"
-        puts "You're about to run Scidb on an insane distribution. Scidb may crash with the"
+        puts "You're about to run Scidc on an insane distribution. Scidc may crash with the"
         puts "pre-installed Tk library $instableTkLibrary. It is highly recommended to install"
-        puts "a stable Tk version (8.6.0, 8.5.11, or 8.5.6) before building Scidb. Read INSTALL"
+        puts "a stable Tk version (8.6.0, 8.5.11, or 8.5.6) before building Scidc. Read INSTALL"
         puts "for instructions how to use alternative library versions."
     }
 
@@ -2412,9 +2412,9 @@ if {[string length $gxxVer]} {
         puts "the application will freeze. In this case you have to use a self-compiled Tk"
         puts "library if you want to avoid this problem (read INSTALL)."
         puts ""
-        puts "It is highly recommended to build Scidb on a working Unix system. This system"
+        puts "It is highly recommended to build Scidc on a working Unix system. This system"
         puts "is broken and distorted due to the \"kernel hardening\" paranoia, which assumes"
-        puts "that every software is an attacker. But Scidb is definitively not an attacker"
+        puts "that every software is an attacker. But Scidc is definitively not an attacker"
         puts "and requires a sane system."
     }
 
@@ -2423,9 +2423,9 @@ if {[string length $gxxVer]} {
         puts "IMPORTANT NOTE:"
         puts "-------------------------------------------------------------------------------"
         puts "Knoppix is a Live Linux system and not suitable for Tcl/Tk applications."
-        puts "Scidb will run, but it is very slow under Knoppix, and you will get some"
+        puts "Scidc will run, but it is very slow under Knoppix, and you will get some"
         puts "nasty Tk errors. It is recommended to install a different Linux distribution"
-        puts "if you want to work with Scidb."
+        puts "if you want to work with Scidc."
     }
 
     exit 0

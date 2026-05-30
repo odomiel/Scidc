@@ -52,14 +52,14 @@ dist-clean: clean-subdirs
 	@rm -f Makefile.in Makefile.in.bak
 
 Makefile.in:
-	@echo "****** Please use the 'configure' script before building Scidb ******"
+	@echo "****** Please use the 'configure' script before building Scidc ******"
 	@exit 1
 
 update-magic:
 	@echo "Update magic file"
-	@if [ ! -r /etc/magic ] || [ -z "`cat /etc/magic | grep Scidb`" ]; then \
+	@if [ ! -r /etc/magic ] || [ -z "`cat /etc/magic | grep Scidc`" ]; then \
 		magic="$(HOME)/.magic";                                              \
-		if [ ! -r $$magic ] || [ -z "`cat $$magic | grep Scidb`" ]; then     \
+		if [ ! -r $$magic ] || [ -z "`cat $$magic | grep Scidc`" ]; then     \
 			done=0;                                                           \
 			if [ "`id -u`" -eq 0 ]; then                                      \
 				if [ -f /etc/magic ]; then                                     \
