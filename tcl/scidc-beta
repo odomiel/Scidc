@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b12 Beta"
+	set version "26.05.30 b13 Beta"
 }
 
 
@@ -103853,7 +103853,7 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 				exec curl -sS -L -o $tmpDest $url
 			}
 			file rename -force $tmpDest $dest
-			file attributes $dest -permissions 0755
+			exec chmod +x $dest
 		} err]} {
 			catch { file delete -force $tmpDest }
 			lappend failed "$e: $err"

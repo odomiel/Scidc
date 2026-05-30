@@ -1104,7 +1104,7 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 				exec curl -sS -L -o $tmpDest $url
 			}
 			file rename -force $tmpDest $dest
-			file attributes $dest -permissions 0755
+			exec chmod +x $dest
 		} err]} {
 			catch { file delete -force $tmpDest }
 			lappend failed "$e: $err"
