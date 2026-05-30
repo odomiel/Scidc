@@ -294,7 +294,6 @@
 ::menu::mc::Fullscreen					"&Helskärm"
 ::menu::mc::LeaveFullscreen			"Lämna &helskärm"
 ::menu::mc::Help							"&Hjälp"
-::menu::mc::Contact						"&Kontakt (Webbläsare)"
 ::menu::mc::Quit							"&Avsluta"
 ::menu::mc::Tools							"&Verktyg"
 ::menu::mc::Extras						"&Tillägg"
@@ -305,9 +304,6 @@
 ::menu::mc::IncrFontSize				"Increase All Font Sizes" ;# NEW
 ::menu::mc::DecrFontSize				"Decrease All Font Sizes" ;# NEW
 
-# Contact
-::menu::mc::ContactBugReport			"&Felrapport"
-::menu::mc::ContactFeatureRequest	"Ö&nskemål"
 
 # Extras
 ::menu::mc::InstallChessBaseFonts	"Installera ChessBase fonter"

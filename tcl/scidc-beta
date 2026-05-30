@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b1 Beta"
+	set version "26.05.30 b2 Beta"
 }
 
 
@@ -149441,7 +149441,6 @@ if {[info exists ::i18n::languages]} {
 	}
 }
 
-
 variable Fullscreen			0
 variable HideMenu				0
 variable Theme					default
@@ -150069,6 +150068,8 @@ proc gameNew {parent {variant Normal}} {
 		::application::switchTab board
 	}
 }
+
+
 proc viewFullscreen {{toggle {}}} {
 	variable Fullscreen
 

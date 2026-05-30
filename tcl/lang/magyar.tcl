@@ -295,7 +295,6 @@
 ::menu::mc::Fullscreen			"&Teljes képernyő"
 ::menu::mc::LeaveFullscreen		"Leave &Teljes képernyő" ;# NEW "Leave Full-Screen"
 ::menu::mc::Help			"&Súgó"
-::menu::mc::Contact			"&Elérhetőség (Web böngésző)"
 ::menu::mc::Quit			"&Kilépés"
 ::menu::mc::Tools			"&Tools" ;# NEW
 ::menu::mc::Extras			"E&xtras" ;# NEW
@@ -306,9 +305,6 @@
 ::menu::mc::IncrFontSize		"Increase All Font Sizes" ;# NEW
 ::menu::mc::DecrFontSize		"Decrease All Font Sizes" ;# NEW
 
-# Contact
-::menu::mc::ContactBugReport		"&Hiba jelentés"
-::menu::mc::ContactFeatureRequest	"&Feature Request" ;# NEW
 
 # Extras
 ::menu::mc::InstallChessBaseFonts	"ChessBase betűtípusok telepítése" ;#"Install ChessBase Fonts"  ;#NEW

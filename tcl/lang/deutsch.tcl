@@ -293,7 +293,6 @@
 ::menu::mc::Fullscreen						"&Vollbild"
 ::menu::mc::LeaveFullscreen				"&Vollbild verlassen"
 ::menu::mc::Help								"&Hilfe"
-::menu::mc::Contact							"&Kontakt (Web-Browser)"
 ::menu::mc::Quit								"&Beenden"
 ::menu::mc::Tools								"&Werkzeuge"
 ::menu::mc::Extras							"E&xtras"
@@ -312,9 +311,6 @@
 ::menu::mc::IncrFontSize					"Alle Zeichensätze vergrößern"
 ::menu::mc::DecrFontSize					"Alle Zeichensätze verkleinern"
 
-# Contact
-::menu::mc::ContactBugReport				"&Fehlerbericht"
-::menu::mc::ContactFeatureRequest		"Funktions&wunsch"
 
 # Extras
 ::menu::mc::InstallChessBaseFonts		"&ChessBase-Zeichensätze installieren"
