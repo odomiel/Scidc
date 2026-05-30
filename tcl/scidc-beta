@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b3 Beta"
+	set version "26.05.30 b4 Beta"
 }
 
 
@@ -103860,6 +103860,26 @@ proc ::tk::PostOverPoint {menu x y {entry {}}} {
 	}
 
 	::tk::_PostOverPoint_application $menu $x $y $entry
+}
+
+bind Menu <Map> +[namespace code {::application::ClampMenuToAppWindow %W}]
+
+proc ::application::ClampMenuToAppWindow {w} {
+	variable Vars
+	if {$w eq "$Vars(menu:main).entries"} return
+	if {![string match "$Vars(menu:main).*" $w]} return
+
+	set mw  [winfo reqwidth $w]
+	set wx  [winfo rootx $w]
+	set rx  [winfo rootx .application]
+	set app_right [expr {$rx + [winfo width .application]}]
+
+	if {$wx + $mw > $app_right} {
+		set parent_w [winfo parent $w]
+		set new_x [expr {[winfo rootx $parent_w] - $mw}]
+		if {$new_x < $rx} { set new_x $rx }
+		$w post $new_x [winfo rooty $w]
+	}
 }
 
 update idletasks

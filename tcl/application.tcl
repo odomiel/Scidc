@@ -1113,4 +1113,30 @@ proc ::tk::PostOverPoint {menu x y {entry {}}} {
 	::tk::_PostOverPoint_application $menu $x $y $entry
 }
 
+# Cascade submenus are posted by Tk's C code via postcascade, which uses
+# WidthOfScreen (= total width of all monitors on Xinerama).  We intercept
+# the Map event and move any submenu that overflows the application window
+# to the left side of its parent menu instead.
+bind Menu <Map> +[namespace code {::application::ClampMenuToAppWindow %W}]
+
+proc ::application::ClampMenuToAppWindow {w} {
+	variable Vars
+	# Only act on submenus of our main menu (not the top-level popup itself,
+	# which is already handled by PostOverPoint above).
+	if {$w eq "$Vars(menu:main).entries"} return
+	if {![string match "$Vars(menu:main).*" $w]} return
+
+	set mw  [winfo reqwidth $w]
+	set wx  [winfo rootx $w]
+	set rx  [winfo rootx .application]
+	set app_right [expr {$rx + [winfo width .application]}]
+
+	if {$wx + $mw > $app_right} {
+		set parent_w [winfo parent $w]
+		set new_x [expr {[winfo rootx $parent_w] - $mw}]
+		if {$new_x < $rx} { set new_x $rx }
+		$w post $new_x [winfo rooty $w]
+	}
+}
+
 # vi:set ts=3 sw=3:
