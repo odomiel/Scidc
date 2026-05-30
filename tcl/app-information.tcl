@@ -57,7 +57,7 @@ array set Options {
 	welcome	1
 }
 
-set URL "http://scidb.sourceforge.net/%s/news.html"
+set URL ""
 
 
 proc build {tab width height} {

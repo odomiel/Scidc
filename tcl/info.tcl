@@ -169,8 +169,7 @@ proc DisplayAbout {w} {
 			$mc::Version $::scidc::version<br/>
 			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/>
 			Copyright &#x00A9; 2026 Mirik<br/><br/>
-			[Url http://scidb.sourceforge.net]<br/><br/>
-			$mc::Distributed<br/><br/>
+$mc::Distributed<br/><br/>
 		</font>
 	"
 }

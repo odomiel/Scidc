@@ -1,143 +1,36 @@
-<!-- **********************************************************************
-* Author : $Author$
-* Version: $Revision$
-* Date   : $Date$
-* Url    : $URL$
-*********************************************************************** -->
-
-<!-- **********************************************************************
-* Copyright: (C) 2012-2013 Gregor Cramer
-*********************************************************************** -->
-
-<!-- **********************************************************************
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*********************************************************************** -->
-
 INDEX Contatti
-INDEX Homepage#Homepage
-INDEX Sito Internet#Homepage
+INDEX Link#Links
 
 TITLE Contatti
 
-<h2 id="Homepage">Homepage</h2>
-
-La pagina web di Scidc si trova all'indirizzo
-<a href="http://scidb.sourceforge.net/">scidb.sourceforge.net</a>.
-
-<h2>Aiuto</h2>
-
-Si cercano volontari per:
-
-<ul>
-  <li>Testing di Scidc</li>
-  <li>Traduzione in altre lingue</li>
-  <li>Scrittura pagine di aiuto</li>
-</ul>
-
-Per favore mandare un messaggio all'autore in modo da poter coordinare il lavoro.
-
-<box>
-<p>
-Come mandare un messaggio:
-</p>
-<ol>
-   <li><p>
-      È richiesto un account su Sourceforge
-      (<a href="https://sourceforge.net/account/registration">Registrazione Account</a>).
-      La registrazione è gratuita e senza obblighi.
-    </p></li>
-    <li><p>
-      Apri <a href="https://sourceforge.net/sendmessage.php?touser=2321037">Manda una Email</a>,
-      accedi con le tue credenziali e manda il messaggio.
-    </p></li>
-</ol>
-</box>
-  
-<h2>Links</h2>
-  
-<p>
-Gli utenti di Scidc posso avere interesse nel visitare i seguenti siti:
-</p>
+<h2 id="Links">Link</h2>
 
 <ul>
   <li><p>
-    <a href="http://sourceforge.net/p/scidb/feature-requests/?source=navbar"
-       style="line-height: 150%;">
-    Tracker: Feature Requests</a><br/>
-    Manda richieste per una funzione; per favore considera l'esistente
-    <a href="Development-Roadmap.html">piano di sviluppo</a>.
-  </p></li>
-
-  <li><p>
-    <a href="http://sourceforge.net/p/scidb/bugs/?source=navbar"
-       style="line-height: 150%;">
-    Tracker: Bugs</a><br/>
-    Segnala problemi con Scidc.
-  </p></li>
-
-  <li><p>
-    <a href="http://sourceforge.net/projects/scidb/reviews/"
-       style="line-height: 150%;">
-    Reviews for Scidc</a><br/>
-    Questo sito offre la possibilità di recensire l'applicazione.
-  </p></li>
-  <li><p>
-    <a href="https://lists.sourceforge.net/lists/listinfo/scidb-users"
-       style="line-height: 150%;">
-    Iscriviti alla Mailing List degli Utenti Scidc</a><br/>
-    Qui puoi iscriverti come membro della "Scidc Users Mailing List". 
-    Questa lista utenti presenta informazioni, novità e proposte. I membri
-    di questa lista possono mandare messaggi che saranno distribuiti a tutti
-    gli altri iscritti automaticamente.
-
-
-  </p></li>
-  <li><p>
-    <a href="http://sourceforge.net/apps/aguestbook/scidb/sign.php"
-       style="line-height: 150%;">
-    Scidc Guestbook</a><br/>
-    A questo sito è disponibile un libro degli ospiti.
-  </p></li>
-
-  <li><p>
-    <a href="ftp://ftp.cis.uab.edu/pub/hyatt/"
-       style="line-height: 150%;">
-    ftp://ftp.cis.uab.edu/pub/hyatt/</a><br/>
-    Il leggendario motore di scacchi Crafty. La sotto-cartella TB ha diverse tablebase di Nalimov che possono essere usate con vari programmi di scacchi così come nelle prossime versioni di Scidc.
-  </p></li>
-
-  <li><p>
-    <a href="http://tablebase.sesse.net"
-       style="line-height: 150%;">
-    tablebase.sesse.net</a><br/>
-    Questo sito fornisce anche file di tablebase fino a 6 pezzi.
-  </p></li>
-
-  <li><p>
-    <a href="http://www.chess.co.uk/twic/"
-       style="line-height: 150%;">
+    <a href="http://www.theweekinchess.com" style="line-height: 150%;">
     The Week in Chess</a><br/>
-    L'eccellente bollettino settimanale di partite di scacchi a respiro internazionale avviabili in formato <abbr>PGN</abbr>.
+    Un eccellente bollettino settimanale di partite di scacchi internazionali
+    in formato PGN.
   </p></li>
 
   <li><p>
     <a href="http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm"
        style="line-height: 150%;">
     Standard: Portable Game Notation Specification and Implementation Guide</a><br/>
-    Lo Standard <abbr>PGN</abbr>, creato da Steven J. Edwards in 1994. Questo sito spiega i formati <abbr>PGN</abbr> e EPD nel dettaglio.
+    Lo standard PGN di Steven J. Edwards (1994).
   </p></li>
 
   <li><p>
-    <a href="http://www.webalice.it/costa.f/eco/eco.html"
-       style="line-height: 150%;">
+    <a href="http://en.wikipedia.org/wiki/ECO_code" style="line-height: 150%;">
     ECO-Code</a><br/>
-    Una panoramica sul codice ECO.
+    Una panoramica del codice ECO.
+  </p></li>
+
+  <li><p>
+    <a href="http://tablebase.sesse.net" style="line-height: 150%;">
+    tablebase.sesse.net</a><br/>
+    File di tablebase, incluse le basi a 6 pezzi.
   </p></li>
 </ul>
 
 END
-
-# vi:set ts=2 sw=2 et filetype=html:

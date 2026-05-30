@@ -1,5 +1,5 @@
 # ======================================================================
-# Makefile for Scidb for Unix operating systems
+# Makefile for Scidc for Unix operating systems
 # ======================================================================
 
 include ../../Makefile.in
