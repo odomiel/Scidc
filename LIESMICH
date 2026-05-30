@@ -5,6 +5,9 @@ Scidc ist eine Schachdatenbank-Anwendung, geforkt von Scidb r1531.
 Das Programm unterstützt mehrere Datenbankformate und enthält
 Stockfish und Fairy-Stockfish für die Partienanalyse.
 
+Der Großteil der Änderungen in diesem Fork wurde mit Unterstützung
+von Claude (Anthropic KI) entwickelt.
+
 Unterstützte Formate
 --------------------
 - SI5 / SI4 / SI3  (Scid-Formate, lesen und schreiben)

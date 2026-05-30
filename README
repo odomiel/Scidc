@@ -5,6 +5,9 @@ Scidc is a chess database application, forked from Scidb r1531.
 It supports reading and writing multiple database formats and includes
 built-in chess engine support for game analysis.
 
+Most changes in this fork were developed with the assistance of
+Claude (Anthropic AI).
+
 Supported formats
 -----------------
 - SI5 / SI4 / SI3  (Scid formats, read/write)
