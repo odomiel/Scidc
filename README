@@ -35,29 +35,7 @@ User data is stored in ~/.scidc-beta/
 
 Building from source
 --------------------
-1. Build a local Tcl/Tk 8.6 (required once):
-
-    bash build-tcltk.sh
-
-2. Configure (required on every fresh clone):
-
-    ./configure
-
-3. Compile:
-
-    make
-
-3. Create the AppImage:
-
-    bash build-appimage.sh
-
-The resulting AppImage is Scidc-x86_64.AppImage.
-On the first run of build-appimage.sh the AppDir/usr/share/ directory
-is populated automatically from the source tree.
-
-For quick testing during development, run directly from the source tree:
-
-    ./run-scidb.sh
+See the file INSTALL for detailed build instructions.
 
 License
 -------

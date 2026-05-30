@@ -35,30 +35,7 @@ Benutzerdaten werden in ~/.scidc-beta/ gespeichert.
 
 Aus dem Quellcode bauen
 -----------------------
-1. Lokales Tcl/Tk 8.6 bauen (einmalig erforderlich):
-
-    bash build-tcltk.sh
-
-2. Konfigurieren (bei jedem frischen Clone erforderlich):
-
-    ./configure
-
-3. Kompilieren:
-
-    make
-
-3. AppImage erstellen:
-
-    bash build-appimage.sh
-
-Das Ergebnis ist Scidc-x86_64.AppImage.
-Beim ersten Aufruf von build-appimage.sh wird AppDir/usr/share/
-automatisch aus dem Quellcode-Verzeichnis befüllt.
-
-Zum schnellen Testen während der Entwicklung kann das Programm
-direkt aus dem Quellcode-Verzeichnis gestartet werden:
-
-    ./run-scidb.sh
+Die ausführliche Bauanleitung befindet sich in der Datei INSTALL.
 
 Lizenz
 ------
