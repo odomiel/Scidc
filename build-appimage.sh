@@ -49,6 +49,8 @@ if [ ! -d "$SHAREDIR" ]; then
     make -C tcl install \
         SHAREDIR="$SHAREDIR" \
         BINDIR="$APPDIR/usr/bin"
+    make -C src install-data \
+        SHAREDIR="$SHAREDIR"
     echo "AppDir/usr/share/scidc-beta/ angelegt."
 fi
 
