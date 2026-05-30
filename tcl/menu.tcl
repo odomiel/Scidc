@@ -60,7 +60,6 @@ set TipOfTheDay					"Tip of the &Day"
 set Fullscreen						"&Full-Screen"
 set LeaveFullscreen				"Leave &Full-Screen"
 set Help								"&Help"
-set Contact							"&Contact (Web Browser)"
 set Quit								"&Quit"
 set Tools							"&Tools"
 set Extras							"&Extras"
@@ -70,10 +69,6 @@ set Layout							"La&yout"
 # Font Size
 set IncrFontSize					"Increase All Font Sizes"
 set DecrFontSize					"Decrease All Font Sizes"
-
-# Contact
-set ContactBugReport				"&Bug Report"
-set ContactFeatureRequest		"&Feature Request"
 
 # Extras
 set InstallChessBaseFonts		"Install ChessBase &Fonts"
@@ -115,9 +110,6 @@ if {[info exists ::i18n::languages]} {
 		}
 	}
 }
-
-set BugTracker					"http://sourceforge.net/p/scidb/bugs/"
-set FeatureRequestTracker	"http://sourceforge.net/p/scidb/feature-requests/"
 
 variable Fullscreen			0
 variable HideMenu				0
@@ -462,31 +454,6 @@ if {0} {
 		-command $cmd \
 		;
 
-	### contact ##############################################################
-	set m [menu $menu.mContact]
-	lassign [::tk::UnderlineAmpersand $mc::Contact] text ul
-	$menu add cascade \
-		-compound left \
-		-menu $m \
-		-label " $text" \
-		-underline [incr ul] \
-		-image $::icon::16x16::contact \
-		;
-
-	lassign [::tk::UnderlineAmpersand $mc::ContactBugReport] text ul
-	$m add command \
-		-label $text \
-		-underline $ul \
-		-command [namespace code [list bugReport .application]] \
-		;
-
-	lassign [::tk::UnderlineAmpersand $mc::ContactFeatureRequest] text ul
-	$m add command \
-		-label $text \
-		-underline $ul \
-		-command [namespace code [list featureRequest .application]] \
-		;
-	
 	### fullscreen ###########################################################
 	$menu add separator
 	if {$Fullscreen} { set var LeaveFullscreen } else { set var Fullscreen }
@@ -776,16 +743,6 @@ proc gameNew {parent {variant Normal}} {
 		::scidc::game::clear $fen
 		::application::switchTab board
 	}
-}
-
-
-proc bugReport {parent} {
-	::web::open $parent [set [namespace current]::BugTracker]
-}
-
-
-proc featureRequest {parent} {
-	::web::open $parent [set [namespace current]::FeatureRequestTracker]
 }
 
 
