@@ -7,12 +7,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 3-Tier-Architektur: C++ DB-Layer → C++ App-Layer → Tcl/Tk UI
 - Mindestanforderung: **Tcl/Tk 8.6** (8.5-Kompatibilitätscode entfernt)
 - Keine Test-Suite – Testing ist manuell
+- Veröffentlicht auf Codeberg: https://codeberg.org/Mirik/Scidc
 
 ---
 
 ## Build & Versionierung
 - **CRITICAL: Jede Codeänderung sofort committen** – niemals mehrere Änderungen ohne Commit ansammeln
 - **Niemals `make` aufrufen** – User baut manuell
+- `Makefile.in` ist **nicht** in Git (maschinenspezifische Pfade) – bei jedem frischen Clone zuerst `./configure` ausführen
 - `./configure` überschreibt `Makefile.in` – persistente Änderungen müssen **auch in `configure`** gemacht werden
 - **Versionsnummer** bei jedem Code-Commit in **4 Dateien** synchron erhöhen:
   - `Makefile.version` (Zeile `SCIDB_VERSION`)
@@ -117,9 +119,10 @@ Daraus folgen drei konkrete Regeln für SI5-Write-Pfade:
 
 ## Tcl Startup-Sequenz
 1. **`exec.tcl`** – Prüft Version-Match C++ ↔ Tcl (`::scidc::misc::version`), startet Remote-Single-Process-Guard
-2. **`start.tcl`** – Initialisiert `::scidc::dir::*` (share, user, config, layout), legt `~/.scidc-beta/` an
-3. **`load.tcl`** – Splash-Screen, lazy-lädt ECO, Themes, Engines
+2. **`start.tcl`** – Initialisiert `::scidc::dir::*` (share, user, config, layout), legt `~/.scidc-beta/` an; setzt `$::scidc::dir::setup = 1` beim allerersten Start
+3. **`load.tcl`** – Splash-Screen, lazy-lädt ECO, Themes, Engines via `engine::setup`
 4. **`end.tcl`** – Finalisiert UI, registriert Options-Write-Callbacks, aktiviert Event-Handler
+5. **`application.tcl::Startup2`** – Sprachdialog (`ChooseLanguage`), dann Engine-Download-Dialog (`OfferEngineDownload`) beim ersten Start
 
 Options werden vor der UI gelesen (`::options::sourceFile`) und nach Programmende via Callbacks geschrieben:
 ```tcl
@@ -132,10 +135,12 @@ proc WriteOptions {chan} { ::options::writeItem $chan MyVar }
 ## Engines
 - Konfiguration: `tcl/engines/engines.dat` (Git-Quelle), synchronisiert nach `AppDir/usr/share/scidc-beta/engines/engines.dat` via `build-appimage.sh`
 - Binaries in `~/.scidc-beta/engines/bin/`, Daten in `~/.scidc-beta/engines/<name>/`
-- `AppRun` deployt Engines aus `usr/bin/` → `~/.scidc-beta/engines/bin/` beim AppImage-Start
+- **Engines sind nicht im AppImage gebündelt** – werden beim ersten Start via Dialog angeboten (`OfferEngineDownload` in `application.tcl`)
+- Engine-Download: `wget`/`curl` → `$::scidc::dir::engines/` → dann `file delete $::scidc::file::engines` + `::engine::setup` um die Liste neu zu laden
 - Engine-Namen in `engines.dat`: `Command` enthält nur den Dateinamen (kein Pfad); `LoadSharedConfiguration` setzt den vollen Pfad
 - UCI-Variantnamen müssen gemappt werden (z.B. `"Three-Check"` → `"3check"`)
 - `SaveEngine`: `lset Engines $sel ...` **innerhalb** des `if {$sel >= 0}` Blocks
+- Nach Änderungen an `~/.scidc-beta/config/engines.dat` (z.B. leere Datei durch fehlgeschlagenen Start): Datei löschen, damit die App beim nächsten Start `engines.dat` aus Share neu lädt
 
 ---
 
@@ -276,20 +281,28 @@ Danach übernimmt `build-appimage.sh` automatisch.
 
 ### Build-Workflow
 ```bash
-# 1. Tcl/Tk 8.6.18 lokal bauen (einmalig; überspringt sich selbst wenn aktuell):
+# 1. Tcl/Tk 8.6 lokal bauen (einmalig):
 bash build-tcltk.sh        # → deps/tcltk/
 
-# 2. Normale Entwicklungsiteration:
+# 2. Konfigurieren (einmalig pro Clone):
+./configure
+
+# 3. Normale Entwicklungsiteration:
 make
-bash build-appimage.sh     # → Scidc-x86_64.AppImage
+bash build-appimage.sh     # → Scidc-x86_64.AppImage (~39 MB)
 # Beim ersten Aufruf befüllt build-appimage.sh AppDir/usr/share/ automatisch.
 ```
 
 ### Wichtige Details
 - `build-appimage.sh` kopiert `tcl/scidc-beta` → `AppDir/usr/bin/scidc-beta` (nicht separate Pflege nötig)
 - `build-appimage.sh` synchronisiert auch lang/ und engines.dat – preserviert `AppDir/usr/share/` ansonsten
+- Das Binary wird beim Kopieren mit `strip` verkleinert (Debug-Symbole entfernt)
 - Tcl/Tk-Module (msgcat etc.) liegen im Source-Build unter `deps/tcltk/lib/tcl8/{ver}/` (nicht `lib/tcl8.6/tcl8/` wie bei Ubuntu-Paketen); `AppRun` setzt `TCL8_6_TM_PATH` entsprechend
 - FUSE-Mount ist **read-only** – Schreibzugriffe nur auf `~/.scidc-beta/`
-- Engines werden via `AppRun` nach `~/.scidc-beta/engines/bin/` deployt
+- **Engines sind nicht im AppImage** – kein AppRun-Deployment; stattdessen Download-Dialog beim ersten Start
 - `run-scidb.sh` läuft direkt aus dem Source-Tree (kein FUSE): `src/tkscidc-beta tcl/scidc-beta`
-- Nach Änderungen an `~/.scidc-beta/config/engines.dat` (z.B. leere Datei durch fehlgeschlagenen Start): Datei löschen, damit die App beim nächsten Start `engines.dat` aus Share neu lädt
+
+### Menü-Popup Positionierung (Dual-Monitor)
+`application.tcl` überschreibt `::tk::PostOverPoint` und `bind Menu <Map>` um zu verhindern dass Menüs auf den zweiten Monitor überlaufen:
+- `PostOverPoint`: klemmt das Haupt-Popup-Menü an den rechten Fensterrand
+- `ClampMenuToAppWindow`: `bind Menu <Map>` klemmt Untermenüs (die via C-level `postcascade` positioniert werden und `WidthOfScreen` = Gesamtbreite nutzen)
