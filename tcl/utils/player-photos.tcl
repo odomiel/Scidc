@@ -86,7 +86,7 @@ set Log(updated:N)				"%s file(s) updated."
 
 
 array set Options {
-	url:player-photos	http://sourceforge.net/projects/scidb/Files
+	url:player-photos	{}
 	notify:timeout		7000
 	use-gksudo			0
 }
