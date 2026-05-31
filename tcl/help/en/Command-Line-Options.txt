@@ -124,23 +124,6 @@ On the command line the following options are available at program start:
   </tr>
   <tr>
     <td class="standard" style="white-space:nowrap;" valign="top">
-        <code>--update-player-photos</code>
-    </td>
-    <td class="standard-justification">
-      Update or install player photos. Afterwards the program will be terminated.
-      <br/><br/>
-      The basic recommendation is to use the update or install functionality via
-      the graphical user interface.
-      <br/><br/>
-      Unix:
-      If called with super-user rights the update will be done in the shared
-      directory (normally <url>/usr/local/share/%scidb%</url>).
-      Otherwise the update will be done in user directory
-      <url>~/.%scidb%</url>.
-    </td>
-  </tr>
-  <tr>
-    <td class="standard" style="white-space:nowrap;" valign="top">
         <code>--single-process</code>
     </td>
     <td class="standard-justification">
