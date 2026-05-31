@@ -10,7 +10,7 @@ src/cdb2sci
 src/cbh2si4
 build.log
 Scidb-x86_64.AppImage
-Scidc-x86_64.AppImage
+Scidc-*.AppImage
 appimagetool-x86_64.AppImage
 AppDir/
 deps/

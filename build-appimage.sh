@@ -174,8 +174,19 @@ else
     TOOL="./$APPIMAGETOOL_FILE"
 fi
 
-ARCH="$ARCH" "$TOOL" "$APPDIR" "Scidc-${ARCH}.AppImage"
+# Versionsnummer aus Makefile.version lesen und in den Dateinamen einbauen
+# (Schema: Scidc-<Version>-<arch>.AppImage; Leerzeichen -> '-')
+VERSION=$(sed -n 's/.*-DSCIDB_VERSION="\\"\(.*\)\\"".*/\1/p' Makefile.version 2>/dev/null)
+if [ -n "$VERSION" ]; then
+    VERSION_SAFE=$(echo "$VERSION" | tr ' ' '-')
+    OUTNAME="Scidc-${VERSION_SAFE}-${ARCH}.AppImage"
+else
+    echo "WARNUNG: Version aus Makefile.version nicht lesbar – nutze unversionierten Namen."
+    OUTNAME="Scidc-${ARCH}.AppImage"
+fi
+
+ARCH="$ARCH" "$TOOL" "$APPDIR" "$OUTNAME"
 
 echo ""
 echo "=== Fertig! ==="
-echo "Starten mit: ./Scidc-${ARCH}.AppImage"
+echo "Starten mit: ./$OUTNAME"
