@@ -1424,6 +1424,9 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	::memcpy(hp.bytes, buf+48, 8);
 	::swapHomePawnBytes(hp.bytes);
 	unsigned count = homePawnCount & 63;
+	// hp.bytes holds 16 nibbles (8 bytes); a corrupt/malicious file may encode
+	// count > 16, which would underflow (16 - count) and overflow hp.bytes.
+	if (count > 16) count = 16;
 	::memset(hp.bytes + mstl::div2(count+1), 0, mstl::div2(16-count));
 	if (mstl::is_odd(count)) hp.bytes[mstl::div2(count)] &= 0x0f;
 	item.m_signature.setHomePawns(count, hp);
@@ -1964,6 +1967,9 @@ Codec::decodeIndex(ByteStream& strm, unsigned index)
 	// the first byte of HomePawnData has high bits of the NumHalfMoves counter in its top two bits
 	item.m_plyCount |= unsigned((count >> 6)) << 8;
 	count &= 63;
+	// hp.bytes holds 16 nibbles (8 bytes); a corrupt/malicious file may encode
+	// count > 16, which would underflow (16 - count) and overflow hp.bytes.
+	if (count > 16) count = 16;
 
 	hp::Pawns hp;
 	strm.get(hp.bytes, sizeof(hp.bytes));
