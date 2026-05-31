@@ -55,7 +55,8 @@ set EngineDownloadMsg		"The following chess engines are available for download.\
 set EngineDownloadBtn		"Download"
 set EngineSkipBtn			"Skip"
 set EngineDownloading		"Downloading %s..."
-set EngineDownloadDone		"Done."
+set EngineDownloadDone		"Download complete."
+set EngineDownloadRestart	"Please restart the program to use the engines."
 set EngineDownloadFailed	"Download failed: %s"
 set EngineDesc(stockfish-scidc)        "Stockfish — strong engine for game analysis"
 set EngineDesc(fairy-stockfish-scidc)  "Fairy-Stockfish — engine for chess variants"
@@ -1036,7 +1037,7 @@ proc OfferEngineDownload {parent} {
 	}
 
 	# Status label (shown during download)
-	tk::label $f.status -text "" -justify left -foreground [::colors::lookup information,html:link]
+	tk::label $f.status -text "" -justify left -wraplength 380
 	pack $f.status -anchor w -pady {8 0}
 
 	# Buttons
@@ -1121,8 +1122,8 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		# the share config and picks up the newly downloaded binaries.
 		catch { file delete $::scidc::file::engines }
 		catch { ::engine::setup }
-		$statusLbl configure -text $mc::EngineDownloadDone
-		after 1000 [list set [namespace current]::Vars(engdl:done) 1]
+		$statusLbl configure -text "$mc::EngineDownloadDone $mc::EngineDownloadRestart"
+		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
 	}
 }
 
