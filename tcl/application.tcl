@@ -1016,6 +1016,7 @@ proc OfferEngineDownload {parent} {
 	wm title $dlg $mc::EngineDownloadTitle
 	wm resizable $dlg no no
 	wm transient $dlg $parent
+	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list set Vars(engdl:done) 1]]
 
 	set f [tk::frame $dlg.f -padx 16 -pady 12]
 	pack $f -fill both -expand yes
@@ -1050,7 +1051,7 @@ proc OfferEngineDownload {parent} {
 		]
 	ttk::button $bf.skip \
 		-text $mc::EngineSkipBtn \
-		-command [list destroy $dlg] \
+		-command [namespace code [list set Vars(engdl:done) 1]] \
 		;
 	pack $bf.dl $bf.skip -side left -padx 4
 
