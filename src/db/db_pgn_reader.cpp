@@ -239,7 +239,7 @@ quote(mstl::string const& s)
 static bool
 isMoveToken(char const* s)
 {
-	while (CharToType[int(*s)] != None)
+	while (CharToType[Byte(*s)] != None)
 		++s;
 
 	return !::isalnum(*s);
@@ -249,7 +249,7 @@ isMoveToken(char const* s)
 static char const*
 skipMoveToken(char const* s)
 {
-	while (CharToType[int(*s)] != None)
+	while (CharToType[Byte(*s)] != None)
 		++s;
 
 	return s;
