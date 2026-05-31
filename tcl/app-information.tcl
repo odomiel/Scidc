@@ -574,7 +574,12 @@ proc Response {lang update parent url data} {
 
 
 proc LanguageChanged {} {
-	FetchNews $::mc::langID 1
+	variable URL
+	if {[string length $URL] == 0} {
+		update
+	} else {
+		FetchNews $::mc::langID 1
+	}
 }
 
 
