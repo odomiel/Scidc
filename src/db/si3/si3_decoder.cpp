@@ -83,6 +83,13 @@ throwCorruptData()
 }
 
 
+// Guard against unbounded recursion from deeply nested variations in a
+// corrupt/malicious file (each '(' recurses one C-stack frame deeper).
+// Real games never approach this; the cap turns a stack overflow into a
+// clean error / "position not found".
+static unsigned const MaxVariationLevel = 300;
+
+
 Decoder::Decoder(ByteStream& strm, sys::utf8::Codec& codec)
 	:m_strm(strm)
 	,m_givenCodec(&codec)
@@ -304,6 +311,9 @@ Decoder::handleInvalidMove(Byte value)
 void
 Decoder::decodeVariation(unsigned level)
 {
+	if (level > MaxVariationLevel)
+		::throwCorruptData();
+
 	bool preComment = false;
 
 	while (true)
@@ -1202,8 +1212,11 @@ Decoder::nextMove()
 
 
 Move
-Decoder::findExactPosition(Board const& position, bool skipVariations)
+Decoder::findExactPosition(Board const& position, bool skipVariations, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		return Move::invalid();
+
 	skipTags();
 
 	if (m_strm.get() & flags::Non_Standard_Start)
@@ -1267,7 +1280,7 @@ Decoder::findExactPosition(Board const& position, bool skipVariations)
 					{
 						m_position.push();
 						m_position.undoMove(m_move);
-						m_move = findExactPosition(position, false);
+						m_move = findExactPosition(position, false, depth + 1);
 						m_position.pop();
 
 						if (m_move)

@@ -62,8 +62,8 @@ private:
 	void prepareDecoding(util::ByteStream& moveArea, util::ByteStream* textArea = nullptr);
 
 	void decodeAnnotation(util::ByteStream& strm);
-	void decodeVariation(util::ByteStream& moves, util::ByteStream& text);
-	void decodeVariation(db::Consumer& consumer, util::ByteStream& moves, util::ByteStream& text);
+	void decodeVariation(util::ByteStream& moves, util::ByteStream& text, unsigned depth = 0);
+	void decodeVariation(db::Consumer& consumer, util::ByteStream& moves, util::ByteStream& text, unsigned depth = 0);
 	unsigned decodeMainline(util::ByteStream& moves, uint16_t* line, unsigned length, Board* startBoard);
 
 	::db::MoveNode*	m_currentNode;

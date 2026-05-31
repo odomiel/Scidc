@@ -61,7 +61,7 @@ public:
 
 	mstl::string const& encoding() const;
 
-	Move findExactPosition(Board const& position, bool skipVariations);
+	Move findExactPosition(Board const& position, bool skipVariations, unsigned depth = 0);
 
 	unsigned doDecoding(GameData& data);
 	save::State doDecoding(db::Consumer& consumer, TagSet& tags);

@@ -55,6 +55,13 @@ throwCorruptData()
 }
 
 
+// Guard against unbounded recursion from deeply nested variations in a
+// corrupt/malicious CBF file (each '(' recurses one C-stack frame deeper).
+// Real games never approach this; the cap turns a stack overflow into a
+// clean "corrupted data" error.
+static unsigned const MaxVariationLevel = 300;
+
+
 static void
 xorBuffer(Byte* buf, unsigned bufLen, Byte xorMask)
 {
@@ -209,8 +216,11 @@ Decoder::decodeAnnotation(ByteStream& strm)
 
 
 void
-Decoder::decodeVariation(ByteStream& moves, ByteStream& text)
+Decoder::decodeVariation(ByteStream& moves, ByteStream& text, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		throwCorruptData();
+
 	Move move;
 
 	while (moves.remaining())
@@ -229,7 +239,7 @@ Decoder::decodeVariation(ByteStream& moves, ByteStream& text)
 				m_position.push();
 				m_position.undoMove(move);
 				current->addVariation(m_currentNode = new MoveNode);
-				decodeVariation(moves, text);
+				decodeVariation(moves, text, depth + 1);
 				m_currentNode = current;
 				m_position.pop();
 				break;
@@ -263,8 +273,11 @@ Decoder::decodeVariation(ByteStream& moves, ByteStream& text)
 
 
 void
-Decoder::decodeVariation(Consumer& consumer, ByteStream& moves, ByteStream& text)
+Decoder::decodeVariation(Consumer& consumer, ByteStream& moves, ByteStream& text, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		throwCorruptData();
+
 	Move move;
 
 	while (moves.remaining())
@@ -281,7 +294,7 @@ Decoder::decodeVariation(Consumer& consumer, ByteStream& moves, ByteStream& text
 				m_position.push();
 				m_position.undoMove(move);
 				consumer.startVariation();
-				decodeVariation(consumer, moves, text);
+				decodeVariation(consumer, moves, text, depth + 1);
 				consumer.finishVariation();
 				m_position.pop();
 				break;
