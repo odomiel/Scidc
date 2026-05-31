@@ -88,7 +88,6 @@ TITLE Benvenuti a Scidc-Help
   <li><a href="Command-Line-Options.html">Opzioni nella Linea di Comando</a></li>
   <li><a href="NAG-Comments.html">Valori delle annotazioni in NAG</a></li>
   <li><a href="Contact-Information.html">Contatti</a></li>
-  <li><a href="Development-Roadmap.html">Piano di Sviluppo</a></li>
   <li><a href="Whats-New.html">Novità</a></li>
   <li><a href="Welcome.html">Benvenuto su Scidc!</a></li>
 </ul>

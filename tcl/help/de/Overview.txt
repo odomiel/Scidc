@@ -98,7 +98,6 @@ TITLE Willkommen zur Scidc-Hilfe
   <li><a href="ECO-Code.html">ECO-Code</a></li>
   <li><a href="FEN.html">FEN (Forsyth-Edwards-Notation)</a></li>
   <li><a href="Contact-Information.html">Kontaktinformationen</a></li>
-  <li><a href="Development-Roadmap.html">Entwicklungsplanung</a></li>
   <li><a href="Whats-New.html">Was ist neu?</a></li>
   <li><a href="Welcome.html">Willkommen zu Scidc!</a></li>
 </ul>
