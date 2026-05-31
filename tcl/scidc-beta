@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.30 b13 Beta"
+	set version "26.05.31 b14 Beta"
 }
 
 
@@ -98339,6 +98339,13 @@ proc setup {} {
 				lappend resolved [array get engine]
 			}
 			set Engines $resolved
+			# If local config has no engines but share has some, reload from share.
+			# Handles the case where engines.dat was written as empty (before engines
+			# were downloaded) but the binaries are now present.
+			if {[llength $Engines] == 0 && $shareFiletime > 0} {
+				LoadSharedConfiguration $shareFile
+				::options::hookWriter [namespace current]::WriteEngineOptions engines
+			}
 		}
 	} elseif {$shareFiletime > 0} {
 		LoadSharedConfiguration $shareFile

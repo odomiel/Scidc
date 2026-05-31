@@ -893,6 +893,13 @@ proc setup {} {
 				lappend resolved [array get engine]
 			}
 			set Engines $resolved
+			# If local config has no engines but share has some, reload from share.
+			# Handles the case where engines.dat was written as empty (before engines
+			# were downloaded) but the binaries are now present.
+			if {[llength $Engines] == 0 && $shareFiletime > 0} {
+				LoadSharedConfiguration $shareFile
+				::options::hookWriter [namespace current]::WriteEngineOptions engines
+			}
 		}
 	} elseif {$shareFiletime > 0} {
 		LoadSharedConfiguration $shareFile
