@@ -63,6 +63,12 @@ cp tcl/lang/*.tcl "$SHAREDIR/lang/"
 # Engines-Konfiguration synchronisieren
 cp tcl/engines/engines.dat "$SHAREDIR/engines/engines.dat"
 
+# Spielerlexikon-Update-Skripte synchronisieren (SHAREDIR wird nur beim
+# Erst-Build befuellt, daher hier bei jedem Build aktualisieren)
+mkdir -p "$SHAREDIR/scripts"
+cp tcl/update-fide-players.py tcl/update-dwz-players.py "$SHAREDIR/scripts/"
+chmod 755 "$SHAREDIR/scripts/update-fide-players.py" "$SHAREDIR/scripts/update-dwz-players.py"
+
 # Hilfe-HTML-Dateien synchronisieren
 find tcl/help -name "*.html" | while read f; do
     rel="${f#tcl/help/}"
