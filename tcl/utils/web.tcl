@@ -78,12 +78,16 @@ proc open {parent url} {
 				if {![info exists DefaultBrowser]} {
 					set DefaultBrowser [FindDefaultBrowser]
 				}
+				# The URL is percent-escaped, but escape() keeps "'" unescaped;
+				# a single quote would break out of the '...' shell quoting below.
+				# Encode it as %27 so the URL cannot inject shell syntax.
+				set shurl [string map {' %27} $url]
 				while {[string length $DefaultBrowser]} {
 					if {[info exists Options($DefaultBrowser)]} {
-						set options [string map [list %url% $url] $Options($DefaultBrowser)]
+						set options [string map [list %url% $shurl] $Options($DefaultBrowser)]
 						if {![catch {exec /bin/sh -c "$DefaultBrowser $options"}]} { break }
 					}
-					if {![catch {exec /bin/sh -c "$DefaultBrowser '$url'" &}]} { break }
+					if {![catch {exec /bin/sh -c "$DefaultBrowser '$shurl'" &}]} { break }
 					lappend Excluded $DefaultBrowser
 					set DefaultBrowser [FindDefaultBrowser]
 				}
