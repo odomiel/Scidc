@@ -81,8 +81,8 @@ private:
 
 	void decodeRun(unsigned count);
 	void decodeRun(unsigned count, Consumer& consumer);
-	void decodeVariation(util::ByteStream& data);
-	void decodeVariation(Consumer& consumer, util::ByteStream& data, util::ByteStream& text);
+	void decodeVariation(util::ByteStream& data, unsigned depth = 0);
+	void decodeVariation(Consumer& consumer, util::ByteStream& data, util::ByteStream& text, unsigned depth = 0);
 	void decodeTextSection(MoveNode* node, util::ByteStream& text);
 	void decodeMark();
 
@@ -103,7 +103,7 @@ private:
 	Move decodeKnight(sq::ID from, Byte nybble);
 	Move decodePawn(sq::ID from, Byte nybble);
 
-	Move searchForPosition(Board const& position, bool skipVariations);
+	Move searchForPosition(Board const& position, bool skipVariations, unsigned depth = 0);
 
 	static void decodeEngines(util::ByteStream& strm, EngineList& engines);
 	static void decodeTags(util::ByteStream& strm, TagSet& tags);

@@ -59,6 +59,11 @@ throwCorruptData()
 }
 
 
+// Guard against unbounded recursion from deeply nested variations in a
+// corrupt/malicious file (each '(' recurses one C-stack frame deeper).
+static unsigned const MaxVariationLevel = 300;
+
+
 Decoder::Decoder(ByteStream& strm)
 	:m_strm(strm)
 	,m_guaranteedStreamSize(strm.size())
@@ -275,8 +280,11 @@ Decoder::decodeMove(Byte value, Move& move)
 
 
 void
-Decoder::decodeVariation(ByteStream& data)
+Decoder::decodeVariation(ByteStream& data, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		throwCorruptData();
+
 	unsigned	pieceNum	= 0;	// satisfies the compiler
 	Move		move;
 
@@ -322,7 +330,7 @@ Decoder::decodeVariation(ByteStream& data)
 					m_position.push();
 					m_position.board().undoMove(move, variant::Normal);
 					current->addVariation(m_currentNode = new MoveNode);
-					decodeVariation(data);
+					decodeVariation(data, depth + 1);
 					m_currentNode = current;
 					m_position.pop();
 				}
@@ -364,8 +372,11 @@ Decoder::decodeVariation(ByteStream& data)
 
 
 void
-Decoder::decodeVariation(Consumer& consumer, util::ByteStream& data, ByteStream& text)
+Decoder::decodeVariation(Consumer& consumer, util::ByteStream& data, ByteStream& text, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		throwCorruptData();
+
 	MarkSet			marks;
 	MoveInfoSet		moveInfo;
 	Annotation		annotation;
@@ -501,7 +512,7 @@ Decoder::decodeVariation(Consumer& consumer, util::ByteStream& data, ByteStream&
 					m_position.push();
 					m_position.board().undoMove(lastMove, variant::Normal);
 					consumer.startVariation();
-					decodeVariation(consumer, data, text);
+					decodeVariation(consumer, data, text, depth + 1);
 					consumer.finishVariation();
 					m_position.pop();
 					break;
@@ -890,8 +901,11 @@ Decoder::nextMove(unsigned runLength)
 
 
 Move
-Decoder::findExactPosition(Board const& position, bool skipVariations)
+Decoder::findExactPosition(Board const& position, bool skipVariations, unsigned depth)
 {
+	if (depth > MaxVariationLevel)
+		return Move::invalid();
+
 	uint16_t idn = m_strm.uint16() & 0x0fff;
 
 	if (idn)
@@ -928,12 +942,12 @@ Decoder::findExactPosition(Board const& position, bool skipVariations)
 			return Move::invalid();
 	}
 
-	return searchForPosition(position, skipVariations);
+	return searchForPosition(position, skipVariations, depth);
 }
 
 
 Move
-Decoder::searchForPosition(Board const& position, bool skipVariations)
+Decoder::searchForPosition(Board const& position, bool skipVariations, unsigned depth)
 {
 	Move move;
 
@@ -967,7 +981,7 @@ Decoder::searchForPosition(Board const& position, bool skipVariations)
 					{
 						m_position.push();
 						m_position.board().undoMove(move, variant::Normal);
-						move = findExactPosition(position, false);
+						move = findExactPosition(position, false, depth + 1);
 						m_position.pop();
 
 						if (move)
