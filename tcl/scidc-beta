@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.05.31 b18 Beta"
+	set version "26.05.31 b19 Beta"
 }
 
 
@@ -102831,6 +102831,8 @@ set EngineDownloading		"Downloading %s..."
 set EngineDownloadDone		"Download complete."
 set EngineDownloadRestart	"Please restart the program to use the engines."
 set EngineDownloadFailed	"Download failed: %s"
+set EngineChecksumMismatch	"checksum mismatch (file may be corrupt or tampered)"
+set EngineNoChecksumTool	"sha256sum/shasum not found - cannot verify download integrity"
 set EngineDesc(stockfish-scidc)		"Stockfish \u2014 strong engine for game analysis"
 set EngineDesc(fairy-stockfish-scidc)	"Fairy-Stockfish \u2014 engine for chess variants"
 
@@ -103844,6 +103846,27 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		return
 	}
 
+	# Determine checksum tool; refuse to install binaries we cannot verify.
+	set hasher ""
+	if {![catch {exec sha256sum --version}]} {
+		set hasher [list sha256sum]
+	} elseif {![catch {exec shasum --version}]} {
+		set hasher [list shasum -a 256]
+	}
+	if {$hasher eq ""} {
+		$statusLbl configure -foreground red -text $mc::EngineNoChecksumTool
+		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
+		return
+	}
+
+	# Expected SHA-256 of the published release assets. Downloaded binaries are
+	# verified against these before being made executable, so neither a corrupted
+	# transfer nor a tampered release asset can be installed and run.
+	array set expectSha {
+		stockfish-scidc        1cda28ae1efda78ef6940870ba4d105898af19fa42569e0b6b25803039eda747
+		fairy-stockfish-scidc  9c8ff22d7474100cf067a8f2a83b278619369997aa9d0e69284c465f160e3419
+	}
+
 	set failed {}
 	foreach e $engines {
 		if {![info exists Vars(engsel:$e)] || !$Vars(engsel:$e)} continue
@@ -103860,6 +103883,11 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 				exec wget -q -L -O $tmpDest $url
 			} else {
 				exec curl -sS -L -o $tmpDest $url
+			}
+			if {![info exists expectSha($e)]} { error $mc::EngineChecksumMismatch }
+			set got [string tolower [lindex [exec {*}$hasher $tmpDest] 0]]
+			if {$got ne [string tolower $expectSha($e)]} {
+				error $mc::EngineChecksumMismatch
 			}
 			file rename -force $tmpDest $dest
 			exec chmod +x $dest

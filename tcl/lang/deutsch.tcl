@@ -458,6 +458,8 @@
 ::application::mc::EngineDownloadDone	"Download abgeschlossen."
 ::application::mc::EngineDownloadRestart	"Bitte starten Sie das Programm neu, um die Engines zu verwenden."
 ::application::mc::EngineDownloadFailed	"Download fehlgeschlagen: %s"
+::application::mc::EngineChecksumMismatch	"Prüfsumme ungültig (Datei beschädigt oder manipuliert)"
+::application::mc::EngineNoChecksumTool	"sha256sum/shasum nicht gefunden - Download-Integrität kann nicht geprüft werden"
 ::application::mc::EngineDesc(stockfish-scidc)	"Stockfish - starke Engine für Partienanalyse"
 ::application::mc::EngineDesc(fairy-stockfish-scidc)	"Fairy-Stockfish - Engine für Schachvarianten"
 
