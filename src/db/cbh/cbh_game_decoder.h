@@ -72,8 +72,8 @@ private:
 	void startDecoding(TagSet* tags = 0);
 	MoveNode* decodeMoves(MoveNode* root);
 	MoveNode* decodeMoves(MoveNodeAllocator& allocator);
-	void decodeMoves(MoveNode* root, unsigned& count);
-	void decodeMoves(MoveNode* root, unsigned& count, MoveNodeAllocator& allocator);
+	void decodeMoves(MoveNode* root, unsigned& count, unsigned depth = 0);
+	void decodeMoves(MoveNode* root, unsigned& count, MoveNodeAllocator& allocator, unsigned depth = 0);
 	void traverse(Consumer& consumer, MoveNode const* root);
 	void getAnnotation(MoveNode* node, int moveNo);
 	void decodeComment(MoveNode* node, unsigned length, move::Position position);

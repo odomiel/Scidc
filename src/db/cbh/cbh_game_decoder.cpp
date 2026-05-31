@@ -542,10 +542,19 @@ GameDecoder::decodeMoves(Consumer& consumer)
 #endif
 
 
+// Guard against unbounded recursion from deeply nested variations in a
+// corrupt/malicious CBH file (each '(' recurses one C-stack frame deeper).
+// Real games never approach this; the cap turns a stack overflow into a
+// clean "corrupted data" error.
+static unsigned const MaxVariationDepth = 300;
+
 void
-GameDecoder::decodeMoves(MoveNode* root, unsigned& count)
+GameDecoder::decodeMoves(MoveNode* root, unsigned& count, unsigned depth)
 {
 	typedef mstl::vector<MoveNode*> Vars;
+
+	if (depth > MaxVariationDepth)
+		IO_RAISE(Game, Corrupted, "variation nesting too deep");
 
 	Vars varList;
 	Move move;
@@ -625,7 +634,7 @@ GameDecoder::decodeMoves(MoveNode* root, unsigned& count)
 			case Token_Push:
 				node = new MoveNode;
 				varList.push_back(node);
-				decodeMoves(node, count);
+				decodeMoves(node, count, depth + 1);
 				break;
 
 			case Token_Pop:
@@ -637,9 +646,12 @@ GameDecoder::decodeMoves(MoveNode* root, unsigned& count)
 
 
 void
-GameDecoder::decodeMoves(MoveNode* root, unsigned& count, MoveNodeAllocator& allocator)
+GameDecoder::decodeMoves(MoveNode* root, unsigned& count, MoveNodeAllocator& allocator, unsigned depth)
 {
 	typedef mstl::vector<MoveNode*> Vars;
+
+	if (depth > MaxVariationDepth)
+		IO_RAISE(Game, Corrupted, "variation nesting too deep");
 
 	Vars varList;
 	Move move;
@@ -724,7 +736,7 @@ GameDecoder::decodeMoves(MoveNode* root, unsigned& count, MoveNodeAllocator& all
 			case Token_Push:
 				node = allocator.allocate();
 				varList.push_back(node);
-				decodeMoves(node, count, allocator);
+				decodeMoves(node, count, allocator, depth + 1);
 				break;
 
 			case Token_Pop:
