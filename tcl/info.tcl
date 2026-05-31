@@ -168,7 +168,8 @@ proc DisplayAbout {w} {
 		<font style='font-family: $fam; font-size: 12pt;'>
 			$mc::Version $::scidc::version<br/>
 			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/>
-			Copyright &#x00A9; 2026 Mirik<br/><br/>
+			Copyright &#x00A9; 2026 Mirik<br/>
+			[Url https://codeberg.org/Mirik/Scidc]<br/><br/>
 $mc::Distributed<br/><br/>
 		</font>
 	"
