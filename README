@@ -20,7 +20,7 @@ Requirements
 - Linux (x86_64)
 - For running: none (AppImage bundles all dependencies)
 - For building: gcc/g++, make, Tcl/Tk 8.6 dev headers, X11 dev headers,
-  zlib, expat, gdbm
+  zlib, expat
 
 Installation
 ------------

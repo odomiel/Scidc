@@ -20,7 +20,7 @@ Voraussetzungen
 - Linux (x86_64)
 - Zum Ausführen: keine (das AppImage enthält alle Abhängigkeiten)
 - Zum Bauen: gcc/g++, make, Tcl/Tk 8.6 Entwicklungsheader,
-  X11 Entwicklungsheader, zlib, expat, gdbm
+  X11 Entwicklungsheader, zlib, expat
 
 Installation
 ------------

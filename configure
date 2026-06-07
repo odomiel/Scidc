@@ -140,8 +140,6 @@ array set package {
     zziplib-lib  -lzzip
     expat-inc    {}
     expat-lib    -lexpat
-    gdbm-inc     {}
-    gdbm-lib     -lgdbm
     tcl-inc      {}
     tcl-lib      {}
     x-inc        {}
@@ -166,7 +164,6 @@ array set force {
     zlib    no
     zziplib no
     expat   no
-    gdbm    no
 }
 
 array set environment {
@@ -222,7 +219,6 @@ array set subdir {
     zlib    {}
     zziplib {}
     expat   {}
-    gdbm    {}
 }
 
 array set distribution {
@@ -1386,78 +1382,6 @@ proc checkZziplib {} {
 }
 
 
-# TestGdbm.sh:
-#    Script used to test if the system has gdbm installed.
-#
-set TestGdbm {#!/bin/sh
-cat <<EOF > testgdbm.c
-#include <gdbm.h>
-int main()
-{
-    char const* s = gdbm_version;
-    char const* t = s;
-    if (*t) ;
-    return 0;
-}
-EOF
-
-__CC__ -o testgdbm testgdbm.c __gdbm-inc__ __gdbm-lib__
-if [ -f testgdbm ]; then
-    exit 0
-else
-    exit 1
-fi
-}
-
-
-# SystemHasGdbm:
-#    Determines if the system has gdbm installed. If not,
-#    the gdbm version that comes with Scidb will be used.
-#
-proc SystemHasGdbm {} {
-    global TestGdbm package
-
-    set testGdbm [regsub -all __CC__ $TestGdbm [GetGCC]]
-    set testGdbm [regsub -all __gdbm-inc__ $testGdbm $package(gdbm-inc)]
-    set testGdbm [regsub -all __gdbm-lib__ $testGdbm $package(gdbm-lib)]
-
-    flush stdout
-    if {[catch {open testgdbm.sh w} f]} { return 0 }
-    puts $f [regsub -all __CC__ $testGdbm [GetGCC]]
-    close $f
-    set result 0
-    if {![catch {exec sh testgdbm.sh} err]} { set result 1 }
-    catch { file delete -force testgdbm.sh }
-    catch { file delete -force testgdbm.c }
-    catch { file delete -force testgdbm }
-    return $result
-}
-
-
-# checGdbm:
-#    Checks whether the system has the gdbm library installed,
-#
-proc checkGdbm {} {
-    global environment subdir package force
-
-    if {$force(expat)} { return 0 }
-
-    if {[string first "libgdbm." $environment(LDFLAGS)] >= 0} {
-        return
-    }
-    puts -nonewline "    Checking if your system already has gdbm installed: "
-    flush stdout
-    if {[SystemHasGdbm]} {
-        puts "yes."
-    } else {
-        puts "no.\n      Using bundled library."
-        set subdir(gdbm) "util/gdbm"
-        set package(gdbm-lib) "[pwd]/src/util/gdbm/libgdbm.a"
-        set package(gdbm-inc) "-I[pwd]/src/util/gdbm"
-    }
-}
-
-
 # TestExpat.sh:
 #    Script used to test if the system has expat installed.
 #
@@ -2168,7 +2092,6 @@ proc usage {rc} {
     puts "  --force-bundled-zlib       \[default=no\]"
     puts "  --force-bundled-zziplib    \[default=no\]"
     puts "  --force-bundled-expat      \[default=no\]"
-    puts "  --force-bundled-gdbm       \[default=no\]"
     puts ""
     puts "Optional Features:"
     puts "  --disable-FEATURE          do not include FEATURE (same as --enable-FEATURE=no)"
@@ -2351,7 +2274,6 @@ if {[string length $gxxVer]} {
     checkZlib
     checkZziplib
     checkExpat
-    checkGdbm
 
     # We will always use the broken linker hack, the newer versions
     # of the GNU linker are all broken (problems with the initialization
