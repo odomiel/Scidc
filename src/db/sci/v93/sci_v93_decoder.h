@@ -59,7 +59,6 @@ public:
 	typedef mstl::map<mstl::string,unsigned> TagMap;
 
 	Decoder(util::ByteStream& strm, variant::Type variant);
-	Decoder(util::ByteStream& strm, unsigned guaranteedStreamSize, variant::Type variant);
 
 	Move findExactPosition(Board const& position, bool skipVariations, unsigned depth = 0);
 	void findTags(TagMap& tags);
@@ -107,7 +106,6 @@ private:
 	Decoder& operator=(Decoder const&);
 
 	util::ByteStream&	m_strm;
-	unsigned				m_guaranteedStreamSize;
 	decoder::Position	m_position;
 	MoveNode*			m_currentNode;
 	variant::Type		m_variant;

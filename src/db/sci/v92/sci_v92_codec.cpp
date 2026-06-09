@@ -818,7 +818,7 @@ Codec::doDecoding(::util::BlockFileReader* reader,
 {
 	ByteStream strm;
 	getGameRecord(info, *reader, strm);
-	Decoder decoder(strm, m_gameData->blockSize() - info.gameOffset());
+	Decoder decoder(strm);
 	return decoder.doDecoding(line, length, startBoard, useStartBoard);
 }
 
@@ -828,7 +828,7 @@ Codec::doDecoding(db::Consumer& consumer, TagSet& tags, GameInfo const& info, un
 {
 	ByteStream strm;
 	getGameRecord(info, m_gameData->reader(), strm);
-	Decoder decoder(strm, m_gameData->blockSize() - info.gameOffset());
+	Decoder decoder(strm);
 	return decoder.doDecoding(consumer, tags);
 }
 
@@ -846,7 +846,7 @@ Codec::doDecoding(GameData& data, GameInfo& info, unsigned gameIndex, mstl::stri
 {
 	ByteStream strm;
 	getGameRecord(info, m_gameData->reader(), strm);
-	Decoder decoder(strm, m_gameData->blockSize() - info.gameOffset());
+	Decoder decoder(strm);
 	decoder.doDecoding(data);
 }
 
@@ -2293,7 +2293,7 @@ Codec::findExactPosition(	GameInfo const& info,
 {
 	ByteStream src;
 	getGameRecord(info, reader ? *reader : m_gameData->reader(), src);
-	Decoder decoder(src, m_gameData->blockSize() - info.gameOffset());
+	Decoder decoder(src);
 	return decoder.findExactPosition(position, skipVariations);
 }
 

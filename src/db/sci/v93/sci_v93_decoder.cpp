@@ -74,18 +74,23 @@ skipString(Byte const* p)
 }
 
 
-Decoder::Decoder(ByteStream& strm, variant::Type variant)
-	:m_strm(strm)
-	,m_guaranteedStreamSize(strm.size())
-	,m_currentNode(0)
-	,m_variant(variant)
+// Validate a record-relative section offset read from an untrusted file and
+// return the corresponding pointer, ensuring `need` bytes are readable there.
+// Turns a malicious out-of-range offset into a clean corrupt-data error instead
+// of an out-of-bounds access.
+inline
+static Byte*
+sectionPtr(ByteStream& strm, unsigned offset, unsigned need)
 {
+	if (offset > strm.capacity() || need > strm.capacity() - offset)
+		throwCorruptData();
+
+	return strm.base() + offset;
 }
 
 
-Decoder::Decoder(ByteStream& strm, unsigned guaranteedStreamSize, variant::Type variant)
+Decoder::Decoder(ByteStream& strm, variant::Type variant)
 	:m_strm(strm)
-	,m_guaranteedStreamSize(guaranteedStreamSize)
 	,m_currentNode(0)
 	,m_variant(variant)
 {
@@ -830,23 +835,15 @@ Decoder::doDecoding(db::Consumer& consumer, TagSet& tags)
 		tags.set(tag::Fen, fen);
 	}
 
-	// Validate the file-supplied data-section offset/size against the record
-	// extent (capacity) before forming pointers/sub-streams -> avoids OOB read.
 	unsigned dataOffset = m_strm.uint24();
-	if (dataOffset > m_strm.capacity())
-		throwCorruptData();
-	Byte* dataSection = m_strm.base() + dataOffset;
+	Byte* dataSection = sectionPtr(m_strm, dataOffset, 0);
 	ByteStream text, data;
 
 	if (flags & flags::TextSection)
 	{
-		if (m_strm.capacity() - dataOffset < 3)
-			throwCorruptData();
-		unsigned size = ByteStream::uint24(dataSection);
-		if (size > m_strm.capacity() - dataOffset - 3)
-			throwCorruptData();
+		unsigned size = ByteStream::uint24(sectionPtr(m_strm, dataOffset, 3));
 
-		text.setup(dataSection + 3, size);
+		text.setup(sectionPtr(m_strm, dataOffset + 3, size), size);
 		data.setup(text.end(), m_strm.end());
 	}
 	else
@@ -902,20 +899,14 @@ Decoder::doDecoding(GameData& gameData)
 	M_ASSERT(m_currentNode);
 
 	unsigned dataOffset = m_strm.uint24();
-	if (dataOffset > m_strm.capacity())
-		throwCorruptData();
-	Byte* dataSection = m_strm.base() + dataOffset;
+	Byte* dataSection = sectionPtr(m_strm, dataOffset, 0);
 	ByteStream data, text;
 
 	if (flags & flags::TextSection)
 	{
-		if (m_strm.capacity() - dataOffset < 3)
-			throwCorruptData();
-		unsigned size = ByteStream::uint24(dataSection);
-		if (size > m_strm.capacity() - dataOffset - 3)
-			throwCorruptData();
+		unsigned size = ByteStream::uint24(sectionPtr(m_strm, dataOffset, 3));
 
-		text.setup(dataSection + 3, size);
+		text.setup(sectionPtr(m_strm, dataOffset + 3, size), size);
 		data.setup(text.end(), m_strm.end());
 	}
 	else
@@ -998,16 +989,12 @@ Decoder::stripMoveInformation(unsigned halfMoveCount, unsigned types)
 
 	bool stripped = false;
 
-	if (offset > m_strm.capacity())
-		throwCorruptData();
-	Byte const* data = m_strm.base() + offset;
+	Byte const* data = sectionPtr(m_strm, offset, 0);
 
 	if (flags & flags::TextSection)
 	{
 		unsigned textSize = m_strm.uint24();
-		if (textSize + 3 > m_strm.capacity() - offset)
-			throwCorruptData();
-		data += textSize + 3;
+		data = sectionPtr(m_strm, offset + textSize + 3, 0);
 	}
 
 	if (flags & flags::TagSection)
@@ -1129,18 +1116,12 @@ Decoder::findTags(TagMap& tags)
 		m_strm.skipString();
 
 	unsigned dataOffset = m_strm.uint24();
-	if (dataOffset > m_strm.capacity())
-		throwCorruptData();
-	Byte* dataSection = m_strm.base() + dataOffset;
+	Byte* dataSection = sectionPtr(m_strm, dataOffset, 0);
 
 	if (flags & flags::TextSection)
 	{
-		if (m_strm.capacity() - dataOffset < 3)
-			throwCorruptData();
-		unsigned textSize = ByteStream::uint24(dataSection);
-		if (textSize + 3 > m_strm.capacity() - dataOffset)
-			throwCorruptData();
-		dataSection += textSize + 3;
+		unsigned textSize = ByteStream::uint24(sectionPtr(m_strm, dataOffset, 3));
+		dataSection = sectionPtr(m_strm, dataOffset + textSize + 3, 0);
 	}
 
 	ByteStream		data(dataSection, m_strm.end());
@@ -1178,16 +1159,12 @@ Decoder::stripTags(TagMap const& tags)
 	bool stripped = false;
 
 	unsigned dataOffset = m_strm.uint24();
-	if (dataOffset > m_strm.capacity())
-		throwCorruptData();
-	Byte* data = m_strm.base() + dataOffset;
+	Byte* data = sectionPtr(m_strm, dataOffset, 0);
 
 	if (flags & flags::TextSection)
 	{
 		unsigned textSize = m_strm.uint24();
-		if (textSize + 3 > m_strm.capacity() - dataOffset)
-			throwCorruptData();
-		data += textSize + 3;
+		data = sectionPtr(m_strm, dataOffset + textSize + 3, 0);
 	}
 
 	Byte const*	q = data;

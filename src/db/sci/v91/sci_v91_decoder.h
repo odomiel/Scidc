@@ -53,7 +53,6 @@ class Decoder
 public:
 
 	Decoder(util::ByteStream& strm);
-	Decoder(util::ByteStream& strm, unsigned ensuredStreamSize);
 
 	Move findExactPosition(Board const& position, bool skipVariations, unsigned depth = 0);
 
@@ -89,7 +88,6 @@ private:
 	Decoder& operator=(Decoder const&);
 
 	util::ByteStream&	m_strm;
-	unsigned				m_ensuredStreamSize;
 	decoder::Position	m_position;
 	MoveNode*			m_currentNode;
 };

@@ -66,15 +66,6 @@ static unsigned const MaxVariationLevel = 300;
 
 Decoder::Decoder(ByteStream& strm)
 	:m_strm(strm)
-	,m_guaranteedStreamSize(strm.size())
-	,m_currentNode(0)
-{
-}
-
-
-Decoder::Decoder(ByteStream& strm, unsigned guaranteedStreamSize)
-	:m_strm(strm)
-	,m_guaranteedStreamSize(guaranteedStreamSize)
 	,m_currentNode(0)
 {
 }
