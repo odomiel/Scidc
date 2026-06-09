@@ -625,6 +625,8 @@ Decoder::decodeTextSection(GameData& data)
 		return;
 
 	unsigned size = m_strm.uint24();
+	if (size > m_strm.remaining())
+		::throwCorruptData();	// offset would push the sub-stream past the record -> OOB
 	ByteStream dataStrm(m_strm.data() + size, m_strm.end());
 
 	decodeTags(dataStrm, data.m_tags);
@@ -652,12 +654,20 @@ Decoder::doDecoding(db::Consumer& consumer, TagSet& tags)
 		tags.set(tag::Fen, fen);
 	}
 
-	ByteStream text(m_strm.base() + m_strm.uint24(), m_strm.end());
+	// Validate the file-supplied text-section offset/size against the record
+	// extent before forming pointers/sub-streams -> avoids OOB read.
+	unsigned textOffset = m_strm.uint24();
+	if (textOffset > m_strm.capacity())
+		::throwCorruptData();
+	ByteStream text(m_strm.base() + textOffset, m_strm.end());
 	ByteStream data;
 
 	if (text.remaining())
 	{
-		text.reset(text.uint24() + 3);
+		unsigned textSize = text.uint24() + 3;
+		if (textSize > text.capacity())
+			::throwCorruptData();
+		text.reset(textSize);
 		data.setup(text.end(), m_strm.end());
 
 		if (data.remaining())

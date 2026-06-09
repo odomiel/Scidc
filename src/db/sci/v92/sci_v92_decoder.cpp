@@ -735,12 +735,21 @@ Decoder::doDecoding(db::Consumer& consumer, TagSet& tags)
 	if (!consumer.startGame(tags, m_position.board()))
 		return save::UnsupportedVariant;
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	// Validate the file-supplied data-section offset/size against the record
+	// extent (capacity) before forming pointers/sub-streams -> avoids OOB read.
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		::throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream text, data;
 
 	if (flags & 0x8000)
 	{
+		if (m_strm.capacity() - dataOffset < 3)
+			::throwCorruptData();
 		unsigned size = ByteStream::uint24(dataSection);
+		if (size > m_strm.capacity() - dataOffset - 3)
+			::throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());
@@ -791,12 +800,19 @@ Decoder::doDecoding(GameData& gameData)
 
 	M_ASSERT(m_currentNode);
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		::throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream data, text;
 
 	if (flags & 0x8000)
 	{
+		if (m_strm.capacity() - dataOffset < 3)
+			::throwCorruptData();
 		unsigned size = ByteStream::uint24(dataSection);
+		if (size > m_strm.capacity() - dataOffset - 3)
+			::throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());

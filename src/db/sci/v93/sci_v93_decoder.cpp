@@ -830,12 +830,21 @@ Decoder::doDecoding(db::Consumer& consumer, TagSet& tags)
 		tags.set(tag::Fen, fen);
 	}
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	// Validate the file-supplied data-section offset/size against the record
+	// extent (capacity) before forming pointers/sub-streams -> avoids OOB read.
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream text, data;
 
 	if (flags & flags::TextSection)
 	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
 		unsigned size = ByteStream::uint24(dataSection);
+		if (size > m_strm.capacity() - dataOffset - 3)
+			throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());
@@ -892,12 +901,19 @@ Decoder::doDecoding(GameData& gameData)
 
 	M_ASSERT(m_currentNode);
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream data, text;
 
 	if (flags & flags::TextSection)
 	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
 		unsigned size = ByteStream::uint24(dataSection);
+		if (size > m_strm.capacity() - dataOffset - 3)
+			throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());
@@ -982,10 +998,17 @@ Decoder::stripMoveInformation(unsigned halfMoveCount, unsigned types)
 
 	bool stripped = false;
 
+	if (offset > m_strm.capacity())
+		throwCorruptData();
 	Byte const* data = m_strm.base() + offset;
 
 	if (flags & flags::TextSection)
-		data += m_strm.uint24() + 3;
+	{
+		unsigned textSize = m_strm.uint24();
+		if (textSize + 3 > m_strm.capacity() - offset)
+			throwCorruptData();
+		data += textSize + 3;
+	}
 
 	if (flags & flags::TagSection)
 		data = skipTags(data);
@@ -1105,10 +1128,20 @@ Decoder::findTags(TagMap& tags)
 	if (idn == 0)
 		m_strm.skipString();
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 
 	if (flags & flags::TextSection)
-		dataSection += ByteStream::uint24(dataSection) + 3;
+	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
+		unsigned textSize = ByteStream::uint24(dataSection);
+		if (textSize + 3 > m_strm.capacity() - dataOffset)
+			throwCorruptData();
+		dataSection += textSize + 3;
+	}
 
 	ByteStream		data(dataSection, m_strm.end());
 	mstl::string	name;
@@ -1144,10 +1177,18 @@ Decoder::stripTags(TagMap const& tags)
 
 	bool stripped = false;
 
-	Byte* data = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* data = m_strm.base() + dataOffset;
 
 	if (flags & flags::TextSection)
-		data += m_strm.uint24() + 3;
+	{
+		unsigned textSize = m_strm.uint24();
+		if (textSize + 3 > m_strm.capacity() - dataOffset)
+			throwCorruptData();
+		data += textSize + 3;
+	}
 
 	Byte const*	q = data;
 	Byte const*	p = data;

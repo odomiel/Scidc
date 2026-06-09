@@ -1107,13 +1107,24 @@ Decoder::doDecoding(db::Consumer& consumer, TagSet& tags)
 		tags.set(tag::Fen, fen);
 	}
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	// The data-section offset and size are read from the (possibly malicious)
+	// file; validate them against the record extent (capacity) before turning
+	// them into pointers/sub-streams, otherwise base()+offset / dataSection+3
+	// would point past the buffer -> OOB read.
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream text, data;
 
 	if (flags & flags::TextSection)
 	{
 		Consumer::LanguageSet langs;
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
 		unsigned size(ByteStream::uint24(dataSection));
+		if (size > m_strm.capacity() - dataOffset - 3)
+			throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());
@@ -1172,12 +1183,19 @@ Decoder::doDecoding(GameData& gameData)
 
 	M_ASSERT(m_currentNode);
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 	ByteStream data, text;
 
 	if (flags & flags::TextSection)
 	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
 		unsigned size = ByteStream::uint24(dataSection);
+		if (size > m_strm.capacity() - dataOffset - 3)
+			throwCorruptData();
 
 		text.setup(dataSection + 3, size);
 		data.setup(text.end(), m_strm.end());
@@ -1281,10 +1299,19 @@ Decoder::stripMoveInformation(unsigned halfMoveCount, unsigned types)
 
 	bool stripped = false;
 
+	if (offset > m_strm.capacity())
+		throwCorruptData();
 	Byte const* data = m_strm.base() + offset;
 
 	if (flags & flags::TextSection)
-		data += ByteStream::uint24(data) + 3;
+	{
+		if (m_strm.capacity() - offset < 3)
+			throwCorruptData();
+		unsigned textSize = ByteStream::uint24(data);
+		if (textSize + 3 > m_strm.capacity() - offset)
+			throwCorruptData();
+		data += textSize + 3;
+	}
 
 	if (flags & flags::TagSection)
 		data = skipTags(data, m_strm.end());
@@ -1295,7 +1322,7 @@ Decoder::stripMoveInformation(unsigned halfMoveCount, unsigned types)
 	if (flags & flags::TimeTableSection)
 	{
 #ifndef DONT_SUPPORT_DEPRECATED_FORMAT
-	if (*data == 0)
+	if (*::check(data, m_strm.end()) == 0)
 	{
 		Byte const* p = skipMoveInfo(data, m_strm.end());
 
@@ -1462,10 +1489,20 @@ Decoder::findTags(TagMap& tags)
 	if (idn == 0)
 		m_strm.skipString();
 
-	Byte* dataSection = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* dataSection = m_strm.base() + dataOffset;
 
 	if (flags & flags::TextSection)
-		dataSection += ByteStream::uint24(dataSection) + 3;
+	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
+		unsigned textSize = ByteStream::uint24(dataSection);
+		if (textSize + 3 > m_strm.capacity() - dataOffset)
+			throwCorruptData();
+		dataSection += textSize + 3;
+	}
 
 	ByteStream		data(dataSection, m_strm.end());
 	mstl::string	name;
@@ -1501,10 +1538,20 @@ Decoder::stripTags(TagMap const& tags)
 
 	bool stripped = false;
 
-	Byte* data = m_strm.base() + m_strm.uint24();
+	unsigned dataOffset = m_strm.uint24();
+	if (dataOffset > m_strm.capacity())
+		throwCorruptData();
+	Byte* data = m_strm.base() + dataOffset;
 
 	if (flags & flags::TextSection)
-		data += ByteStream::uint24(data) + 3;
+	{
+		if (m_strm.capacity() - dataOffset < 3)
+			throwCorruptData();
+		unsigned textSize = ByteStream::uint24(data);
+		if (textSize + 3 > m_strm.capacity() - dataOffset)
+			throwCorruptData();
+		data += textSize + 3;
+	}
 
 	Byte const*	q = data;
 	Byte const*	p = data;
@@ -1769,6 +1816,8 @@ Decoder::validateGameData(unsigned char const* data, unsigned size)
 
 	if (flags & flags::TextSection)
 	{
+		if (size - dataOffset < 3)	// reading 3 bytes at dataSection would be OOB
+			return false;
 		unsigned textOffset = ByteStream::uint24(dataSection);
 
 		if (strm.tellg() > textOffset || textOffset + 3 >= size)
