@@ -405,7 +405,9 @@ Decoder::prepareDecoding(ByteStream& moveArea, ByteStream* textArea)
 	unsigned boardPos			= textPos + (buf[6] << 8) + buf[7] - 1;
 	unsigned endPos			= buf[10] & 1 ? boardPos + 33 : boardPos;
 
-	if (endPos > m_strm.size())
+	// boardPos < textPos happens exactly when the text-length field is 0, which
+	// would underflow (boardPos - textPos) into a ~4GB ByteStream window below.
+	if (endPos > m_strm.size() || boardPos < textPos)
 		throwCorruptData();
 
 	ByteStream boardArea(buf + boardPos, m_strm.end());

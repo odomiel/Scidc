@@ -182,7 +182,7 @@ GameDecoder::decodeComment(MoveNode* node, unsigned length, move::Position posit
 	str.reserve(length + 200);
 
 	unsigned i = 0;
-	while (::isspace(p[i]))
+	while (i < length && ::isspace(p[i]))
 		++i;
 
 	for ( ; i < length; ++i)
@@ -201,7 +201,7 @@ GameDecoder::decodeComment(MoveNode* node, unsigned length, move::Position posit
 			{
 				case 0x0d:
 					str.append(0x0a);
-					if (p[i + 1] == 0x0a)
+					if (i + 1 < length && p[i + 1] == 0x0a)
 						++i;
 					break;
 
