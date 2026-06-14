@@ -964,7 +964,7 @@ proc Add {toolbar widgetCommand args} {
 		set options(-background) [$toolbar cget -background]
 	}
 	if {![info exists options(-activebackground)]} {
-		set options(-activebackground) $Defaults(toolbar:activebackground)
+		set options(-activebackground) [$toolbar cget -background]
 	}
 
 	if {[string match *ttk::spinbox $widgetCommand]} { set options(-state) $state }
