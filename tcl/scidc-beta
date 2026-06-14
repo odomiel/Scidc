@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.06.09 b2 Beta"
+	set version "26.06.14 b1 Beta"
 }
 
 
@@ -36633,9 +36633,6 @@ proc open {parent url} {
 				if {![info exists DefaultBrowser]} {
 					set DefaultBrowser [FindDefaultBrowser]
 				}
-				# The URL is percent-escaped, but escape() keeps "'" unescaped;
-				# a single quote would break out of the '...' shell quoting below.
-				# Encode it as %27 so the URL cannot inject shell syntax.
 				set shurl [string map {' %27} $url]
 				while {[string length $DefaultBrowser]} {
 					if {[info exists Options($DefaultBrowser)]} {
@@ -45265,7 +45262,7 @@ proc ConfigureCheckButton {toolbar v w var args} {
 	if {[CheckIfOn $toolbar $v $var]} {
 		set relief sunken
 		set overrelief sunken
-		set color $Defaults(button:selectcolor)
+		set color $Specs(frame:background)
 	} else {
 		set relief flat
 		set overrelief solid
@@ -98343,9 +98340,6 @@ proc setup {} {
 				lappend resolved [array get engine]
 			}
 			set Engines $resolved
-			# If local config has no engines but share has some, reload from share.
-			# Handles the case where engines.dat was written as empty (before engines
-			# were downloaded) but the binaries are now present.
 			if {[llength $Engines] == 0 && $shareFiletime > 0} {
 				LoadSharedConfiguration $shareFile
 				::options::hookWriter [namespace current]::WriteEngineOptions engines
@@ -102837,8 +102831,8 @@ set EngineDownloadRestart	"Please restart the program to use the engines."
 set EngineDownloadFailed	"Download failed: %s"
 set EngineChecksumMismatch	"checksum mismatch (file may be corrupt or tampered)"
 set EngineNoChecksumTool	"sha256sum/shasum not found - cannot verify download integrity"
-set EngineDesc(stockfish-scidc)		"Stockfish \u2014 strong engine for game analysis"
-set EngineDesc(fairy-stockfish-scidc)	"Fairy-Stockfish \u2014 engine for chess variants"
+set EngineDesc(stockfish-scidc)        "Stockfish — strong engine for game analysis"
+set EngineDesc(fairy-stockfish-scidc)  "Fairy-Stockfish — engine for chess variants"
 
 } ;# namespace mc
 
@@ -103764,14 +103758,12 @@ proc OfferEngineDownload {parent} {
 	set baseUrl "https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
 	set engines {stockfish-scidc fairy-stockfish-scidc}
 
-	# Only offer engines that are not yet installed
 	set missing {}
 	foreach e $engines {
 		if {![file exists [file join $engDir $e]]} { lappend missing $e }
 	}
 	if {[llength $missing] == 0} return
 
-	# --- Build dialog -------------------------------------------------------
 	set dlg $parent.engdl
 	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
@@ -103786,7 +103778,6 @@ proc OfferEngineDownload {parent} {
 	tk::label $f.msg -text $mc::EngineDownloadMsg -justify left -wraplength 380
 	pack $f.msg -anchor w -pady {0 10}
 
-	# One checkbox per missing engine
 	array set sel {}
 	foreach e $missing { set sel($e) 1 }
 	foreach e $missing {
@@ -103799,11 +103790,9 @@ proc OfferEngineDownload {parent} {
 		pack $f.cb_$e -anchor w -pady 2
 	}
 
-	# Status label (shown during download)
 	tk::label $f.status -text "" -justify left -wraplength 380
 	pack $f.status -anchor w -pady {8 0}
 
-	# Buttons
 	set bf [tk::frame $f.bf]
 	pack $bf -pady {10 0} -anchor e
 
@@ -103830,12 +103819,10 @@ proc OfferEngineDownload {parent} {
 proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 	variable Vars
 
-	# Disable buttons during download
 	foreach w [winfo children [winfo parent $statusLbl].bf] {
 		catch { $w configure -state disabled }
 	}
 
-	# Determine download tool (wget or curl)
 	set downloader ""
 	if {![catch {exec wget --version}]} {
 		set downloader wget
@@ -103850,7 +103837,6 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		return
 	}
 
-	# Determine checksum tool; refuse to install binaries we cannot verify.
 	set hasher ""
 	if {![catch {exec sha256sum --version}]} {
 		set hasher [list sha256sum]
@@ -103863,9 +103849,6 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		return
 	}
 
-	# Expected SHA-256 of the published release assets. Downloaded binaries are
-	# verified against these before being made executable, so neither a corrupted
-	# transfer nor a tampered release asset can be installed and run.
 	array set expectSha {
 		stockfish-scidc        1cda28ae1efda78ef6940870ba4d105898af19fa42569e0b6b25803039eda747
 		fairy-stockfish-scidc  9c8ff22d7474100cf067a8f2a83b278619369997aa9d0e69284c465f160e3419
@@ -103907,14 +103890,13 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 			-text [format $mc::EngineDownloadFailed [join $failed ", "]]
 		after 3000 [list set [namespace current]::Vars(engdl:done) 1]
 	} else {
-		# Reload engine list: remove local engines.dat so setup() re-reads
-		# the share config and picks up the newly downloaded binaries.
 		catch { file delete $::scidc::file::engines }
 		catch { ::engine::setup }
 		$statusLbl configure -text "$mc::EngineDownloadDone $mc::EngineDownloadRestart"
 		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
 	}
 }
+
 
 proc Startup2 {} {
 	set app .application

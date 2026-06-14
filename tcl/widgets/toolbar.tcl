@@ -1945,7 +1945,7 @@ proc ConfigureCheckButton {toolbar v w var args} {
 	if {[CheckIfOn $toolbar $v $var]} {
 		set relief sunken
 		set overrelief sunken
-		set color $Defaults(button:selectcolor)
+		set color $Specs(frame:background)
 	} else {
 		set relief flat
 		set overrelief solid
