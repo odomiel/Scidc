@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.06.14 b3 Beta"
+	set version "26.06.14 b4 Beta"
 }
 
 
@@ -43682,7 +43682,8 @@ proc addSeparator {toolbar} {
 	set w $toolbar.__tbs__[incr Counter]
 	lappend Specs(children:$toolbar) $w
 	set Specs(visible:$w:$toolbar) 1
-	tk::frame $w -class ToolbarSeparator -relief sunken -borderwidth 1
+	tk::frame $w -class ToolbarSeparator -relief sunken -borderwidth 1 \
+		-background [$toolbar cget -background]
 	if {$Specs(usehandle:$toolbar)} {
 		bind $w <ButtonPress-3> [namespace code [list Menu $toolbar %X %Y]]
 	}
@@ -46551,7 +46552,7 @@ proc MakeClone {toolbar parent clone w} {
 	set Specs(clone:$toolbar:$w) $clone
 
 	switch $class {
-		ToolbarSeparator	{ frame $clone -class ToolbarSeparator -relief sunken -borderwidth 1 }
+		ToolbarSeparator	{ frame $clone -class ToolbarSeparator -relief sunken -borderwidth 1 -background [$toolbar cget -background] }
 		TCombobox			{ ttk::combobox $clone }
 		TTCombobox			{ ttk::tcombobox $clone; $clone clone $w }
 		TEntry				{ ttk::entry $clone }
