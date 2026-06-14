@@ -88,7 +88,7 @@ ttk::style theme create darkmode -parent clam -settings {
 			-bordercolor     [list focus #7b9cd6] \
 			;
 	}
-	ttk::style configure TCombobox -arrowcolor #bbbbbb
+	ttk::style configure TCombobox -arrowcolor #bbbbbb -padding 0
 	ttk::style configure TSpinbox  -arrowcolor #bbbbbb -padding {2 0 2 0}
 
 	# Frame / Label / LabelFrame
