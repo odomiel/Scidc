@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.06.14 b4 Beta"
+	set version "26.06.14 b5 Beta"
 }
 
 
@@ -1753,6 +1753,13 @@ update idletasks
 namespace eval colors {
 
 array set Colors {
+	lite:engine,infobackground				#e0e0e0
+	lite:engine,infoforeground				#000000
+	dark:engine,infobackground				#313438
+	dark:engine,infoforeground				#cccccc
+	night:engine,infobackground			#313438
+	night:engine,infoforeground			#cccccc
+
 	lite:pgn,background						#ffffff
 	lite:pgn,foreground:main				#000000
 	lite:pgn,foreground:variation			#0000ee
@@ -124357,7 +124364,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:hashfullness) [::toolbar::add $tbInfo label \
 		-width 5 \
 		-justify center \
-		-background #e0e0e0 \
+		-background [::colors::lookup engine,infobackground] \
+		-foreground [::colors::lookup engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::HashFullness \
@@ -124368,7 +124376,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:nps) [::toolbar::add $tbInfo label \
 		-width 9 \
 		-justify center \
-		-background #e0e0e0 \
+		-background [::colors::lookup engine,infobackground] \
+		-foreground [::colors::lookup engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::NodesPerSecond \
@@ -124377,7 +124386,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:tbhits) [::toolbar::add $tbInfo label \
 		-width 5 \
 		-justify center \
-		-background #e0e0e0 \
+		-background [::colors::lookup engine,infobackground] \
+		-foreground [::colors::lookup engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::TablebaseHits \

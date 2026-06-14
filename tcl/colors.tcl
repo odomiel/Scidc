@@ -27,6 +27,13 @@
 namespace eval colors {
 
 array set Colors {
+	lite:engine,infobackground				#e0e0e0
+	lite:engine,infoforeground				#000000
+	dark:engine,infobackground				#313438
+	dark:engine,infoforeground				#cccccc
+	night:engine,infobackground			#313438
+	night:engine,infoforeground			#cccccc
+
 	lite:pgn,background						#ffffff
 	lite:pgn,foreground:main				#000000
 	lite:pgn,foreground:variation			#0000ee
