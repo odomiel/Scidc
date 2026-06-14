@@ -1033,7 +1033,7 @@ proc Add {toolbar widgetCommand args} {
 				bind $w <Destroy> +[list trace remove variable $v write $traceCmd]
 
 				if {[set $variable] eq $value} {
-					$w configure -relief solid -background [$w cget -activebackground]
+					$w configure -relief solid -background [$w cget -background]
 				}
 			}
 		}
@@ -1916,7 +1916,7 @@ proc Trace(radiobutton:state) {toolbar w var args} {
 	if {$Specs(state:$w:$toolbar) eq "disabled" || ![CheckIfOn $toolbar $w $var]} {
 		$w configure -background $Specs(frame:background)
 	} else {
-		$w configure -relief solid -overrelief solid -background $Defaults(button:selectcolor)
+		$w configure -relief solid -overrelief solid -background $Specs(frame:background)
 	}
 
 	if {[winfo containing {*}[winfo pointerxy .]] eq $v} {
@@ -1967,7 +1967,7 @@ proc ConfigureWidget {toolbar var bg activebg} {
 		if {[info exists Specs(value:$var:$w:$toolbar)]} {
 			if {![info exists Specs(state:$w:$toolbar)] || $Specs(state:$w:$toolbar) eq "normal"} {
 				if {$Specs(value:$var:$w:$toolbar) eq $value} {
-					$w configure -background $activebg -relief solid
+					$w configure -background $bg -relief solid
 				} else {
 					$w configure -background $bg -relief flat
 				}
