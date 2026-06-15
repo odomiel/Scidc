@@ -716,7 +716,10 @@ Database::close()
 void
 Database::remove()
 {
-	M_REQUIRE(format() == format::Scidb || format() == format::Scid3 || format() == format::Scid4);
+	M_REQUIRE(	format() == format::Scidb
+				|| format() == format::Scid3
+				|| format() == format::Scid4
+				|| format() == format::Scid5);
 	M_REQUIRE(!usingAsyncReader());
 
 	if (m_codec)
@@ -1394,7 +1397,8 @@ Database::exportGame(unsigned index, Database& destination) const
 	M_REQUIRE(destination.isOpen());
 	M_REQUIRE(	destination.format() == format::Scidb
 				|| destination.format() == format::Scid3
-				|| destination.format() == format::Scid4);
+				|| destination.format() == format::Scid4
+				|| destination.format() == format::Scid5);
 	M_REQUIRE(index < countGames());
 
 	GameInfo const&	info			= m_gameInfoList[index];
@@ -1429,7 +1433,8 @@ Database::copyGames(	Database& destination,
 	M_REQUIRE(!destination.usingAsyncReader());
 	M_REQUIRE(	destination.format() == format::Scidb
 				|| destination.format() == format::Scid3
-				|| destination.format() == format::Scid4);
+				|| destination.format() == format::Scid4
+				|| destination.format() == format::Scid5);
 	M_REQUIRE(	destination.variant() == variant()
 				|| (destination.variant() == variant::ThreeCheck && isScidFormat(format())));
 	M_REQUIRE(illegalRejected || !isScidFormat(destination.format()));
