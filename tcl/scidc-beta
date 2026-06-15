@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.06.15 b1 Beta"
+	set version "26.06.15 b2 Beta"
 }
 
 
@@ -150078,19 +150078,21 @@ proc dbNew {parent variant} {
 	if {$FileSelBoxInUse} { return 0 }
 	set FileSelBoxInUse 1
 
-	set filetypes [list [list $mc::ScidbBases {.sci}]]
+	set filetypes {}
 	if {$variant eq "Normal"} {
 		lappend filetypes [list $mc::ScidBases {.si5}]
 	}
+	lappend filetypes [list $mc::ScidbBases {.sci}]
 	if {$variant in {Normal Undetermined}} {
 		lappend filetypes [list $mc::PGNFilesArchives {.pgn .pgn.gz}]
 	}
+	set defaultExtension [expr {$variant eq "Normal" ? ".si5" : ".sci"}]
 	set result [::dialog::saveFile \
 		-parent $parent \
 		-class database \
 		-filetypes $filetypes \
 		-geometry last \
-		-defaultextension .sci \
+		-defaultextension $defaultExtension \
 		-defaultencoding utf-8 \
 		-needencoding 1 \
 		-title "[set [namespace current]::mc::NewFile] ($::mc::VariantName($variant))" \
