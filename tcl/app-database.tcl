@@ -1437,7 +1437,11 @@ proc PopupMenu {parent x y {base ""}} {
 					-command [namespace code [list StripPGNTags $parent $base]] \
 					-state $state \
 					;
+			}
 
+			# Kompaktieren auch fuer SI5 (beschreibbar, gleicher Kompaktier-Pfad
+			# wie .sci); isSciFormat ist nur fuer das native .sci-Format wahr.
+			if {$isSciFormat || $ext eq "si5"} {
 				if {[::scidc::db::get compact? $base $Vars(variant)]} {
 					set state normal
 				} else {
@@ -1449,6 +1453,7 @@ proc PopupMenu {parent x y {base ""}} {
 					-compound left \
 					-command [namespace code [list Compact $top $base]] \
 					-state $state \
+					;
 			}
 		}
 
