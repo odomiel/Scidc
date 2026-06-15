@@ -739,8 +739,12 @@ Database::shouldCompact() const
 	M_REQUIRE(isOpen());
 	M_ASSERT(m_statistic);
 
+	// SI5 ist (wie Scidb) beschreibbar und nutzt denselben datei-basierten
+	// Kompaktier-Pfad (Cursor::compact: Export der nicht-geloeschten Partien in
+	// eine neue DB, danach rename). SI3/SI4 werden nur ReadOnly geoeffnet und
+	// sind daher bereits durch !isReadonly() ausgeschlossen.
 	return	!isReadonly()
-			&& format() == format::Scidb
+			&& (format() == format::Scidb || format() == format::Scid5)
 			&& (m_shouldCompact || m_statistic->counter.deleted > 0);
 }
 
