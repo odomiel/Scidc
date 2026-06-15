@@ -36,23 +36,34 @@ proc tr {text} { return $text }
 proc defaultCSS {} { return "" }
 
 
-proc Build {w keys} {
-	namespace eval [namespace current]::$w {}
+proc BuildCSS {} {
+	set bg     [::colors::lookup keybar,background]
+	set fg     [::colors::lookup keybar,foreground]
+	set bl     [::colors::lookup keybar,border-light]
+	set bd     [::colors::lookup keybar,border-dark]
+	set hover  [::colors::lookup keybar,hover]
 	set css [defaultCSS]
 	append css "
 		kbd.key {
 			font-size: smaller;
 			border-width: 0.2em;
 			border-style: solid;
-			border-color: #dddddd #bbbbbb #bbbbbb #dddddd;
+			border-color: $bl $bd $bd $bl;
 			padding: 0;
-			background: #eeeeee;
+			background: $bg;
+			color: $fg;
 			white-space: nowrap;
 		}
 		body { padding: 0; border: 0; margin: 0; display: block; }
 	"
 	# TODO: background not working; why?
-	append css ":hover { text-decoration: none; background: #bbbbbb; }"
+	append css ":hover { text-decoration: none; background: $hover; }"
+	return $css
+}
+
+
+proc Build {w keys} {
+	namespace eval [namespace current]::$w {}
 	::html $w \
 		-takefocus 0 \
 		-width 0 \
@@ -62,9 +73,10 @@ proc Build {w keys} {
 		-fontsize [expr {abs([font configure TkTextFont -size])}] \
 		-fittowidth yes \
 		-fittoheight no \
-		-css $css \
+		-css [BuildCSS] \
 		;
 	bind $w <<LanguageChanged>> [namespace code [list LanguageChanged $w]]
+	bind $w <<ThemeChanged>> [namespace code [list ThemeChanged $w]]
 	$w onmouseover [list [namespace current]::MouseEnter $w]
 	$w onmouseout  [list [namespace current]::MouseLeave $w]
 	$w onmousedown1 [list [namespace current]::MouseDown $w]
@@ -99,6 +111,13 @@ proc WidgetProc {w command args} {
 
 proc LanguageChanged {w} {
 	variable ${w}::Keys
+	$w keys $Keys
+}
+
+
+proc ThemeChanged {w} {
+	variable ${w}::Keys
+	catch { $w.__html__ configure -background [::theme::getColor background] -css [BuildCSS] }
 	$w keys $Keys
 }
 

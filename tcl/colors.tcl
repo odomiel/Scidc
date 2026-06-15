@@ -34,6 +34,22 @@ array set Colors {
 	night:engine,infobackground			#313438
 	night:engine,infoforeground			#cccccc
 
+	lite:keybar,background					#eeeeee
+	lite:keybar,foreground					#000000
+	lite:keybar,border-light				#dddddd
+	lite:keybar,border-dark					#bbbbbb
+	lite:keybar,hover						#bbbbbb
+	dark:keybar,background					#45494d
+	dark:keybar,foreground					#cccccc
+	dark:keybar,border-light				#5a5f63
+	dark:keybar,border-dark					#2b2b2b
+	dark:keybar,hover						#5a5f63
+	night:keybar,background					#45494d
+	night:keybar,foreground					#cccccc
+	night:keybar,border-light				#5a5f63
+	night:keybar,border-dark				#2b2b2b
+	night:keybar,hover						#5a5f63
+
 	lite:pgn,background						#ffffff
 	lite:pgn,foreground:main				#000000
 	lite:pgn,foreground:variation			#0000ee
