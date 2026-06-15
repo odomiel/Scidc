@@ -1381,6 +1381,12 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 		event->setDate_(Date());
 		event->setEventMode_(Reader::getEventMode(event->name(), site->name()));
 	}
+	// Site-Refcount wie im SI3/SI4-Decoder erhöhen (einmal pro Event-Erstnutzung).
+	// Sonst bleibt site->frequency() == 0, und ein späteres GameInfo::reset()
+	// (z.B. beim Ersetzen einer Partie) löst in decrRef() die precondition
+	// "entry->frequency() > 0" aus.
+	if (event->frequency() == 0)
+		site->incrRef();
 	round->incrRef(); event->incrRef();
 	item.m_event = event;
 
