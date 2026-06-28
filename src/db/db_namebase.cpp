@@ -33,6 +33,7 @@
 
 #include "m_algorithm.h"
 #include "m_utility.h"
+#include "m_vector.h"
 #include "m_cast.h"
 #include "m_assert.h"
 
@@ -68,6 +69,41 @@ containsNoCase(mstl::string const& needle, mstl::string const& haystack)
 	}
 
 	return false;
+}
+
+
+static void
+splitSearchTokens(mstl::string const& s, mstl::vector<mstl::string>& tokens)
+{
+	char const* p = s.c_str();
+	char const* e = p + s.size();
+
+	while (p < e)
+	{
+		while (p < e && (*p == ' ' || *p == ',' || *p == '\t'))
+			++p;
+
+		char const* start = p;
+
+		while (p < e && *p != ' ' && *p != ',' && *p != '\t')
+			++p;
+
+		if (p > start)
+			tokens.push_back(mstl::string(start, unsigned(p - start)));
+	}
+}
+
+
+static bool
+matchesAllTokens(mstl::vector<mstl::string> const& tokens, mstl::string const& haystack)
+{
+	for (unsigned k = 0; k < tokens.size(); ++k)
+	{
+		if (!::containsNoCase(tokens[k], haystack))
+			return false;
+	}
+
+	return true;
 }
 
 
@@ -198,14 +234,22 @@ Namebase::findMatches(mstl::string const& name, Matches& result, unsigned maxMat
 
 	maxMatches += n;
 
-	// Case-insensitive substring search: a sorted-list binary search cannot be
-	// used for substring matching, so we scan the (alphabetically sorted) list
-	// linearly and keep entries whose name contains the search string.
+	// Case-insensitive token search: the search string is split into words
+	// (whitespace/comma); an entry matches if it contains every word as a
+	// case-insensitive substring, in any order (so "first last" and
+	// "last first" both match, no separator required). A sorted-list binary
+	// search is not applicable, so we scan the list linearly.
+	mstl::vector<mstl::string> tokens;
+	::splitSearchTokens(name, tokens);
+
+	if (tokens.empty())
+		return 0;
+
 	for (List::const_iterator i = m_list.begin();
 			result.size() < maxMatches && i != m_list.end();
 			++i)
 	{
-		if ((*i)->m_frequency && ::containsNoCase(name, (*i)->name()))
+		if ((*i)->m_frequency && ::matchesAllTokens(tokens, (*i)->name()))
 			result.push_back(*i);
 	}
 

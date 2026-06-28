@@ -258,6 +258,41 @@ containsNoCase(mstl::string const& needle, mstl::string const& haystack)
 }
 
 
+static void
+splitSearchTokens(mstl::string const& s, mstl::vector<mstl::string>& tokens)
+{
+	char const* p = s.c_str();
+	char const* e = p + s.size();
+
+	while (p < e)
+	{
+		while (p < e && (*p == ' ' || *p == ',' || *p == '\t'))
+			++p;
+
+		char const* start = p;
+
+		while (p < e && *p != ' ' && *p != ',' && *p != '\t')
+			++p;
+
+		if (p > start)
+			tokens.push_back(mstl::string(start, unsigned(p - start)));
+	}
+}
+
+
+static bool
+matchesAllTokens(mstl::vector<mstl::string> const& tokens, mstl::string const& haystack)
+{
+	for (unsigned k = 0; k < tokens.size(); ++k)
+	{
+		if (!::containsNoCase(tokens[k], haystack))
+			return false;
+	}
+
+	return true;
+}
+
+
 static char const*
 skipSpaces(char const* s)
 {
@@ -1752,14 +1787,21 @@ Player::findMatches(mstl::string const& name, Matches& result, unsigned maxMatch
 
 	mstl::string::size_type maxSize = maxMatches + n;
 
-	// Case-insensitive substring search over the (sorted) player list; binary
-	// search is not applicable for substring matching, so we scan linearly.
-	for (PlayerList::const_iterator i = ::playerList.begin();
-			result.size() < maxSize && i != ::playerList.end();
-			++i)
+	// Case-insensitive token search (whitespace/comma separated); an entry
+	// matches if it contains every word as a substring, in any order. Binary
+	// search is not applicable, so we scan the player list linearly.
+	mstl::vector<mstl::string> tokens;
+	::splitSearchTokens(name2, tokens);
+
+	if (!tokens.empty())
 	{
-		if (::containsNoCase(name2, i->first))
-			::insert(result, i->second);
+		for (PlayerList::const_iterator i = ::playerList.begin();
+				result.size() < maxSize && i != ::playerList.end();
+				++i)
+		{
+			if (::matchesAllTokens(tokens, i->first))
+				::insert(result, i->second);
+		}
 	}
 
 	result.resize(mstl::min(maxMatches + n, result.size()));

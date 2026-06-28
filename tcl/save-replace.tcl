@@ -2068,7 +2068,7 @@ proc UpdateMatchList {top field item args} {
 	set Priv(focus) $top.$item
 	set Priv(lb) $top.nb.matches.$attr.lb
 
-	if {[string length $Priv($field)] == 0} {
+	if {[string length $Priv($field)] < 3} {
 		set matches $History($attr)
 		set title $mc::History
 	} else {
