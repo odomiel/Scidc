@@ -1,0 +1,35 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Partietext-Fenster
+TITLE Das Partietext-Fenster
+
+<p>
+Das <b>Partietext-Fenster</b> zeigt die Notation der aktuell geladenen Partie:
+die Hauptvariante, alle Nebenvarianten, Kommentare, NAG-Symbole
+(&#x21d2; <a href="NAG-Comments.html">NAG-Kommentarwerte</a>) und &ndash; sofern
+vorhanden &ndash; eingebettete Diagramme.
+</p>
+
+<p>
+Ein Klick auf einen Zug springt im <a href="Board-Window.html">Schachbrett</a> zur
+zugehörigen Stellung. Über das Kontextmenü und die Werkzeugleiste lassen sich
+Varianten auf- und zuklappen, die Zugnotation umschalten und Kommentare im
+<a href="Comment-Editor-Dialog.html">Kommentareditor</a> bearbeiten. Die Darstellung
+(Schriftgröße, Farben, Notationsstil) folgt den Einstellungen des Programms.
+</p>

@@ -1,0 +1,33 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Partienhistorie
+TITLE Die Partienhistorie
+
+<p>
+Die <b>Partienhistorie</b> listet die zuletzt geöffneten Partien auf und erlaubt
+ein schnelles Zurückspringen zu einer früher betrachteten Partie, ohne sie erneut
+in der Datenbank suchen zu müssen.
+</p>
+
+<p>
+Jeder Eintrag nennt die Partie mit ihren Kopfdaten und der Herkunftsdatenbank. Ein
+Doppelklick lädt die Partie erneut. Die Historie wird über die Sitzung hinweg
+geführt, sodass auch nach einem Neustart auf kürzlich bearbeitete Partien
+zugegriffen werden kann.
+</p>

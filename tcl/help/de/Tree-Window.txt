@@ -1,0 +1,35 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Zugbaum
+TITLE Das Zugbaum-Fenster
+
+<p>
+Das <b>Zugbaum-Fenster</b> zeigt für die aktuelle Brettstellung alle in der
+Datenbank vorkommenden Fortsetzungszüge mit ihrer Statistik. Zu jedem Zug werden
+die Häufigkeit, der Punkteschnitt (Erfolgsquote) und gegebenenfalls die
+durchschnittliche Wertungszahl bzw. das Jahr angezeigt.
+</p>
+
+<p>
+So lässt sich erkennen, welche Züge in einer Stellung üblich und wie erfolgreich
+sie sind &ndash; nützlich für die Eröffnungsvorbereitung. Ein Klick auf einen Zug führt
+ihn auf dem Brett aus und aktualisiert den Baum für die neue Stellung. Die zu einem
+Zug gehörenden Partien lassen sich in der
+<a href="Tree-Games-Window.html">Zugbaumpartienliste</a> anzeigen.
+</p>

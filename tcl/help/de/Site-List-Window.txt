@@ -1,0 +1,31 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Orteliste
+TITLE Die Orteliste
+
+<p>
+Die <b>Orteliste</b> führt alle Austragungsorte der aktiven Datenbank auf,
+zusammen mit dem zugehörigen Land und der Anzahl der dort gespielten Partien.
+</p>
+
+<p>
+Die Liste ist sortierbar und über das Suchfeld durchsuchbar. Die Suche ignoriert
+Groß- und Kleinschreibung und findet Teilzeichenketten. Über das Kontextmenü
+lassen sich alle Partien eines Ortes filtern.
+</p>

@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Spieler-Steckbrief
+TITLE Der Spieler-Steckbrief
+
+<p>
+Der <b>Spieler-Steckbrief</b> fasst die Daten eines Spielers übersichtlich
+zusammen. Er zeigt unter anderem die jüngste und höchste Wertungszahl, den
+Zeitraum der erfassten Partien (erste und letzte Partie) sowie eine Ergebnisbilanz
+(Siege, Remis, Niederlagen, Gesamtzahl).
+</p>
+
+<p>
+Zusätzlich werden die häufigsten Eröffnungen mit Weiß und mit Schwarz aufgeführt.
+So entsteht ein schnelles Profil des Spielstils und der Aktivität eines Spielers.
+</p>
+
+<p>
+Über Verweise lassen sich weiterführende Quellen öffnen, etwa der FIDE-Verlauf der
+Wertungszahl, die Wikipedia-Biografie sowie Bibliothekskataloge (VIAF und Deutsche
+Nationalbibliothek). Der Steckbrief wird üblicherweise per Doppelklick aus der
+<a href="Player-List-Window.html">Spielerliste</a> geöffnet.
+</p>

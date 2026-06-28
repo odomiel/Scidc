@@ -1,0 +1,40 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Engine-Verwaltung
+TITLE Die Engine-Verwaltung
+
+<p>
+Die <b>Engine-Verwaltung</b> dient zum Einrichten und Pflegen der Schach-Engines
+(Analyseprogramme). Sie zeigt zu jeder Engine Informationen wie Name, Autor,
+Webseite, Land, Spielstärke, Protokoll (UCI bzw. XBoard/WinBoard), Aufrufbefehl
+und Arbeitsverzeichnis.
+</p>
+
+<p>
+Neue Engines können hinzugefügt, bestehende bearbeitet oder entfernt werden. Für
+jede Engine lassen sich die unterstützten Schachformen
+(&#x21d2; <a href="Chess-Variants.html">Schachformen</a>) sowie die
+engine-spezifischen Optionen (etwa Hash-Größe und Anzahl der Threads) festlegen.
+Die zuletzt verwendeten Engines werden vermerkt.
+</p>
+
+<p>
+Beim ersten Programmstart bietet Scidc an, einen Satz Standard-Engines
+herunterzuladen, da im Programmpaket selbst keine Engines enthalten sind.
+</p>

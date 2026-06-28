@@ -1,0 +1,41 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Schachbrett
+TITLE Das Schachbrett-Fenster
+
+<p>
+Das <b>Schachbrett-Fenster</b> ist das zentrale Anzeigeelement und stellt die
+aktuelle Stellung der geladenen Partie dar. Darunter befinden sich
+Navigationsschaltflächen, mit denen sich Zug für Zug oder an den Anfang bzw. das
+Ende der Partie springen lässt.
+</p>
+
+<p>
+Züge können direkt auf dem Brett per Maus ausgeführt werden; dabei werden sie in
+die <a href="Game-Text-Window.html">Partienotation</a> eingetragen. Aussehen und
+Verhalten des Bretts &ndash; Figurensatz, Brett-Thema, Koordinatenanzeige,
+Markierungspfeile und Feldfarben &ndash; lassen sich über die Brett-Themen und die
+Einstellungen anpassen. Markierungen (Pfeile, farbige Felder) werden über die
+<a href="Mark-Palette-Dialog.html">Feldmarkierungspalette</a> gesetzt.
+</p>
+
+<p>
+Eine beliebige Ausgangsstellung kann über die
+<a href="Board-Setup-Dialog.html">Stellungseingabe</a> erstellt werden.
+</p>

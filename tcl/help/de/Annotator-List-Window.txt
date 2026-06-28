@@ -1,0 +1,31 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Kommentatorenliste
+TITLE Die Kommentatorenliste
+
+<p>
+Die <b>Kommentatorenliste</b> zeigt alle Kommentatoren (Annotatoren) der aktiven
+Datenbank, also die Personen, die Partien mit Anmerkungen versehen haben, samt
+der Anzahl der von ihnen kommentierten Partien.
+</p>
+
+<p>
+Die Liste ist sortier- und durchsuchbar. Über das Kontextmenü können alle Partien
+eines bestimmten Kommentators gefiltert werden.
+</p>

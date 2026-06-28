@@ -1,0 +1,32 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Zugbaumpartienliste
+TITLE Die Zugbaumpartienliste
+
+<p>
+Die <b>Zugbaumpartienliste</b> zeigt die Partien an, die zur aktuellen Auswahl im
+<a href="Tree-Window.html">Zugbaum</a> passen &ndash; also alle Partien der Datenbank,
+die über die aktuelle Stellung bzw. den gewählten Zug verlaufen.
+</p>
+
+<p>
+Die Liste verhält sich wie die übrige <a href="Game-List-Window.html">Partienliste</a>:
+sie ist sortierbar, und ein Doppelklick lädt die jeweilige Partie. So lassen sich
+zu einer Eröffnungsstellung schnell konkrete Beispielpartien finden.
+</p>

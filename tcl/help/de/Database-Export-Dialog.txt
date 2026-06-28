@@ -1,0 +1,40 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Datenbankenexport
+TITLE Der Datenbankenexport
+
+<p>
+Der <b>Datenbankenexport</b> schreibt Partien aus einer Datenbank in eine
+Ausgabedatei. Als Zielformate stehen unter anderem PGN, HTML, LaTeX und Text zur
+Verfügung; exportiert werden je nach Wahl die gesamte Datenbank oder nur die durch
+den Filter ausgewählten Partien.
+</p>
+
+<p>
+Der Dialog ist in mehrere Registerkarten gegliedert, mit denen sich der Export fein
+steuern lässt: Dateiauswahl, allgemeine Optionen, Seiten- und Diagrammlayout,
+Stil, Zeichenkodierung, auszugebende Tags, Zugnotation, Anmerkungen und Kommentare.
+So lassen sich z.&nbsp;B. Diagramme einfügen, Koordinaten oder Zugsymbole anzeigen
+und die Sichtbarkeit einzelner Bestandteile festlegen.
+</p>
+
+<p>
+Für die feinkörnige Einstellung der PGN-Ausgabe siehe auch die
+<a href="PGN-Export-Settings.html">PGN-Export-Einstellungen</a>.
+</p>

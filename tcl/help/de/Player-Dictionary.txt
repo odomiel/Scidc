@@ -1,0 +1,42 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Spielerlexikon
+TITLE Das Spielerlexikon
+
+<p>
+Das <b>Spielerlexikon</b> ist eine eingebaute Stammdatenbank für Schachspieler.
+Es liefert gesicherte Angaben wie FIDE-ID, Titel, Föderation, Geschlecht und
+Wertungszahlen und dient als Nachschlagewerk beim Erfassen und Pflegen von
+Partien.
+</p>
+
+<p>
+Über einen Filter lässt sich die Anzeige eingrenzen &ndash; etwa nach
+Organisations-ID, Titeln, Wertungsbereichen oder einem Zeitraum. Die Suche nach
+Spielernamen ignoriert Groß- und Kleinschreibung und unterstützt
+Suchmusterabgleich (&#x21d2; <a href="Pattern-Matching.html">Pattern-Matching</a>).
+</p>
+
+<p>
+Die Wertungslisten lassen sich direkt aus der Anwendung heraus aktualisieren:
+Über <b>Spielerlisten aktualisieren</b> lädt Scidc nacheinander die aktuellen
+FIDE- und DWZ-Daten herunter und liest sie ein. Beim Speichern einer Partie
+schlägt der <a href="Game-Browser.html">Partie-speichern-Dialog</a> passende
+Einträge aus dem Spielerlexikon als Entsprechungen vor.
+</p>

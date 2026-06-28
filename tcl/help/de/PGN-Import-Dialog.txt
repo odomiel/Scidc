@@ -1,0 +1,40 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Partienimport
+TITLE Der Partienimport
+
+<p>
+Über den <b>Partienimport</b> werden Partien aus dem PGN-Format in eine Datenbank
+eingelesen. Importiert werden kann aus einer Datei oder aus eingefügtem Text;
+auch gepackte und mehrere Dateien werden unterstützt.
+</p>
+
+<p>
+Während des Imports prüft Scidc die Partien und meldet Auffälligkeiten in einem
+Protokoll. Fehlertolerante Verarbeitung sorgt dafür, dass auch unvollständige oder
+leicht fehlerhafte PGN-Daten so weit wie möglich übernommen werden; das Protokoll
+weist auf übersprungene Stellen, Warnungen und Fehler hin.
+</p>
+
+<p>
+Die Zieldatenbank bestimmt das Format, in dem die Partien gespeichert werden
+(&#x21d2; <a href="Database-Formats.html">Datenbankformate</a>). Zum Export in die
+umgekehrte Richtung dient der
+<a href="Database-Export-Dialog.html">Datenbankenexport</a>.
+</p>

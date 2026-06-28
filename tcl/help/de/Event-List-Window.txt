@@ -1,0 +1,33 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Veranstaltungsliste
+TITLE Die Veranstaltungsliste
+
+<p>
+Die <b>Veranstaltungsliste</b> zeigt alle Turniere und Veranstaltungen der
+aktiven Datenbank. Übliche Spalten sind Name der Veranstaltung, Ort, Datum bzw.
+Zeitraum, Anzahl der Partien, Turnierart und Zeitmodus.
+</p>
+
+<p>
+Die Liste ist sortier- und durchsuchbar. Ein Doppelklick auf eine Veranstaltung
+zeigt deren Partien an; bei Rundenturnieren lässt sich daraus die
+<a href="Crosstable-Window.html">Kreuztabelle</a> öffnen. Das Kontextmenü erlaubt
+es, alle Partien einer Veranstaltung zu filtern.
+</p>

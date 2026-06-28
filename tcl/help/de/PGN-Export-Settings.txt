@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX PGN-Export-Einstellungen
+TITLE Die PGN-Export-Einstellungen
+
+<p>
+Die <b>PGN-Export-Einstellungen</b> steuern, wie Partien im PGN-Format ausgegeben
+werden &ndash; sowohl beim <a href="Database-Export-Dialog.html">Datenbankenexport</a>
+als auch beim Kopieren von Partien in die Zwischenablage.
+</p>
+
+<p>
+Festgelegt werden unter anderem die Zugnotation, der Umgang mit Kommentaren und
+Varianten, die Einrückung sowie Zusatzangaben wie Hinweise auf
+Stellungswiederholung (dreifache bzw. fünffache Wiederholung) und die
+50-Züge-Regel. Eine Vorschau zeigt die Auswirkungen der gewählten Optionen.
+</p>
+
+<p>
+Die Einstellungen lassen sich auf den Stand beim Öffnen des Dialogs zurücksetzen
+(<b>Auf Ausgangswerte zurücksetzen</b>) oder vollständig auf die Werkseinstellungen
+(<b>Auf Werkseinstellungen zurücksetzen</b>).
+</p>

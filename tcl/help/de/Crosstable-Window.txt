@@ -1,0 +1,33 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Kreuztabelle
+TITLE Die Kreuztabelle
+
+<p>
+Die <b>Kreuztabelle</b> stellt die Ergebnisse einer Veranstaltung übersichtlich
+dar. Je nach Turnierform kann zwischen verschiedenen Darstellungen gewählt werden:
+Rundenturnier (jeder gegen jeden), Schweizer System oder Mannschaftskampf.
+</p>
+
+<p>
+Angezeigt werden die Teilnehmer mit ihren Wertungszahlen, die Einzelergebnisse
+gegeneinander sowie Punktsummen und Platzierungen. Ein Klick auf ein Ergebnis in
+der Tabelle öffnet die zugehörige Partie. Die Kreuztabelle wird üblicherweise aus
+der <a href="Event-List-Window.html">Veranstaltungsliste</a> heraus geöffnet.
+</p>

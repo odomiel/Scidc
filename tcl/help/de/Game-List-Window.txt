@@ -1,0 +1,43 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Partienliste
+TITLE Die Partienliste
+
+<p>
+Die <b>Partienliste</b> zeigt alle Partien der aktiven Datenbank in tabellarischer
+Form. Jede Zeile entspricht einer Partie; die Spalten zeigen die wichtigsten
+Kopfdaten an, etwa Weiß und Schwarz mit Wertungszahlen, Ergebnis, Anzahl der Züge,
+Veranstaltung, Ort, Runde, Datum, <a href="ECO-Code.html">ECO-Code</a> und
+Partiemarkierungen (&#x21d2; <a href="Game-Flags.html">Partiemarkierungen</a>).
+</p>
+
+<p>
+Ein Klick auf einen Spaltenkopf sortiert die Liste nach dieser Spalte; ein
+erneuter Klick kehrt die Reihenfolge um. Über das Kontextmenü der Spaltenköpfe
+lassen sich Spalten ein- und ausblenden sowie in der Breite anpassen. Mit einem
+Doppelklick auf eine Zeile wird die Partie zum Anzeigen und Bearbeiten geladen.
+</p>
+
+<p>
+Welche Partien angezeigt werden, bestimmt der aktive Filter. Such- und
+Filterfunktionen schränken die Liste auf eine Teilmenge ein; die Statuszeile gibt
+an, wie viele Partien von der Gesamtzahl gerade sichtbar sind. Das Kontextmenü
+einer Zeile bietet Aktionen wie Laden, Kopieren, Löschen (Markieren zum Löschen)
+und das Bearbeiten der Partiemarkierungen.
+</p>
