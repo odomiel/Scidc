@@ -43,18 +43,31 @@ using namespace db;
 
 
 static bool
-isPrefix(mstl::string const& s, mstl::string const& t)
+containsNoCase(mstl::string const& needle, mstl::string const& haystack)
 {
-	if (s.size() > t.size())
+	if (needle.empty())
+		return true;
+
+	if (needle.size() > haystack.size())
 		return false;
 
-	for (unsigned i = 0; i < s.size(); ++i)
+	unsigned const last = haystack.size() - needle.size();
+
+	for (unsigned i = 0; i <= last; ++i)
 	{
-		if (s[i] != t[i])
-			return false;
+		unsigned j = 0;
+
+		for ( ; j < needle.size(); ++j)
+		{
+			if (::tolower((unsigned char)haystack[i + j]) != ::tolower((unsigned char)needle[j]))
+				break;
+		}
+
+		if (j == needle.size())
+			return true;
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -185,17 +198,14 @@ Namebase::findMatches(mstl::string const& name, Matches& result, unsigned maxMat
 
 	maxMatches += n;
 
-	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), name);
-
-	if (i == m_list.end() || *i < name || !::isPrefix(name, (*i)->name()))
-		return 0;
-
-	if ((*i)->m_frequency)
-		result.push_back(*(i++));
-
-	for ( ; result.size() < maxMatches && i != m_list.end() && ::isPrefix(name, (*i)->name()); ++i)
+	// Case-insensitive substring search: a sorted-list binary search cannot be
+	// used for substring matching, so we scan the (alphabetically sorted) list
+	// linearly and keep entries whose name contains the search string.
+	for (List::const_iterator i = m_list.begin();
+			result.size() < maxMatches && i != m_list.end();
+			++i)
 	{
-		if ((*i)->m_frequency)
+		if ((*i)->m_frequency && ::containsNoCase(name, (*i)->name()))
 			result.push_back(*i);
 	}
 

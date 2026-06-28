@@ -167,18 +167,31 @@ insert(Site::Matches& matches, Site const* site)
 
 
 static bool
-isPrefix(mstl::string const& s, mstl::string const& t)
+containsNoCase(mstl::string const& needle, mstl::string const& haystack)
 {
-	if (s.size() > t.size())
+	if (needle.empty())
+		return true;
+
+	if (needle.size() > haystack.size())
 		return false;
 
-	for (unsigned i = 0; i < s.size(); ++i)
+	unsigned const last = haystack.size() - needle.size();
+
+	for (unsigned i = 0; i <= last; ++i)
 	{
-		if (s[i] != t[i])
-			return false;
+		unsigned j = 0;
+
+		for ( ; j < needle.size(); ++j)
+		{
+			if (::tolower((unsigned char)haystack[i + j]) != ::tolower((unsigned char)needle[j]))
+				break;
+		}
+
+		if (j == needle.size())
+			return true;
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -467,20 +480,16 @@ Site::findMatches(mstl::string const& name, Matches& result, unsigned maxMatches
 	if (maxMatches <= n)
 		return 0;
 
- 	SiteList::const_iterator i = mstl::lower_bound(::siteList.begin(), ::siteList.end(), name);
-
-	if (i == ::siteList.end() || i->first < name || !::isPrefix(name, i->first))
-		return 0;
-
-	::insert(result, i->second);
-	++i;
-
 	mstl::string::size_type maxSize = maxMatches + n;
 
-	while (result.size() < maxSize && i != ::siteList.end() && ::isPrefix(name, i->first))
+	// Case-insensitive substring search over the (sorted) site list; binary
+	// search is not applicable for substring matching, so we scan linearly.
+	for (SiteList::const_iterator i = ::siteList.begin();
+			result.size() < maxSize && i != ::siteList.end();
+			++i)
 	{
-		::insert(result, i->second);
-		++i;
+		if (::containsNoCase(name, i->first))
+			::insert(result, i->second);
 	}
 
 	result.resize(mstl::min(maxMatches + n, result.size()));

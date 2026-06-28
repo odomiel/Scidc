@@ -230,18 +230,31 @@ findSpace(char const* s)
 
 
 static bool
-isPrefix(mstl::string const& s, mstl::string const& t)
+containsNoCase(mstl::string const& needle, mstl::string const& haystack)
 {
-	if (s.size() > t.size())
+	if (needle.empty())
+		return true;
+
+	if (needle.size() > haystack.size())
 		return false;
 
-	for (unsigned i = 0; i < s.size(); ++i)
+	unsigned const last = haystack.size() - needle.size();
+
+	for (unsigned i = 0; i <= last; ++i)
 	{
-		if (s[i] != t[i])
-			return false;
+		unsigned j = 0;
+
+		for ( ; j < needle.size(); ++j)
+		{
+			if (::tolower((unsigned char)haystack[i + j]) != ::tolower((unsigned char)needle[j]))
+				break;
+		}
+
+		if (j == needle.size())
+			return true;
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -1737,20 +1750,16 @@ Player::findMatches(mstl::string const& name, Matches& result, unsigned maxMatch
 	mstl::string name2(name);
 	standardizeNames(name2);
 
-	PlayerList::const_iterator i = mstl::lower_bound(::playerList.begin(), ::playerList.end(), name2);
-
-	if (i == ::playerList.end() || i->first < name2 || !::isPrefix(name2, i->first))
-		return 0;
-
-	::insert(result, i->second);
-	++i;
-
 	mstl::string::size_type maxSize = maxMatches + n;
 
-	while (result.size() < maxSize && i != ::playerList.end() && ::isPrefix(name2, i->first))
+	// Case-insensitive substring search over the (sorted) player list; binary
+	// search is not applicable for substring matching, so we scan linearly.
+	for (PlayerList::const_iterator i = ::playerList.begin();
+			result.size() < maxSize && i != ::playerList.end();
+			++i)
 	{
-		::insert(result, i->second);
-		++i;
+		if (::containsNoCase(name2, i->first))
+			::insert(result, i->second);
 	}
 
 	result.resize(mstl::min(maxMatches + n, result.size()));
