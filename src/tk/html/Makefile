@@ -69,7 +69,7 @@ $(LIB).a: $(OBJS)
 
 #========================================================================
 
-LEMON_CFLAGS = $(CFLAGS) $(SYS_LDFLAGS) -Wno-uninitialized -fno-strict-aliasing
+LEMON_CFLAGS = $(CFLAGS) $(SYS_LDFLAGS) -Wno-uninitialized -fno-strict-aliasing -std=gnu11
 
 htmltokens.h: tokenlist.txt
 	@echo "Building $@"
