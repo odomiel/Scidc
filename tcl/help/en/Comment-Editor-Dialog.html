@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- Generated from tcl/help/en/Comment-Editor-Dialog.txt -->
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+  <meta http-equiv="content-type"
+           content="text/html; charset=utf-8" />
+  <meta http-equiv="content-language"
+           content="en" />
+  <meta http-equiv="content-style-type"
+           content="text/css" />
+
+  <meta name="author"
+     content="scidb.sourceforge.net" />
+  <meta name="generator"
+     content="scidb.sourceforge.net" />
+  <meta name="description"
+     content="Scidc - Help Page" />
+
+  <link rel="icon"
+       href="http://scidb.sourceforge.net/favicon.ico"
+       type="image/x-icon" />
+  <link rel="shortcut icon"
+       href="http://scidb.sourceforge.net/favicon.ico" />
+  <link rel="stylesheet"
+       type="text/css"
+      media="screen"
+		 href="../styles/help.css" />
+
+  <title>Scidc - Help: Comment Editor</title>
+</head>
+
+<body>
+
+<div class="title">
+  <h1 class="title">Comment Editor</h1>
+</div>
+
+<p>
+This dialog is opened in the game editor in one of the following ways:
+</p>
+
+<ul>
+  <li style="margin-bottom:0.5em;">
+    With the keyboard shortcut
+    <kbd class='key'>Ctrl</kbd>+<kbd class='key'>K</kbd>
+    to edit a comment after the move.
+  </li>
+  <li style="margin-bottom:0.5em;">
+    With the keyboard shortcut
+    <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>K</kbd>
+    to edit a comment before the move; or to edit a leading comment of a variation
+    when the input cursor is positioned before the first move of the variation (or
+    main line).
+  </li>
+  <li style="margin-bottom:0.5em;">
+    Through the context menu of the game editor.
+  </li>
+  <li>
+    By clicking on a comment. In this case the dialog automatically switches, already
+    when opening, to the language of the selected comment.
+  </li>
+</ul>
+
+<p>
+Opening the comment editor is only possible while a game is being edited in the game
+editor.
+</p>
+
+<p>
+The comment editor consists of five regions:
+</p>
+
+<ul style='list-style-type: none'><li><img src="images/comment-editor.png" alt="" /></li></ul>
+
+<ul>
+  <li><a href="#Language">Language selection</a> (top toolbar)</li>
+  <li><a href="#Formatting">Text formatting</a> (left toolbar)</li>
+  <li><a href="#Text">Text field</a></li>
+  <li><a href="#Buttons">Buttons for text field control</a> (buttons to the right of the text field)</li>
+  <li><a href="#Dialog">Dialog buttons</a> (buttons at the bottom)</li>
+</ul>
+
+<h2 id="Language">Language selection</h2>
+
+<p>
+The comment editor allows entering and modifying comments in the game text in
+different language versions. All European languages are supported. The symbol
+<img src="../images/green-plus.png" alt="" /> opens a combobox for adding another
+language.
+</p>
+
+<h2 id="Formatting">Text formatting</h2>
+
+<p>
+Comments can be formatted:
+</p>
+
+<ul>
+  <li><img src="../images/format-bold.png" alt="" />&ensp;Bold</li>
+  <li><img src="../images/format-italic.png" alt="" />&ensp;Italic</li>
+  <li><img src="../images/format-underline.png" alt="" />&ensp;Underline</li>
+</ul>
+
+<p>
+All combinations of these formattings are allowed. To apply them, a text region is
+selected (&#x21d2; <a href="#Control">Control in the text field</a>) and then the
+corresponding symbol is chosen. Applying a formatting affects the entire selected
+region. Each time the input cursor is repositioned in the text field, the formatting
+of the character to the left of the input cursor is shown accordingly. When entering
+text, the formatting to the left of the input cursor is continued, but not the
+formatting to the right of the input cursor.
+</p>
+
+<p>
+There is one exception: figurines (graphical pieces, such as <span class='chess'>&#x2654;</span>) and
+position evaluation symbols (such as &#x00b1;) are not subject to italic formatting
+nor to underline formatting.
+</p>
+
+<div class='annotation'><img src='../images/annotation.png' style='float:left; margin:0 1em 0 0' alt='annotation' />
+These formattings can only be stored in the
+<a href="Database-Formats.html#Scidc">Scidc database format</a>.
+When converting to the
+<a href="Database-Formats.html#Scid">Scid format</a>,
+or when exporting to the
+<a href="Database-Formats.html#PGN">PGN format</a> (exception:
+one of the options <i>Write comment in HTML format</i>
+or <i>Use Scidb import format</i> is used) all formattings are lost.
+</div>
+
+<p>
+The comment editor marks all symbols recognized as <a href="NAG-Comments.txt">NAG</a>
+with a dark red foreground for better visibility. When the mouse pointer is held over
+such a symbol, a tooltip with the meaning of this symbol is shown.
+</p>
+
+<h2 id="Text">Text field</h2>
+
+<ul>
+  <li><a href="#Text:Control">Control in the text field</a></li>
+  <li><a href="#Text:Hyperlinks">Hyperlinks</a></li>
+  <li><a href="#Text:Emoticons">Smileys</a></li>
+  <li><a href="#Text:Menu">Context menu</a></li>
+</ul>
+
+<h3 id="Text:Control">Control in the text field</h3>
+
+<ul>
+  <li><a href="#Control:Mouse">Input cursor control with the mouse</a></li>
+  <li><a href="#Control:Keyboard">Input cursor control with the keyboard</a></li>
+  <li><a href="#Control:Select">Text selection</a></li>
+  <li><a href="#Control:Delete">Deleting text</a></li>
+  <li><a href="#Control:Undo">Undo &amp; redo</a></li>
+  <li><a href="#Control:Misc">Further control shortcuts</a></li>
+  <li><a href="#Control:Special">Inserting special characters</a></li>
+  <li><a href="#Control:Figurine">Inserting a piece</a></li>
+</ul>
+
+<h4 id="Control:Mouse">Input cursor control with the mouse</h4>
+
+<p>
+Clicking with the left mouse button positions the input cursor before the character
+under the mouse pointer, sets the input focus to the text field, and deselects any
+selected text. Dragging with the mouse while the left mouse button is held selects
+the text between the input cursor and the character under the mouse pointer.
+</p>
+
+<p>
+Double-clicking with the left mouse button selects the word under the mouse pointer
+and positions the input cursor at the beginning of the word. Dragging with the mouse
+while the left mouse button is held after a double click selects the words between the
+input cursor and the character under the mouse pointer.
+</p>
+
+<p>
+A triple click with the left mouse button selects the line under the mouse pointer
+and positions the input cursor at the end of the line. Dragging with the mouse while
+the left mouse button is held after a triple click selects all lines between the input
+cursor and the character under the mouse pointer.
+</p>
+
+<p>
+The end of a text selection can be extended by dragging the mouse with the left mouse
+button held; this affects the end of the selection that was closest to the mouse
+pointer during the click. If a double click was performed before dragging, then
+extension happens in word units; after a preceding triple click, extension happens in
+line units.
+</p>
+
+<p>
+Clicking the left mouse button while the <kbd class='key'>Ctrl</kbd> key is held
+positions the input cursor without affecting the text selection.
+</p>
+
+<p>
+The visible text excerpt in the text field can be changed by dragging with the middle
+mouse button held. If the middle mouse button is clicked without dragging the mouse,
+then the current X text selection of the clipboard is inserted at the position of the
+input cursor (Linux/Unix only).
+</p>
+
+<p>
+If the mouse is dragged out of the text window area while the left mouse button is
+held, then the text scrolls automatically to make more text visible.
+</p>
+
+<h4 id="Control:Keyboard">Input cursor control with the keyboard</h4>
+
+<table>
+  <tr valign="top">
+    <td nowrap="nowrap">
+      <kbd class='key'>←</kbd> or <kbd class='key'>Ctrl</kbd>+<kbd class='key'>B</kbd><br/>
+      <kbd class='key'>→</kbd> or <kbd class='key'>Ctrl</kbd>+<kbd class='key'>F</kbd>
+    </td>
+    <td class='justification' style="padding-left: 0.5em;">
+      Moves the input cursor one character to the left or right; in addition any text
+      in the text window is deselected.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>←</kbd><br/>
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>→</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor one character to the left or right; the selection in the
+      text window is extended by the new character.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>←</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>→</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor word by word, and deselects any text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>←</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>→</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor word by word, and extends the text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>↑</kbd> or <kbd class='key'>Ctrl</kbd>+<kbd class='key'>P</kbd><br/>
+      <kbd class='key'>↓</kbd> or <kbd class='key'>Ctrl</kbd>+<kbd class='key'>N</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor one line up or down, and deselects any text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>↑</kbd><br/>
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>↓</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor one line up or down, the text selection is extended by the
+      new characters.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>↑</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>↓</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor paragraph by paragraph (groups of lines separated by empty
+      lines), and deselects any text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>↑</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>↓</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor paragraph by paragraph, and extends the text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>PgDn</kbd><br/>
+      <kbd class='key'>PgUp</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor one text area forward or backward, and deselects any text
+      selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>PgDn</kbd><br/>
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>PgUp</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor one text area forward or backward, and extends the text
+      selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>PgDn</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>PgUp</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Scrolls the text area one page forward or backward, without changing the input
+      cursor or affecting the text selection.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Home</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the beginning of the display line, and deselects any
+      text selection in the text field.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>Home</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the beginning of the display line, and extends the text
+      selection to this point.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Home</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the beginning of the text, and deselects any text
+      selection in the text field.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>Home</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the beginning of the text, and extends the text
+      selection to this point.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>End</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the end of the display line, and deselects any text
+      selection in the text field.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>End</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the end of the display line, and extends the text
+      selection to this point.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>End</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the end of the text, and deselects any text selection
+      in the text field.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>End</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Moves the input cursor to the end of the text, and extends the text selection to
+      this point.
+    </td>
+  </tr>
+</table>
+
+<h4 id="Control:Select">Text selection</h4>
+
+<table>
+  <tr valign="top">
+    <td nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>A</kbd>
+    </td>
+    <td class='justification' style="padding-left: 0.5em;">
+      Selects the entire text content.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>C</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Copies the selected text to the clipboard, if a selection exists.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>X</kbd>
+      <br/><kbd class='key'>F20</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Copies the selected text to the clipboard and deletes the selected text. If no
+      selection exists, this key has no effect.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>V</kbd>
+      <br/><kbd class='key'>F18</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Inserts the content of the clipboard after the input cursor.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Del</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the selected text if any exists, otherwise the character to the right of
+      the input cursor is deleted.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>⟻</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the selected text if any exists, otherwise the character to the left of
+      the input cursor is deleted.
+    </td>
+  </tr>
+</table>
+
+<h4 id="Control:Delete">Deleting text</h4>
+
+<table>
+  <tr valign="top">
+    <td nowrap="nowrap">
+      <kbd class='key'>Del</kbd>
+    </td>
+    <td class='justification' style="padding-left: 0.5em;">
+      Deletes the character to the right of the input cursor. If text has been
+      selected, then the selected text is deleted.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>⟻</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the character to the left of the input cursor. If text has been selected,
+      then the selected text is deleted.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>D</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the character to the right of the input cursor.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>E</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the word to the right of the input cursor.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Q</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes the word to the left of the input cursor.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>K</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Deletes from the input cursor to the end of the line. If the input cursor is
+      already at the end of the line, then the line break is deleted.
+    </td>
+  </tr>
+</table>
+
+<h4 id="Control:Undo">Undo &amp; redo</h4>
+
+<table>
+  <tr valign="top">
+    <td nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Z</kbd>
+    </td>
+    <td class='justification' style="padding-left: 0.5em;">
+      Undo the last action in the text area.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Y</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Redo the previous undo.
+    </td>
+  </tr>
+</table>
+
+<h4 id="Control:Misc">Further control shortcuts</h4>
+
+<table>
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>T</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Swaps the two characters to the right of the input cursor.
+    </td>
+  </tr>
+
+</table>
+
+<h4 id="Control:Special">Inserting special characters</h4>
+
+<table>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Alt</kbd>+<kbd class='key'>&#x2212;</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+    Insert an em dash.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>&#x2212;</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+    Insert an en dash.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>&#x2212;</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>_</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+    Insert a non-breaking hyphen.
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>␣</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+    Insert a non-breaking space (prevents an automatic line break).
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>S</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      Inserts the character &#x2423; into the text. This character has a special meaning
+      at the beginning and end of the text. Spaces at the beginning and end of the text
+      are removed on saving (so that they are not accidentally saved, as they are easily
+      overlooked in the game editor). To force spaces at the beginning or end of the
+      text nonetheless, this character can be used, as it is converted to a space on
+      saving, but only at the beginning and end of the text. In general, spaces at the
+      text ends are discouraged (they are supported among other reasons because they can
+      occur in the Scid database format).
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td style="padding-top: 1em;" nowrap="nowrap">
+      <kbd class='key'>Shift</kbd>+<kbd class='key'>⏎</kbd><br/>
+      <kbd class='key'>Ctrl</kbd>+<kbd class='key'>⏎</kbd>
+    </td>
+    <td class='justification' style="padding-top: 1em; padding-left: 0.5em;">
+      With this, line breaks can be forced. In the text field the forced line breaks are
+      marked with the paragraph symbol &#x00b6;. Line breaks in comments are lost when
+      exporting to the <a href="Database-Formats.html#PGN">PGN format</a>. Their use is
+      generally discouraged (they are supported because they can occur in the Scid
+      database format).
+    </td>
+  </tr>
+
+</table>
+
+<h4 id="Control:Figurine">Inserting a piece</h4>
+
+<p>
+The following keyboard shortcuts serve to insert a piece:
+</p>
+
+<div class='box'>
+  <table class="box">
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>K</kbd>  </td><td>=</td><td><span class='chess'>&#x2654;</span>  </td></tr>
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>Q</kbd> </td><td>=</td><td><span class='chess'>&#x2655;</span> </td></tr>
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>R</kbd>  </td><td>=</td><td><span class='chess'>&#x2656;</span>  </td></tr>
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>B</kbd></td><td>=</td><td><span class='chess'>&#x2657;</span></td></tr>
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>N</kbd></td><td>=</td><td><span class='chess'>&#x2658;</span></td></tr>
+    <tr><td><kbd class='key'>Ctrl</kbd>+<kbd class='key'>Shift</kbd>+<kbd class='key'>P</kbd>  </td><td>=</td><td><span class='chess'>&#x2659;</span>  </td></tr>
+  </table>
+</div>
+
+<p>
+The shortcut letters follow the piece letters of the current language (King, Queen,
+Rook, Bishop, Knight, Pawn in English); when the comment language is changed, the
+shortcuts are rebound accordingly.
+</p>
+
+<h3 id="Text:Hyperlinks">Hyperlinks</h3>
+
+<p>
+The editor allows entering web links (hyperlinks) as well as entering clickable email
+addresses. The syntax for entry is borrowed from the wiki syntax:
+</p>
+
+<ol>
+  <li style="text-align: left">
+    <code>[[http://scidb.sourceforge.net]]</code> links the URL
+    <a href="http://scidb.sourceforge.net" target="blank_">http://scidb.sourceforge.net&nbsp;<span class="awesome">&#xf08e;</span></a>
+    to the web page <code>http://scidb.sourceforge.net</code>.
+  </li>
+  <li style="text-align: left">
+    <code>[[http://scidb.sourceforge.net][Scidc]]</code> links the word
+    <a href="http://scidb.sourceforge.net" target="blank_">Scidc&nbsp;<span class="awesome">&#xf08e;</span></a> to the web page
+    <code>http://scidb.sourceforge.net</code>. Alternatively the syntax
+    <code>[[http://scidb.sourceforge.net|Scidc]]</code> can also be used.
+  </li>
+  <li style="text-align: left">
+    <code>[[fred@feuerstein.net][Fred Feuerstein]]</code> refers to the email address
+    of <a href="mailto:fred@feuerstein.net" target="blank_">Fred Feuerstein&nbsp;<span class="awesome">&#xf112;</span></a>.
+  </li>
+</ol>
+
+<p>
+To make entering a link easier, a helper function exists in the context menu.
+</p>
+
+<h3 id="Text:Emoticons">Smileys</h3>
+
+<p>
+The editor recognizes smileys, provided smiley recognition has been enabled in the
+game editor, i.e. textual smiley codes &ndash; such as
+<span style='white-space:nowrap;'><code>:-)</code></span> &ndash; are shown with the
+corresponding pictogram (e.g. <img src="../images/smiley.png" alt="" />), provided
+recognition was possible. For this, the display of smileys in the comment editor must
+also be enabled (&#x21d2; <a href="#Menu">Context menu</a>). Entering a smiley is
+easiest with the help of the context menu. Smiley codes entered in the text field are
+not recognized automatically right away, but only after a refresh of the entire
+display, such as after a language change, or after saving (with
+<span class='menuitem'>Apply</span>).
+</p>
+
+<p>
+When smiley pictograms are shown, they are of course not subject to any text
+formatting. However, it should be noted that the text display of the smiley codes is
+subject to the set formatting.
+</p>
+
+<p>
+Smileys are stored in textual form, i.e. they are transferable to other database
+formats.
+</p>
+
+<h3 id="Text:Menu">Context menu</h3>
+
+The context menu in the text field offers the following functions:
+
+<ul style='list-style-type: none'><li><img src="images/comment-editor-menu.png" alt="" /></li></ul>
+
+<p>
+<span class='menuitem'>Copy</span>
+Copy selected text to the clipboard. This menu item is only available when text is
+selected.
+</p>
+
+<p>
+<span class='menuitem'>Cut</span>
+Delete selected text and copy it to the clipboard. This menu item is only available
+when text is selected.
+</p>
+
+<p>
+<span class='menuitem'>Paste</span>
+Insert text from the clipboard at the input cursor position. This menu item is only
+available when text is present in the clipboard.
+</p>
+
+<p>
+<span class='menuitem'>Insert symbol</span>
+Insert a symbol at the input cursor position.
+</p>
+
+<p>
+<span class='menuitem'>Insert smiley</span>
+Insert an emoticon (smiley) at the input cursor position.
+</p>
+
+<p>
+<span class='menuitem'>Insert link</span>
+Insert a hyperlink at the input cursor position.
+</p>
+
+<p>
+<span class='menuitem'>Format text</span>
+Format the selected text: bold, italic, or underlined.
+</p>
+
+<p>
+<span class='menuitem'>Copy text to</span>
+Copy the entire text to another language region. The text is appended to any text that
+may already be present.
+</p>
+
+<p>
+<span class='menuitem'>Undo</span>
+Undo the last action in the text area.
+</p>
+
+<p>
+<span class='menuitem'>Redo</span>
+Redo the previous undo (&#x21d2; <span class='menuitem'>Undo</span>).
+</p>
+
+<p>
+<span class='menuitem'>Select all</span>
+Select the entire text.
+</p>
+
+<p>
+<span class='menuitem'>Delete</span>
+Delete the entire text.
+</p>
+
+<p>
+<span class='menuitem'>Revert</span>
+Restore the original text - either the starting text, or the text after the last save.
+This menu item is only available when the current text differs from the restore text.
+</p>
+
+<p>
+<span class='menuitem'>Switch language</span>
+Select a different language.
+</p>
+
+<p>
+<span class='menuitem'>Add language</span>
+Add a language.
+</p>
+
+<p>
+<span class='menuitem'>Show smileys</span>
+When enabled, the recognized smileys are shown with pictograms, otherwise the text for
+this smiley is shown. This menu item is only available when automatic recognition of
+smileys is enabled in the game editor.
+</p>
+
+<h2 id="Buttons">Buttons for text field control</h2>
+
+<p>
+<span class='menuitem'>Insert symbol</span>
+Quick entry of a symbol at the current input cursor position, such as a position
+evaluation, or another special character.
+</p>
+
+<p>
+<span class='menuitem'>Delete</span>
+Delete the entire text (of the current language).
+</p>
+
+<p>
+<span class='menuitem'>Revert</span>
+Restore the original text for the current language. This button is only active when
+the new text differs from the original text. As soon as the text is saved, this becomes
+the new original text.
+</p>
+
+<h2 id="Dialog">Dialog buttons</h2>
+
+<p>
+<span class='menuitem'>OK</span>
+Save the texts of all selected languages and close the dialog.
+</p>
+
+<p>
+<span class='menuitem'>Apply</span>
+Save the texts of all selected languages without leaving the dialog (for previewing in
+the game editor).
+</p>
+
+<p>
+<span class='menuitem'>Cancel</span>
+Close the dialog without saving, i.e. any changes that may exist are discarded. If a
+save was already done before with <span class='menuitem'>Apply</span>, then the
+last-saved text is retained.
+</p>
+
+</body>
+</html>
