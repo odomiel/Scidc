@@ -1,0 +1,87 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2013 Gregor Cramer
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Square marker palette
+INDEX Square markers
+INDEX Move markers
+INDEX Markers on the chessboard
+TITLE Square Marker Palette
+
+<dir><img src="images/marks-palette.png" /></dir>
+
+<p>
+This palette can be opened on the chessboard window either with the keyboard shortcut
+<nobr><key>Ctrl</key>+<key>%::application::board::mc::Accel(edit-marks)%</key></nobr>
+or through the context menu of the game editor (<see/>
+<menuitem>%::marks::mc::MarksPalette%</menuitem>), but only while a game is being
+edited in the game editor.
+</p>
+
+<p>
+The palette allows choosing the color of the marker as well as the marker type. The
+color and type selection was kept identical to the chess database application
+<a href="http://scid.sourceforge.net">Scid</a>.
+</p>
+
+<note>
+The palette is only visible while the chessboard window is active.
+</note>
+
+<p>
+In the game editor markers are indicated with the symbol
+<span color="|::pgn::editor::Colors(foreground:marks)|#6300c6|"><awesome>&#xf0b2;</awesome></span>.
+The tooltip shows the code as it appears in the
+<a href="Database-Formats.html#PGN">PGN format</a>.
+</p>
+
+<p>
+The following describes how markers are set. Setting a marker on the chessboard is
+only possible while a game is being edited in the game editor.
+</p>
+
+<ul>
+  <li><a href="#square">Mark a square with a symbol</a></li>
+  <li><a href="#move">Mark a move with an arrow</a></li>
+</ul>
+
+<h3 id="square">Mark a square with a symbol</h3>
+
+<p>
+A double click, or two clicks on a square while holding the <key>Ctrl</key> key,
+marks this square with the selected symbol in the selected color. The marker is
+removed by another double click while holding <key>Ctrl</key> with the same symbol
+and the same color. Note that after the first click the marker for the selected
+square is shown, and only after the second click does the symbol become visible. A
+square marker can be overwritten by another square marker. Multiple markers on one
+square are not possible.
+</p>
+
+<h3 id="move">Mark a move with an arrow</h3>
+
+<p>
+An arrow is set by a click while holding the <key>Ctrl</key> key on the source square
+(the marker for the selected square is now shown) and a second click while holding
+<key>Ctrl</key> on the target square. The arrow is shown in the selected color. A
+move marker is removed by setting an arrow of the same color again on the same source
+and target squares. A move marker can be replaced by a move marker of a different
+color.
+</p>
+
+END
+
+<!-- vi:set ts=2 sw=2 et filetype=html fileencoding=utf-8: -->

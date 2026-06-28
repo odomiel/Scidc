@@ -1,0 +1,33 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2013 Gregor Cramer
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Edit start position
+TITLE Edit Start Position
+
+<p>
+This dialog simplifies entering a Chess 960 or Shuffle Chess start position. To do
+so you simply place the pieces of White's back rank. The %::widget::mc::Ok%
+button is only enabled when a valid start position is present. If the number of the
+start position is known, the
+<a href="Board-Setup-Dialog.html">board setup dialog</a> should be preferred for
+entering the position number directly.
+</p>
+
+END
+
+<!-- vi:set ts=2 sw=2 et filetype=html fileencoding=utf-8: -->

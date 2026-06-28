@@ -360,7 +360,19 @@ proc FullPath {file} {
 	} else {
 		set lang [helpLanguage]
 	}
-	return [file normalize [file join $::scidc::dir::help $lang $file]]
+	set path [file normalize [file join $::scidc::dir::help $lang $file]]
+	# Sprachen ausser Deutsch nutzen die englische Hilfeseite, wenn keine eigene
+	# Sprachversion existiert; als letzte Reserve die deutsche Seite. Deutsch
+	# selbst faellt nicht zurueck.
+	if {$lang ne "de" && ![file readable $path]} {
+		foreach fallback {en de} {
+			if {$fallback ne $lang} {
+				set alt [file normalize [file join $::scidc::dir::help $fallback $file]]
+				if {[file readable $alt]} { return $alt }
+			}
+		}
+	}
+	return $path
 }
 
 
