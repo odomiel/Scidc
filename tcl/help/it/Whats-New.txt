@@ -33,6 +33,7 @@ modificate o corrette dal fork:</p>
   <li class="space">Opzione "Cancella intera cronologia" nel menu contestuale della schermata iniziale</li>
   <li class="space"><abbr>.si5</abbr> aggiunto alla finestra di assegnazione tipi di file</li>
   <li class="space">Sottomenu di debug sotto Impostazioni</li>
+  <li class="space">Ricerca dei nomi migliorata nella finestra Salva partita: senza distinzione tra maiuscole e minuscole, ricerca per sottostringa e per parole (nome e cognome in qualsiasi ordine, senza virgola), a partire da 3 caratteri</li>
 </ul>
 
 <h3>Funzionalità Rimosse</h3>
