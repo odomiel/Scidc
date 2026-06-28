@@ -1,0 +1,31 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Site List
+TITLE The Site List
+
+<p>
+The <b>Site List</b> shows all venues of the active database, together with the
+associated country and the number of games played there.
+</p>
+
+<p>
+The list can be sorted and searched via the search field. The search is
+case-insensitive and matches substrings. Through the context menu all games of a
+site can be filtered.
+</p>

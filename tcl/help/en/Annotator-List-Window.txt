@@ -1,0 +1,30 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Annotator list
+TITLE The Annotator List
+
+<p>
+The <b>Annotator List</b> shows all annotators of the active database, that is, the
+people who have annotated games, together with the number of games they annotated.
+</p>
+
+<p>
+The list can be sorted and searched. Through the context menu all games of a
+particular annotator can be filtered.
+</p>

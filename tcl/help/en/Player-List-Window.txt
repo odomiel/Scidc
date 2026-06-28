@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Player list
+TITLE The Player List
+
+<p>
+The <b>Player List</b> shows all players occurring in the active database. For each
+player it shows, among other things, the frequency (number of games), federation,
+title, sex and the available ratings (Elo, DWZ and others).
+</p>
+
+<p>
+The list can be sorted by any column. The search field filters by player name; the
+search is case-insensitive and matches substrings in any word order. Double-clicking
+opens the <a href="Player-Card.html">Player Card</a> with statistics and biographical
+references.
+</p>
+
+<p>
+The context menu offers actions such as filtering all games of a player and &ndash; if
+a link to the <a href="Player-Dictionary.html">Player Dictionary</a> exists &ndash;
+adopting verified master data (FIDE ID, title, federation).
+</p>

@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Engine Management
+TITLE Engine Management
+
+<p>
+<b>Engine Management</b> is used to set up and maintain the chess engines (analysis
+programs). For each engine it shows information such as name, author, web page,
+country, playing strength, protocol (UCI or XBoard/WinBoard), command and working
+directory.
+</p>
+
+<p>
+New engines can be added, existing ones edited or removed. For each engine the
+supported chess variants (&#x21d2; <a href="Chess-Variants.html">chess variants</a>)
+as well as the engine-specific options (such as hash size and number of threads) can
+be configured. The most recently used engines are noted.
+</p>
+
+<p>
+On the first program start Scidc offers to download a set of default engines, since
+no engines are bundled with the program itself.
+</p>

@@ -1,0 +1,40 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Chessboard
+TITLE The Chessboard Window
+
+<p>
+The <b>Chessboard Window</b> is the central display element and shows the current
+position of the loaded game. Below it are navigation buttons for stepping move by
+move or jumping to the start or end of the game.
+</p>
+
+<p>
+Moves can be played directly on the board with the mouse; they are then entered into
+the <a href="Game-Text-Window.html">game notation</a>. The appearance and behaviour
+of the board &ndash; piece set, board theme, coordinate display, marker arrows and
+square colors &ndash; can be adjusted through the board themes and the settings.
+Markers (arrows, colored squares) are set with the
+<a href="Mark-Palette-Dialog.html">square marker palette</a>.
+</p>
+
+<p>
+An arbitrary starting position can be created with the
+<a href="Board-Setup-Dialog.html">board setup</a>.
+</p>

@@ -1,0 +1,32 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Event List
+TITLE The Event List
+
+<p>
+The <b>Event List</b> shows all tournaments and events of the active database.
+Typical columns are the event name, site, date or period, number of games, event
+type and time mode.
+</p>
+
+<p>
+The list can be sorted and searched. Double-clicking an event shows its games; for
+round-robin tournaments the <a href="Crosstable-Window.html">Crosstable</a> can be
+opened from there. The context menu allows filtering all games of an event.
+</p>

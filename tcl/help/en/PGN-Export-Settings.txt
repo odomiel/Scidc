@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX PGN Export Settings
+TITLE PGN Export Settings
+
+<p>
+The <b>PGN Export Settings</b> control how games are written in PGN format &ndash;
+both for the <a href="Database-Export-Dialog.html">database export</a> and when
+copying games to the clipboard.
+</p>
+
+<p>
+Among the settings are the move notation, the handling of comments and variations,
+the indentation as well as additional information such as hints about move repetition
+(threefold and fivefold repetition) and the 50-move rule. A preview shows the effect
+of the chosen options.
+</p>
+
+<p>
+The settings can be reverted to the state when the dialog was opened (<b>Revert to
+initial settings</b>) or completely to the factory settings (<b>Reset to factory
+settings</b>).
+</p>

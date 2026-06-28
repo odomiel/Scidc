@@ -1,0 +1,39 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Merge games
+TITLE Merging Games
+
+<p>
+With the <b>Merge</b> function several games can be merged into a single game with
+variations. This is useful for turning many individual games into a compact opening
+tree as an annotated game.
+</p>
+
+<p>
+The merge can start from the current board position or from the initial position.
+Options allow transpositions to be included or excluded as well as limiting the
+variation depth and the maximal variation length. A preview shows the result before
+saving.
+</p>
+
+<p>
+The result can be saved as a new game or merged into an existing game. While the
+dialog is open, the game in question is locked against concurrent changes. Only games
+of the same chess variant can be merged.
+</p>

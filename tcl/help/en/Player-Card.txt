@@ -1,0 +1,38 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Player Card
+TITLE The Player Card
+
+<p>
+The <b>Player Card</b> summarizes the data of a player at a glance. It shows, among
+other things, the latest and highest rating, the period of the recorded games (first
+and last game) as well as a results balance (wins, draws, losses, total).
+</p>
+
+<p>
+In addition, the most common openings with White and with Black are listed. This
+provides a quick profile of a player's style and activity.
+</p>
+
+<p>
+Via links, further sources can be opened, such as the FIDE rating history, the
+Wikipedia biography as well as library catalogs (VIAF and the German National
+Library). The card is usually opened by double-clicking from the
+<a href="Player-List-Window.html">player list</a>.
+</p>

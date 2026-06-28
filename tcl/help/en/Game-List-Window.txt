@@ -1,0 +1,41 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Game list
+TITLE The Game List
+
+<p>
+The <b>Game List</b> shows all games of the active database in tabular form. Each
+row represents a game; the columns show the most important header data, such as
+White and Black with their ratings, the result, the number of moves, event, site,
+round, date, <a href="ECO-Code.html">ECO code</a> and game flags
+(&#x21d2; <a href="Game-Flags.html">Game flags</a>).
+</p>
+
+<p>
+Clicking a column header sorts the list by that column; clicking again reverses the
+order. Through the column header context menu, columns can be shown or hidden and
+their width adjusted. Double-clicking a row loads the game for viewing and editing.
+</p>
+
+<p>
+Which games are shown is determined by the active filter. Search and filter
+functions restrict the list to a subset; the status line indicates how many of the
+total games are currently visible. A row's context menu offers actions such as
+loading, copying, deleting (marking for deletion) and editing the game flags.
+</p>

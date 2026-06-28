@@ -36,6 +36,11 @@ set Contents {
     {{{Crosstable} {Crosstable-Window.html}}}
     {{{Game import} {PGN-Import-Dialog.html}}}
     {{{Database export} {Database-Export-Dialog.html}}}
+    {{{Merge games} {Database-Merge.html}}}
+    {{{Player Dictionary} {Player-Dictionary.html}}}
+    {{{Player Card} {Player-Card.html}}}
+    {{{Engine Management} {Engine-Management.html}}}
+    {{{PGN Export Settings} {PGN-Export-Settings.html}}}
   }
   {
     {{{CQL (Chess Query Language)} {Overview.html} {cql-manual}}}

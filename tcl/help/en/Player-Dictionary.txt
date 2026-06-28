@@ -1,0 +1,40 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Player Dictionary
+TITLE The Player Dictionary
+
+<p>
+The <b>Player Dictionary</b> is a built-in master database for chess players. It
+provides verified data such as FIDE ID, title, federation, sex and ratings, and
+serves as a reference work when entering and maintaining games.
+</p>
+
+<p>
+A filter narrows the display &ndash; for example by organization ID, titles, rating
+ranges or a period of years. The player name search is case-insensitive and supports
+pattern matching (&#x21d2; <a href="Pattern-Matching.html">Pattern matching</a>).
+</p>
+
+<p>
+The rating lists can be updated directly from within the application: via <b>Update
+Player Lists</b> Scidc downloads the current FIDE and DWZ data one after another and
+reads them in. When saving a game, the
+<a href="Game-Browser.html">save game dialog</a> proposes matching entries from the
+player dictionary.
+</p>

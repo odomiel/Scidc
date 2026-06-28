@@ -1,0 +1,35 @@
+<!-- ======================================================================
+* Author : $Author$
+* Version: $Revision$
+* Date   : $Date$
+* Url    : $URL$
+======================================================================= -->
+
+<!-- ======================================================================
+* Copyright: (C) 2026 Scidc
+======================================================================= -->
+
+<!-- ======================================================================
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+======================================================================= -->
+
+INDEX Game text window
+TITLE The Game Text Window
+
+<p>
+The <b>Game Text Window</b> shows the notation of the currently loaded game: the
+main line, all variations, comments, NAG symbols
+(&#x21d2; <a href="NAG-Comments.html">NAG comment values</a>) and &ndash; where
+present &ndash; embedded diagrams.
+</p>
+
+<p>
+Clicking a move jumps to the corresponding position on the
+<a href="Board-Window.html">chessboard</a>. Through the context menu and the toolbar,
+variations can be collapsed and expanded, the move notation switched, and comments
+edited. The presentation (font size, colors, notation style) follows the program
+settings.
+</p>
