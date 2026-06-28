@@ -471,8 +471,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:hashfullness) [::toolbar::add $tbInfo label \
 		-width 5 \
 		-justify center \
-		-background [::colors::lookup engine,infobackground] \
-		-foreground [::colors::lookup engine,infoforeground] \
+		-background [::colors::lookupTheme engine,infobackground] \
+		-foreground [::colors::lookupTheme engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::HashFullness \
@@ -483,8 +483,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:nps) [::toolbar::add $tbInfo label \
 		-width 9 \
 		-justify center \
-		-background [::colors::lookup engine,infobackground] \
-		-foreground [::colors::lookup engine,infoforeground] \
+		-background [::colors::lookupTheme engine,infobackground] \
+		-foreground [::colors::lookupTheme engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::NodesPerSecond \
@@ -493,8 +493,8 @@ proc build {parent number patternNumber} {
 	set Vars(widget:tbhits) [::toolbar::add $tbInfo label \
 		-width 5 \
 		-justify center \
-		-background [::colors::lookup engine,infobackground] \
-		-foreground [::colors::lookup engine,infoforeground] \
+		-background [::colors::lookupTheme engine,infobackground] \
+		-foreground [::colors::lookupTheme engine,infoforeground] \
 		-relief raised \
 		-borderwidth 1 \
 		-tooltipvar [namespace current]::mc::TablebaseHits \

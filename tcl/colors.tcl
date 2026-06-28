@@ -584,6 +584,30 @@ proc lookup {color} {
 }
 
 
+# Liefert "lite" oder "dark" anhand der Luminanz des tatsaechlichen TTK-Theme-
+# Hintergrunds, unabhaengig vom (separaten) Color-Scheme. Fuer Widgets, die mit
+# dem TTK-Theme gerendert werden (Toolbar-Labels, HTML-keybar etc.).
+proc themeVariant {} {
+	variable Scheme
+	if {[catch { winfo rgb . [::theme::getColor background] } rgb]} {
+		return [expr {$Scheme eq "lite" ? "lite" : "dark"}]
+	}
+	lassign $rgb r g b
+	set lum [expr {(0.299*$r + 0.587*$g + 0.114*$b)/65535.0}]
+	return [expr {$lum < 0.5 ? "dark" : "lite"}]
+}
+
+
+# Wie lookup, waehlt aber die lite/dark-Variante nach dem TTK-Theme statt nach
+# dem Color-Scheme.
+proc lookupTheme {color} {
+	variable Colors
+	set variant [themeVariant]
+	if {[info exists Colors($variant:$color)]} { return $Colors($variant:$color) }
+	return [lookup $color]
+}
+
+
 proc hsv2rgb {h s v} { return [::dialog::choosecolor::hsv2rgb $h $s $v] }
 proc rgb2hsv {r g b} { return [::dialog::choosecolor::rgb2hsv $r $g $b] }
 proc getActualColor {color} { return [::dialog::choosecolor::getActualColor $color] }

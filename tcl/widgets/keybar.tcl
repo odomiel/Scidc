@@ -36,35 +36,16 @@ proc tr {text} { return $text }
 proc defaultCSS {} { return "" }
 
 
-# Die keybar-Tasten werden mit dem TTK-Theme gerendert (Widget-Hintergrund =
-# [::theme::getColor background]) und muessen sich daher am tatsaechlichen Theme
-# orientieren, nicht am unabhaengigen Color-Scheme. Sonst erscheinen bei
-# Scheme=dark + hellem TTK-Theme dunkle Tasten auf hellem Dialog (und umgekehrt).
-proc Variant {} {
-	if {[catch { winfo rgb . [::theme::getColor background] } rgb]} {
-		return [expr {$::colors::Scheme eq "lite" ? "lite" : "dark"}]
-	}
-	lassign $rgb r g b
-	set lum [expr {(0.299*$r + 0.587*$g + 0.114*$b)/65535.0}]
-	return [expr {$lum < 0.5 ? "dark" : "lite"}]
-}
-
-
-proc Color {key} {
-	set variant [Variant]
-	if {[info exists ::colors::Colors($variant:keybar,$key)]} {
-		return $::colors::Colors($variant:keybar,$key)
-	}
-	return [::colors::lookup keybar,$key]
-}
-
-
+# Die keybar-Tasten werden mit dem TTK-Theme gerendert und muessen sich daher am
+# tatsaechlichen Theme orientieren, nicht am unabhaengigen Color-Scheme (sonst
+# dunkle Tasten auf hellem Dialog bei Scheme=dark + hellem TTK-Theme). Dafuer
+# ::colors::lookupTheme, das die lite/dark-Variante nach der Theme-Luminanz waehlt.
 proc BuildCSS {} {
-	set bg     [Color background]
-	set fg     [Color foreground]
-	set bl     [Color border-light]
-	set bd     [Color border-dark]
-	set hover  [Color hover]
+	set bg     [::colors::lookupTheme keybar,background]
+	set fg     [::colors::lookupTheme keybar,foreground]
+	set bl     [::colors::lookupTheme keybar,border-light]
+	set bd     [::colors::lookupTheme keybar,border-dark]
+	set hover  [::colors::lookupTheme keybar,hover]
 	set css [defaultCSS]
 	append css "
 		kbd.key {
