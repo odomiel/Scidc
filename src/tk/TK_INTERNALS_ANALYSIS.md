@@ -7,11 +7,11 @@
 
 | Datei | winPtr-> Zugriffe | Kritikalität | Status |
 |-------|-------------------|--------------|--------|
-| tk_base.cpp | ~35 | ⭐⭐⭐⭐⭐ | 🟡 Teilweise (einfache Lesezugriffe ersetzt) |
-| tk_busy.cpp | ~50 | ⭐⭐⭐⭐ | 🟡 Teilweise (einfache Lesezugriffe ersetzt) |
-| tk_fixes.cpp | ~20 | ⭐⭐⭐⭐ | ✅ Abgeschlossen (alle Zugriffe durch Wrapper ersetzt) |
+| tk_base.cpp | 0 | ⭐⭐⭐⭐⭐ | ✅ Abgeschlossen (alle Zugriffe durch Wrapper ersetzt) |
+| tk_busy.cpp | ~31 | ⭐⭐⭐⭐ | 🟡 Teilweise (Tk_FakeWin* Zugriffe verbleiben) |
+| tk_fixes.cpp | 0 | ⭐⭐⭐⭐ | ✅ Abgeschlossen (alle Zugriffe durch Wrapper ersetzt) |
 | tk_multiwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
-| tk_window_manager.cpp | ? | ⭐⭐⭐ | ⬜ Nicht begonnen |
+| tk_window_manager.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
 | tk_init.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
 | tk_notebook.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
 | tk_panedwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
