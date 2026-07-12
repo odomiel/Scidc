@@ -8,6 +8,8 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.07.12
 
+- **b12** – Modernisierung: Phase 3.1 – Alle direkten Tk-Strukturzugriffe in tk_busy.cpp durch Kompatibilitäts-Wrapper ersetzt
+- **b11** – Modernisierung: Phase 3 – Direkte TkWindow-Strukturzugriffe in tk_base.cpp und tk_fixes.cpp durch tkCompat-Wrapper ersetzt
 - **b10** – Modernisierung: Skript update-version.sh korrigiert (generische Patterns statt hardcoded Versionen)
 - **b9** – Modernisierung: Skript update-version.sh zur automatischen Versionssynchronisation hinzugefügt
 - **b8** – Modernisierung: Tcl C-API auf moderne Funktionen aktualisiert (Tcl_ResetResult/Tcl_AppendResult → Tcl_SetObjResult, Tcl_Eval → Tcl_EvalEx)

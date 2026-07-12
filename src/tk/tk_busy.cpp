@@ -87,7 +87,7 @@ ScCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef, Window *parentPtr, Tk_Window t
 {
     Busy *busyPtr = (Busy *) busy;
 
-    if (winPtr->flags & TK_REPARENTED) {
+    if (tkCompat::isWindowReparented(winPtr)) {
 	/*
 	 * This works around a bug in the implementation of menubars for
 	 * non-Macintosh window systems (Win32 and X11). Tk doesn't reset the
@@ -179,7 +179,7 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
     hWnd = CreateWindowEx(exStyle, TK_WIN_CHILD_CLASS_NAME, nullptr, style,
 	    Tk_X(tkwin), Tk_Y(tkwin), Tk_Width(tkwin), Tk_Height(tkwin),
 	    hParent, nullptr, Tk_GetHINSTANCE(), nullptr);
-    winPtr->window = Tk_AttachHWND(tkwin, hWnd);
+    tkCompat::setWindowIdFromFakeWin(winPtr, Tk_AttachHWND(tkwin, hWnd));
 }
 
 #elif defined(__MacOSX__)
@@ -213,7 +213,7 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
 static void
 ScCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef, Window *parentPtr, Tk_Window tkParent, Busy* busy)
 {
-    if (winPtr->flags & TK_REPARENTED) {
+    if (tkCompat::isWindowReparented(winPtr)) {
 	/*
 	 * This works around a bug in the implementation of menubars for
 	 * non-MacIntosh window systems (Win32 and X11). Tk doesn't reset the
@@ -276,12 +276,13 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
     Tk_Changes(tkwin)->border_width = 0;
     // depth is set below via Tk_Visual(tkwin)
 
-    winPtr->window = XCreateWindow(Tk_Display(tkwin), parent,
+    Window winId = XCreateWindow(Tk_Display(tkwin), parent,
 	    Tk_X(tkwin), Tk_Y(tkwin),
 	    (unsigned) Tk_Width(tkwin),  /* width */
 	    (unsigned) Tk_Height(tkwin),  /* height */
 	    (unsigned) Tk_Changes(tkwin)->border_width,  /* border_width */
 	    0, InputOnly, Tk_Visual(tkwin), mask, atts);
+    tkCompat::setWindowIdFromFakeWin(winPtr, winId);
 }
 
 #endif
@@ -516,7 +517,7 @@ FirstChild(
 {
     struct TkWindow *parentPtr = (struct TkWindow *) parent;
 
-    return (Tk_Window) parentPtr->childList;
+    return (Tk_Window) tkCompat::getChildList(parentPtr);
 }
 
 static inline Tk_Window
@@ -528,7 +529,7 @@ NextChild(
     if (winPtr == nullptr) {
 	return nullptr;
     }
-    return (Tk_Window) winPtr->nextPtr;
+    return (Tk_Window) tkCompat::getNextWinPtr(winPtr);
 }
 
 static inline void
@@ -538,7 +539,7 @@ SetWindowInstanceData(
 {
     struct TkWindow *winPtr = (struct TkWindow *) tkwin;
 
-    winPtr->instanceData = instanceData;
+    tkCompat::setInstanceData(winPtr, instanceData);
 }
 
 /*

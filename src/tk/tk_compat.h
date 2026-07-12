@@ -92,7 +92,8 @@ inline bool isWindowTopHierarchy(TkWindow* winPtr);
 
 // Prüft ob das Fenster reparented ist
 // In Tk 8.6: winPtr->flags & TK_REPARENTED
-inline bool isWindowReparented(TkWindow* winPtr);
+// Funktion akzeptiert sowohl TkWindow* als auch Tk_FakeWin* (Tk_Window)
+inline bool isWindowReparented(void* winPtr);
 
 // Prüft ob das Fenster Konfigurationsbenachrichtigung benötigt
 // In Tk 8.6: winPtr->flags & TK_NEED_CONFIG_NOTIFY
@@ -113,6 +114,14 @@ inline void clearWindowFlags(TkWindow* winPtr, int flags);
 // Setzt dirtyChanges
 // In Tk 8.6: winPtr->dirtyChanges = value
 inline void setDirtyChanges(TkWindow* winPtr, unsigned int value);
+
+// Setzt das X11 Window ID (für Tk_FakeWin*)
+// In Tk 8.6: winPtr->window = windowId
+inline void setWindowIdFromFakeWin(void* winPtr, Window windowId);
+
+// Setzt instanceData (TkWindow intern)
+// In Tk 8.6: winPtr->instanceData = data
+inline void setInstanceData(TkWindow* winPtr, ClientData data);
 
 // ======================================================================
 // Window Eigenschaften
@@ -259,8 +268,11 @@ inline bool isWindowTopHierarchy(TkWindow* winPtr) {
     return winPtr && (winPtr->flags & TK_TOP_HIERARCHY);
 }
 
-inline bool isWindowReparented(TkWindow* winPtr) {
-    return winPtr && (winPtr->flags & TK_REPARENTED);
+inline bool isWindowReparented(void* winPtr) {
+    // Akzeptiert sowohl TkWindow* als auch Tk_FakeWin* (Tk_Window)
+    // Beide haben ein flags Feld an der gleichen Position
+    struct GenericWin { int flags; } *w = (struct GenericWin *)winPtr;
+    return winPtr && (w->flags & TK_REPARENTED);
 }
 
 inline bool needsConfigNotify(TkWindow* winPtr) {
@@ -342,6 +354,18 @@ inline void setChildList(TkWindow* winPtr, TkWindow* child) {
 
 inline void setLastChildPtr(TkWindow* winPtr, TkWindow* lastChild) {
     if (winPtr) winPtr->lastChildPtr = lastChild;
+}
+
+inline void setWindowIdFromFakeWin(void* winPtr, Window windowId) {
+    // Für Tk_FakeWin* Struktur
+    if (winPtr) {
+        struct GenericWin { Window window; } *w = (struct GenericWin *)winPtr;
+        w->window = windowId;
+    }
+}
+
+inline void setInstanceData(TkWindow* winPtr, ClientData data) {
+    if (winPtr) winPtr->instanceData = data;
 }
 
 inline TkWindow* getGrabWindow(TkWindow* winPtr) {
