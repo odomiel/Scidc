@@ -22,6 +22,7 @@
 #include "m_iostream.h"
 #include "m_vector.h"
 #include "m_string.h"
+#include <zlib.h>
 
 extern "C"
 {

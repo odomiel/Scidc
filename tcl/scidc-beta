@@ -2301,9 +2301,6 @@ proc lookup {color} {
 }
 
 
-# Liefert "lite" oder "dark" anhand der Luminanz des tatsaechlichen TTK-Theme-
-# Hintergrunds, unabhaengig vom (separaten) Color-Scheme. Fuer Widgets, die mit
-# dem TTK-Theme gerendert werden (Toolbar-Labels, HTML-keybar etc.).
 proc themeVariant {} {
 	variable Scheme
 	if {[catch { winfo rgb . [::theme::getColor background] } rgb]} {
@@ -2315,8 +2312,6 @@ proc themeVariant {} {
 }
 
 
-# Wie lookup, waehlt aber die lite/dark-Variante nach dem TTK-Theme statt nach
-# dem Color-Scheme.
 proc lookupTheme {color} {
 	variable Colors
 	set variant [themeVariant]
@@ -40197,9 +40192,6 @@ proc FullPath {file} {
 		set lang [helpLanguage]
 	}
 	set path [file normalize [file join $::scidc::dir::help $lang $file]]
-	# Sprachen ausser Deutsch nutzen die englische Hilfeseite, wenn keine eigene
-	# Sprachversion existiert; als letzte Reserve die deutsche Seite. Deutsch
-	# selbst faellt nicht zurueck.
 	if {$lang ne "de" && ![file readable $path]} {
 		foreach fallback {en de} {
 			if {$fallback ne $lang} {
@@ -64564,10 +64556,6 @@ proc tr {text} { return $text }
 proc defaultCSS {} { return "" }
 
 
-# Die keybar-Tasten werden mit dem TTK-Theme gerendert und muessen sich daher am
-# tatsaechlichen Theme orientieren, nicht am unabhaengigen Color-Scheme (sonst
-# dunkle Tasten auf hellem Dialog bei Scheme=dark + hellem TTK-Theme). Dafuer
-# ::colors::lookupTheme, das die lite/dark-Variante nach der Theme-Luminanz waehlt.
 proc BuildCSS {} {
 	set bg     [::colors::lookupTheme keybar,background]
 	set fg     [::colors::lookupTheme keybar,foreground]

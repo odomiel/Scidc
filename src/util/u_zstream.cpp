@@ -46,6 +46,7 @@ using namespace util;
 #define ZIP_FILE	static_cast<ZStream::Handle*>(cookie)->file
 #define ZIP_DIR	static_cast<ZStream::Handle*>(cookie)->dir
 #define HANDLE		static_cast<ZStream::Handle*>(cookie)->handle
+#define GZHANDLE	reinterpret_cast<gzFile>(HANDLE)
 
 #define IS_READABLE	(static_cast<ZStream::Handle*>(cookie)->mode & mstl::ios_base::in)
 #define IS_WRITEABLE	(static_cast<ZStream::Handle*>(cookie)->mode & mstl::ios_base::out)
@@ -334,7 +335,7 @@ read(void* cookie, char* buf, size_t len)
 {
 	M_ASSERT(IS_READABLE);
 
-	int bytesRead = ::gzread(HANDLE, buf, len);
+	int bytesRead = ::gzread(GZHANDLE, buf, len);
 	return bytesRead <= 0 ? 0 : bytesRead;
 }
 
@@ -342,7 +343,7 @@ read(void* cookie, char* buf, size_t len)
 static int
 seek(void* cookie, __off64_t* pos, int whence)
 {
-	*pos = ::gzseek(HANDLE, *pos, whence);
+	*pos = ::gzseek(GZHANDLE, *pos, whence);
 	return *pos == -1 ? -1 : 0;
 }
 
@@ -350,7 +351,7 @@ seek(void* cookie, __off64_t* pos, int whence)
 static int
 close(void* cookie)
 {
-	return ::gzclose(HANDLE);
+	return ::gzclose(GZHANDLE);
 }
 
 
@@ -358,7 +359,7 @@ static __ssize_t
 write(void* cookie, char const* buf, size_t len)
 {
 	M_ASSERT(IS_WRITEABLE);
-	return ::gzwrite(HANDLE, buf, len);
+	return ::gzwrite(GZHANDLE, buf, len);
 }
 
 
@@ -461,7 +462,7 @@ uint64_t
 ZStream::goffset()
 {
 	if (m_type == GZip)
-		return gzoffset(gzFile(m_handle.handle));
+		return gzoffset(static_cast<gzFile>(m_handle.handle));
 
 	return tellg();
 }
@@ -531,7 +532,7 @@ ZStream::open(char const* filename, Mode mode)
 		m_fp = ::fopencookie(cookie, fmode, ::m_gzip);
 
 		if (!m_fp)
-			::gzclose(HANDLE);
+			::gzclose(GZHANDLE);
 
 		m_size = gzip::readUncompressedSize(strm);
 		m_type = GZip;
@@ -613,7 +614,7 @@ ZStream::open(char const* filename, Type type, Mode mode)
 			m_fp = ::fopencookie(cookie, fmode, ::m_gzip);
 
 			if (!m_fp)
-				::gzclose(HANDLE);
+				::gzclose(GZHANDLE);
 			break;
 
 		case Zip:
