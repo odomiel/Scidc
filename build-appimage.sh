@@ -176,7 +176,7 @@ fi
 
 # Versionsnummer aus Makefile.version lesen und in den Dateinamen einbauen
 # (Schema: Scidc-<Version>-<arch>.AppImage; Leerzeichen -> '-')
-VERSION=$(sed -n 's/.*-DSCIDB_VERSION="\\"\(.*\)\\"".*/\1/p' Makefile.version 2>/dev/null)
+VERSION=$(grep SCIDB_VERSION Makefile.version | sed 's/.*="//;s/"//')
 if [ -n "$VERSION" ]; then
     VERSION_SAFE=$(echo "$VERSION" | tr ' ' '-')
     OUTNAME="Scidc-${VERSION_SAFE}-${ARCH}.AppImage"
