@@ -389,7 +389,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidc::revision < 1493} {
+		if {$::scidc::revision < 1494} {
 			foreach attr {docking:showall layout:list layout:name} {
 				if {[info exists ::application::Options($attr)]} {
 					set ::application::twm::Options(board:$attr) $::application::Options($attr)
