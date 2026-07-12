@@ -3,7 +3,7 @@
 #
 # Aufruf: ./scripts/update-version.sh <new_version> <new_revision>
 #
-# Beispiel: ./scripts/update-version.sh "26.07.12 b9 Beta" 1495
+# Beispiel: ./scripts/update-version.sh "26.07.12 b10 Beta" 1496
 #
 # Diese 5 Dateien werden aktualisiert:
 # 1. Makefile.version
@@ -20,7 +20,7 @@ cd "$PROJECT_DIR"
 
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <version> <revision>"
-    echo "Example: $0 \"26.07.12 b9 Beta\" 1495"
+    echo "Example: $0 \"26.07.12 b10 Beta\" 1496"
     exit 1
 fi
 
@@ -32,29 +32,31 @@ echo ""
 
 # 1. Makefile.version
 echo "[1/5] Updating Makefile.version..."
-sed -i "s/26\.07\.12 b8 Beta/$VERSION/g" Makefile.version
-sed -i "s/"1494"/"$REVISION"/g" Makefile.version
+sed -i -E "s/(SCIDB_VERSION[[:space:]]*=.*\")([^"]*)(\\\")/\1$VERSION\3/" Makefile.version
+sed -i -E "s/(SCIDB_REVISION[[:space:]]*=.*\")([0-9]+)(\\\")/\1$REVISION\3/" Makefile.version
 
 # 2. src/tcl/tcl_misc.cpp
 echo "[2/5] Updating src/tcl/tcl_misc.cpp..."
-sed -i "s/26\.07\.12 b8 Beta/$VERSION/g" src/tcl/tcl_misc.cpp
-sed -i "s/"1494"/"$REVISION"/g" src/tcl/tcl_misc.cpp
+sed -i -E "s/(# define SCIDB_VERSION[[:space:]]+\")([^"]*)(\\\")/\1$VERSION\3/" src/tcl/tcl_misc.cpp
+sed -i -E "s/(# define SCIDB_REVISION[[:space:]]+\")([0-9]+)(\\\")/\1$REVISION\3/" src/tcl/tcl_misc.cpp
 
 # 3. tcl/exec.tcl
 echo "[3/5] Updating tcl/exec.tcl..."
-sed -i "s/26\.07\.12 b8 Beta/$VERSION/g" tcl/exec.tcl
+sed -i -E 's/(set version ")[^"]*(")/\1'$VERSION'\2/' tcl/exec.tcl
 
 # 4. tcl/scidc-beta (mixed-encoding)
 echo "[4/5] Updating tcl/scidc-beta..."
 python3 -c "
 import sys
+import re
 version = sys.argv[1]
 with open('tcl/scidc-beta', 'rb') as f:
     data = f.read()
 before = sum(b > 127 for b in data)
-old = b'set version \"26.07.12 b8 Beta\"'
+# Generisches Pattern: set version \"...\"
+old = rb'set version \"[^\"]*\"'
 new = b'set version \"' + version.encode('latin-1') + b'\"'
-data = data.replace(old, new, 1)
+data = re.sub(old, new, data, count=1)
 after = sum(b > 127 for b in data)
 assert before == after, f'Non-ASCII bytes changed: {before} -> {after}'
 with open('tcl/scidc-beta', 'wb') as f:
@@ -63,9 +65,9 @@ print(f'  Non-ASCII bytes preserved: {after}')
 " "$VERSION"
 
 # 5. tcl/end.tcl
+# Ersetze alle numerischen Revision-Vergleiche
 echo "[5/5] Updating tcl/end.tcl..."
-# Ersetze alle numerischen Revision-Vergleiche (außer den dynamischen mit [::scidc::misc::revision])
-sed -i -E "s/(\$::scidc::revision|scidc::revision) < ([0-9]+)/\1 < $REVISION/g" tcl/end.tcl
+sed -i -E "s/(\$::scidc::revision|scidc::revision) < [0-9]+/\1 < $REVISION/g" tcl/end.tcl
 
 echo ""
 echo "=== All 5 files updated successfully! ==="
