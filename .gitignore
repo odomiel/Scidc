@@ -13,7 +13,14 @@ Scidb-x86_64.AppImage
 Scidc-*.AppImage
 appimagetool-x86_64.AppImage
 AppDir/
-deps/
+
+# Built Tcl/Tk libraries (from build-tcltk.sh)
+deps/tcltk/
+
+# Submodule directories for Tcl/Tk sources
+# These are managed by .gitmodules - do NOT ignore
+# deps/tcl/
+# deps/tk/
 
 Makefile.in
 CLAUDE.md

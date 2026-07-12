@@ -1,0 +1,40 @@
+# Git Submodules für Scidc
+# ==========================
+#
+# Diese Datei definiert die Tcl/Tk Abhängigkeiten als Git-Submodule.
+# Damit kann man einfach zwischen verschiedenen Versionen wechseln.
+#
+# Aktivierung:
+#   git submodule update --init --recursive
+#
+# Version wechseln:
+#   cd deps/tcl
+#   git checkout tcl-8.6.18  # oder core-8-6-18-b3
+#   cd ../tk
+#   git checkout tk-8.6.18    # oder core-8-6-18-b3
+
+# Tcl Core Repository
+# Haupt-Repo: https://core.tcl.tk/tcl
+[submodule "deps/tcl"]
+	path = deps/tcl
+	url = https://github.com/tcltk/tcl.git
+	branch = core-8-6-18
+
+# Tk Core Repository  
+# Haupt-Repo: https://core.tcl.tk/tk
+[submodule "deps/tk"]
+	path = deps/tk
+	url = https://github.com/tcltk/tk.git
+	branch = core-8-6-18
+
+# Alternative für Tk 9.0:
+# [submodule "deps/tk9"]
+#	path = deps/tk9
+#	url = https://github.com/tcltk/tk.git
+#	branch = core-9-0-4
+
+# Alternative für Tcl 9.0:
+# [submodule "deps/tcl9"]
+#	path = deps/tcl9
+#	url = https://github.com/tcltk/tcl.git
+#	branch = core-9-0-4
