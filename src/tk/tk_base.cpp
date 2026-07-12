@@ -29,6 +29,7 @@
 #include "tcl_exception.h"
 
 #include <tkInt.h>
+#include "tk_compat.h"
 
 
 extern "C" { void TkpWmSetState(TkWindow* winPtr, int state); }
@@ -38,14 +39,14 @@ static void
 reparent(TkWindow* childPtr, TkWindow* newParentPtr = nullptr)
 {
 	M_ASSERT(childPtr);
-	M_ASSERT(childPtr->window);
-	M_ASSERT(!newParentPtr || newParentPtr->window);
+	M_ASSERT(Tk_WindowId(childPtr) != None);
+	M_ASSERT(!newParentPtr || Tk_WindowId(newParentPtr) != None);
 
 #if defined(__WIN32__) || defined(__WIN64__)
 
 	// Reparent to nullptr so UpdateWrapper won't delete our original parent window
-	HWND handle = newParentPtr ? TkWinGetHWND(newParentPtr->window) : None;
-	SetParent(TkWinGetHWND(winPtr->window), hwnd);
+	HWND handle = newParentPtr ? TkWinGetHWND(Tk_WindowId(newParentPtr)) : None;
+	SetParent(TkWinGetHWND(Tk_WindowId(childPtr)), hwnd);
 
 #elif defined(__MacOSX__)
 
@@ -54,8 +55,8 @@ reparent(TkWindow* childPtr, TkWindow* newParentPtr = nullptr)
 #else // if defined(__unix__)
 
 	Window parent = newParentPtr ?
-		newParentPtr->window : XRootWindow(childPtr->display, childPtr->screenNum);
-	XReparentWindow(childPtr->display, childPtr->window, parent, 0, 0);
+		Tk_WindowId(newParentPtr) : XRootWindow(tkCompat::getDisplay(childPtr), tkCompat::getScreenNum(childPtr));
+	XReparentWindow(tkCompat::getDisplay(childPtr), Tk_WindowId(childPtr), parent, 0, 0);
 
 #endif
 }
@@ -133,7 +134,8 @@ bool
 tk::isAlreadyDead(Tcl_Obj* obj)
 {
 	M_ASSERT(obj);
-	return exists(obj) && bool(reinterpret_cast<TkWindow*>(window(obj))->flags & TK_ALREADY_DEAD);
+	TkWindow* winPtr = reinterpret_cast<TkWindow*>(window(obj));
+	return exists(obj) && bool(winPtr->flags & TK_ALREADY_DEAD);
 }
 
 
@@ -203,12 +205,12 @@ tk::reparent(Tk_Window child, Tk_Window newParent)
 	TkWindow* childPtr	= reinterpret_cast<TkWindow*>(child);
 	TkWindow* parentPtr	= reinterpret_cast<TkWindow*>(newParent);
 
-	if (!isToplevel(child) && parentPtr->window == None)
+	if (!isToplevel(child) && Tk_WindowId(parentPtr) == None)
 		unmap(child);
 	
 	::relink(childPtr, parentPtr);
 
-	if (!isToplevel(child) && childPtr->window != None && parentPtr->window != None)
+	if (!isToplevel(child) && Tk_WindowId(childPtr) != None && Tk_WindowId(parentPtr) != None)
 		::reparent(childPtr, parentPtr);
 }
 
@@ -229,30 +231,31 @@ tk::release(Tk_Window window)
 	// TkFocusSplit(winPtr); // has hidden scope
 	// We hope that this toplevel don't has a focus record.
 
-	if (winPtr->window == None)
+	if (Tk_WindowId(winPtr) == None)
 	{
 		// The window is not created yet, we still have time
 		// to make it an legitimate toplevel window.
-		winPtr->dirtyAtts |= CWBorderPixel;
+		tkCompat::setDirtyAtts(winPtr, tkCompat::getDirtyAtts(winPtr) | CWBorderPixel);
 	}
 	else
 	{
-		if (winPtr->flags & TK_MAPPED)
+		if (Tk_IsMapped(winPtr))
 			unmap(window);
 
 		::reparent(winPtr);
 	}
 
+	// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
 	winPtr->flags |= TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED;
 
 	TkWmNewWindow(winPtr);
 	TkpWmSetState(winPtr, WithdrawnState);
 
 	// Size was set - force a call to Geometry Manager
-	winPtr->reqWidth++;
-	winPtr->reqHeight++;
-	Tk_GeometryRequest(window, winPtr->reqWidth - 1, winPtr->reqHeight - 1);
-	//Tk_GeometryRequest(mainWindow(), winPtr->reqWidth - 1, winPtr->reqHeight - 1);
+	tkCompat::setReqWidth(winPtr, tkCompat::getReqWidth(winPtr) + 1);
+	tkCompat::setReqHeight(winPtr, tkCompat::getReqHeight(winPtr) + 1);
+	Tk_GeometryRequest(window, tkCompat::getReqWidth(winPtr) - 1, tkCompat::getReqHeight(winPtr) - 1);
+	//Tk_GeometryRequest(mainWindow(), tkCompat::getReqWidth(winPtr) - 1, tkCompat::getReqHeight(winPtr) - 1);
 
 	TkWmMapWindow(winPtr);
 
@@ -265,22 +268,24 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 {
 	TkWindow* winPtr = reinterpret_cast<TkWindow*>(tkwin);
 
-	if (!winPtr->parentPtr)
+	if (!tkCompat::getParentWinPtr(winPtr))
 		return false;
 
-	if (!(winPtr->flags & TK_TOP_LEVEL))
+	if (!Tk_IsTopLevel(winPtr))
 		return true; // window is already captured
 
 	// withdraw the window
 	TkpWmSetState(winPtr, WithdrawnState);
 
-	if (tkparent && tkparent != reinterpret_cast<Tk_Window>(winPtr->parentPtr))
+	if (tkparent && tkparent != reinterpret_cast<Tk_Window>(tkCompat::getParentWinPtr(winPtr)))
 		::relink(winPtr, reinterpret_cast<TkWindow*>(tkparent));
 
-	if (winPtr->window == None)
+	if (Tk_WindowId(winPtr) == None)
 	{
 		// cause this and parent window to exist
-		winPtr->atts.event_mask &= ~StructureNotifyMask;
+		XSetWindowAttributes atts = *tkCompat::getWindowAtts(winPtr);
+		atts.event_mask &= ~StructureNotifyMask;
+		// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
 		winPtr->flags &= ~TK_TOP_LEVEL;
 	}
 	else
@@ -291,8 +296,8 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 
 		// SetParent must be done before TkWmDeadWindow or it's DestroyWindow on the
 		// parent Hwnd will also destroy the child
-		makeExists(reinterpret_cast<Tk_Window>(winPtr->parentPtr));
-		::reparent(winPtr, winPtr->parentPtr);
+		makeExists(reinterpret_cast<Tk_Window>(tkCompat::getParentWinPtr(winPtr)));
+		::reparent(winPtr, tkCompat::getParentWinPtr(winPtr));
 		// Dis-associate from wm
 		TkWmDeadWindow(winPtr);
 
@@ -303,15 +308,16 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 #else // if defined(__unix__)
 
 		TkWmDeadWindow(winPtr);
-		XUnmapWindow(winPtr->display, winPtr->window);
-		makeExists(reinterpret_cast<Tk_Window>(winPtr->parentPtr));
-		::reparent(winPtr, winPtr->parentPtr);
+		XUnmapWindow(tkCompat::getDisplay(winPtr), Tk_WindowId(winPtr));
+		makeExists(reinterpret_cast<Tk_Window>(tkCompat::getParentWinPtr(winPtr)));
+		::reparent(winPtr, tkCompat::getParentWinPtr(winPtr));
 
 #endif
 
 		// clear those attributes that non-toplevel windows don't possess
+		// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
 		winPtr->flags &= ~(TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED);
-		atts.event_mask = winPtr->atts.event_mask;
+		atts.event_mask = tkCompat::getWindowAtts(winPtr)->event_mask;
 		atts.event_mask &= ~StructureNotifyMask;
 		Tk_ChangeWindowAttributes(tkwin, CWEventMask, &atts);
 	}

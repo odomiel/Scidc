@@ -30,6 +30,7 @@
 #include "tcl_base.h"
 
 #include "tkInt.h"
+#include "tk_compat.h"
 
 #include "m_types.h"
 
@@ -269,17 +270,18 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
 	(KeyPressMask | KeyReleaseMask | ButtonPressMask | \
 	ButtonReleaseMask | PointerMotionMask)
 
-    winPtr->atts.do_not_propagate_mask = PROP_EVENTS;
-    winPtr->atts.event_mask = USER_EVENTS;
+    XSetWindowAttributes* atts = tkCompat::getWindowAtts(winPtr);
+    atts->do_not_propagate_mask = PROP_EVENTS;
+    atts->event_mask = USER_EVENTS;
     winPtr->changes.border_width = 0;
     winPtr->depth = 0;
 
-    winPtr->window = XCreateWindow(winPtr->display, parent,
+    winPtr->window = XCreateWindow(tkCompat::getDisplay(winPtr), parent,
 	    winPtr->changes.x, winPtr->changes.y,
 	    (unsigned) winPtr->changes.width,		/* width */
 	    (unsigned) winPtr->changes.height,		/* height */
 	    (unsigned) winPtr->changes.border_width,	/* border_width */
-	    winPtr->depth, InputOnly, winPtr->visual, mask, &winPtr->atts);
+	    winPtr->depth, InputOnly, winPtr->visual, mask, atts);
 }
 
 #endif
@@ -628,11 +630,11 @@ DoConfigureNotify(
     XEvent event;
 
     event.type = ConfigureNotify;
-    event.xconfigure.serial = LastKnownRequestProcessed(winPtr->display);
+    event.xconfigure.serial = LastKnownRequestProcessed(Tk_Display(winPtr));
     event.xconfigure.send_event = False;
-    event.xconfigure.display = winPtr->display;
-    event.xconfigure.event = winPtr->window;
-    event.xconfigure.window = winPtr->window;
+    event.xconfigure.display = Tk_Display(winPtr);
+    event.xconfigure.event = Tk_WindowId(winPtr);
+    event.xconfigure.window = Tk_WindowId(winPtr);
     event.xconfigure.x = winPtr->changes.x;
     event.xconfigure.y = winPtr->changes.y;
     event.xconfigure.width = winPtr->changes.width;
@@ -643,7 +645,7 @@ DoConfigureNotify(
     } else {
 	event.xconfigure.above = None;
     }
-    event.xconfigure.override_redirect = winPtr->atts.override_redirect;
+    event.xconfigure.override_redirect = Tk_Attributes(winPtr)->override_redirect;
     Tk_HandleEvent(&event);
 }
 
@@ -857,7 +859,7 @@ MakeTransparentWindowExist(
     int notUsed;
     TkDisplay *dispPtr;
 
-    if (winPtr->window != None) {
+    if (Tk_WindowId(winPtr) != None) {
 	return;			/* Window already exists. */
     }
 
@@ -868,7 +870,7 @@ MakeTransparentWindowExist(
     ScMakeTransparentWindowExist(tkwin, parent);
 
     dispPtr = winPtr->dispPtr;
-    hPtr = Tcl_CreateHashEntry(&dispPtr->winTable, (char *) winPtr->window,
+    hPtr = Tcl_CreateHashEntry(&dispPtr->winTable, (char *) Tk_WindowId(winPtr),
 	    &notUsed);
     Tcl_SetHashValue(hPtr, winPtr);
     winPtr->dirtyAtts = 0;
@@ -888,15 +890,15 @@ MakeTransparentWindowExist(
 	 * Tk_RestackWindow.
 	 */
 
-	for (winPtr2 = winPtr->nextPtr; winPtr2 != nullptr;
-		winPtr2 = winPtr2->nextPtr) {
-	    if ((winPtr2->window != None) &&
-		    !(winPtr2->flags & (TK_TOP_HIERARCHY|TK_REPARENTED))) {
+	for (winPtr2 = tkCompat::getNextWinPtr(winPtr); winPtr2 != nullptr;
+		winPtr2 = tkCompat::getNextWinPtr(winPtr2)) {
+	    if ((Tk_WindowId(winPtr2) != None) &&
+		    !(tkCompat::isWindowTopHierarchy(winPtr2) || tkCompat::isWindowReparented(winPtr2))) {
 		XWindowChanges changes;
 
-		changes.sibling = winPtr2->window;
+		changes.sibling = Tk_WindowId(winPtr2);
 		changes.stack_mode = Below;
-		XConfigureWindow(winPtr->display, winPtr->window,
+		XConfigureWindow(tkCompat::getDisplay(winPtr), Tk_WindowId(winPtr),
 			CWSibling | CWStackMode, &changes);
 		break;
 	    }
@@ -910,8 +912,9 @@ MakeTransparentWindowExist(
      * Tk_DestroyWindow under some conditions).
      */
 
-    if ((winPtr->flags & TK_NEED_CONFIG_NOTIFY)
-	    && !(winPtr->flags & TK_ALREADY_DEAD)) {
+    if (tkCompat::needsConfigNotify(winPtr)
+	    && !tkCompat::isWindowAlreadyDead(winPtr)) {
+	// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
 	winPtr->flags &= ~TK_NEED_CONFIG_NOTIFY;
 	DoConfigureNotify((Tk_FakeWin *) tkwin);
     }

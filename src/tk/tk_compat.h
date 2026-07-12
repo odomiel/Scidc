@@ -74,6 +74,18 @@ inline bool isWindowTopLevel(TkWindow* winPtr);
 // In Tk 8.6: winPtr->flags & TK_TOP_HIERARCHY
 inline bool isWindowTopHierarchy(TkWindow* winPtr);
 
+// Prüft ob das Fenster reparented ist
+// In Tk 8.6: winPtr->flags & TK_REPARENTED
+inline bool isWindowReparented(TkWindow* winPtr);
+
+// Prüft ob das Fenster Konfigurationsbenachrichtigung benötigt
+// In Tk 8.6: winPtr->flags & TK_NEED_CONFIG_NOTIFY
+inline bool needsConfigNotify(TkWindow* winPtr);
+
+// Prüft ob das Fenster bereits zerstört ist
+// In Tk 8.6: winPtr->flags & TK_ALREADY_DEAD
+inline bool isWindowAlreadyDead(TkWindow* winPtr);
+
 // ======================================================================
 // Window Eigenschaften
 // ======================================================================
@@ -209,6 +221,18 @@ inline bool isWindowTopLevel(TkWindow* winPtr) {
 
 inline bool isWindowTopHierarchy(TkWindow* winPtr) {
     return winPtr && (winPtr->flags & TK_TOP_HIERARCHY);
+}
+
+inline bool isWindowReparented(TkWindow* winPtr) {
+    return winPtr && (winPtr->flags & TK_REPARENTED);
+}
+
+inline bool needsConfigNotify(TkWindow* winPtr) {
+    return winPtr && (winPtr->flags & TK_NEED_CONFIG_NOTIFY);
+}
+
+inline bool isWindowAlreadyDead(TkWindow* winPtr) {
+    return winPtr && (winPtr->flags & TK_ALREADY_DEAD);
 }
 
 inline Window getWindowId(TkWindow* winPtr) {
