@@ -110,6 +110,10 @@ inline void setWindowFlags(TkWindow* winPtr, int flags);
 // In Tk 8.6: winPtr->flags &= ~flags
 inline void clearWindowFlags(TkWindow* winPtr, int flags);
 
+// Setzt dirtyChanges
+// In Tk 8.6: winPtr->dirtyChanges = value
+inline void setDirtyChanges(TkWindow* winPtr, unsigned int value);
+
 // ======================================================================
 // Window Eigenschaften
 // ======================================================================
@@ -273,6 +277,10 @@ inline void setWindowFlags(TkWindow* winPtr, int flags) {
 
 inline void clearWindowFlags(TkWindow* winPtr, int flags) {
     if (winPtr) winPtr->flags &= ~flags;
+}
+
+inline void setDirtyChanges(TkWindow* winPtr, unsigned int value) {
+    if (winPtr) winPtr->dirtyChanges = value;
 }
 
 inline Window getWindowId(TkWindow* winPtr) {

@@ -270,18 +270,18 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
 	(KeyPressMask | KeyReleaseMask | ButtonPressMask | \
 	ButtonReleaseMask | PointerMotionMask)
 
-    XSetWindowAttributes* atts = tkCompat::getWindowAtts(winPtr);
+    XSetWindowAttributes* atts = Tk_Attributes(tkwin);
     atts->do_not_propagate_mask = PROP_EVENTS;
     atts->event_mask = USER_EVENTS;
-    winPtr->changes.border_width = 0;
-    winPtr->depth = 0;
+    Tk_Changes(tkwin)->border_width = 0;
+    // depth is set below via Tk_Visual(tkwin)
 
-    winPtr->window = XCreateWindow(tkCompat::getDisplay(winPtr), parent,
-	    winPtr->changes.x, winPtr->changes.y,
-	    (unsigned) winPtr->changes.width,		/* width */
-	    (unsigned) winPtr->changes.height,		/* height */
-	    (unsigned) winPtr->changes.border_width,	/* border_width */
-	    winPtr->depth, InputOnly, winPtr->visual, mask, atts);
+    winPtr->window = XCreateWindow(Tk_Display(tkwin), parent,
+	    Tk_X(tkwin), Tk_Y(tkwin),
+	    (unsigned) Tk_Width(tkwin),  /* width */
+	    (unsigned) Tk_Height(tkwin),  /* height */
+	    (unsigned) Tk_Changes(tkwin)->border_width,  /* border_width */
+	    0, InputOnly, Tk_Visual(tkwin), mask, atts);
 }
 
 #endif
@@ -635,13 +635,14 @@ DoConfigureNotify(
     event.xconfigure.display = Tk_Display(winPtr);
     event.xconfigure.event = Tk_WindowId(winPtr);
     event.xconfigure.window = Tk_WindowId(winPtr);
-    event.xconfigure.x = winPtr->changes.x;
-    event.xconfigure.y = winPtr->changes.y;
-    event.xconfigure.width = winPtr->changes.width;
-    event.xconfigure.height = winPtr->changes.height;
-    event.xconfigure.border_width = winPtr->changes.border_width;
-    if (winPtr->changes.stack_mode == Above) {
-	event.xconfigure.above = winPtr->changes.sibling;
+    XWindowChanges* changes = Tk_Changes(winPtr);
+    event.xconfigure.x = Tk_X(winPtr);
+    event.xconfigure.y = Tk_Y(winPtr);
+    event.xconfigure.width = Tk_Width(winPtr);
+    event.xconfigure.height = Tk_Height(winPtr);
+    event.xconfigure.border_width = changes->border_width;
+    if (changes->stack_mode == Above) {
+	event.xconfigure.above = changes->sibling;
     } else {
 	event.xconfigure.above = None;
     }
@@ -874,7 +875,7 @@ MakeTransparentWindowExist(
 	    &notUsed);
     Tcl_SetHashValue(hPtr, winPtr);
     tkCompat::setDirtyAtts(winPtr, 0);
-    winPtr->dirtyChanges = 0;
+    tkCompat::setDirtyChanges(winPtr, 0);
 
     if (!tkCompat::isWindowTopHierarchy(winPtr)) {
 	TkWindow *winPtr2;
@@ -914,8 +915,8 @@ MakeTransparentWindowExist(
 
     if (tkCompat::needsConfigNotify(winPtr)
 	    && !tkCompat::isWindowAlreadyDead(winPtr)) {
-	// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
-	winPtr->flags &= ~TK_NEED_CONFIG_NOTIFY;
+	// Clear flag
+	tkCompat::clearWindowFlags(winPtr, TK_NEED_CONFIG_NOTIFY);
 	DoConfigureNotify((Tk_FakeWin *) tkwin);
     }
 }
