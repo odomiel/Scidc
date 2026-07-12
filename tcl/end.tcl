@@ -361,7 +361,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidc::revision < 946} {
+		if {$::scidc::revision < 1495} {
 			foreach v {::pgn::browser::Colors ::pgn::editor::Colors} {
 				foreach {f c} {	background				"#ffffff"
 										background:current   "#ffdd76"
@@ -389,7 +389,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidc::revision < 1494} {
+		if {$::scidc::revision < 1495} {
 			foreach attr {docking:showall layout:list layout:name} {
 				if {[info exists ::application::Options($attr)]} {
 					set ::application::twm::Options(board:$attr) $::application::Options($attr)
@@ -446,7 +446,7 @@ if {[catch {
 }
 
 # migrate to new default theme
-if {$scidc::revision < 701} {
+if {$scidc::revision < 1495} {
 	if {$board::currentTheme eq {Blue Theme|1354018040763|yellow.color|gregor}} {
 		set board::currentTheme Default
 	} elseif {$scidc::revision > 83 && $board::currentTheme eq "Default"} {

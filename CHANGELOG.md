@@ -8,7 +8,8 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.07.12
 
-- **b8** – Modernisierung: Tcl C-API auf moderne Funktionen aktualisiert (Tcl_ResetResult/Tcl_AppendResult → Tcl_SetObjResult, Tcl_Eval → Tcl_EvalEx) + C++17 aktiviert
+- **b9** – Modernisierung: Skript update-version.sh zur automatischen Versionssynchronisation hinzugefügt
+- **b8** – Modernisierung: Tcl C-API auf moderne Funktionen aktualisiert (Tcl_ResetResult/Tcl_AppendResult → Tcl_SetObjResult, Tcl_Eval → Tcl_EvalEx)
 - **b7** – Hilfe: Kommentareditor-Seite ins Englische uebersetzt
 
 ## 26.06.28
