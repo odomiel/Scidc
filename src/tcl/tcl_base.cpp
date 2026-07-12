@@ -426,7 +426,7 @@ tcl::error(	char const* cmd, char const* subcmd, char const* subsubcmd,
 	}
 
 	::vsnprintf(::m_buf, sizeof(::m_buf), format, ap);
-	Tcl_SetResult(interp(), ::m_buf, __tcl_static);
+	Tcl_SetObjResult(interp(), tcl::newObj(::m_buf));
 
 	return TCL_ERROR;
 }
@@ -533,14 +533,22 @@ tcl::usage(	char const* cmd, char const* subcmd, char const* subsubcmd,
 void
 tcl::appendResult(char const* format, ...)
 {
-	char buf[4096];
 	va_list args;
-
 	va_start(args, format);
-	vsnprintf(buf, sizeof(buf), format, args);
+
+	Tcl_Obj* current = Tcl_GetObjResult(interp());
+	if (current == nullptr)
+		current = tcl::newObj();
+	else
+		tcl::incrRef(current);
+
+	Tcl_Obj* newPart = Tcl_ObjPrintf(format, args);
 	va_end(args);
 
-	Tcl_AppendResult(interp(), buf, nullptr);
+	Tcl_Obj* combined = Tcl_DuplicateObj(current);
+	Tcl_AppendObjToObj(combined, newPart);
+	tcl::setResult(combined);
+	tcl::decrRef(current);
 }
 
 
@@ -691,7 +699,7 @@ vinvoke(char const* callee, Tcl_Obj* cmd, va_list args)
 
 		objv[objc] = nullptr;
 		result = info.objProc(info.objClientData, interp(), objc, objv);
-		Tcl_GetStringResult(interp());
+		Tcl_GetObjResult(interp());
 		decrRefCount(objc, objv);
 	}
 	else
@@ -727,8 +735,7 @@ tcl::invoke(char const* callee, Tcl_Obj* cmd, ...)
 	M_REQUIRE(callee);
 	M_REQUIRE(cmd);
 
-	Tcl_SavedResult state;
-	Tcl_SaveResult(interp(), &state);
+	Tcl_Obj* savedResult = tcl::incrRef(tcl::result());
 
 	va_list args;
 	va_start(args, cmd);
@@ -736,10 +743,11 @@ tcl::invoke(char const* callee, Tcl_Obj* cmd, ...)
 	va_end(args);
 
 	if (rc == TCL_OK)
-		Tcl_RestoreResult(interp(), &state);
+		tcl::setResult(savedResult);
 	else
 		M_THROW(tcl::Error());
 
+	tcl::decrRef(savedResult);
 	return rc;
 }
 
@@ -752,8 +760,7 @@ tcl::invoke(char const* callee,
 	M_REQUIRE(callee);
 	M_REQUIRE(cmd);
 
-	Tcl_SavedResult state;
-	Tcl_SaveResult(interp(), &state);
+	Tcl_Obj* savedResult = tcl::incrRef(tcl::result());
 
 	int rc;
 
@@ -767,8 +774,9 @@ tcl::invoke(char const* callee,
 		rc = invoke(callee, cmd, list, nullptr);
 
 	if (rc == TCL_OK)
-		Tcl_RestoreResult(interp(), &state);
+		tcl::setResult(savedResult);
 
+	tcl::decrRef(savedResult);
 	return rc;
 }
 
@@ -1316,19 +1324,19 @@ tcl::init(Tcl_Interp* ti)
 
 	Treectrl_Init(ti);
 
-	Tcl_Eval(ti, "namespace eval ::scidb {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::dir {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::db {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::view {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::game {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::tree {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::pos {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::app {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::board {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::misc {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::crosstable {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::engine {}");
-	Tcl_Eval(ti, "namespace eval ::scidc::intern {}");
+	Tcl_EvalEx(ti, "namespace eval ::scidb {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::dir {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::db {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::view {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::game {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::tree {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::pos {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::app {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::board {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::misc {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::crosstable {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::engine {}", -1, 0);
+	Tcl_EvalEx(ti, "namespace eval ::scidc::intern {}", -1, 0);
 
 	for (unsigned i = 0; i < U_NUMBER_OF(m_value); ++i)
 		tcl::incrRef(::m_value[i] = tcl::newObj(i));

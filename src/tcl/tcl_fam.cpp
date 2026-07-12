@@ -124,7 +124,7 @@ cmdOpen(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 				mstl::string err(fam->error());
 				delete fam;
 				procMap.remove(proc);
-				Tcl_SetResult(ti, const_cast<char*>(err.c_str()), TCL_VOLATILE);
+				Tcl_SetObjResult(ti, tcl::newObj(err));
 				return TCL_ERROR;
 			}
 		}
@@ -185,7 +185,7 @@ cmdAdd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	if (fam->add(path))
 		return TCL_OK;
 
-	Tcl_SetResult(ti, const_cast<char*>(fam->error().c_str()), TCL_VOLATILE);
+	Tcl_SetObjResult(ti, tcl::newObj(fam->error()));
 	return TCL_ERROR;
 }
 
@@ -217,7 +217,7 @@ namespace fam {
 void
 init(Tcl_Interp* ti)
 {
-	Tcl_Eval(ti, "namespace eval ::fam {}");
+	Tcl_EvalEx(ti, "namespace eval ::fam {}", -1, 0);
 
 	createCommand(ti, "::fam::open",		cmdOpen);
 	createCommand(ti, "::fam::close",	cmdClose);

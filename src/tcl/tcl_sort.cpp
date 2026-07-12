@@ -206,10 +206,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 			{
 				if (i == objc - 2)
 				{
-					Tcl_AppendResult(
-						m_interp,
-						"\"-index\" option must be followed by list index",
-						nullptr);
+					Tcl_SetObjResult(m_interp, Tcl_NewStringObj("\"-index\" option must be followed by list index", -1));
 					return TCL_ERROR;
 				}
 
@@ -239,10 +236,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 			{
 				if (i == objc - 2)
 				{
-					Tcl_AppendResult(
-						m_interp,
-						"\"-mapping\" option must be followed by mapping table",
-						nullptr);
+					Tcl_SetObjResult(m_interp, Tcl_NewStringObj("\"-mapping\" option must be followed by mapping table", -1));
 					return TCL_ERROR;
 				}
 				if (tcl::compare::setMappingTable(objv[i + 1]) != TCL_OK)
@@ -263,10 +257,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 			case Opt_Order:
 				if (i == objc - 2)
 				{
-					Tcl_AppendResult(
-						m_interp,
-						"\"-order\" option must be followed by alphabetic list",
-						nullptr);
+					Tcl_SetObjResult(m_interp, Tcl_NewStringObj("\"-order\" option must be followed by alphabetic list", -1));
 					return TCL_ERROR;
 				}
 				if (tcl::compare::setAlphabeticList(objv[i + 1]) != TCL_OK)
@@ -412,13 +403,7 @@ Sort::selectObjFromSublist(Tcl_Obj *objPtr, Tcl_Obj** currentObj)
 			char buffer[100];
 
 			::snprintf(buffer, sizeof(buffer), "%d", index);
-			Tcl_AppendResult(	m_interp,
-									"element ",
-									buffer,
-									" missing from sublist \"",
-									Tcl_GetString(objPtr),
-									"\"",
-									nullptr);
+			Tcl_SetObjResult(m_interp, Tcl_ObjPrintf("element %s missing from sublist \"%s\"", buffer, Tcl_GetString(objPtr)));
 			m_resultCode = TCL_ERROR;
 			return nullptr;
 		}

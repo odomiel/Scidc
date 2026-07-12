@@ -1588,7 +1588,7 @@ cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		savedStderr_g = ::dup(STDERR_FILENO);
 		if (savedStderr_g < 0)
 		{
-			Tcl_SetResult(ti, const_cast<char*>(::strerror(errno)), TCL_VOLATILE);
+			Tcl_SetObjResult(ti, tcl::newObj(::strerror(errno)));
 			return TCL_ERROR;
 		}
 	}
@@ -1604,7 +1604,7 @@ cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		int fd = ::open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
 		{
-			Tcl_SetResult(ti, const_cast<char*>(::strerror(errno)), TCL_VOLATILE);
+			Tcl_SetObjResult(ti, tcl::newObj(::strerror(errno)));
 			return TCL_ERROR;
 		}
 		::dup2(fd, STDERR_FILENO);

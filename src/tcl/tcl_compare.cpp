@@ -267,7 +267,7 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 
 	if (nentries % 2 == 1)
 	{
-		Tcl_AppendResult(interp(), "argument of \"-mapping\" must have even number of entries", nullptr);
+		Tcl_SetObjResult(interp(), Tcl_NewStringObj("argument of \"-mapping\" must have even number of entries", -1));
 		return TCL_ERROR;
 	}
 
@@ -287,7 +287,7 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 
 		if (index >= 256)
 		{
-			Tcl_AppendResult(interp(), "Latin-1 character expected", nullptr);
+			Tcl_SetObjResult(interp(), Tcl_NewStringObj("Latin-1 character expected", -1));
 			return TCL_ERROR;
 		}
 
@@ -344,7 +344,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 
 				if (uc > 256)
 				{
-					Tcl_AppendResult(interp(), "character out of Latin-1", nullptr);
+					Tcl_SetObjResult(interp(), Tcl_NewStringObj("character out of Latin-1", -1));
 					return TCL_ERROR;
 				}
 
@@ -376,7 +376,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 
 						if (uc > 256)
 						{
-							Tcl_AppendResult(interp(), "character out of Latin-1", nullptr);
+							Tcl_SetObjResult(interp(), Tcl_NewStringObj("character out of Latin-1", -1));
 							return TCL_ERROR;
 						}
 
@@ -386,7 +386,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 					{
 //						if (sys::utf8::getChar(s) != i)
 //						{
-//							Tcl_AppendResult(interp(), "invalid sequence", nullptr);
+//							Tcl_SetObjResult(interp(), Tcl_NewStringObj("invalid sequence", -1));
 //							return TCL_ERROR;
 //						}
 						lookup->add(s, ++count);

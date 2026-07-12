@@ -44,15 +44,13 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 
 	if (!srcChan)
 	{
-		Tcl_ResetResult(ti);
-		Tcl_AppendResult(ti, "invalid source channel '%s'", stringFromObj(objc, objv, 1), nullptr);
+		Tcl_SetObjResult(ti, Tcl_ObjPrintf("invalid source channel '%s'", stringFromObj(objc, objv, 1)));
 		return TCL_ERROR;
 	}
 
 	if (!dstChan)
 	{
-		Tcl_ResetResult(ti);
-		Tcl_AppendResult(ti, "invalid destination channel '%s'", stringFromObj(objc, objv, 2), nullptr);
+		Tcl_SetObjResult(ti, Tcl_ObjPrintf("invalid destination channel '%s'", stringFromObj(objc, objv, 2)));
 		return TCL_ERROR;
 	}
 
@@ -67,9 +65,9 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 	if (inflateInit(&strm) != Z_OK)
 	{
 		if (strm.msg)
-			Tcl_SetResult(ti, strm.msg, TCL_VOLATILE);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj(strm.msg, -1));
 		else
-			Tcl_SetResult(ti, const_cast<char*>("zlib initialization failed"), TCL_STATIC);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj("zlib initialization failed", -1));
 
 		return TCL_ERROR;
 	}
@@ -91,7 +89,7 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 		if (avail < 0)
 		{
 			deflateEnd(&strm);
-			Tcl_SetResult(ti, const_cast<char*>("read failed"), TCL_STATIC);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj("read failed", -1));
 			return TCL_ERROR;
 		}
 
@@ -116,9 +114,9 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 				case Z_MEM_ERROR:
 					inflateEnd(&strm);
 					if (strm.msg)
-						Tcl_SetResult(ti, strm.msg, TCL_VOLATILE);
+						Tcl_SetObjResult(ti, Tcl_NewStringObj(strm.msg, -1));
 					else
-						Tcl_SetResult(ti, const_cast<char*>("zlib::inflate failed"), TCL_STATIC);
+						Tcl_SetObjResult(ti, Tcl_NewStringObj("zlib::inflate failed", -1));
 					return TCL_ERROR;
 
 				case Z_STREAM_ERROR:
@@ -131,7 +129,7 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 			if (Tcl_Write(dstChan, outBuf, have) != have)
 			{
 				inflateEnd(&strm);
-				Tcl_SetResult(ti, const_cast<char*>("write failed"), TCL_STATIC);
+				Tcl_SetObjResult(ti, Tcl_NewStringObj("write failed", -1));
 				return TCL_ERROR;
 			}
 		}
@@ -148,7 +146,7 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 
 	if (remaining > 0)
 	{
-		Tcl_SetResult(ti, const_cast<char*>("zlib::inflate failed"), TCL_STATIC);
+		Tcl_SetObjResult(ti, Tcl_NewStringObj("zlib::inflate failed", -1));
 		return TCL_ERROR;
 	}
 
@@ -176,15 +174,13 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 
 	if (!srcChan)
 	{
-		Tcl_ResetResult(ti);
-		Tcl_AppendResult(ti, "invalid source channel '%s'", stringFromObj(objc, objv, 1), nullptr);
+		Tcl_SetObjResult(ti, Tcl_ObjPrintf("invalid source channel '%s'", stringFromObj(objc, objv, 1)));
 		return TCL_ERROR;
 	}
 
 	if (!dstChan)
 	{
-		Tcl_ResetResult(ti);
-		Tcl_AppendResult(ti, "invalid destination channel '%s'", stringFromObj(objc, objv, 2), nullptr);
+		Tcl_SetObjResult(ti, Tcl_ObjPrintf("invalid destination channel '%s'", stringFromObj(objc, objv, 2)));
 		return TCL_ERROR;
 	}
 
@@ -197,9 +193,9 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 	if (deflateInit(&strm, Z_DEFAULT_COMPRESSION) != Z_OK)
 	{
 		if (strm.msg)
-			Tcl_SetResult(ti, strm.msg, TCL_VOLATILE);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj(strm.msg, -1));
 		else
-			Tcl_SetResult(ti, const_cast<char*>("zlib initialization failed"), TCL_STATIC);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj("zlib initialization failed", -1));
 
 		return TCL_ERROR;
 	}
@@ -220,7 +216,7 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 		if (avail < 0)
 		{
 			deflateEnd(&strm);
-			Tcl_SetResult(ti, const_cast<char*>("read failed"), TCL_STATIC);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj("read failed", -1));
 			return TCL_ERROR;
 		}
 
@@ -241,7 +237,7 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 			if (Tcl_Write(dstChan, outBuf, have) != have)
 			{
 				deflateEnd(&strm);
-				Tcl_SetResult(ti, const_cast<char*>("write failed"), TCL_STATIC);
+				Tcl_SetObjResult(ti, Tcl_NewStringObj("write failed", -1));
 				return TCL_ERROR;
 			}
 
@@ -287,7 +283,7 @@ cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 
 		if (Tcl_GetWideIntFromObj(ti, objv[2], &icrc) != TCL_OK)
 		{
-			Tcl_SetResult(ti, const_cast<char*>("Invalid checksum argument"), TCL_STATIC);
+			Tcl_SetObjResult(ti, Tcl_NewStringObj("Invalid checksum argument", -1));
 			return TCL_ERROR;
 		}
 
