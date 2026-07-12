@@ -70,7 +70,7 @@
 
 #ifdef CODEBLOCKS
 # define SCIDB_VERSION	"26.07.12 b7 Beta"
-# define SCIDB_REVISION	"978"
+# define SCIDB_REVISION	"1493"
 #endif
 
 using namespace tcl;
