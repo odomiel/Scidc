@@ -69,8 +69,8 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-// # define SCIDB_VERSION	"26-07-12 b10 Beta"
-// # define SCIDB_REVISION	"1496"
+// # define SCIDB_VERSION	"26-07-12 b11 Beta"
+// # define SCIDB_REVISION	"1497"
 #endif
 
 using namespace tcl;
@@ -1086,7 +1086,7 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int
 cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
-	setResult("26.07.12 b10 Beta");
+	setResult("26.07.12 b11 Beta");
 	return TCL_OK;
 }
 
