@@ -67,26 +67,31 @@ unlinkWindow(TkWindow* winPtr)
 {
 	M_ASSERT(winPtr);
 
-	if (!tkCompat::getParentWinPtr(winPtr))
+	TkWindow* parent = tkCompat::getParentWinPtr(winPtr);
+	if (!parent)
 		return;
 
-	TkWindow* prevPtr = winPtr->parentPtr->childList;
+	TkWindow* prevPtr = tkCompat::getChildList(parent);
 
 	if (prevPtr == winPtr)
 	{
-		if (!(winPtr->parentPtr->childList = winPtr->nextPtr))
-			winPtr->parentPtr->lastChildPtr = nullptr;
+		TkWindow* next = tkCompat::getNextWinPtr(winPtr);
+		tkCompat::setChildList(parent, next);
+		if (!next)
+			tkCompat::setLastChildPtr(parent, nullptr);
 	}
 	else
 	{
-		for ( ; prevPtr->nextPtr != winPtr; prevPtr = prevPtr->nextPtr)
+		for ( ; tkCompat::getNextWinPtr(prevPtr) != winPtr; prevPtr = tkCompat::getNextWinPtr(prevPtr))
 			M_ASSERT(prevPtr);
 
-		if (!(prevPtr->nextPtr = prevPtr->nextPtr->nextPtr))
-			winPtr->parentPtr->lastChildPtr = prevPtr;
+		TkWindow* nextNext = tkCompat::getNextWinPtr(tkCompat::getNextWinPtr(prevPtr));
+		tkCompat::setNextWinPtr(prevPtr, nextNext);
+		if (!nextNext)
+			tkCompat::setLastChildPtr(parent, prevPtr);
 	}
 
-	winPtr->nextPtr = nullptr;
+	tkCompat::setNextWinPtr(winPtr, nullptr);
 }
 
 
@@ -95,25 +100,24 @@ linkWindow(TkWindow* winPtr)
 {
 	M_ASSERT(winPtr);
 
-	if (!tkCompat::getParentWinPtr(winPtr))
+	TkWindow* parent = tkCompat::getParentWinPtr(winPtr);
+	if (!parent)
 		return;
 
-	TkWindow* parent = tkCompat::getParentWinPtr(winPtr);
-
-	if (TkWindow* prevPtr = parent->childList)
+	if (TkWindow* prevPtr = tkCompat::getChildList(parent))
 	{
-		while (prevPtr->nextPtr)
-			prevPtr = prevPtr->nextPtr;
+		while (tkCompat::getNextWinPtr(prevPtr))
+			prevPtr = tkCompat::getNextWinPtr(prevPtr);
 
-		prevPtr->nextPtr = winPtr;
+		tkCompat::setNextWinPtr(prevPtr, winPtr);
 	}
 	else
 	{
-		parent->childList = winPtr;
+		tkCompat::setChildList(parent, winPtr);
 	}
 
-	winPtr->nextPtr = nullptr;
-	parent->lastChildPtr = winPtr;
+	tkCompat::setNextWinPtr(winPtr, nullptr);
+	tkCompat::setLastChildPtr(parent, winPtr);
 }
 
 
@@ -122,10 +126,10 @@ relink(TkWindow* childPtr, TkWindow* newParentPtr)
 {
 	M_ASSERT(childPtr);
 	M_ASSERT(newParentPtr);
-	M_ASSERT(childPtr->parentPtr != newParentPtr);
+	M_ASSERT(tkCompat::getParentWinPtr(childPtr) != newParentPtr);
 
 	unlinkWindow(childPtr);
-	childPtr->parentPtr = newParentPtr;
+	tkCompat::setParentWinPtr(childPtr, newParentPtr);
 	linkWindow(childPtr);
 }
 
@@ -245,8 +249,8 @@ tk::release(Tk_Window window)
 		::reparent(winPtr);
 	}
 
-	// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
-	winPtr->flags |= TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED;
+	// Set window flags
+	tkCompat::setWindowFlags(winPtr, TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED);
 
 	TkWmNewWindow(winPtr);
 	TkpWmSetState(winPtr, WithdrawnState);
@@ -285,8 +289,8 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 		// cause this and parent window to exist
 		XSetWindowAttributes atts = *tkCompat::getWindowAtts(winPtr);
 		atts.event_mask &= ~StructureNotifyMask;
-		// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
-		winPtr->flags &= ~TK_TOP_LEVEL;
+		// Clear window flag
+		tkCompat::clearWindowFlags(winPtr, TK_TOP_LEVEL);
 	}
 	else
 	{
@@ -315,8 +319,7 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 #endif
 
 		// clear those attributes that non-toplevel windows don't possess
-		// Note: Direct flag manipulation - needs Tk 9.0 compatibility layer
-		winPtr->flags &= ~(TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED);
+		tkCompat::clearWindowFlags(winPtr, TK_TOP_HIERARCHY | TK_TOP_LEVEL | TK_HAS_WRAPPER | TK_WIN_MANAGED);
 		atts.event_mask = tkCompat::getWindowAtts(winPtr)->event_mask;
 		atts.event_mask &= ~StructureNotifyMask;
 		Tk_ChangeWindowAttributes(tkwin, CWEventMask, &atts);

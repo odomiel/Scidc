@@ -869,14 +869,14 @@ MakeTransparentWindowExist(
 
     ScMakeTransparentWindowExist(tkwin, parent);
 
-    dispPtr = winPtr->dispPtr;
+    dispPtr = tkCompat::getDispPtr(winPtr);
     hPtr = Tcl_CreateHashEntry(&dispPtr->winTable, (char *) Tk_WindowId(winPtr),
 	    &notUsed);
     Tcl_SetHashValue(hPtr, winPtr);
-    winPtr->dirtyAtts = 0;
+    tkCompat::setDirtyAtts(winPtr, 0);
     winPtr->dirtyChanges = 0;
 
-    if (!(winPtr->flags & TK_TOP_HIERARCHY)) {
+    if (!tkCompat::isWindowTopHierarchy(winPtr)) {
 	TkWindow *winPtr2;
 
 	/*

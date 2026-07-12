@@ -44,6 +44,10 @@ namespace tkCompat {
 // In Tk 9.0: Neu implementieren mit öffentlicher API
 inline TkWindow* getParentWinPtr(TkWindow* winPtr);
 
+// Setzt den Eltern-Window-Pointer
+// In Tk 8.6: winPtr->parentPtr = parent
+inline void setParentWinPtr(TkWindow* winPtr, TkWindow* parent);
+
 // Gibt das nächste Fenster in der Geschwister-Liste zurück
 // In Tk 8.6: winPtr->nextPtr
 inline TkWindow* getNextWinPtr(TkWindow* winPtr);
@@ -55,6 +59,18 @@ inline TkWindow* getChildList(TkWindow* winPtr);
 // Gibt das letzte Kind-Fenster zurück
 // In Tk 8.6: winPtr->lastChildPtr
 inline TkWindow** getLastChildPtrPtr(TkWindow* winPtr);
+
+// Setzt das nächste Fenster in der Geschwister-Liste
+// In Tk 8.6: winPtr->nextPtr = next
+inline void setNextWinPtr(TkWindow* winPtr, TkWindow* next);
+
+// Setzt das erste Kind-Fenster
+// In Tk 8.6: winPtr->childList = child
+inline void setChildList(TkWindow* winPtr, TkWindow* child);
+
+// Setzt das letzte Kind-Fenster
+// In Tk 8.6: winPtr->lastChildPtr = lastChild
+inline void setLastChildPtr(TkWindow* winPtr, TkWindow* lastChild);
 
 // ======================================================================
 // Window Status
@@ -85,6 +101,14 @@ inline bool needsConfigNotify(TkWindow* winPtr);
 // Prüft ob das Fenster bereits zerstört ist
 // In Tk 8.6: winPtr->flags & TK_ALREADY_DEAD
 inline bool isWindowAlreadyDead(TkWindow* winPtr);
+
+// Setzt Fenster-Flags (Bitwise OR)
+// In Tk 8.6: winPtr->flags |= flags
+inline void setWindowFlags(TkWindow* winPtr, int flags);
+
+// Entfernt Fenster-Flags (Bitwise AND NOT)
+// In Tk 8.6: winPtr->flags &= ~flags
+inline void clearWindowFlags(TkWindow* winPtr, int flags);
 
 // ======================================================================
 // Window Eigenschaften
@@ -215,6 +239,10 @@ inline TkWindow** getLastChildPtrPtr(TkWindow* winPtr) {
     return winPtr ? &winPtr->lastChildPtr : nullptr;
 }
 
+inline void setParentWinPtr(TkWindow* winPtr, TkWindow* parent) {
+    if (winPtr) winPtr->parentPtr = parent;
+}
+
 inline bool isWindowMapped(TkWindow* winPtr) {
     return winPtr && (winPtr->flags & TK_MAPPED);
 }
@@ -237,6 +265,14 @@ inline bool needsConfigNotify(TkWindow* winPtr) {
 
 inline bool isWindowAlreadyDead(TkWindow* winPtr) {
     return winPtr && (winPtr->flags & TK_ALREADY_DEAD);
+}
+
+inline void setWindowFlags(TkWindow* winPtr, int flags) {
+    if (winPtr) winPtr->flags |= flags;
+}
+
+inline void clearWindowFlags(TkWindow* winPtr, int flags) {
+    if (winPtr) winPtr->flags &= ~flags;
 }
 
 inline Window getWindowId(TkWindow* winPtr) {
@@ -285,6 +321,19 @@ inline unsigned int getDirtyAtts(TkWindow* winPtr) {
 
 inline void setDirtyAtts(TkWindow* winPtr, unsigned int mask) {
     if (winPtr) winPtr->dirtyAtts = mask;
+}
+
+// Setter für Linked-List-Manipulation
+inline void setNextWinPtr(TkWindow* winPtr, TkWindow* next) {
+    if (winPtr) winPtr->nextPtr = next;
+}
+
+inline void setChildList(TkWindow* winPtr, TkWindow* child) {
+    if (winPtr) winPtr->childList = child;
+}
+
+inline void setLastChildPtr(TkWindow* winPtr, TkWindow* lastChild) {
+    if (winPtr) winPtr->lastChildPtr = lastChild;
 }
 
 inline TkWindow* getGrabWindow(TkWindow* winPtr) {
