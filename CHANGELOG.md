@@ -6,6 +6,11 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den 4 Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.07.12
+
+- **b8** – Modernisierung: Tcl C-API auf moderne Funktionen aktualisiert (Tcl_ResetResult/Tcl_AppendResult → Tcl_SetObjResult, Tcl_Eval → Tcl_EvalEx) + C++17 aktiviert
+- **b7** – Hilfe: Kommentareditor-Seite ins Englische uebersetzt
+
 ## 26.06.28
 
 - **b6** – Hilfe: Englischer Fallback fuer Nicht-Deutsch-Sprachen + 3 en-Seiten ergaenzt
