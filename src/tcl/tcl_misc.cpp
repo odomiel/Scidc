@@ -1086,7 +1086,7 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int
 cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
-	setResult("26.07.12 b11 Beta");
+	setResult("26.07.12 b12 Beta");
 	return TCL_OK;
 }
 

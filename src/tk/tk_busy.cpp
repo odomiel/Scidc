@@ -87,7 +87,7 @@ ScCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef, Window *parentPtr, Tk_Window t
 {
     Busy *busyPtr = (Busy *) busy;
 
-    if (tkCompat::isWindowReparented(winPtr)) {
+    if (tkCompat::isWindowReparented((TkWindow*)winPtr)) {
 	/*
 	 * This works around a bug in the implementation of menubars for
 	 * non-Macintosh window systems (Win32 and X11). Tk doesn't reset the
@@ -213,7 +213,7 @@ ScMakeTransparentWindowExist(Tk_Window tkwin, Window parent)
 static void
 ScCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef, Window *parentPtr, Tk_Window tkParent, Busy* busy)
 {
-    if (tkCompat::isWindowReparented(winPtr)) {
+    if (tkCompat::isWindowReparented((TkWindow*)winPtr)) {
 	/*
 	 * This works around a bug in the implementation of menubars for
 	 * non-MacIntosh window systems (Win32 and X11). Tk doesn't reset the

@@ -92,8 +92,7 @@ inline bool isWindowTopHierarchy(TkWindow* winPtr);
 
 // Prüft ob das Fenster reparented ist
 // In Tk 8.6: winPtr->flags & TK_REPARENTED
-// Funktion akzeptiert sowohl TkWindow* als auch Tk_FakeWin* (Tk_Window)
-inline bool isWindowReparented(void* winPtr);
+inline bool isWindowReparented(TkWindow* winPtr);
 
 // Prüft ob das Fenster Konfigurationsbenachrichtigung benötigt
 // In Tk 8.6: winPtr->flags & TK_NEED_CONFIG_NOTIFY
@@ -115,9 +114,9 @@ inline void clearWindowFlags(TkWindow* winPtr, int flags);
 // In Tk 8.6: winPtr->dirtyChanges = value
 inline void setDirtyChanges(TkWindow* winPtr, unsigned int value);
 
-// Setzt das X11 Window ID (für Tk_FakeWin*)
+// Setzt das X11 Window ID
 // In Tk 8.6: winPtr->window = windowId
-inline void setWindowIdFromFakeWin(void* winPtr, Window windowId);
+inline void setWindowIdFromFakeWin(TkWindow* winPtr, Window windowId);
 
 // Setzt instanceData (TkWindow intern)
 // In Tk 8.6: winPtr->instanceData = data
@@ -268,11 +267,8 @@ inline bool isWindowTopHierarchy(TkWindow* winPtr) {
     return winPtr && (winPtr->flags & TK_TOP_HIERARCHY);
 }
 
-inline bool isWindowReparented(void* winPtr) {
-    // Akzeptiert sowohl TkWindow* als auch Tk_FakeWin* (Tk_Window)
-    // Beide haben ein flags Feld an der gleichen Position
-    struct GenericWin { int flags; } *w = (struct GenericWin *)winPtr;
-    return winPtr && (w->flags & TK_REPARENTED);
+inline bool isWindowReparented(TkWindow* winPtr) {
+    return winPtr && (winPtr->flags & TK_REPARENTED);
 }
 
 inline bool needsConfigNotify(TkWindow* winPtr) {
@@ -356,11 +352,9 @@ inline void setLastChildPtr(TkWindow* winPtr, TkWindow* lastChild) {
     if (winPtr) winPtr->lastChildPtr = lastChild;
 }
 
-inline void setWindowIdFromFakeWin(void* winPtr, Window windowId) {
-    // Für Tk_FakeWin* Struktur
+inline void setWindowIdFromFakeWin(TkWindow* winPtr, Window windowId) {
     if (winPtr) {
-        struct GenericWin { Window window; } *w = (struct GenericWin *)winPtr;
-        w->window = windowId;
+        winPtr->window = windowId;
     }
 }
 
