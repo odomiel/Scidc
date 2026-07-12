@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.12 b10 Beta"
+	set version "26.07.12 b11 Beta"
 }
 
 
@@ -150950,7 +150950,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidc::revision < 1496} {
+		if {$::scidc::revision < 1497} {
 			foreach v {::pgn::browser::Colors ::pgn::editor::Colors} {
 				foreach {f c} {	background				"#ffffff"
 										background:current   "#ffdd76"
@@ -150978,7 +150978,7 @@ if {[catch {
 			}
 		}
 
-		if {$::scidc::revision < 1496} {
+		if {$::scidc::revision < 1497} {
 			foreach attr {docking:showall layout:list layout:name} {
 				if {[info exists ::application::Options($attr)]} {
 					set ::application::twm::Options(board:$attr) $::application::Options($attr)
@@ -151034,7 +151034,7 @@ if {[catch {
 	exit 1
 }
 
-if {$scidc::revision < 1496} {
+if {$scidc::revision < 1497} {
 	if {$board::currentTheme eq {Blue Theme|1354018040763|yellow.color|gregor}} {
 		set board::currentTheme Default
 	} elseif {$scidc::revision > 83 && $board::currentTheme eq "Default"} {
