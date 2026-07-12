@@ -107,6 +107,10 @@ inline int getScreenNum(TkWindow* winPtr);
 // In Tk 8.6: winPtr->dispPtr
 inline struct TkDisplay* getDispPtr(TkWindow* winPtr);
 
+// Gibt den X Display-Pointer von einem TkDisplay zurück
+// In Tk 8.6: dispPtr->display
+inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr);
+
 // ======================================================================
 // Geometry
 // ======================================================================
@@ -249,6 +253,10 @@ inline int getScreenNum(TkWindow* winPtr) {
 
 inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
     return winPtr ? winPtr->dispPtr : nullptr;
+}
+
+inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {
+    return dispPtr ? dispPtr->display : nullptr;
 }
 
 inline int getReqWidth(TkWindow* winPtr) {

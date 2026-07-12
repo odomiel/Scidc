@@ -146,7 +146,7 @@ EatGrabEvents(
     GrabInfo info;
     ClientData oldArg, dummy;
 
-    info.display = dispPtr->display;
+    info.display = tkCompat::getDisplayFromDisp(dispPtr);
     info.serial = serial;
     Sync(info.display);
     oldProc = Tk_RestrictEvents(GrabRestrictProc, (ClientData)&info, &oldArg);
@@ -219,9 +219,9 @@ ReleaseButtonGrab(
     }
     if (tkCompat::getGrabFlagsFromDisp(dispPtr) & GRAB_TEMP_GLOBAL) {
 	tkCompat::getGrabFlagsRef(dispPtr) &= ~GRAB_TEMP_GLOBAL;
-	serial = NextRequest(dispPtr->display);
-	XUngrabPointer(dispPtr->display, CurrentTime);
-	XUngrabKeyboard(dispPtr->display, CurrentTime);
+	serial = NextRequest(tkCompat::getDisplayFromDisp(dispPtr));
+	XUngrabPointer(tkCompat::getDisplayFromDisp(dispPtr), CurrentTime);
+	XUngrabKeyboard(tkCompat::getDisplayFromDisp(dispPtr), CurrentTime);
 	EatGrabEvents(dispPtr, serial);
     }
 }
@@ -399,19 +399,19 @@ TkPointerEvent(
 		    return 0;					/* Note 2. */
 		}
 		if (!(tkCompat::getGrabFlagsFromDisp(dispPtr) & GRAB_GLOBAL)) {	/* Note 6. */
-		    serial = NextRequest(dispPtr->display);
-		    if (XGrabPointer(dispPtr->display,
+		    serial = NextRequest(tkCompat::getDisplayFromDisp(dispPtr));
+		    if (XGrabPointer(tkCompat::getDisplayFromDisp(dispPtr),
 			    tkCompat::getGrabWindowFromDisp(dispPtr)->window, True,
 			    ButtonPressMask|ButtonReleaseMask|ButtonMotionMask,
 			    GrabModeAsync, GrabModeAsync, None, None,
 			    CurrentTime) == 0) {
 			EatGrabEvents(dispPtr, serial);
-			if (XGrabKeyboard(dispPtr->display, tkCompat::getWindowId(winPtr),
+			if (XGrabKeyboard(tkCompat::getDisplayFromDisp(dispPtr), tkCompat::getWindowId(winPtr),
 				False, GrabModeAsync, GrabModeAsync,
 				CurrentTime) == 0) {
 			    tkCompat::getGrabFlagsRef(dispPtr) |= GRAB_TEMP_GLOBAL;
 			} else {
-			    XUngrabPointer(dispPtr->display, CurrentTime);
+			    XUngrabPointer(tkCompat::getDisplayFromDisp(dispPtr), CurrentTime);
 			}
 		    }
 		}

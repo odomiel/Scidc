@@ -67,7 +67,7 @@ unlinkWindow(TkWindow* winPtr)
 {
 	M_ASSERT(winPtr);
 
-	if (!winPtr->parentPtr)
+	if (!tkCompat::getParentWinPtr(winPtr))
 		return;
 
 	TkWindow* prevPtr = winPtr->parentPtr->childList;
@@ -95,10 +95,10 @@ linkWindow(TkWindow* winPtr)
 {
 	M_ASSERT(winPtr);
 
-	if (!winPtr->parentPtr)
+	if (!tkCompat::getParentWinPtr(winPtr))
 		return;
 
-	TkWindow* parent = winPtr->parentPtr;
+	TkWindow* parent = tkCompat::getParentWinPtr(winPtr);
 
 	if (TkWindow* prevPtr = parent->childList)
 	{
@@ -135,7 +135,7 @@ tk::isAlreadyDead(Tcl_Obj* obj)
 {
 	M_ASSERT(obj);
 	TkWindow* winPtr = reinterpret_cast<TkWindow*>(window(obj));
-	return exists(obj) && bool(winPtr->flags & TK_ALREADY_DEAD);
+	return exists(obj) && tkCompat::isWindowAlreadyDead(winPtr);
 }
 
 
