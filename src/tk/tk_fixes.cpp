@@ -20,6 +20,7 @@
 
 #include <tk.h>
 #include <tkInt.h>
+#include "tk_compat.h"
 
 #ifndef DISCARD_TK_FIXES
 
@@ -178,19 +179,20 @@ MovePointer2(
     TkWindow *winPtr;
 
     winPtr = sourcePtr;
-    if ((winPtr == NULL) || (winPtr->window == None)) {
+    if ((winPtr == NULL) || (tkCompat::getWindowId(winPtr) == None)) {
 	winPtr = destPtr;
-	if ((winPtr == NULL) || (winPtr->window == None)) {
+	if ((winPtr == NULL) || (tkCompat::getWindowId(winPtr) == None)) {
 	    return;
 	}
     }
 
-    event.xcrossing.serial = LastKnownRequestProcessed(winPtr->display);
+    Display* display = tkCompat::getDisplay(winPtr);
+    event.xcrossing.serial = LastKnownRequestProcessed(display);
     event.xcrossing.send_event = GENERATED_EVENT_MAGIC;
-    event.xcrossing.display = winPtr->display;
-    event.xcrossing.root = RootWindow(winPtr->display, winPtr->screenNum);
-    event.xcrossing.time = TkCurrentTime(winPtr->dispPtr);
-    XQueryPointer(winPtr->display, winPtr->window, &dummy1, &dummy2,
+    event.xcrossing.display = display;
+    event.xcrossing.root = RootWindow(display, tkCompat::getScreenNum(winPtr));
+    event.xcrossing.time = TkCurrentTime(tkCompat::getDispPtr(winPtr));
+    XQueryPointer(display, tkCompat::getWindowId(winPtr), &dummy1, &dummy2,
 	    &event.xcrossing.x_root, &event.xcrossing.y_root,
 	    &dummy3, &dummy4, &event.xcrossing.state);
     event.xcrossing.mode = mode;
@@ -208,15 +210,15 @@ ReleaseButtonGrab(
 {
     unsigned int serial;
 
-    if (dispPtr->buttonWinPtr != NULL) {
-	if (dispPtr->buttonWinPtr != dispPtr->serverWinPtr) {
-	    MovePointer2(dispPtr->buttonWinPtr, dispPtr->serverWinPtr,
+    if (tkCompat::getButtonWinPtr(dispPtr) != NULL) {
+	if (tkCompat::getButtonWinPtr(dispPtr) != tkCompat::getServerWinPtr(dispPtr)) {
+	    MovePointer2(tkCompat::getButtonWinPtr(dispPtr), tkCompat::getServerWinPtr(dispPtr),
 		    NotifyUngrab, 1, 1);
 	}
-	dispPtr->buttonWinPtr = NULL;
+	tkCompat::setButtonWinPtr(dispPtr, NULL);
     }
-    if (dispPtr->grabFlags & GRAB_TEMP_GLOBAL) {
-	dispPtr->grabFlags &= ~GRAB_TEMP_GLOBAL;
+    if (tkCompat::getGrabFlagsFromDisp(dispPtr) & GRAB_TEMP_GLOBAL) {
+	tkCompat::getGrabFlagsRef(dispPtr) &= ~GRAB_TEMP_GLOBAL;
 	serial = NextRequest(dispPtr->display);
 	XUngrabPointer(dispPtr->display, CurrentTime);
 	XUngrabKeyboard(dispPtr->display, CurrentTime);
@@ -232,7 +234,7 @@ TkPointerEvent(
 				 * reported. */
 {
     TkWindow *winPtr2;
-    TkDisplay *dispPtr = winPtr->dispPtr;
+    TkDisplay *dispPtr = tkCompat::getDispPtr(winPtr);
     unsigned int serial;
     int outsideGrabTree = 0;
     int ancestorOfGrab = 0;
@@ -269,10 +271,10 @@ TkPointerEvent(
 
 	if (eventPtr->xcrossing.send_event != GENERATED_EVENT_MAGIC) {
 	    if ((eventPtr->type == LeaveNotify) &&
-		    (winPtr->flags & TK_TOP_HIERARCHY)) {
-		dispPtr->serverWinPtr = NULL;
+		    (tkCompat::isWindowTopHierarchy(winPtr))) {
+		tkCompat::setServerWinPtr(dispPtr, NULL);
 	    } else {
-		dispPtr->serverWinPtr = winPtr;
+		tkCompat::setServerWinPtr(dispPtr, winPtr);
 	    }
 	}
 
@@ -286,7 +288,7 @@ TkPointerEvent(
 	 *    one of those windows.
 	 */
 
-	if (dispPtr->grabWinPtr != NULL) {
+	if (tkCompat::getGrabWindowFromDisp(dispPtr) != NULL) {
 	    if (outsideGrabTree && appGrabbed) {
 		if (!ancestorOfGrab) {
 		    /* FIX: Allow menu buttons events */
@@ -313,8 +315,8 @@ TkPointerEvent(
 	     * events except for the window in which the button was pressed.
 	     */
 
-	    if ((dispPtr->buttonWinPtr != NULL)
-		    && (winPtr != dispPtr->buttonWinPtr)) {
+	    if ((tkCompat::getButtonWinPtr(dispPtr) != NULL)
+		    && (winPtr != tkCompat::getButtonWinPtr(dispPtr))) {
 		return 0;
 	    }
 	}
@@ -337,10 +339,10 @@ TkPointerEvent(
 	 */
 
 	winPtr2 = winPtr;
-	if (dispPtr->buttonWinPtr != NULL) {
-	    winPtr2 = dispPtr->buttonWinPtr;
-	} else if (outsideGrabTree || (dispPtr->serverWinPtr == NULL)) {
-	    winPtr2 = dispPtr->grabWinPtr;
+	if (tkCompat::getButtonWinPtr(dispPtr) != NULL) {
+	    winPtr2 = tkCompat::getButtonWinPtr(dispPtr);
+	} else if (outsideGrabTree || (tkCompat::getServerWinPtr(dispPtr) == NULL)) {
+	    winPtr2 = tkCompat::getGrabWindowFromDisp(dispPtr);
 	}
 	if (winPtr2 != winPtr) {
 	    TkChangeEventWindow(eventPtr, winPtr2);
@@ -368,7 +370,7 @@ TkPointerEvent(
      *    mouse from the button window to its current window.
      * 5. If the grab is set at a time when a button is already down, or if
      *    the window where the button was pressed was deleted, then
-     *    dispPtr->buttonWinPtr will stay NULL. Just forget about the
+     *    tkCompat::getButtonWinPtr(dispPtr) will stay NULL. Just forget about the
      *    auto-grab for the button press; events will go to whatever window
      *    contains the pointer. If this window isn't in the grab tree then
      *    redirect events to the grab window.
@@ -381,10 +383,10 @@ TkPointerEvent(
      */
 
     if ((eventPtr->type == ButtonPress) || (eventPtr->type == ButtonRelease)) {
-	winPtr2 = dispPtr->buttonWinPtr;
+	winPtr2 = tkCompat::getButtonWinPtr(dispPtr);
 	if (winPtr2 == NULL) {
 	    if (outsideGrabTree) {
-		winPtr2 = dispPtr->grabWinPtr;			/* Note 5. */
+		winPtr2 = tkCompat::getGrabWindowFromDisp(dispPtr);			/* Note 5. */
 	    } else {
 		winPtr2 = winPtr;				/* Note 5. */
 	    }
@@ -392,28 +394,28 @@ TkPointerEvent(
 	if (eventPtr->type == ButtonPress) {
 	    if ((eventPtr->xbutton.state & ALL_BUTTONS) == 0) {
 		if (outsideGrabTree) {
-		    TkChangeEventWindow(eventPtr, dispPtr->grabWinPtr);
+		    TkChangeEventWindow(eventPtr, tkCompat::getGrabWindowFromDisp(dispPtr));
 		    Tk_QueueWindowEvent(eventPtr, TCL_QUEUE_HEAD);
 		    return 0;					/* Note 2. */
 		}
-		if (!(dispPtr->grabFlags & GRAB_GLOBAL)) {	/* Note 6. */
+		if (!(tkCompat::getGrabFlagsFromDisp(dispPtr) & GRAB_GLOBAL)) {	/* Note 6. */
 		    serial = NextRequest(dispPtr->display);
 		    if (XGrabPointer(dispPtr->display,
-			    dispPtr->grabWinPtr->window, True,
+			    tkCompat::getGrabWindowFromDisp(dispPtr)->window, True,
 			    ButtonPressMask|ButtonReleaseMask|ButtonMotionMask,
 			    GrabModeAsync, GrabModeAsync, None, None,
 			    CurrentTime) == 0) {
 			EatGrabEvents(dispPtr, serial);
-			if (XGrabKeyboard(dispPtr->display, winPtr->window,
+			if (XGrabKeyboard(dispPtr->display, tkCompat::getWindowId(winPtr),
 				False, GrabModeAsync, GrabModeAsync,
 				CurrentTime) == 0) {
-			    dispPtr->grabFlags |= GRAB_TEMP_GLOBAL;
+			    tkCompat::getGrabFlagsRef(dispPtr) |= GRAB_TEMP_GLOBAL;
 			} else {
 			    XUngrabPointer(dispPtr->display, CurrentTime);
 			}
 		    }
 		}
-		dispPtr->buttonWinPtr = winPtr;
+		tkCompat::setButtonWinPtr(dispPtr, winPtr);
 		return 1;
 	    }
 	} else {
@@ -460,10 +462,10 @@ TopLevelWindow(
     TkWindow *topLevelWinPtr = winPtr;
 
     while (winPtr) {
-	if (winPtr->flags & TK_TOP_HIERARCHY) {
+	if (tkCompat::isWindowTopHierarchy(winPtr)) {
 	    return winPtr;
 	}
-	winPtr = winPtr->parentPtr;
+	winPtr = tkCompat::getParentWinPtr(winPtr);
     }
 
     return topLevelWinPtr;
@@ -502,12 +504,12 @@ TkGrabState(
     TkWindow *winPtr)		/* Window for which grab information is
 				 * needed. */
 {
-    TkWindow *grabWinPtr = winPtr->dispPtr->grabWinPtr;
+    TkWindow *grabWinPtr = tkCompat::getDispPtr(winPtr)->grabWinPtr;
 
     if (grabWinPtr == NULL) {
 	return TK_GRAB_NONE;
     }
-    if (!(winPtr->dispPtr->grabFlags & GRAB_GLOBAL) &&
+    if (!(tkCompat::getDispPtr(winPtr)->grabFlags & GRAB_GLOBAL) &&
 	    winPtr != grabWinPtr && /* this is an often case (which is false) */
 	    CannotDerive(TopLevelWindow(winPtr), TopLevelWindow(grabWinPtr))) {
 	return TK_GRAB_NONE;

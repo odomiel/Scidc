@@ -138,6 +138,38 @@ inline TkWindow* getGrabWindow(TkWindow* winPtr);
 // In Tk 8.6: winPtr->dispPtr->grabFlags
 inline int getGrabFlags(TkWindow* winPtr);
 
+// ======================================================================
+// Grab-Handling via TkDisplay
+// ======================================================================
+
+// Gibt das Grab-Fenster direkt aus TkDisplay zurück
+// In Tk 8.6: dispPtr->grabWinPtr
+inline TkWindow* getGrabWindowFromDisp(struct TkDisplay* dispPtr);
+
+// Gibt die Grab-Flags direkt aus TkDisplay zurück
+// In Tk 8.6: dispPtr->grabFlags
+inline int getGrabFlagsFromDisp(struct TkDisplay* dispPtr);
+
+// ======================================================================
+// TkDisplay Zugriffe (für Grab- und Button-Handling)
+// ======================================================================
+
+// Gibt das buttonWinPtr des Displays zurück
+// In Tk 8.6: dispPtr->buttonWinPtr
+inline TkWindow* getButtonWinPtr(struct TkDisplay* dispPtr);
+inline TkWindow*& getButtonWinPtrRef(struct TkDisplay* dispPtr);
+
+// Gibt das serverWinPtr des Displays zurück
+// In Tk 8.6: dispPtr->serverWinPtr
+inline TkWindow* getServerWinPtr(struct TkDisplay* dispPtr);
+inline TkWindow*& getServerWinPtrRef(struct TkDisplay* dispPtr);
+
+// Setzt das buttonWinPtr des Displays
+inline void setButtonWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr);
+
+// Setzt das serverWinPtr des Displays
+inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr);
+
 } // namespace tkCompat
 
 // ======================================================================
@@ -229,6 +261,54 @@ inline TkWindow* getGrabWindow(TkWindow* winPtr) {
 
 inline int getGrabFlags(TkWindow* winPtr) {
     return (winPtr && winPtr->dispPtr) ? winPtr->dispPtr->grabFlags : 0;
+}
+
+// TkDisplay Zugriffe
+inline TkWindow* getButtonWinPtr(struct TkDisplay* dispPtr) {
+    return dispPtr ? dispPtr->buttonWinPtr : nullptr;
+}
+
+inline TkWindow* getServerWinPtr(struct TkDisplay* dispPtr) {
+    return dispPtr ? dispPtr->serverWinPtr : nullptr;
+}
+
+inline void setButtonWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr) {
+    if (dispPtr) dispPtr->buttonWinPtr = winPtr;
+}
+
+inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr) {
+    if (dispPtr) dispPtr->serverWinPtr = winPtr;
+}
+
+// Reference-Varianten für direkte Zuweisungen
+inline TkWindow*& getButtonWinPtrRef(struct TkDisplay* dispPtr) {
+    static TkWindow* dummy = nullptr;
+    return dispPtr ? dispPtr->buttonWinPtr : dummy;
+}
+
+inline TkWindow*& getServerWinPtrRef(struct TkDisplay* dispPtr) {
+    static TkWindow* dummy = nullptr;
+    return dispPtr ? dispPtr->serverWinPtr : dummy;
+}
+
+// Grab-Handling via TkDisplay
+inline TkWindow* getGrabWindowFromDisp(struct TkDisplay* dispPtr) {
+    return dispPtr ? dispPtr->grabWinPtr : nullptr;
+}
+
+inline int getGrabFlagsFromDisp(struct TkDisplay* dispPtr) {
+    return dispPtr ? dispPtr->grabFlags : 0;
+}
+
+// Reference-Varianten für Grab
+inline TkWindow*& getGrabWinPtrRef(struct TkDisplay* dispPtr) {
+    static TkWindow* dummy = nullptr;
+    return dispPtr ? dispPtr->grabWinPtr : dummy;
+}
+
+inline int& getGrabFlagsRef(struct TkDisplay* dispPtr) {
+    static int dummy = 0;
+    return dispPtr ? dispPtr->grabFlags : dummy;
 }
 
 } // namespace tkCompat
