@@ -50,6 +50,13 @@
 
 #include "tcl.h"
 #include "tk.h"
+
+/* Tk 8.6 / Tk 9.0 Compatibility Layer - lokale Makros für C-Code */
+/* Diese Makros abstrahieren direkte TkWindow-Strukturzugriffe */
+#define tkCompat_getChildList(w) ((w) ? (w)->childList : NULL)
+#define tkCompat_getNextWinPtr(w) ((w) ? (w)->nextPtr : NULL)
+#define tkCompat_getFlags(w) ((w) ? (w)->flags : 0)
+
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
@@ -249,12 +256,12 @@ CoordsToWindow(int rootX, int rootY, Tk_Window tkwin)
 
 # ifdef USE_TKINT_H
 
-		TkWindow* winPtr = ((TkWindow*) tkwin)->childList;
+		TkWindow* winPtr = tkCompat_getChildList((TkWindow*) tkwin);
 		tkwin = NULL;
 
-		for ( ; winPtr; winPtr = winPtr->nextPtr)
+		for ( ; winPtr; winPtr = tkCompat_getNextWinPtr(winPtr))
 		{
-			if (!(winPtr->flags & TK_ANONYMOUS_WINDOW))
+			if (!(tkCompat_getFlags(winPtr) & TK_ANONYMOUS_WINDOW))
 			{
 				Tk_Window child = (Tk_Window) winPtr;
 

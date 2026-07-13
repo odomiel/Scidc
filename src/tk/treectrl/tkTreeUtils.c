@@ -17,6 +17,11 @@
 
 #include "tkTreeCtrl.h"
 
+/* Tk 8.6 / Tk 9.0 Compatibility Layer - lokale Makros für C-Code */
+/* Diese Makros abstrahieren direkte TkWindow-Strukturzugriffe */
+#define tkCompat_getChildList(w) ((w) ? (w)->childList : NULL)
+#define tkCompat_getNextWinPtr(w) ((w) ? (w)->nextPtr : NULL)
+
 #ifdef WIN32
 #include "tkWinInt.h"
 #endif
@@ -1323,7 +1328,7 @@ Tree_ScrollWindow(
 	int result;
 
 	winInfoPtr = winInfo;
-	for (winPtr = winPtr->childList; winPtr != NULL; winPtr = winPtr->nextPtr) {
+	for (winPtr = tkCompat_getChildList(winPtr); winPtr != NULL; winPtr = tkCompat_getNextWinPtr(winPtr)) {
 		if (Tk_WindowId(winPtr) != None) {
 			hwndChild = TkWinGetHWND(Tk_WindowId(winPtr));
 			GetWindowRect(hwndChild, &childRect);
