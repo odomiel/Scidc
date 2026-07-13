@@ -1,22 +1,24 @@
 # Tk-Internals Zugriffe - Analyse für Tk 9.0 Portierung
 
-**Datum:** 12.07.2026  
+**Datum:** 13.07.2026  
 **Ziel:** Alle direkten Zugriffe auf TkWindow-Struktur identifizieren und durch Kompatibilitäts-Wrapper ersetzen
 
 ## 📊 Zusammenfassung
 
 | Datei | winPtr-> Zugriffe | Kritikalität | Status |
 |-------|-------------------|--------------|--------|
-| tk_base.cpp | 0 | ⭐⭐⭐⭐⭐ | ✅ Abgeschlossen (alle Zugriffe durch Wrapper ersetzt) |
-| tk_busy.cpp | ~31 | ⭐⭐⭐⭐ | 🟡 Teilweise (Tk_FakeWin* Zugriffe verbleiben) |
-| tk_fixes.cpp | 0 | ⭐⭐⭐⭐ | ✅ Abgeschlossen (alle Zugriffe durch Wrapper ersetzt) |
-| tk_multiwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
-| tk_window_manager.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
-| tk_init.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
-| tk_notebook.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
-| tk_panedwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten Zugriffe |
+| tk_base.cpp | 0 | ⭐⭐⭐⭐⭐ | ✅ Abgeschlossen (Phase 1-2) |
+| tk_fixes.cpp | 0 | ⭐⭐⭐⭐ | ✅ Abgeschlossen (Phase 1-2) |
+| tk_busy.cpp | 0 | ⭐⭐⭐⭐ | ✅ Abgeschlossen (Phase 3.1) |
+| tk_multiwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
+| tk_window_manager.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
+| tk_init.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
+| tk_notebook.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
+| tk_panedwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
+| **treectrl/** | ~11 | ⭐⭐⭐ | ⚠️ Externe Bibliothek (C-Code) |
 
-**Gesamt:** ~150+ direkte Strukturzugriffe in Hauptdateien (ohne Forks)
+**Gesamt:** ~0 direkte TkWindow-Strukturzugriffe in eigenen C++-Dateien
+**Phase 1-3: ABGESCHLOSSEN für eigene Dateien**
 
 ---
 
