@@ -15,10 +15,11 @@
 | tk_init.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
 | tk_notebook.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
 | tk_panedwindow.cpp | 0 | ⭐⭐⭐ | ✅ Keine direkten TkWindow-> Zugriffe |
-| **treectrl/** | ~11 | ⭐⭐⭐ | ⚠️ Externe Bibliothek (C-Code) |
+| **treectrl/** | ~5 | ⭐⭐⭐ | 🟡 Teilweise (Phase 3.3: tkTreeUtils.c Makros ersetzt, tkTreeCtrl.c verbleibt) |
 
 **Gesamt:** ~0 direkte TkWindow-Strukturzugriffe in eigenen C++-Dateien
 **Phase 1-3: ABGESCHLOSSEN für eigene Dateien**
+**Phase 3.3: TKTREEUTILS.C TEILWEISE ABGESCHLOSSEN**
 
 ---
 
