@@ -1324,8 +1324,8 @@ Tree_ScrollWindow(
 
 	winInfoPtr = winInfo;
 	for (winPtr = winPtr->childList; winPtr != NULL; winPtr = winPtr->nextPtr) {
-		if (winPtr->window != None) {
-			hwndChild = TkWinGetHWND(winPtr->window);
+		if (Tk_WindowId(winPtr) != None) {
+			hwndChild = TkWinGetHWND(Tk_WindowId(winPtr));
 			GetWindowRect(hwndChild, &childRect);
 			winInfoPtr->x = childRect.left;
 			winInfoPtr->y = childRect.top;
@@ -1345,13 +1345,13 @@ Tree_ScrollWindow(
 	winInfoPtr = winInfo;
 	while (winCount--) {
 		winPtr = winInfoPtr->winPtr;
-		hwndChild = TkWinGetHWND(winPtr->window);
+		hwndChild = TkWinGetHWND(Tk_WindowId(winPtr));
 		GetWindowRect(hwndChild, &childRect);
 		if (childRect.left != winInfoPtr->x ||
 				childRect.top != winInfoPtr->y) {
-			dbwin("moved window %s %d,%d\n", winPtr->pathName, childRect.left - winInfoPtr->x, childRect.top - winInfoPtr->y);
-			winPtr->changes.x += childRect.left - winInfoPtr->x;
-			winPtr->changes.y += childRect.top - winInfoPtr->y;
+			dbwin("moved window %s %d,%d\n", Tk_PathName(winPtr), childRect.left - winInfoPtr->x, childRect.top - winInfoPtr->y);
+			Tk_Changes(winPtr)->x += childRect.left - winInfoPtr->x;
+			Tk_Changes(winPtr)->y += childRect.top - winInfoPtr->y;
 			/* TkDoConfigureNotify(winPtr); */
 		}
 		winInfoPtr++;
