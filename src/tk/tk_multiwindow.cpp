@@ -1228,8 +1228,8 @@ ConfigureSlaves(	MultiWindow* mw,			// Information about multi window
 			Tk_CreateEventHandler(	slave->tkwin,
 											StructureNotifyMask,
 											SlaveStructureProc,
-											(ClientData)slave);
-			Tk_ManageGeometry(slave->tkwin, &multiWindowMgrType, (ClientData)slave);
+											static_cast<ClientData>(slave));
+			Tk_ManageGeometry(slave->tkwin, &multiWindowMgrType, static_cast<ClientData>(slave));
 			inserts[insertIndex++] = slave;
 			numNewSlaves++;
 		}
@@ -1345,7 +1345,7 @@ MultiWindowWorldChanged(ClientData instanceData)	// Information about the multi 
 
 	if (Tk_IsMapped(mw->tkwin) && !(mw->flags & REDRAW_PENDING))
 	{
-		Tcl_DoWhenIdle(DisplayMultiWindow, (ClientData)mw);
+		Tcl_DoWhenIdle(DisplayMultiWindow, static_cast<ClientData>(mw));
 		mw->flags |= REDRAW_PENDING;
 	}
 }
@@ -1391,7 +1391,7 @@ ConfigureMultiWindow(	Tcl_Interp* interp,		// Used for error reporting
 	}
 
 	Tk_FreeSavedOptions(&savedOptions);
-	MultiWindowWorldChanged((ClientData)mw);
+	MultiWindowWorldChanged(static_cast<ClientData>(mw));
 
 	// If an option that affects geometry has changed, make a re-layout request.
 
@@ -1453,7 +1453,7 @@ MultiWindowWidgetObjCmd(ClientData clientData,	// Information about square widge
 	if (Tcl_GetIndexFromObj(interp, objv[1], optionStrings, "command", 0, &index) != TCL_OK)
 		return TCL_ERROR;
 
-	Tcl_Preserve((ClientData)mw);
+	Tcl_Preserve(static_cast<ClientData>(mw));
 
 	switch ((enum options)index)
 	{
@@ -1559,12 +1559,12 @@ MultiWindowWidgetObjCmd(ClientData clientData,	// Information about square widge
 
 						if (slave && slave->master)
 						{
-							Tk_ManageGeometry(slaveWindow, nullptr, (ClientData)nullptr);
+							Tk_ManageGeometry(slaveWindow, nullptr, static_cast<ClientData>(nullptr));
 							Tk_UnmaintainGeometry(slave->tkwin, mw->tkwin);
 							Tk_DeleteEventHandler(	slave->tkwin,
 															StructureNotifyMask,
 															SlaveStructureProc,
-															(ClientData)slave);
+															static_cast<ClientData>(slave));
 							Tk_UnmapWindow(slave->tkwin);
 							Unlink(slave);
 						}
@@ -1772,7 +1772,7 @@ MultiWindowWidgetObjCmd(ClientData clientData,	// Information about square widge
 			break;
 	}
 
-	Tcl_Release((ClientData)mw);
+	Tcl_Release(static_cast<ClientData>(mw));
 	return result;
 }
 
@@ -1803,8 +1803,8 @@ DestroyMultiWindow(MultiWindow* mw)		// Info about multi window widget
 
 	// Cancel idle callbacks for redrawing the widget and for rearranging the panes.
 
-	Tcl_CancelIdleCall(DisplayMultiWindow, (ClientData)mw);
-	Tcl_CancelIdleCall(ArrangePane, (ClientData)mw);
+	Tcl_CancelIdleCall(DisplayMultiWindow, static_cast<ClientData>(mw));
+	Tcl_CancelIdleCall(ArrangePane, static_cast<ClientData>(mw));
 
 	if (mw->gc)
 		Tk_FreeGC(Tk_Display(mw->tkwin), mw->gc);
@@ -1819,7 +1819,7 @@ DestroyMultiWindow(MultiWindow* mw)		// Info about multi window widget
 		Tk_DeleteEventHandler(	mw->slaves[i]->tkwin,
 										StructureNotifyMask,
 										SlaveStructureProc,
-										(ClientData)mw->slaves[i]);
+										static_cast<ClientData>(mw->slaves[i]));
 		Tk_ManageGeometry(mw->slaves[i]->tkwin, nullptr, nullptr);
 		Tk_FreeConfigOptions((char*)mw->slaves[i], mw->slaveOpts, mw->tkwin);
 		ckfree((char*)mw->slaves[i]);
@@ -1835,9 +1835,9 @@ DestroyMultiWindow(MultiWindow* mw)		// Info about multi window widget
 	// Let Tk_FreeConfigOptions clean up the rest.
 
 	Tk_FreeConfigOptions((char*)mw, mw->optionTable, mw->tkwin);
-	Tcl_Release((ClientData)mw->tkwin);
+	Tcl_Release(static_cast<ClientData>(mw->tkwin));
 	mw->tkwin = nullptr;
-	Tcl_EventuallyFree((ClientData)mw, TCL_DYNAMIC);
+	Tcl_EventuallyFree(static_cast<ClientData>(mw), TCL_DYNAMIC);
 }
 
 
@@ -1871,7 +1871,7 @@ MultiWindowEventProc(ClientData clientData,	// Information about window
 		case Expose:
 			if (mw->tkwin != nullptr && !(mw->flags & REDRAW_PENDING))
 			{
-				Tcl_DoWhenIdle(DisplayMultiWindow, (ClientData)mw);
+				Tcl_DoWhenIdle(DisplayMultiWindow, static_cast<ClientData>(mw));
 				mw->flags |= REDRAW_PENDING;
 			}
 			break;
@@ -1973,7 +1973,7 @@ MultiWindowReqProc(	ClientData clientData,	// Multi window's information about w
 	if (Tk_IsMapped(mw->tkwin) && !(mw->flags & RESIZE_PENDING))
 	{
 		mw->flags |= RESIZE_PENDING;
-		Tcl_DoWhenIdle(ArrangePane, (ClientData)mw);
+		Tcl_DoWhenIdle(ArrangePane, static_cast<ClientData>(mw));
 	}
 }
 
@@ -2008,7 +2008,7 @@ MultiWindowLostSlaveProc(	ClientData clientData,	// Grid structure for slave win
     Tk_DeleteEventHandler(	slave->tkwin,
 	 								StructureNotifyMask,
 									SlaveStructureProc,
-									(ClientData)slave);
+									static_cast<ClientData>(slave));
     Tk_UnmapWindow(slave->tkwin);
     slave->tkwin = nullptr;
     ckfree((char*)slave);
@@ -2061,7 +2061,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 		mwOpts = (OptionTables*)ckalloc(sizeof(OptionTables));
 
 		// Set up an exit handler to free the optionTables struct.
-		Tcl_SetAssocData(interp, "MultiWindowOptionTables", DestroyOptionTables, (ClientData)mwOpts);
+		Tcl_SetAssocData(interp, "MultiWindowOptionTables", DestroyOptionTables, static_cast<ClientData>(mwOpts));
 
 		// Create the multi window option tables.
 		mwOpts->mwOptions = Tk_CreateOptionTable(interp, optionSpecs);
@@ -2079,7 +2079,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 								interp,
 								Tk_PathName(mw->tkwin),
 								MultiWindowWidgetObjCmd,
-								(ClientData)mw,
+								static_cast<ClientData>(mw),
 								MultiWindowCmdDeletedProc);
 	mw->optionTable = mwOpts->mwOptions;
 	mw->slaveOpts = mwOpts->slaveOpts;
@@ -2094,7 +2094,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 	// Keep a hold of the associated tkwin until we destroy the widget,
 	// otherwise Tk might free it while we still need it.
 
-	Tcl_Preserve((ClientData)mw->tkwin);
+	Tcl_Preserve(static_cast<ClientData>(mw->tkwin));
 
 	if (Tk_InitOptions(interp, (char*)mw, mwOpts->mwOptions, tkwin) != TCL_OK)
 	{
@@ -2105,7 +2105,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 	Tk_CreateEventHandler(	mw->tkwin,
 									ExposureMask|StructureNotifyMask,
 									MultiWindowEventProc,
-									(ClientData)mw);
+									static_cast<ClientData>(mw));
 
 	if (ConfigureMultiWindow(interp, mw, objc - 2, objv + 2) != TCL_OK)
 	{
