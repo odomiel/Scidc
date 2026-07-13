@@ -20,6 +20,19 @@
 
 #include "tkTreeCtrl.h"
 
+/* Tk 8.6 / Tk 9.0 Compatibility Layer for direct TkWindow field access */
+/* For C code (treectrl), we define simple macros that access TkWindow fields directly */
+/* These should be replaced with tkCompat wrapper calls when C-compatible tk_compat.h is available */
+
+/* Temporäre Makros für Phase 3.4 - später durch tkCompat-Wrapper ersetzen */
+#ifndef TKCOMPAT_H_INCLUDED
+/* Wenn tk_compat.h nicht inkludiert wurde, definieren wir lokale Makros */
+#define tkCompat_getChildList(w) ((w) ? (w)->childList : NULL)
+#define tkCompat_getNextWinPtr(w) ((w) ? (w)->nextPtr : NULL)
+#define tkCompat_getInstanceData(w) ((w) ? (w)->instanceData : NULL)
+#define tkCompat_getClassProcsPtr(w) ((w) ? (w)->classProcsPtr : NULL)
+#endif
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -4371,13 +4384,13 @@ RecomputeWidgets(
 	Tk_ClassWorldChangedProc *proc;
 
 	/* Clomp! Stomp! All over the internals */
-	proc = Tk_GetClassProc(winPtr->classProcsPtr, worldChangedProc);
+	proc = Tk_GetClassProc(tkCompat_getClassProcsPtr(winPtr), worldChangedProc);
 	if (proc == TreeWorldChanged) {
-		TreeTheme_ThemeChanged((TreeCtrl *) winPtr->instanceData);
-		TreeWorldChanged(winPtr->instanceData);
+		TreeTheme_ThemeChanged((TreeCtrl *) tkCompat_getInstanceData(winPtr));
+		TreeWorldChanged(tkCompat_getInstanceData(winPtr));
 	}
 
-	for (winPtr = winPtr->childList; winPtr != NULL; winPtr = winPtr->nextPtr) {
+	for (winPtr = tkCompat_getChildList(winPtr); winPtr != NULL; winPtr = tkCompat_getNextWinPtr(winPtr)) {
 		RecomputeWidgets(winPtr);
 	}
 }
