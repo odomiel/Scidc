@@ -35,6 +35,7 @@
 // *********************************************************************
 
 #include "tkInt.h"
+#include "tk_compat.h"
 
 # define malloc(size)	((void *) (ckalloc(size)))
 # define free(ptr)	ckfree((char *) (ptr))

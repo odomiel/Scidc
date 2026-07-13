@@ -21,6 +21,7 @@
 #include "tcl_base.h"
 
 #include "tkInt.h"
+#include "tk_compat.h"
 
 #include "m_types.h"
 

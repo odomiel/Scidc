@@ -18,6 +18,7 @@
 
 #include "tk_init.h"
 #include "tkInt.h"
+#include "tk_compat.h"
 
 #include "tcl_base.h"
 

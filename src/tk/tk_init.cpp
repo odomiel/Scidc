@@ -21,6 +21,7 @@
 
 #include <tcl.h>
 #include <tkInt.h>
+#include "tk_compat.h"
 
 extern "C"
 {
