@@ -432,18 +432,297 @@ inline int& getGrabFlagsRef(struct TkDisplay* dispPtr) {
 // Diese Implementation ist ein Platzhalter und muss angepasst werden,
 // wenn Tk 9.0 verfügbar ist
 
+// Wichtig: In Tk 9.0 hat TkWindow eine komplett andere Struktur.
+// Die meisten Felder sind nicht mehr direkt zugänglich.
+// Stattdessen müssen öffentliche APIs verwendet werden.
+
 namespace tkCompat {
 
-// In Tk 9.0 gibt es keine direkte Strukturzugriffe mehr
-// Wir müssen öffentliche APIs verwenden
+// ======================================================================
+// Window Hierarchie
+// ======================================================================
 
 inline TkWindow* getParentWinPtr(TkWindow* winPtr) {
-    // In Tk 9.0: Tk_GetParent(winPtr) oder ähnliche Funktion
+    // In Tk 9.0: Tk_WindowGetParent(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetParent(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline TkWindow* getNextWinPtr(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetNextSibling(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetNextSibling(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline TkWindow* getChildList(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetFirstChild(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetFirstChild(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline TkWindow** getLastChildPtrPtr(TkWindow* winPtr) {
+    // In Tk 9.0: Gibt es nicht mehr in dieser Form
+    // Muss durch eine andere Lösung ersetzt werden
     // TODO: Implementieren wenn Tk 9.0 verfügbar ist
     return nullptr;
 }
 
-// ... (andere Funktionen ähnlich implementieren)
+inline void setParentWinPtr(TkWindow* winPtr, TkWindow* parent) {
+    // In Tk 9.0: Tk_WindowSetParent(winPtr, parent) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetParent(winPtr, parent);
+}
+
+inline void setNextWinPtr(TkWindow* winPtr, TkWindow* next) {
+    // In Tk 9.0: Tk_WindowSetNextSibling(winPtr, next) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetNextSibling(winPtr, next);
+}
+
+inline void setChildList(TkWindow* winPtr, TkWindow* child) {
+    // In Tk 9.0: Tk_WindowSetFirstChild(winPtr, child) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetFirstChild(winPtr, child);
+}
+
+inline void setLastChildPtr(TkWindow* winPtr, TkWindow* lastChild) {
+    // In Tk 9.0: Tk_WindowSetLastChild(winPtr, lastChild) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetLastChild(winPtr, lastChild);
+}
+
+// ======================================================================
+// Window Status
+// ======================================================================
+
+inline bool isWindowMapped(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowIsMapped(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr && Tk_WindowIsMapped(winPtr);
+    return false;
+}
+
+inline bool isWindowTopLevel(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowIsToplevel(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr && Tk_WindowIsToplevel(winPtr);
+    return false;
+}
+
+inline bool isWindowTopHierarchy(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowIsTopHierarchy(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr && Tk_WindowIsTopHierarchy(winPtr);
+    return false;
+}
+
+inline bool isWindowReparented(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowIsReparented(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr && Tk_WindowIsReparented(winPtr);
+    return false;
+}
+
+inline bool needsConfigNotify(TkWindow* winPtr) {
+    // In Tk 9.0: Gibt es nicht mehr in dieser Form
+    // Muss durch eine andere Lösung ersetzt werden
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    return false;
+}
+
+inline bool isWindowAlreadyDead(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowIsDead(winPtr) oder ähnliche Funktion
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr && Tk_WindowIsDead(winPtr);
+    return false;
+}
+
+inline void setWindowFlags(TkWindow* winPtr, int flags) {
+    // In Tk 9.0: Tk_WindowSetFlags(winPtr, flags) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetFlags(winPtr, flags);
+}
+
+inline void clearWindowFlags(TkWindow* winPtr, int flags) {
+    // In Tk 9.0: Tk_WindowClearFlags(winPtr, flags) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowClearFlags(winPtr, flags);
+}
+
+inline void setDirtyChanges(TkWindow* winPtr, unsigned int value) {
+    // In Tk 9.0: Nicht mehr relevant oder andere Lösung
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+}
+
+inline void setWindowIdFromFakeWin(TkWindow* winPtr, Window windowId) {
+    // In Tk 9.0: Tk_WindowSetId(winPtr, windowId) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetId(winPtr, windowId);
+}
+
+inline void setInstanceData(TkWindow* winPtr, ClientData data) {
+    // In Tk 9.0: Tk_WindowSetInstanceData(winPtr, data) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetInstanceData(winPtr, data);
+}
+
+inline ClientData getInstanceData(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetInstanceData(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetInstanceData(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline TkClassProcs* getClassProcsPtr(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetClassProcs(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetClassProcs(winPtr) : nullptr;
+    return nullptr;
+}
+
+// ======================================================================
+// Window Eigenschaften
+// ======================================================================
+
+inline Window getWindowId(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowId(winPtr) - Makro funktioniert
+    // return winPtr ? Tk_WindowId(winPtr) : None;
+    return None;
+}
+
+inline Display* getDisplay(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetDisplay(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetDisplay(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline int getScreenNum(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetScreenNumber(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetScreenNumber(winPtr) : 0;
+    return 0;
+}
+
+inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetDisplayPtr(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetDisplayPtr(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {
+    // In Tk 9.0: Tk_DisplayGetDisplay(dispPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return dispPtr ? Tk_DisplayGetDisplay(dispPtr) : nullptr;
+    return nullptr;
+}
+
+// ======================================================================
+// Geometry
+// ======================================================================
+
+inline int getReqWidth(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetReqWidth(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetReqWidth(winPtr) : 0;
+    return 0;
+}
+
+inline int getReqHeight(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetReqHeight(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetReqHeight(winPtr) : 0;
+    return 0;
+}
+
+inline void setReqWidth(TkWindow* winPtr, int width) {
+    // In Tk 9.0: Tk_WindowSetReqWidth(winPtr, width) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetReqWidth(winPtr, width);
+}
+
+inline void setReqHeight(TkWindow* winPtr, int height) {
+    // In Tk 9.0: Tk_WindowSetReqHeight(winPtr, height) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // if (winPtr) Tk_WindowSetReqHeight(winPtr, height);
+}
+
+// ======================================================================
+// Attributes
+// ======================================================================
+
+inline XSetWindowAttributes* getWindowAtts(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetAttributes(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetAttributes(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline unsigned int getDirtyAtts(TkWindow* winPtr) {
+    // In Tk 9.0: Nicht mehr relevant oder andere Lösung
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    return 0;
+}
+
+inline void setDirtyAtts(TkWindow* winPtr, unsigned int mask) {
+    // In Tk 9.0: Nicht mehr relevant oder andere Lösung
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+}
+
+inline unsigned int getFlags(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_WindowGetFlags(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_WindowGetFlags(winPtr) : 0;
+    return 0;
+}
+
+// ======================================================================
+// Grab-Handling
+// ======================================================================
+
+inline TkWindow* getGrabWindow(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_GetGrabWindow(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_GetGrabWindow(winPtr) : nullptr;
+    return nullptr;
+}
+
+inline int getGrabFlags(TkWindow* winPtr) {
+    // In Tk 9.0: Tk_GetGrabFlags(winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    // return winPtr ? Tk_GetGrabFlags(winPtr) : 0;
+    return 0;
+}
+
+// ======================================================================
+// TkDisplay Zugriffe
+// ======================================================================
+
+inline TkWindow* getButtonWinPtr(struct TkDisplay* dispPtr) {
+    // In Tk 9.0: Tk_DisplayGetButtonWinPtr(dispPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    return nullptr;
+}
+
+inline TkWindow* getServerWinPtr(struct TkDisplay* dispPtr) {
+    // In Tk 9.0: Tk_DisplayGetServerWinPtr(dispPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+    return nullptr;
+}
+
+inline void setButtonWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr) {
+    // In Tk 9.0: Tk_DisplaySetButtonWinPtr(dispPtr, winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+}
+
+inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr) {
+    // In Tk 9.0: Tk_DisplaySetServerWinPtr(dispPtr, winPtr) - öffentliche API
+    // TODO: Implementieren wenn Tk 9.0 verfügbar ist
+}
 
 } // namespace tkCompat
 
