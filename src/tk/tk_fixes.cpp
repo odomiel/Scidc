@@ -179,20 +179,20 @@ MovePointer2(
     TkWindow *winPtr;
 
     winPtr = sourcePtr;
-    if ((winPtr == NULL) || (tkCompat::getWindowId(winPtr) == None)) {
+    if ((winPtr == NULL) || (Tk_WindowId(winPtr) == None)) {
 	winPtr = destPtr;
-	if ((winPtr == NULL) || (tkCompat::getWindowId(winPtr) == None)) {
+	if ((winPtr == NULL) || (Tk_WindowId(winPtr) == None)) {
 	    return;
 	}
     }
 
-    Display* display = tkCompat::getDisplay(winPtr);
+    Display* display = Tk_Display(winPtr);
     event.xcrossing.serial = LastKnownRequestProcessed(display);
     event.xcrossing.send_event = GENERATED_EVENT_MAGIC;
     event.xcrossing.display = display;
-    event.xcrossing.root = RootWindow(display, tkCompat::getScreenNum(winPtr));
+    event.xcrossing.root = RootWindow(display, Tk_ScreenNumber(winPtr));
     event.xcrossing.time = TkCurrentTime(tkCompat::getDispPtr(winPtr));
-    XQueryPointer(display, tkCompat::getWindowId(winPtr), &dummy1, &dummy2,
+    XQueryPointer(display, Tk_WindowId(winPtr), &dummy1, &dummy2,
 	    &event.xcrossing.x_root, &event.xcrossing.y_root,
 	    &dummy3, &dummy4, &event.xcrossing.state);
     event.xcrossing.mode = mode;
@@ -401,12 +401,12 @@ TkPointerEvent(
 		if (!(tkCompat::getGrabFlagsFromDisp(dispPtr) & GRAB_GLOBAL)) {	/* Note 6. */
 		    serial = NextRequest(tkCompat::getDisplayFromDisp(dispPtr));
 		    if (XGrabPointer(tkCompat::getDisplayFromDisp(dispPtr),
-			    tkCompat::getGrabWindowFromDisp(dispPtr)->window, True,
+			    Tk_WindowId(tkCompat::getGrabWindowFromDisp(dispPtr)), True,
 			    ButtonPressMask|ButtonReleaseMask|ButtonMotionMask,
 			    GrabModeAsync, GrabModeAsync, None, None,
 			    CurrentTime) == 0) {
 			EatGrabEvents(dispPtr, serial);
-			if (XGrabKeyboard(tkCompat::getDisplayFromDisp(dispPtr), tkCompat::getWindowId(winPtr),
+			if (XGrabKeyboard(tkCompat::getDisplayFromDisp(dispPtr), Tk_WindowId(winPtr),
 				False, GrabModeAsync, GrabModeAsync,
 				CurrentTime) == 0) {
 			    tkCompat::getGrabFlagsRef(dispPtr) |= GRAB_TEMP_GLOBAL;

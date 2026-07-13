@@ -23,6 +23,10 @@
 **Phase 3.3-3.5: ALLE BIBLIOTHEKEN ABGESCHLOSSEN (C-Code mit lokalen Makros)**
 **Phase 4: TK 9.0 PLATZHALTER-IMPLEMENTIERUNGEN HINZUGEFÜGT**
 **Phase 5: TK_COMPAT.H IN ALLE DATEIEN MIT TKINT.H INTEGRIERT (tk_init.cpp, tk_multiwindow.cpp, tk_notebook.cpp, tk_panedwindow.cpp)**
+**Phase 6: EINFACHE WRAPPER DURCH ÖFFENTLICHE TK 8.6 MAKROS ERSETZT**
+- `tkCompat::getWindowId()` → `Tk_WindowId()`
+- `tkCompat::getDisplay()` → `Tk_Display()`
+- `tkCompat::getScreenNum()` → `Tk_ScreenNumber()`
 
 ---
 

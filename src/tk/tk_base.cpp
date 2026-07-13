@@ -55,8 +55,8 @@ reparent(TkWindow* childPtr, TkWindow* newParentPtr = nullptr)
 #else // if defined(__unix__)
 
 	Window parent = newParentPtr ?
-		Tk_WindowId(newParentPtr) : XRootWindow(tkCompat::getDisplay(childPtr), tkCompat::getScreenNum(childPtr));
-	XReparentWindow(tkCompat::getDisplay(childPtr), Tk_WindowId(childPtr), parent, 0, 0);
+		Tk_WindowId(newParentPtr) : XRootWindow(Tk_Display(childPtr), Tk_ScreenNumber(childPtr));
+	XReparentWindow(Tk_Display(childPtr), Tk_WindowId(childPtr), parent, 0, 0);
 
 #endif
 }
@@ -312,7 +312,7 @@ tk::capture(Tk_Window tkwin, Tk_Window tkparent)
 #else // if defined(__unix__)
 
 		TkWmDeadWindow(winPtr);
-		XUnmapWindow(tkCompat::getDisplay(winPtr), Tk_WindowId(winPtr));
+		XUnmapWindow(Tk_Display(winPtr), Tk_WindowId(winPtr));
 		makeExists(reinterpret_cast<Tk_Window>(tkCompat::getParentWinPtr(winPtr)));
 		::reparent(winPtr, tkCompat::getParentWinPtr(winPtr));
 

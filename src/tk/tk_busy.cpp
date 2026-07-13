@@ -900,7 +900,7 @@ MakeTransparentWindowExist(
 
 		changes.sibling = Tk_WindowId(winPtr2);
 		changes.stack_mode = Below;
-		XConfigureWindow(tkCompat::getDisplay(winPtr), Tk_WindowId(winPtr),
+		XConfigureWindow(Tk_Display(winPtr), Tk_WindowId(winPtr),
 			CWSibling | CWStackMode, &changes);
 		break;
 	    }
