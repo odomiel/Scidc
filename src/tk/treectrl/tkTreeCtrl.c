@@ -77,208 +77,208 @@ extern Tk_ObjCustomOption TreeCtrlCO_column_NOT_TAIL;
 static Tk_OptionSpec optionSpecs[] = {
 	{TK_OPTION_BORDER, "-background", "background", "Background",
 	 "white", -1, Tk_Offset(TreeCtrl, border), 0,
-	 (ClientData) "white", TREE_CONF_REDISPLAY},
+	 static_cast<ClientData>("white"), TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING, "-backgroundimage", "backgroundImage", "BackgroundImage",
 	  (char *) NULL, -1, Tk_Offset(TreeCtrl, backgroundImageString),
-	  TK_OPTION_NULL_OK, (ClientData) NULL,
+	  TK_OPTION_NULL_OK, static_cast<ClientData>(NULL),
 	  TREE_CONF_BG_IMAGE | TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING_TABLE, "-backgroundmode",
 	 "backgroundMode", "BackgroundMode",
 	 "row", -1, Tk_Offset(TreeCtrl, backgroundMode),
-	 0, (ClientData) bgModeST, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(bgModeST), TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING_TABLE, "-columnresizemode",
 	 "columnResizeMode", "ColumnResizeMode",
 	 "proxy", -1, Tk_Offset(TreeCtrl, columnResizeMode),
-	 0, (ClientData) columnResizeModeST, 0},
+	 0, static_cast<ClientData>(columnResizeModeST), 0},
 	{TK_OPTION_SYNONYM, "-bd", (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData) "-borderwidth"},
+	 (char *) NULL, 0, -1, 0, static_cast<ClientData>("-borderwidth")},
 	{TK_OPTION_SYNONYM, "-bg", (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData) "-background"},
+	 (char *) NULL, 0, -1, 0, static_cast<ClientData>("-background")},
 	{TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth",
 	 DEF_LISTBOX_BORDER_WIDTH, Tk_Offset(TreeCtrl, borderWidthObj),
 	 Tk_Offset(TreeCtrl, borderWidth),
-	 0, (ClientData) NULL, TREE_CONF_BORDERS | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_BORDERS | TREE_CONF_RELAYOUT},
 	{TK_OPTION_COLOR, "-buttoncolor", "buttonColor", "ButtonColor",
 	 "#808080", -1, Tk_Offset(TreeCtrl, buttonColor),
-	 0, (ClientData) NULL, TREE_CONF_BUTTON | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_BUTTON | TREE_CONF_REDISPLAY},
 	{TK_OPTION_CUSTOM, "-buttonbitmap", "buttonBitmap", "ButtonBitmap",
 	 (char *) NULL,
 	 Tk_Offset(TreeCtrl, buttonBitmap.obj), Tk_Offset(TreeCtrl, buttonBitmap),
-	 TK_OPTION_NULL_OK, (ClientData) NULL,
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL),
 	 TREE_CONF_BUTTON | TREE_CONF_BUTBMP | TREE_CONF_RELAYOUT},
 	{TK_OPTION_CUSTOM, "-buttonimage", "buttonImage", "ButtonImage",
 	 (char *) NULL,
 	 Tk_Offset(TreeCtrl, buttonImage.obj), Tk_Offset(TreeCtrl, buttonImage),
-	 TK_OPTION_NULL_OK, (ClientData) NULL,
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL),
 	 TREE_CONF_BUTTON | TREE_CONF_BUTIMG | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-buttonsize", "buttonSize", "ButtonSize",
 	 "9", Tk_Offset(TreeCtrl, buttonSizeObj),
 	 Tk_Offset(TreeCtrl, buttonSize),
-	 0, (ClientData) NULL, TREE_CONF_BUTTON | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_BUTTON | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-buttonthickness",
 	 "buttonThickness", "ButtonThickness",
 	 "1", Tk_Offset(TreeCtrl, buttonThicknessObj),
 	 Tk_Offset(TreeCtrl, buttonThickness),
-	 0, (ClientData) NULL, TREE_CONF_BUTTON | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_BUTTON | TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING, "-columnprefix", "columnPrefix", "ColumnPrefix",
-	 "", -1, Tk_Offset(TreeCtrl, columnPrefix), 0, (ClientData) NULL, 0},
+	 "", -1, Tk_Offset(TreeCtrl, columnPrefix), 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_PIXELS, "-columnproxy", "columnProxy", "ColumnProxy",
 	 (char *) NULL, Tk_Offset(TreeCtrl, columnProxy.xObj),
 	 Tk_Offset(TreeCtrl, columnProxy.x),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_PROXY},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_PROXY},
 	{TK_OPTION_BOOLEAN, "-columntagexpr", "columnTagExpr", "ColumnTagExpr",
 	 "1", -1, Tk_Offset(TreeCtrl, columnTagExpr),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_CURSOR, "-cursor", "cursor", "Cursor",
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, cursor),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, 0},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), 0},
 #ifdef DEPRECATED
 	{TK_OPTION_STRING, "-defaultstyle", "defaultStyle", "DefaultStyle",
 	 (char *) NULL, Tk_Offset(TreeCtrl, defaultStyle.stylesObj), -1,
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_DEFSTYLE},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_DEFSTYLE},
 #endif /* DEPRECATED */
 	{TK_OPTION_STRING_TABLE, "-doublebuffer",
 	 "doubleBuffer", "DoubleBuffer",
 	 "item", -1, Tk_Offset(TreeCtrl, doubleBuffer),
-	 0, (ClientData) doubleBufferST, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(doubleBufferST), TREE_CONF_REDISPLAY},
 	{TK_OPTION_BOOLEAN, "-expensivespanwidth", "expensiveSpanWidth", "ExpensiveSpanWidth",
 	 "0", -1, Tk_Offset(TreeCtrl, expensiveSpanWidth),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_SYNONYM, "-fg", (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData) "-foreground"},
+	 (char *) NULL, 0, -1, 0, static_cast<ClientData>("-foreground")},
 	{TK_OPTION_FONT, "-font", "font", "Font",
 	 DEF_LISTBOX_FONT, Tk_Offset(TreeCtrl, fontObj),
 	 Tk_Offset(TreeCtrl, tkfont),
-	 0, (ClientData) NULL, TREE_CONF_FONT | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_FONT | TREE_CONF_RELAYOUT},
 	{TK_OPTION_COLOR, "-foreground", "foreground", "Foreground",
 	 DEF_LISTBOX_FG, Tk_Offset(TreeCtrl, fgObj), Tk_Offset(TreeCtrl, fgColorPtr),
-	 0, (ClientData) NULL, TREE_CONF_FG | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_FG | TREE_CONF_REDISPLAY},
 	{TK_OPTION_BOOLEAN, "-fullstripes", "fullStripes", "FullStripes",
 	 "0", -1, Tk_Offset(TreeCtrl, fullStripes),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 	{TK_OPTION_PIXELS, "-height", "height", "Height",
 	 "200", Tk_Offset(TreeCtrl, heightObj), Tk_Offset(TreeCtrl, height),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_COLOR, "-highlightbackground", "highlightBackground",
 	 "HighlightBackground", DEF_LISTBOX_HIGHLIGHT_BG, -1,
 	 Tk_Offset(TreeCtrl, highlightBgColorPtr),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 	{TK_OPTION_COLOR, "-highlightcolor", "highlightColor", "HighlightColor",
 	 DEF_LISTBOX_HIGHLIGHT, -1, Tk_Offset(TreeCtrl, highlightColorPtr),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 	{TK_OPTION_PIXELS, "-highlightthickness", "highlightThickness",
 	 "HighlightThickness", DEF_LISTBOX_HIGHLIGHT_WIDTH,
 	 Tk_Offset(TreeCtrl, highlightWidthObj),
 	 Tk_Offset(TreeCtrl, highlightWidth),
-	 0, (ClientData) NULL, TREE_CONF_BORDERS | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_BORDERS | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-indent", "indent", "Indent",
 	 "19", Tk_Offset(TreeCtrl, indentObj),
 	 Tk_Offset(TreeCtrl, indent),
-	 0, (ClientData) NULL, TREE_CONF_INDENT | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_INDENT | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-itemheight", "itemHeight", "ItemHeight",
 	 "0", Tk_Offset(TreeCtrl, itemHeightObj),
 	 Tk_Offset(TreeCtrl, itemHeight),
-	 0, (ClientData) NULL, TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
 #if 0
 	{TK_OPTION_CUSTOM, "-itempadx", (char *) NULL, (char *) NULL,
 	 "0",
 	 Tk_Offset(TreeCtrl, itemPadXObj),
 	 Tk_Offset(TreeCtrl, itemPadX),
-	 0, (ClientData) &TreeCtrlCO_pad, 0},
+	 0, static_cast<ClientData>(&TreeCtrlCO_pad), 0},
 	{TK_OPTION_CUSTOM, "-itempady", (char *) NULL, (char *) NULL,
 	 "0",
 	 Tk_Offset(TreeCtrl, itemPadYObj),
 	 Tk_Offset(TreeCtrl, itemPadY),
-	 0, (ClientData) &TreeCtrlCO_pad, 0},
+	 0, static_cast<ClientData>(&TreeCtrlCO_pad), 0},
 #endif
 	{TK_OPTION_STRING, "-itemprefix", "itemPrefix", "ItemPrefix",
-	 "", -1, Tk_Offset(TreeCtrl, itemPrefix), 0, (ClientData) NULL, 0},
+	 "", -1, Tk_Offset(TreeCtrl, itemPrefix), 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-itemtagexpr", "itemTagExpr", "ItemTagExpr",
 	 "1", -1, Tk_Offset(TreeCtrl, itemTagExpr),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_PIXELS, "-itemwidth", "itemWidth", "ItemWidth",
 	 "", Tk_Offset(TreeCtrl, itemWidthObj), Tk_Offset(TreeCtrl, itemWidth),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-itemwidthequal", "itemWidthEqual", "ItemWidthEqual",
 	 "0", -1, Tk_Offset(TreeCtrl, itemWidthEqual),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-itemwidthmultiple", "itemWidthMultiple", "ItemWidthMultiple",
 	 "", Tk_Offset(TreeCtrl, itemWidMultObj), Tk_Offset(TreeCtrl, itemWidMult),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-keepuserwidth", "keepUserWidth", "KeepUserWidth",
 	 "1", -1, Tk_Offset(TreeCtrl, keepUserWidth),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_COLOR, "-linecolor", "lineColor", "LineColor",
 	 "#808080", -1, Tk_Offset(TreeCtrl, lineColor),
-	 0, (ClientData) NULL, TREE_CONF_LINE | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_LINE | TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING_TABLE, "-linestyle", "lineStyle", "LineStyle",
 	 "dot", -1, Tk_Offset(TreeCtrl, lineStyle),
-	 0, (ClientData) lineStyleST, TREE_CONF_LINE | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(lineStyleST), TREE_CONF_LINE | TREE_CONF_REDISPLAY},
 	{TK_OPTION_PIXELS, "-linethickness", "lineThickness", "LineThickness",
 	 "1", Tk_Offset(TreeCtrl, lineThicknessObj),
 	 Tk_Offset(TreeCtrl, lineThickness),
-	 0, (ClientData) NULL, TREE_CONF_LINE | TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_LINE | TREE_CONF_REDISPLAY},
 	{TK_OPTION_PIXELS, "-minitemheight", "minItemHeight", "MinItemHeight",
 	 "0", Tk_Offset(TreeCtrl, minItemHeightObj),
 	 Tk_Offset(TreeCtrl, minItemHeight),
-	 0, (ClientData) NULL, TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_ITEMSIZE | TREE_CONF_RELAYOUT},
 	{TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient",
 	 "vertical", -1, Tk_Offset(TreeCtrl, vertical),
-	 0, (ClientData) orientStringTable, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(orientStringTable), TREE_CONF_RELAYOUT},
 	{TK_OPTION_RELIEF, "-relief", "relief", "Relief",
 	 "sunken", -1, Tk_Offset(TreeCtrl, relief),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 	{TK_OPTION_PIXELS, "-rowproxy", "rowProxy", "RowProxy",
 	 (char *) NULL, Tk_Offset(TreeCtrl, rowProxy.yObj),
 	 Tk_Offset(TreeCtrl, rowProxy.y),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, TREE_CONF_PROXY},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), TREE_CONF_PROXY},
 	{TK_OPTION_STRING, "-scrollmargin", "scrollMargin", "ScrollMargin",
 	 "0", Tk_Offset(TreeCtrl, scrollMargin), -1,
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_STRING, "-selectmode", "selectMode", "SelectMode",
 	 DEF_LISTBOX_SELECT_MODE, -1, Tk_Offset(TreeCtrl, selectMode),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, 0},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-showbuttons", "showButtons",
 	 "ShowButtons", "1", -1, Tk_Offset(TreeCtrl, showButtons),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showheader", "showHeader", "ShowHeader",
 	 "1", -1, Tk_Offset(TreeCtrl, showHeader),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showlines", "showLines",
 	 "ShowLines", "1", -1, Tk_Offset(TreeCtrl, showLines),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showrootlines", "showRootLines",
 	 "ShowRootLines", "1", -1, Tk_Offset(TreeCtrl, showRootLines),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showroot", "showRoot",
 	 "ShowRoot", "1", -1, Tk_Offset(TreeCtrl, showRoot),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showrootbutton", "showRootButton",
 	 "ShowRootButton", "0", -1, Tk_Offset(TreeCtrl, showRootButton),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-showrootchildbuttons", "showRootChildButtons",
 	 "ShowRootChildButtons", "1", -1, Tk_Offset(TreeCtrl, showRootChildButtons),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_STRING, "-state", "state", "State",
 	 (char *) NULL, Tk_Offset(TreeCtrl, stateObj), -1,
-	 TK_OPTION_NULL_OK, (ClientData) NULL,
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL),
 	 TREE_CONF_STATE | TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING, "-takefocus", "takeFocus", "TakeFocus",
 	 DEF_LISTBOX_TAKE_FOCUS, -1, Tk_Offset(TreeCtrl, takeFocus),
 	 TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_CUSTOM, "-treecolumn", "treeColumn", "TreeColumn",
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, columnTree),
-	 TK_OPTION_NULL_OK, (ClientData) &TreeCtrlCO_column_NOT_TAIL,
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(&TreeCtrlCO_column_NOT_TAIL),
 	 TREE_CONF_RELAYOUT},
 	{TK_OPTION_BOOLEAN, "-usetheme", "useTheme",
 	 "UseTheme", "1", -1, Tk_Offset(TreeCtrl, useTheme),
-	 0, (ClientData) NULL, TREE_CONF_THEME | TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_THEME | TREE_CONF_RELAYOUT},
 	{TK_OPTION_PIXELS, "-width", "width", "Width",
 	 "200", Tk_Offset(TreeCtrl, widthObj), Tk_Offset(TreeCtrl, width),
-	 0, (ClientData) NULL, TREE_CONF_RELAYOUT},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_RELAYOUT},
 	{TK_OPTION_STRING, "-wrap", "wrap", "Wrap",
 	 (char *) NULL, Tk_Offset(TreeCtrl, wrapObj), -1,
-	 TK_OPTION_NULL_OK, (ClientData) NULL,
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL),
 	 TREE_CONF_WRAP | TREE_CONF_RELAYOUT},
 	{TK_OPTION_STRING, "-xscrollcommand", "xScrollCommand", "ScrollCommand",
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, xScrollCmd),
@@ -288,7 +288,7 @@ static Tk_OptionSpec optionSpecs[] = {
 	 TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_PIXELS, "-xscrollincrement", "xScrollIncrement", "ScrollIncrement",
 	 "0", -1, Tk_Offset(TreeCtrl, xScrollIncrement),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 	{TK_OPTION_STRING, "-yscrollcommand", "yScrollCommand", "ScrollCommand",
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, yScrollCmd),
 	 TK_OPTION_NULL_OK, 0, 0},
@@ -297,39 +297,39 @@ static Tk_OptionSpec optionSpecs[] = {
 	 TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_PIXELS, "-yscrollincrement", "yScrollIncrement", "ScrollIncrement",
 	 "0", -1, Tk_Offset(TreeCtrl, yScrollIncrement),
-	 0, (ClientData) NULL, TREE_CONF_REDISPLAY},
+	 0, static_cast<ClientData>(NULL), TREE_CONF_REDISPLAY},
 
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, -1, -1, 0, (ClientData) NULL, 0}
+	 (char *) NULL, -1, -1, 0, static_cast<ClientData>(NULL), 0}
 };
 
 static Tk_OptionSpec debugSpecs[] = {
 	{TK_OPTION_INT, "-displaydelay", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeCtrl, debug.displayDelay),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-data", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeCtrl, debug.data),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-display", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeCtrl, debug.display),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_COLOR, "-drawcolor", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, debug.drawColor),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, 0},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-enable", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeCtrl, debug.enable),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_COLOR, "-erasecolor", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, debug.eraseColor),
-	 TK_OPTION_NULL_OK, (ClientData) NULL, 0},
+	 TK_OPTION_NULL_OK, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-span", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeCtrl, debug.span),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_BOOLEAN, "-textlayout", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeCtrl, debug.textLayout),
-	 0, (ClientData) NULL, 0},
+	 0, static_cast<ClientData>(NULL), 0},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, -1, -1, 0, (ClientData) NULL, 0}
+	 (char *) NULL, -1, -1, 0, static_cast<ClientData>(NULL), 0}
 };
 
 static int TreeWidgetCmd(ClientData clientData, Tcl_Interp *interp, int objc,
@@ -413,7 +413,7 @@ TreeObjCmd(
 	tree->interp				= interp;
 	tree->widgetCmd				= Tcl_CreateObjCommand(interp,
 										Tk_PathName(tree->tkwin), TreeWidgetCmd,
-										(ClientData) tree, TreeCmdDeletedProc);
+										static_cast<ClientData>(tree), TreeCmdDeletedProc);
 	tree->optionTable			= optionTable;
 	tree->relief				= TK_RELIEF_SUNKEN;
 	tree->prevWidth				= Tk_Width(tkwin);
@@ -448,7 +448,7 @@ TreeObjCmd(
 	if (i < objc)
 		args[argc++] = objv[i];
 	Tk_SetClass(tkwin, classname);
-	Tk_SetClassProcs(tkwin, &treectrlClass, (ClientData) tree);
+	Tk_SetClassProcs(tkwin, &treectrlClass, static_cast<ClientData>(tree));
 
 	tree->debug.optionTable = Tk_CreateOptionTable(interp, debugSpecs);
 	(void) Tk_InitOptions(interp, (char *) tree, tree->debug.optionTable,
@@ -481,7 +481,7 @@ TreeObjCmd(
 #else
 			ExposureMask|StructureNotifyMask|FocusChangeMask|ActivateMask,
 #endif
-			TreeEventProc, (ClientData) tree);
+			TreeEventProc, static_cast<ClientData>(tree));
 
 	/* Must do this on Unix because Tk_GCForColor() uses
 	 * Tk_WindowId(tree->tkwin) */
@@ -494,7 +494,7 @@ TreeObjCmd(
 	 * Keep a hold of the associated tkwin until we destroy the listbox,
 	 * otherwise Tk might free it while we still need it.
 	 */
-	Tcl_Preserve((ClientData) tkwin);
+	Tcl_Preserve(static_cast<ClientData>(tkwin));
 
 	if (Tk_InitOptions(interp, (char *) tree, optionTable, tkwin) != TCL_OK) {
 		Tk_DestroyWindow(tree->tkwin);
@@ -619,7 +619,7 @@ static int TreeWidgetCmd(
 		return TCL_ERROR;
 	}
 
-	Tcl_Preserve((ClientData) tree);
+	Tcl_Preserve(static_cast<ClientData>(tree));
 	Tree_PreserveItems(tree);
 
 	switch (index) {
@@ -1197,12 +1197,12 @@ static int TreeWidgetCmd(
 		}
 	}
 	Tree_ReleaseItems(tree);
-	Tcl_Release((ClientData) tree);
+	Tcl_Release(static_cast<ClientData>(tree));
 	return result;
 
 error:
 	Tree_ReleaseItems(tree);
-	Tcl_Release((ClientData) tree);
+	Tcl_Release(static_cast<ClientData>(tree));
 	return TCL_ERROR;
 }
 
@@ -1703,7 +1703,7 @@ TreeEventProc(
 			if (!tree->deleted) {
 				tree->deleted = 1;
 				Tcl_DeleteCommandFromToken(tree->interp, tree->widgetCmd);
-				Tcl_EventuallyFree((ClientData) tree, TreeDestroy);
+				Tcl_EventuallyFree(static_cast<ClientData>(tree), TreeDestroy);
 			}
 			break;
 #ifdef USE_TTK
@@ -1892,20 +1892,20 @@ Tree_UpdateScrollbarX(
 	if (tree->xScrollCmd == NULL)
 		return;
 
-	Tcl_Preserve((ClientData) interp);
-	Tcl_Preserve((ClientData) tree);
+	Tcl_Preserve(static_cast<ClientData>(interp));
+	Tcl_Preserve(static_cast<ClientData>(tree));
 
 	xScrollCmd = tree->xScrollCmd;
-	Tcl_Preserve((ClientData) xScrollCmd);
+	Tcl_Preserve(static_cast<ClientData>(xScrollCmd));
 	sprintf(buffer, "%g %g", fractions[0], fractions[1]);
 	result = Tcl_VarEval(interp, xScrollCmd, " ", buffer, (char *) NULL);
 	if (result != TCL_OK)
 		Tcl_BackgroundError(interp);
 	Tcl_ResetResult(interp);
-	Tcl_Release((ClientData) xScrollCmd);
+	Tcl_Release(static_cast<ClientData>(xScrollCmd));
 
-	Tcl_Release((ClientData) tree);
-	Tcl_Release((ClientData) interp);
+	Tcl_Release(static_cast<ClientData>(tree));
+	Tcl_Release(static_cast<ClientData>(interp));
 }
 
 /*
@@ -1948,20 +1948,20 @@ Tree_UpdateScrollbarY(
 	if (tree->yScrollCmd == NULL)
 		return;
 
-	Tcl_Preserve((ClientData) interp);
-	Tcl_Preserve((ClientData) tree);
+	Tcl_Preserve(static_cast<ClientData>(interp));
+	Tcl_Preserve(static_cast<ClientData>(tree));
 
 	yScrollCmd = tree->yScrollCmd;
-	Tcl_Preserve((ClientData) yScrollCmd);
+	Tcl_Preserve(static_cast<ClientData>(yScrollCmd));
 	sprintf(buffer, "%g %g", fractions[0], fractions[1]);
 	result = Tcl_VarEval(interp, yScrollCmd, " ", buffer, (char *) NULL);
 	if (result != TCL_OK)
 		Tcl_BackgroundError(interp);
 	Tcl_ResetResult(interp);
-	Tcl_Release((ClientData) yScrollCmd);
+	Tcl_Release(static_cast<ClientData>(yScrollCmd));
 
-	Tcl_Release((ClientData) tree);
-	Tcl_Release((ClientData) interp);
+	Tcl_Release(static_cast<ClientData>(tree));
+	Tcl_Release(static_cast<ClientData>(interp));
 }
 
 /*
@@ -2148,7 +2148,7 @@ Tree_GetImage(
 	hPtr = Tcl_CreateHashEntry(&tree->imageNameHash, imageName, &isNew);
 	if (isNew) {
 		image = Tk_GetImage(tree->interp, tree->tkwin, imageName,
-				ImageChangedProc, (ClientData) tree);
+				ImageChangedProc, static_cast<ClientData>(tree));
 		if (image == NULL) {
 			Tcl_DeleteHashEntry(hPtr);
 			return NULL;

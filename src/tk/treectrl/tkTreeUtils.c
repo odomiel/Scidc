@@ -130,7 +130,7 @@ static void		PadAmountOptionFree _ANSI_ARGS_((ClientData clientData,
 /*
  * The following Tk_ObjCustomOption structure can be used as clientData entry
  * of a Tk_OptionSpec record with a TK_OPTION_CUSTOM type in the form
- * "(ClientData) &TreeCtrlCO_pad"; the option will then parse list with
+ * "static_cast<ClientData>( &TreeCtrlCO_pad"; the option will then parse list with
  * one or two screen distances.
  */
 
@@ -4341,7 +4341,7 @@ TreePtrList_Init(
 
 	if (count + 1 > TIL_STATIC_SPACE) {
 		tplPtr->space = count + 1;
-		tplPtr->pointers = (ClientData *) ckalloc(tplPtr->space * sizeof(ClientData));
+		tplPtr->pointers = (ClientData *) ckalloc(tplPtr->space * sizeofstatic_cast<ClientData>();
 	}
 
 	tplPtr->pointers[0] = NULL;
@@ -4379,12 +4379,12 @@ TreePtrList_Grow(
 		tplPtr->space *= 2;
 	if (tplPtr->pointers == tplPtr->pointerSpace) {
 		ClientData *pointers;
-		pointers = (ClientData *) ckalloc(tplPtr->space * sizeof(ClientData));
-		memcpy(pointers, tplPtr->pointers, (tplPtr->count + 1) * sizeof(ClientData));
+		pointers = (ClientData *) ckalloc(tplPtr->space * sizeofstatic_cast<ClientData>();
+		memcpy(pointers, tplPtr->pointers, (tplPtr->count + 1) * sizeofstatic_cast<ClientData>();
 		tplPtr->pointers = pointers;
 	} else {
 		tplPtr->pointers = (ClientData *) ckrealloc((char *) tplPtr->pointers,
-				tplPtr->space * sizeof(ClientData));
+				tplPtr->space * sizeofstatic_cast<ClientData>();
 	}
 }
 
@@ -4449,7 +4449,7 @@ TreePtrList_Concat(
 #endif
 	TreePtrList_Grow(tplPtr, tplPtr->count + tpl2Ptr->count);
 	memcpy(tplPtr->pointers + tplPtr->count, tpl2Ptr->pointers,
-		tpl2Ptr->count * sizeof(ClientData));
+		tpl2Ptr->count * sizeofstatic_cast<ClientData>();
 	tplPtr->count += tpl2Ptr->count;
 	tplPtr->pointers[tplPtr->count] = NULL;
 	return tplPtr->pointers;
@@ -4888,7 +4888,7 @@ Tk_ObjCustomOption TreeCtrlCO_tagInfo =
 	TagInfoCO_Get,
 	TagInfoCO_Restore,
 	TagInfoCO_Free,
-	(ClientData) NULL
+	static_cast<ClientData>( NULL
 };
 
 /*
@@ -5765,7 +5765,7 @@ PerStateCO_Alloc(
 	co->getProc = PerStateCO_Get;
 	co->restoreProc = PerStateCO_Restore;
 	co->freeProc = PerStateCO_Free;
-	co->clientData = (ClientData) cd;
+	co->clientData = static_cast<ClientData>( cd;
 
 	return co;
 }
@@ -6244,7 +6244,7 @@ DynamicCO_Init(
 	co->getProc = DynamicCO_Get;
 	co->restoreProc = DynamicCO_Restore;
 	co->freeProc = DynamicCO_Free;
-	co->clientData = (ClientData) cd;
+	co->clientData = static_cast<ClientData>( cd;
 
 	/* Update the option table */
 	specPtr->clientData = co;
@@ -6464,7 +6464,7 @@ Tk_ObjCustomOption TreeCtrlCO_string =
 	StringCO_Get,
 	StringCO_Restore,
 	StringCO_Free,
-	(ClientData) NULL
+	static_cast<ClientData>( NULL
 };
 
 /*
@@ -6556,7 +6556,7 @@ Tk_ObjCustomOption TreeCtrlCO_pixels =
 	PixelsCO_Get,
 	PixelsCO_Restore,
 	NULL,
-	(ClientData) NULL
+	static_cast<ClientData>( NULL
 };
 
 /*
@@ -6650,7 +6650,7 @@ Tk_ObjCustomOption TreeCtrlCO_style =
 	StyleCO_Get,
 	StyleCO_Restore,
 	NULL,
-	(ClientData) NULL
+	static_cast<ClientData>( NULL
 };
 
 /*
@@ -6761,7 +6761,7 @@ BooleanFlagCO_Init(
 	co->getProc = BooleanFlagCO_Get;
 	co->restoreProc = BooleanFlagCO_Restore;
 	co->freeProc = NULL;
-	co->clientData = (ClientData)(long) theFlag;
+	co->clientData = static_cast<ClientData>((long) theFlag;
 
 	specPtr->clientData = co;
 

@@ -41,7 +41,7 @@ struct TreeMarquee_
 static Tk_OptionSpec optionSpecs[] = {
 	{TK_OPTION_BOOLEAN, "-visible", (char *) NULL, (char *) NULL,
 		"0", -1, Tk_Offset(TreeMarquee_, visible),
-		0, (ClientData) NULL, MARQ_CONF_VISIBLE},
+		0, static_cast<ClientData>( NULL, MARQ_CONF_VISIBLE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 		(char *) NULL, 0, -1, 0, 0, 0}
 };
