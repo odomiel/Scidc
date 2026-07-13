@@ -6,9 +6,14 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den 4 Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.07.13
+
+- **b1** – Modernisierung: Phase 6 – Einfache tkCompat-Wrapper durch öffentliche Tk 8.6 Makros ersetzt
+
 ## 26.07.12
 
-- **b12** – Modernisierung: Phase 3.1 – Alle direkten Tk-Strukturzugriffe in tk_busy.cpp durch Kompatibilitäts-Wrapper ersetzt
+- **b12** – Modernisierung: Phase 5 – tk_compat.h in alle Dateien mit tkInt.h integriert
+- **b11** – Modernisierung: Phase 3.1 – Alle direkten Tk-Strukturzugriffe in tk_busy.cpp durch Kompatibilitäts-Wrapper ersetzt
 - **b11** – Modernisierung: Phase 3 – Direkte TkWindow-Strukturzugriffe in tk_base.cpp und tk_fixes.cpp durch tkCompat-Wrapper ersetzt
 - **b10** – Modernisierung: Skript update-version.sh korrigiert (generische Patterns statt hardcoded Versionen)
 - **b9** – Modernisierung: Skript update-version.sh zur automatischen Versionssynchronisation hinzugefügt
