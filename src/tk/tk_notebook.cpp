@@ -244,11 +244,11 @@ static const Tk_OptionSpec optionSpecs[] =
 {
    {TK_OPTION_BORDER, "-background", "background", "Background",
 	 DEF_NOTEBOOK_BG_COLOR, -1, Tk_Offset(Notebook, background),
-	 0, (ClientData)DEF_NOTEBOOK_BG_MONO},
+	 0, static_cast<ClientData>(DEF_NOTEBOOK_BG_MONO)},
    {TK_OPTION_SYNONYM, "-bd", nullptr, nullptr,
-	 nullptr, 0, -1, 0, (ClientData) "-borderwidth"},
+	 nullptr, 0, -1, 0, static_cast<ClientData>("-borderwidth")},
    {TK_OPTION_SYNONYM, "-bg", nullptr, nullptr,
-	 nullptr, 0, -1, 0, (ClientData) "-background"},
+	 nullptr, 0, -1, 0, static_cast<ClientData>("-background")},
    {TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth",
 	 DEF_NOTEBOOK_BORDERWIDTH, -1, Tk_Offset(Notebook, borderWidth),
 	 0, 0, GEOMETRY},
@@ -273,14 +273,14 @@ static const Tk_OptionSpec optionSpecs[] =
 	 0, 0, 0},
 	{TK_OPTION_CUSTOM, "-padding", "padding", "Padding", "0",
 	 -1, Tk_Offset(Notebook, padding), 0,
-	 (ClientData)&paddingOption, GEOMETRY },
+	 static_cast<ClientData>(&paddingOption), GEOMETRY },
    {TK_OPTION_RELIEF, "-relief", "relief", "Relief",
 	 DEF_NOTEBOOK_RELIEF, -1, Tk_Offset(Notebook, relief), 0, 0, 0},
 	{TK_OPTION_STRING_TABLE, "-state", "", "",
 	 "normal", -1, Tk_Offset(Notebook, state), 0, ClientData(stateStrings), 0 },
    {TK_OPTION_BORDER, "-tabbackground", "tabBackground", "TabBackground",
 	 DEF_NOTEBOOK_TAB_BG_COLOR, -1, Tk_Offset(Notebook, tabBackground),
-	 0, (ClientData)DEF_NOTEBOOK_BG_MONO},
+	 0, static_cast<ClientData>(DEF_NOTEBOOK_BG_MONO)},
    {TK_OPTION_PIXELS, "-width", "width", "Width",
 	 DEF_NOTEBOOK_WIDTH, Tk_Offset(Notebook, widthObj),
 	 Tk_Offset(Notebook, width), TK_OPTION_NULL_OK, 0, GEOMETRY},
@@ -315,10 +315,10 @@ static const Tk_OptionSpec paneOptionSpecs[] =
 	 Tk_Offset(Slave, minheight), TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_CUSTOM, "-padding", nullptr, nullptr, "2 2 2 2",
 	 -1, Tk_Offset(Slave, padding), 0,
-	 (ClientData)&paddingOption, GEOMETRY },
+	 static_cast<ClientData>(&paddingOption), GEOMETRY },
    {TK_OPTION_CUSTOM, "-sticky", nullptr, nullptr,
 	 DEF_NOTEBOOK_PANE_STICKY, -1, Tk_Offset(Slave, sticky), 0,
-	 (ClientData)&stickyOption, GEOMETRY },
+	 static_cast<ClientData>(&stickyOption), GEOMETRY },
 	{TK_OPTION_STRING, "-text", nullptr, nullptr, "",
 	 Tk_Offset(Slave,textObj), -1, 0, 0, GEOMETRY },
 	{TK_OPTION_INT, "-underline", nullptr, nullptr,
@@ -882,7 +882,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 	if (nb->currentIndex == -1)
 		return;
 
-	Tcl_Preserve((ClientData)nb);
+	Tcl_Preserve(static_cast<ClientData>(nb));
 	LayoutTabs(nb);
 
 	slave = nb->slaves[nb->currentIndex];
@@ -909,7 +909,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 		Tk_MaintainGeometry(slave->tkwin, nb->tkwin, slaveX, slaveY, slaveWidth, slaveHeight);
 	}
 
-	Tcl_Release((ClientData)nb);
+	Tcl_Release(static_cast<ClientData>(nb));
 }
 
 
