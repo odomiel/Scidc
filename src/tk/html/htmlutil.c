@@ -46,7 +46,7 @@ struct InstData {
 };
 
 struct InstGlobal {
-    void (*xCall)(ClientData, int, void (*)(ClientData), ClientData);
+    void (*xCall)(ClientData, int, void (*)static_cast<ClientData>(, ClientData);
 
     /* List of all dynamic InstCommand commands */
     InstCommand *pGlobal;
@@ -87,7 +87,7 @@ updateInstData(InstGlobal *pGlobal, InstCommand *p, int iClicks)
 }
 
 void *
-HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)(ClientData), ClientData clientData)
+HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)static_cast<ClientData>(, ClientData clientData)
 {
     InstGlobal *pGlobal = (InstGlobal *)pClientData;
     InstCommand *p = &pGlobal->aCommand[iCall];
@@ -113,7 +113,7 @@ HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)(ClientData
 }
 
 void
-HtmlInstrumentCall(ClientData pClientData, int iCall, void (*xFunc)(ClientData), ClientData clientData)
+HtmlInstrumentCall(ClientData pClientData, int iCall, void (*xFunc)static_cast<ClientData>(, ClientData clientData)
 {
     InstGlobal *pGlobal = (InstGlobal *)pClientData;
     InstCommand *p = &pGlobal->aCommand[iCall];
@@ -391,7 +391,7 @@ HtmlInstrumentInit(Tcl_Interp *interp)
 
     Tcl_InitHashTable(&p->aVector, sizeof(InstVector)/sizeof(int));
     Tcl_CreateObjCommand(interp,
-        "::tkhtml::instrument", instrument_objcmd, (ClientData)p, instDelCommand
+        "::tkhtml::instrument", instrument_objcmd, static_cast<ClientData>(p, instDelCommand
     );
 }
 

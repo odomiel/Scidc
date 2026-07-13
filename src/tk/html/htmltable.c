@@ -1271,7 +1271,7 @@ tableIterate(
     memset(&sRowContext, 0, sizeof(RowIterateContext));
     sRowContext.xRowCallback = xRowCallback;
     sRowContext.xCallback  = xCallback;
-    sRowContext.clientData = (ClientData)pContext;
+    sRowContext.clientData = static_cast<ClientData>(pContext;
 
     /* Search for the table header and footer blocks. */
     for (ii = 0; ii < HtmlNodeNumChildren(pNode); ii++) {
