@@ -149,7 +149,7 @@ EatGrabEvents(
     info.display = tkCompat::getDisplayFromDisp(dispPtr);
     info.serial = serial;
     Sync(info.display);
-    oldProc = Tk_RestrictEvents(GrabRestrictProc, (ClientData)&info, &oldArg);
+    oldProc = Tk_RestrictEvents(GrabRestrictProc, static_cast<ClientData>(&info), &oldArg);
     while (Tcl_ServiceEvent(TCL_WINDOW_EVENTS)) {
     }
     Tk_RestrictEvents(oldProc, oldArg, &dummy);

@@ -189,11 +189,11 @@ static const Tk_OptionSpec optionSpecs[] =
 {
     {TK_OPTION_BORDER, "-background", "background", "Background",
 	 DEF_MULTIWINDOW_BG_COLOR, -1, Tk_Offset(MultiWindow, background),
-	 0, (ClientData)DEF_MULTIWINDOW_BG_MONO},
+	 0, static_cast<ClientData>(DEF_MULTIWINDOW_BG_MONO)},
     {TK_OPTION_SYNONYM, "-bd", nullptr, nullptr,
-	 nullptr, 0, -1, 0, (ClientData) "-borderwidth"},
+	 nullptr, 0, -1, 0, static_cast<ClientData>("-borderwidth")},
     {TK_OPTION_SYNONYM, "-bg", nullptr, nullptr,
-	 nullptr, 0, -1, 0, (ClientData) "-background"},
+	 nullptr, 0, -1, 0, static_cast<ClientData>("-background")},
     {TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth",
 	 DEF_MULTIWINDOW_BORDERWIDTH, -1, Tk_Offset(MultiWindow, borderWidth),
 	 0, 0, GEOMETRY},
@@ -249,7 +249,7 @@ static const Tk_OptionSpec slaveOptionSpecs[] =
 	 DEF_MULTIWINDOW_PANE_PADY, -1, Tk_Offset(Slave, pady), 0, 0, 0},
     {TK_OPTION_CUSTOM, "-sticky", nullptr, nullptr,
 	 DEF_MULTIWINDOW_PANE_STICKY, -1, Tk_Offset(Slave, sticky), 0,
-	 (ClientData) &stickyOption, 0},
+	 static_cast<ClientData>(&stickyOption), 0},
     {TK_OPTION_PIXELS, "-width", nullptr, nullptr,
 	 DEF_MULTIWINDOW_PANE_WIDTH, Tk_Offset(Slave, widthObj),
 	 Tk_Offset(Slave, width), TK_OPTION_NULL_OK, 0, 0},
@@ -623,7 +623,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 	if (!HaveUnhiddenSlave(mw))
 		return;
 
-	Tcl_Preserve((ClientData)mw);
+	Tcl_Preserve(static_cast<ClientData>(mw));
 
 	slave = mw->slaves[0];
 	doubleBw = 2*Tk_Changes(slave->tkwin)->border_width;
@@ -649,7 +649,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 		Tk_MaintainGeometry(slave->tkwin, mw->tkwin, slaveX, slaveY, width, height);
 	}
 
-	Tcl_Release((ClientData)mw);
+	Tcl_Release(static_cast<ClientData>(mw));
 }
 
 
@@ -882,7 +882,7 @@ ComputeGeometry(MultiWindow* mw)		// Pointer to the Multi Window structure
 	if (Tk_IsMapped(mw->tkwin) && !(mw->flags & REDRAW_PENDING))
 	{
 		mw->flags |= REDRAW_PENDING;
-		Tcl_DoWhenIdle(DisplayMultiWindow, (ClientData)mw);
+		Tcl_DoWhenIdle(DisplayMultiWindow, static_cast<ClientData>(mw));
 	}
 }
 
@@ -937,7 +937,7 @@ Unlink(Slave* slave)		// Window to unlink
 	if (Tk_IsMapped(mw->tkwin) && !(mw->flags & REDRAW_PENDING))
 	{
 		mw->flags |= REDRAW_PENDING;
-		Tcl_DoWhenIdle(DisplayMultiWindow, (ClientData)mw);
+		Tcl_DoWhenIdle(DisplayMultiWindow, static_cast<ClientData>(mw));
 	}
 
 	// Set the slave's master to nullptr, so that we can tell that the slave
