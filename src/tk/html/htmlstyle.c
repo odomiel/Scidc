@@ -693,7 +693,7 @@ HtmlStyleApply(HtmlTree *pTree, HtmlNode *pNode)
 {
     int isRoot = ((pNode == pTree->pRoot) ? 1 : 0);
     HtmlLog(pTree, "STYLEENGINE", "START");
-    HtmlWalkTree(pTree, pNode, styleNode, static_cast<ClientData>(((intptr_t)isRoot));
+    HtmlWalkTree(pTree, pNode, styleNode, (ClientData)(((intptr_t)isRoot));
     return TCL_OK;
 }
 
@@ -715,7 +715,7 @@ HtmlStyleApplyImmediately(HtmlTree *pTree, HtmlNode *pNode)
 {
     int isRoot = ((pNode == pTree->pRoot) ? 1 : 0);
     HtmlLog(pTree, "STYLEENGINE", "START");
-    HtmlWalkTree(pTree, pNode, styleNodeImmediately, static_cast<ClientData>(((intptr_t)isRoot));
+    HtmlWalkTree(pTree, pNode, styleNodeImmediately, (ClientData)(((intptr_t)isRoot));
     return TCL_OK;
 }
 

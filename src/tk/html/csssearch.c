@@ -251,7 +251,7 @@ HtmlCssSearch(
         sSearch.pTree = pTree;
         sSearch.pSearchRoot = pSearchRoot;
         sSearch.pCache = HtmlNew(CssCachedSearch);
-        HtmlWalkTree(pTree, pSearchRoot, cssSearchCb, static_cast<ClientData>(&sSearch);
+        HtmlWalkTree(pTree, pSearchRoot, cssSearchCb, (ClientData)&sSearch);
         pCache = sSearch.pCache;
         HtmlCssStyleSheetFree(pStyle);
         HtmlFree(z);
