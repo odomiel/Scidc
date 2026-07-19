@@ -647,10 +647,10 @@ uriObjCmd(
             pNew = objToUri(pObj);
             Tcl_DecrRefCount(pObj);
             Tcl_GetCommandInfo(interp, Tcl_GetString(objv[0]), &info);
-            assert(info.objClientData == static_cast<ClientData>(p);
-            assert(info.deleteData == static_cast<ClientData>(p);
-            info.objClientData = static_cast<ClientData>(pNew);
-            info.deleteData = static_cast<ClientData>(pNew);
+            assert(info.objClientData == (ClientData)(p);
+            assert(info.deleteData == (ClientData)(p);
+            info.objClientData = (ClientData)(pNew);
+            info.deleteData = (ClientData)(pNew);
             Tcl_SetCommandInfo(interp, Tcl_GetString(objv[0]), &info);
             HtmlFree(p);
             break;

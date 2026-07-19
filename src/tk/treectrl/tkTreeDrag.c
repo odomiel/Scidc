@@ -67,11 +67,11 @@ static Tk_OptionSpec optionSpecs[] = {
 #ifdef DRAGIMAGE_STYLE
 	{TK_OPTION_CUSTOM, "-style", (char *) NULL, (char *) NULL,
 		(char *) NULL, -1, Tk_Offset(TreeDragImage_, masterStyle),
-		TK_OPTION_NULL_OK, static_cast<ClientData>( &TreeCtrlCO_style, 0},
+		TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_style, 0},
 #endif /* DRAGIMAGE_STYLE */
 	{TK_OPTION_BOOLEAN, "-visible", (char *) NULL, (char *) NULL,
 		"0", -1, Tk_Offset(TreeDragImage_, visible),
-		0, static_cast<ClientData>( NULL, DRAG_CONF_VISIBLE},
+		0, (ClientData)( NULL, DRAG_CONF_VISIBLE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 		(char *) NULL, 0, -1, 0, 0, 0}
 };
@@ -116,7 +116,7 @@ UpdateImage(
     XDestroyImage(ximage);
 
     dragImage->image = Tk_GetImage(tree->interp, tree->tkwin,
-	"::TreeCtrl::ImageDrag", NULL, static_cast<ClientData>( NULL);
+	"::TreeCtrl::ImageDrag", NULL, (ClientData)( NULL);
 }
 
 static void
@@ -251,7 +251,7 @@ DragImage_UpdateStyleTkImage(
     XDestroyImage(ximage);
 
     dragImage->tkimage = Tk_GetImage(tree->interp, tree->tkwin,
-	"::TreeCtrl::ImageDrag", NULL, static_cast<ClientData>( NULL);
+	"::TreeCtrl::ImageDrag", NULL, (ClientData)( NULL);
 }
 
 static void

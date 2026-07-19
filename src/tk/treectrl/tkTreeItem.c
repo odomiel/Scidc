@@ -99,19 +99,19 @@ static CONST char *ItemUid = "Item", *ItemColumnUid = "ItemColumn";
 static Tk_OptionSpec itemOptionSpecs[] = {
 	{TK_OPTION_CUSTOM, "-button", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeItem_, flags),
-	 0, static_cast<ClientData>( NULL, ITEM_CONF_BUTTON},
+	 0, (ClientData)( NULL, ITEM_CONF_BUTTON},
 	{TK_OPTION_PIXELS, "-height", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeItem_, fixedHeight),
-	 TK_OPTION_NULL_OK, static_cast<ClientData>( NULL, ITEM_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, ITEM_CONF_SIZE},
 	{TK_OPTION_CUSTOM, "-tags", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeItem_, tagInfo),
-	 TK_OPTION_NULL_OK, static_cast<ClientData>( &TreeCtrlCO_tagInfo, 0},
+	 TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_tagInfo, 0},
 	{TK_OPTION_CUSTOM, "-visible", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeItem_, flags),
-	 0, static_cast<ClientData>( NULL, ITEM_CONF_VISIBLE},
+	 0, (ClientData)( NULL, ITEM_CONF_VISIBLE},
 	{TK_OPTION_CUSTOM, "-wrap", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeItem_, flags),
-	 0, static_cast<ClientData>( NULL, ITEM_CONF_WRAP},
+	 0, (ClientData)( NULL, ITEM_CONF_WRAP},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	 (char *) NULL, 0, -1, 0, 0, 0}
 };
@@ -3908,7 +3908,7 @@ TreeItem_SpansRedoIfNeeded(
 		Tcl_HashEntry *hPtr;
 
 		hPtr = Tcl_CreateHashEntry(&tree->itemSpansHash, (char *) item, &isNew);
-		Tcl_SetHashValue(hPtr, static_cast<ClientData>( item);
+		Tcl_SetHashValue(hPtr, (ClientData)( item);
 		item->flags |= ITEM_FLAG_SPANS_VALID;
 	}
 }
@@ -4254,7 +4254,7 @@ TreeItem_Draw(
 
 	TreeItem_WalkSpans(tree, item, lock,
 			x, y, width, height,
-			SpanWalkProc_Draw, static_cast<ClientData>( &clientData);
+			SpanWalkProc_Draw, (ClientData)( &clientData);
 }
 
 /*
@@ -4594,7 +4594,7 @@ TreeItem_UpdateWindowPositions(
 {
 	TreeItem_WalkSpans(tree, item, lock,
 			x, y, width, height,
-			SpanWalkProc_UpdateWindowPositions, static_cast<ClientData>( NULL);
+			SpanWalkProc_UpdateWindowPositions, (ClientData)( NULL);
 }
 
 /*
@@ -8550,7 +8550,7 @@ TreeItem_Identify(
 
 	TreeItem_WalkSpans(tree, item, lock,
 			0, 0, width, height,
-			SpanWalkProc_Identify, static_cast<ClientData>( &clientData);
+			SpanWalkProc_Identify, (ClientData)( &clientData);
 }
 
 /*
@@ -8650,7 +8650,7 @@ TreeItem_Identify2(
 
 	TreeItem_WalkSpans(tree, item, COLUMN_LOCK_NONE,
 			left, top, width, height,
-			SpanWalkProc_Identify2, static_cast<ClientData>( &clientData);
+			SpanWalkProc_Identify2, (ClientData)( &clientData);
 }
 
 /*
@@ -8790,7 +8790,7 @@ TreeItem_GetRects(
 
 	TreeItem_WalkSpans(tree, item, lock,
 			left, top, width, height,
-			SpanWalkProc_GetRects, static_cast<ClientData>( &clientData);
+			SpanWalkProc_GetRects, (ClientData)( &clientData);
 
 	return clientData.result;
 }

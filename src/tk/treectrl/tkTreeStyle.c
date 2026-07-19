@@ -146,9 +146,9 @@ static char *orientStringTable[] = { "horizontal", "vertical", (char *) NULL };
 static Tk_OptionSpec styleOptionSpecs[] = {
 	{TK_OPTION_STRING_TABLE, "-orient", (char *) NULL, (char *) NULL,
 		"horizontal", -1, Tk_Offset(MStyle, vertical),
-		0, static_cast<ClientData>( orientStringTable, 0},
+		0, (ClientData)( orientStringTable, 0},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-		(char *) NULL, 0, -1, 0, static_cast<ClientData>( NULL, 0}
+		(char *) NULL, 0, -1, 0, (ClientData)( NULL, 0}
 };
 
 /*

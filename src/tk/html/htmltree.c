@@ -170,7 +170,7 @@ geomRequestProc(ClientData clientData, Tk_Window widget)
     if (!pTree->cb.inProgress) {
         HtmlCallbackLayout(pTree, pNode);
     } else {
-        Tcl_DoWhenIdle(geomRequestProcCb, static_cast<ClientData>(pNode);
+        Tcl_DoWhenIdle(geomRequestProcCb, (ClientData)(pNode);
     }
 }
 
@@ -182,7 +182,7 @@ clearReplacement(HtmlTree *pTree, HtmlElementNode *pElem)
     if (p) {
 
         /* Cancel any idle callback scheduled by geomRequestProc() */
-        Tcl_CancelIdleCall(geomRequestProcCb, static_cast<ClientData>(pElem);
+        Tcl_CancelIdleCall(geomRequestProcCb, (ClientData)(pElem);
 
         /* If there is a delete script, invoke it now. */
         if (p->pDelete) {

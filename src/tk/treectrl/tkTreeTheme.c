@@ -990,7 +990,7 @@ int TreeTheme_InitInterp(Tcl_Interp *interp)
 
 	data = (PerInterpData *) ckalloc(sizeof(PerInterpData));
 	data->hwnd = hwnd;
-	Tcl_SetAssocData(interp, "TreeCtrlTheme", FreeAssocData, static_cast<ClientData>( data);
+	Tcl_SetAssocData(interp, "TreeCtrlTheme", FreeAssocData, (ClientData)( data);
 
 	return TCL_OK;
 }
