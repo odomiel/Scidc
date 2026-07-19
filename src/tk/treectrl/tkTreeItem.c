@@ -141,7 +141,7 @@ Column_Alloc(
 	Column *column = (Column *) TreeAlloc_Alloc(tree->allocData, ItemColumnUid,
 			sizeof(Column));
 #else
-	Column *column = (Column *) ckalloc(sizeof(Column));
+	Column *column = (Column *) Tcl_Alloc(sizeof(Column));
 #endif
 	memset(column, '\0', sizeof(Column));
 	column->span = 1;
@@ -610,7 +610,7 @@ Item_Alloc(
 #ifdef ALLOC_HAX
 	TreeItem item = (TreeItem) TreeAlloc_Alloc(tree->allocData, ItemUid, sizeof(TreeItem_));
 #else
-	TreeItem item = (TreeItem) ckalloc(sizeof(TreeItem_));
+	TreeItem item = (TreeItem) Tcl_Alloc(sizeof(TreeItem_));
 #endif
 	memset(item, '\0', sizeof(TreeItem_));
 	if (Tk_InitOptions(tree->interp, (char *) item,
@@ -3314,7 +3314,7 @@ TreeItem_FreeResources(
 	if (item->rInfo != NULL)
 		Tree_FreeItemRInfo(tree, item);
 	if (item->spans != NULL)
-		ckfree((char *) item->spans);
+		Tcl_Free((char *) item->spans);
 	Tk_FreeConfigOptions((char *) item, tree->itemOptionTable, tree->tkwin);
 
 	/* Add the item record to the "preserved" list. It will be freed later. */
@@ -3834,10 +3834,10 @@ TreeItem_SpansRedo(
 		dbwin("TreeItem_SpansRedo item %d\n", item->id);
 
 	if (item->spans == NULL) {
-		item->spans = (int *) ckalloc(sizeof(int) * tree->columnCount);
+		item->spans = (int *) Tcl_Alloc(sizeof(int) * tree->columnCount);
 		item->spanAlloc = tree->columnCount;
 	} else if (item->spanAlloc < tree->columnCount) {
-		item->spans = (int *) ckrealloc((char *) item->spans,
+		item->spans = (int *) Tcl_Realloc((char *) item->spans,
 				sizeof(int) * tree->columnCount);
 		item->spanAlloc = tree->columnCount;
 	}
@@ -6532,8 +6532,8 @@ ItemSortCmd(
 	}
 	count = indexL - indexF + 1;
 
-	sortData.item1s = (struct SortItem1 *) ckalloc(sizeof(struct SortItem1) * count * sortData.columnCount);
-	sortData.items = (struct SortItem *) ckalloc(sizeof(struct SortItem) * count);
+	sortData.item1s = (struct SortItem1 *) Tcl_Alloc(sizeof(struct SortItem1) * count * sortData.columnCount);
+	sortData.items = (struct SortItem *) Tcl_Alloc(sizeof(struct SortItem) * count);
 	for (i = 0; i < count; i++) {
 		sortData.items[i].item1 = sortData.item1s + i * sortData.columnCount;
 		sortData.items[i].obj = NULL;
@@ -6718,8 +6718,8 @@ ItemSortCmd(
 			Tcl_DecrRefCount(sortData.columns[i].command);
 		}
 	}
-	ckfree((char *) sortData.item1s);
-	ckfree((char *) sortData.items);
+	Tcl_Free((char *) sortData.item1s);
+	Tcl_Free((char *) sortData.items);
 
 	if (tree->debug.enable && tree->debug.data) {
 		Tree_Debug(tree);
@@ -7100,7 +7100,7 @@ ItemTagCmd(
 							Tcl_NewStringObj((char *) tags[i], -1));
 				}
 				Tcl_SetObjResult(interp, listObj);
-				ckfree((char *) tags);
+				Tcl_Free((char *) tags);
 			}
 			break;
 		}

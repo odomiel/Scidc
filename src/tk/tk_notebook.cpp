@@ -1453,7 +1453,7 @@ SlaveStructureProc(	ClientData clientData,	// Pointer to record describing windo
 	{
 		Unlink(slave);
 		slave->tkwin = nullptr;
-		ckfree((char*)slave);
+		Tcl_Free((char*)slave);
 		ComputeGeometry(nb);
 	}
 }
@@ -1628,7 +1628,7 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 	// structures corresponding to the windows specified. Some of those
 	// structures may already have existed, some may be new.
 
-	inserts = (Slave**)ckalloc(sizeof(Slave*)*(firstOptionArg - 2));
+	inserts = (Slave**)Tcl_Alloc(sizeof(Slave*)*(firstOptionArg - 2));
 	insertIndex = 0;
 
 	// Populate the inserts array, creating new slave structures as necessary,
@@ -1692,7 +1692,7 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 			// Create a new slave structure and initialize it. All slaves start
 			// out with their "natural" dimensions.
 
-			Slave* slave = (Slave*)ckalloc(sizeof(Slave));
+			Slave* slave = (Slave*)Tcl_Alloc(sizeof(Slave));
 			memset(slave, 0, sizeof(Slave));
 			Tk_InitOptions(interp, (char *)slave, nb->paneOptions, nb->tkwin);
 			Tk_SetOptions(	interp,
@@ -1721,7 +1721,7 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 	// Allocate the new slaves array, then copy the slaves into it, in order.
 
 	i = sizeof(Slave*)*(nb->numSlaves + numNewSlaves);
-	newSlaves = (Slave**)ckalloc((unsigned)i);
+	newSlaves = (Slave**)Tcl_Alloc((unsigned)i);
 	memset(newSlaves, 0, (size_t)i);
 
 	if (index == -1)
@@ -1764,8 +1764,8 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 
 	// Make the new slaves array the notebook's slave array, and clean up.
 
-	ckfree((char*)nb->slaves);
-	ckfree((char*)inserts);
+	Tcl_Free((char*)nb->slaves);
+	Tcl_Free((char*)inserts);
 	nb->slaves = newSlaves;
 
 	// Set the notebook's slave count to the new value.
@@ -2346,12 +2346,12 @@ DestroyNotebook(Notebook* nb)		// Info about notebook widget
 										static_cast<ClientData>(nb->slaves[i]));
 		Tk_ManageGeometry(nb->slaves[i]->tkwin, nullptr, nullptr);
 		Tk_FreeConfigOptions((char*)nb->slaves[i], nb->paneOptions, nb->tkwin);
-		ckfree((char*)nb->slaves[i]);
+		Tcl_Free((char*)nb->slaves[i]);
 		nb->slaves[i] = nullptr;
 	}
 
 	if (nb->slaves)
-		ckfree((char*)nb->slaves);
+		Tcl_Free((char*)nb->slaves);
 
 	// Remove the widget command from the interpreter.
 	Tcl_DeleteCommandFromToken(nb->interp, nb->widgetCmd);
@@ -2470,7 +2470,7 @@ static void
 DestroyOptionTables(	ClientData clientData,	// Pointer to the OptionTables struct
 							Tcl_Interp* interp)		// Pointer to the calling interp
 {
-	ckfree((char*)clientData);
+	Tcl_Free((char*)clientData);
 }
 
 
@@ -2540,7 +2540,7 @@ NotebookLostSlaveProc(	ClientData clientData,	// Grid structure for slave window
 									static_cast<ClientData>(slave));
     Tk_UnmapWindow(slave->tkwin);
     slave->tkwin = nullptr;
-    ckfree((char*)slave);
+    Tcl_Free((char*)slave);
     ComputeGeometry(nb);
 }
 
@@ -2587,7 +2587,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 		// a pointer to the tables as the command's clinical so we'll have
 		// easy access to it in the future.
 
-		nbOptions = (OptionTables*)ckalloc(sizeof(OptionTables));
+		nbOptions = (OptionTables*)Tcl_Alloc(sizeof(OptionTables));
 
 		// Set up an exit handler to free the optionTables struct.
 		Tcl_SetAssocData(interp, "NotebookOptionTables", DestroyOptionTables, static_cast<ClientData>(nbOptions));
@@ -2600,7 +2600,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 	Tk_SetClass(tkwin, "Notebook");
 
 	// Allocate and initialize the widget record.
-	nb = (Notebook*)ckalloc(sizeof(Notebook));
+	nb = (Notebook*)Tcl_Alloc(sizeof(Notebook));
 	memset((void*)nb, 0, sizeof(Notebook));
 	nb->tkwin = tkwin;
 	nb->interp = interp;

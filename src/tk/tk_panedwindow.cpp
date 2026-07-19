@@ -37,8 +37,8 @@
 #include "tkInt.h"
 #include "tk_compat.h"
 
-# define malloc(size)	((void *) (ckalloc(size)))
-# define free(ptr)	ckfree((char *) (ptr))
+# define malloc(size)	((void *) (Tcl_Alloc(size)))
+# define free(ptr)	Tcl_Free((char *) (ptr))
 
 /*
  * Defaults for panedwindows

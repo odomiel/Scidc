@@ -9,7 +9,7 @@
  * restrack.c --
  *
  *     This file contains wrappers for functions that dynamically allocate
- *     and deallocate resources (for example ckalloc() and ckfree()). The
+ *     and deallocate resources (for example Tcl_Alloc() and Tcl_Free()). The
  *     purpose of this is to provide a built-in system for debugging
  *     problems with dynamic resource allocation and buffer-overruns.
  *
@@ -30,7 +30,7 @@
  *             This implements the [::tkhtml::heapdebug] command. See
  *             below for details.
  *
- *     No tkhtml code outside of this file should call ckalloc() and
+ *     No tkhtml code outside of this file should call Tcl_Alloc() and
  *     friends directly.
  *
  *     This code is not thread safe. It's only for debugging.
@@ -203,19 +203,19 @@ ResAlloc(ClientData v1, ClientData v2)
 
     pEntry = Tcl_CreateHashEntry(&aOutstanding, (const char *)key, &newentry);
     if (newentry) {
-        pRec = (ResRecord *)ckalloc(sizeof(ResRecord));
+        pRec = (ResRecord *)Tcl_Alloc(sizeof(ResRecord));
         memset(pRec, 0, sizeof(ResRecord));
         Tcl_SetHashValue(pEntry, pRec);
     } else {
         pRec = Tcl_GetHashValue(pEntry);
     }
 
-    aFrame = (int *)ckalloc(sizeof(int) * 30);
+    aFrame = (int *)Tcl_Alloc(sizeof(int) * 30);
     backtrace((void *)aFrame, 29);
     aFrame[29] = 0;
     pRec->nRef++;
     pRec->nStack++;
-    pRec->aStack = (int **)ckrealloc(
+    pRec->aStack = (int **)Tcl_Realloc(
             (char *)pRec->aStack,
             sizeof(int *) * pRec->nStack
     );
@@ -264,10 +264,10 @@ ResFree(ClientData v1, ClientData v2)
         ResRecord *pRec = (ResRecord *)Tcl_GetHashValue(pEntry);
 
         for (i = 0; i < pRec->nStack; i++) {
-            ckfree((char *)pRec->aStack[i]);
+            Tcl_Free((char *)pRec->aStack[i]);
         }
-       ckfree((char *)pRec->aStack);
-        ckfree((char *)pRec);
+       Tcl_Free((char *)pRec->aStack);
+        Tcl_Free((char *)pRec);
 
         Tcl_DeleteHashEntry(pEntry);
     }
@@ -410,7 +410,7 @@ insertMallocHash(
 
     pEntry = Tcl_CreateHashEntry(&aMalloc, zTopic, &isNewEntry);
     if (isNewEntry) {
-        aData = (int *)ckalloc(sizeof(int) * 2);
+        aData = (int *)Tcl_Alloc(sizeof(int) * 2);
         aData[0] = 1;
         aData[1] = nBytes;
         Tcl_SetHashValue(pEntry, aData);
@@ -464,7 +464,7 @@ freeMallocHash(
 
     if (aData[0] == 0) {
         Tcl_DeleteHashEntry(pEntryMalloc);
-       ckfree((char *)aData);
+       Tcl_Free((char *)aData);
     }
     Tcl_DeleteHashEntry(pEntryAllocationType);
 }
@@ -574,7 +574,7 @@ Rt_AllocCommand(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj * c
  *
  * Rt_Alloc --
  *
- *     A wrapper around ckalloc() for use by code outside of this file.
+ *     A wrapper around Tcl_Alloc() for use by code outside of this file.
  *
  * Results:
  *     None.
@@ -588,7 +588,7 @@ char *
 Rt_Alloc(const char *zTopic, int n)
 {
     int nAlloc = n + 4 * sizeof(int);
-    int *z = (int *)ckalloc(nAlloc);
+    int *z = (int *)Tcl_Alloc(nAlloc);
     char *zRet = (char *)&z[2];
     z[0] = 0xFED00FED;
     z[1] = n;
@@ -606,7 +606,7 @@ Rt_Alloc(const char *zTopic, int n)
  *
  * Rt_Free --
  *
- *     A wrapper around ckfree() for use by code outside of this file.
+ *     A wrapper around Tcl_Free() for use by code outside of this file.
  *
  * Results:
  *     None.
@@ -625,7 +625,7 @@ Rt_Free(char *p)
         assert(z[-2] == 0xFED00FED);
         assert(z[1 + n / sizeof(int)] == 0xBAD00BAD);
         memset(z, 0x55, n);
-        ckfree((char *)&z[-2]);
+        Tcl_Free((char *)&z[-2]);
         ResFree(RES_ALLOC, &z[-2]);
         freeMallocHash((char *)z, n);
     }
@@ -636,7 +636,7 @@ Rt_Free(char *p)
  *
  * Rt_Realloc --
  *
- *     A wrapper around ckrealloc() for use by code outside of this file.
+ *     A wrapper around Tcl_Realloc() for use by code outside of this file.
  *
  * Results:
  *     None.

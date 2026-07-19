@@ -320,7 +320,7 @@ DupWindowInternalRep(
     WindowRep *oldPtr, *newPtr;
 
     oldPtr = static_cast<WindowRep*>(srcPtr->internalRep.otherValuePtr);
-    newPtr = reinterpret_cast<WindowRep*>(ckalloc(sizeof(WindowRep)));
+    newPtr = reinterpret_cast<WindowRep*>(Tcl_Alloc(sizeof(WindowRep)));
     newPtr->tkwin = oldPtr->tkwin;
     newPtr->mainPtr = oldPtr->mainPtr;
     newPtr->epoch = oldPtr->epoch;
@@ -350,7 +350,7 @@ static void
 FreeWindowInternalRep(
     Tcl_Obj *objPtr)            /* Window object with internal rep to free. */
 {
-    ckfree(static_cast<char*>(objPtr->internalRep.otherValuePtr));
+    Tcl_Free(static_cast<char*>(objPtr->internalRep.otherValuePtr));
     objPtr->internalRep.otherValuePtr = nullptr;
     objPtr->typePtr = nullptr;
 }
@@ -403,7 +403,7 @@ SetWindowFromAny(
         typePtr->freeIntRepProc(objPtr);
     }
 
-    winPtr = reinterpret_cast<WindowRep*>(ckalloc(sizeof(WindowRep)));
+    winPtr = reinterpret_cast<WindowRep*>(Tcl_Alloc(sizeof(WindowRep)));
     winPtr->tkwin = nullptr;
     winPtr->mainPtr = nullptr;
     winPtr->epoch = 0;
@@ -788,7 +788,7 @@ DestroyBusy(
 	Tk_ManageGeometry(busyPtr->tkBusy, nullptr, busyPtr);
 	Tk_DestroyWindow(busyPtr->tkBusy);
     }
-    ckfree(data);
+    Tcl_Free(data);
 }
 
 /*
@@ -963,10 +963,10 @@ CreateBusy(
     Window parent;
     Tk_FakeWin *winPtr;
 
-    busyPtr = reinterpret_cast<Busy*>(ckalloc(sizeof(Busy)));
+    busyPtr = reinterpret_cast<Busy*>(Tcl_Alloc(sizeof(Busy)));
     x = y = 0;
     length = strlen(Tk_Name(tkRef));
-    name = static_cast<char*>(ckalloc(length + 6));
+    name = static_cast<char*>(Tcl_Alloc(length + 6));
     if (Tk_IsTopLevel(tkRef)) {
 	fmt = "_Busy";		/* Child */
 	tkParent = tkRef;
@@ -990,7 +990,7 @@ CreateBusy(
     }
     sprintf(name, fmt, Tk_Name(tkRef));
     tkBusy = Tk_CreateWindow(interp, tkParent, name, nullptr);
-    ckfree(name);
+    Tcl_Free(name);
 
     if (tkBusy == nullptr) {
 	return nullptr;

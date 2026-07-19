@@ -3049,7 +3049,7 @@ Element_CreateAndConfig(
 	elem = (TreeElement) TreeAlloc_Alloc(tree->allocData, type->name,
 			type->size);
 #else
-	elem = (TreeElement) ckalloc(type->size);
+	elem = (TreeElement) Tcl_Alloc(type->size);
 #endif
 	memset(elem, '\0', type->size);
 	elem->name = Tk_GetUid(name);
@@ -3206,7 +3206,7 @@ TreeStyle_NewInstance(
 #ifdef ALLOC_HAX
 	copy = (IStyle *) TreeAlloc_Alloc(tree->allocData, IStyleUid, sizeof(IStyle));
 #else
-	copy = (IStyle *) ckalloc(sizeof(IStyle));
+	copy = (IStyle *) Tcl_Alloc(sizeof(IStyle));
 #endif
 	memset(copy, '\0', sizeof(IStyle));
 	copy->master = style;
@@ -3218,7 +3218,7 @@ TreeStyle_NewInstance(
 				IElementLinkUid, sizeof(IElementLink), style->numElements,
 				ELEMENT_LINK_ROUND);
 #else
-		copy->elements = (IElementLink *) ckalloc(sizeof(IElementLink) *
+		copy->elements = (IElementLink *) Tcl_Alloc(sizeof(IElementLink) *
 				style->numElements);
 #endif
 		memset(copy->elements, '\0', sizeof(IElementLink) * style->numElements);
@@ -3526,7 +3526,7 @@ MStyle_ChangeElementsAux(
 				MElementLinkUid, sizeof(MElementLink), count,
 				ELEMENT_LINK_ROUND);
 #else
-		eLinks = (MElementLink *) ckalloc(sizeof(MElementLink) * count);
+		eLinks = (MElementLink *) Tcl_Alloc(sizeof(MElementLink) * count);
 #endif
 	}
 
@@ -3605,7 +3605,7 @@ IStyle_ChangeElementsAux(
 				IElementLinkUid, sizeof(IElementLink), count,
 				ELEMENT_LINK_ROUND);
 #else
-		eLinks = (IElementLink *) ckalloc(sizeof(IElementLink) * count);
+		eLinks = (IElementLink *) Tcl_Alloc(sizeof(IElementLink) * count);
 #endif
 	}
 
@@ -3716,7 +3716,7 @@ Style_ChangeElements(
 
 		if (onionCnt > 0) {
 			if (onionCnt != eLink->onionCount)
-				onion = (int *) ckalloc(sizeof(int) * onionCnt);
+				onion = (int *) Tcl_Alloc(sizeof(int) * onionCnt);
 			else
 				onion = eLink->onion;
 			k = 0;
@@ -4423,7 +4423,7 @@ Tree_ElementIterateBegin(
 {
 	Iterate *iter;
 
-	iter = (Iterate *) ckalloc(sizeof(Iterate));
+	iter = (Iterate *) Tcl_Alloc(sizeof(Iterate));
 	iter->tree = tree;
 	iter->elemTypePtr = elemTypePtr;
 	iter->hPtr = Tcl_FirstHashEntry(&tree->itemHash, &iter->search);
@@ -4435,7 +4435,7 @@ Tree_ElementIterateBegin(
 			return (TreeIterate) iter;
 		iter->hPtr = Tcl_NextHashEntry(&iter->search);
 	}
-	ckfree((char *) iter);
+	Tcl_Free((char *) iter);
 	return NULL;
 }
 
@@ -4458,7 +4458,7 @@ Tree_ElementIterateNext(
 			return iter_;
 		iter->hPtr = Tcl_NextHashEntry(&iter->search);
 	}
-	ckfree((char *) iter);
+	Tcl_Free((char *) iter);
 	return NULL;
 }
 
@@ -5088,7 +5088,7 @@ Style_CreateAndConfig(
 	style = (MStyle *) TreeAlloc_Alloc(tree->allocData, MStyleUid,
 			sizeof(MStyle));
 #else
-	style = (MStyle *) ckalloc(sizeof(MStyle));
+	style = (MStyle *) Tcl_Alloc(sizeof(MStyle));
 #endif
 	memset(style, '\0', sizeof(MStyle));
 	style->name = Tk_GetUid(name);
@@ -5552,26 +5552,26 @@ StyleLayoutCmd(
 					}
 					break;
 				}
-				onion = (int *) ckalloc(sizeof(int) * objc1);
+				onion = (int *) Tcl_Alloc(sizeof(int) * objc1);
 				for (j = 0; j < objc1; j++) {
 					TreeElement elem2;
 					MElementLink *eLink2;
 
 					if (Element_FromObj(tree, objv1[j], &elem2) != TCL_OK) {
-						ckfree((char *) onion);
+						Tcl_Free((char *) onion);
 						goto badConfig;
 					}
 
 					eLink2 = MStyle_FindElem(tree, style, elem2, &n);
 					if (eLink2 == NULL) {
-						ckfree((char *) onion);
+						Tcl_Free((char *) onion);
 						FormatResult(interp,
 							"style %s does not use element %s",
 							style->name, elem2->name);
 						goto badConfig;
 					}
 					if (eLink == eLink2) {
-						ckfree((char *) onion);
+						Tcl_Free((char *) onion);
 						FormatResult(interp,
 							"element %s can't form union with itself",
 							elem2->name);
@@ -5591,10 +5591,10 @@ StyleLayoutCmd(
 				if (count == objc1)
 					eLink->onion = onion;
 				else {
-					eLink->onion = (int *) ckalloc(sizeof(int) * count);
+					eLink->onion = (int *) Tcl_Alloc(sizeof(int) * count);
 					for (k = 0; k < count; k++)
 						eLink->onion[k] = onion[k];
-					ckfree((char *) onion);
+					Tcl_Free((char *) onion);
 				}
 				eLink->onionCount = count;
 				break;
@@ -5934,10 +5934,10 @@ TreeStyleCmd(
 				if (Tcl_ListObjGetElements(interp, objv[4], &listObjc, &listObjv) != TCL_OK)
 					return TCL_ERROR;
 				if (listObjc > 0)
-					elemList = (TreeElement *) ckalloc(sizeof(TreeElement_) * listObjc);
+					elemList = (TreeElement *) Tcl_Alloc(sizeof(TreeElement_) * listObjc);
 				for (i = 0; i < listObjc; i++) {
 					if (Element_FromObj(tree, listObjv[i], &elem) != TCL_OK) {
-						ckfree((char *) elemList);
+						Tcl_Free((char *) elemList);
 						return TCL_ERROR;
 					}
 
@@ -5973,7 +5973,7 @@ TreeStyleCmd(
 				}
 				Style_ChangeElements(tree, style, count, elemList, map);
 				if (elemList != NULL)
-					ckfree((char *) elemList);
+					Tcl_Free((char *) elemList);
 				STATIC_FREE(map, int, count);
 				break;
 			}
@@ -6368,7 +6368,7 @@ TreeStyle_Remap(
 #else
 		if (styleFromNumElements > 0)
 			WCFREE(styleFrom->elements, IElementLink, styleFromNumElements);
-		styleFrom->elements = (IElementLink *) ckalloc(sizeof(IElementLink) *
+		styleFrom->elements = (IElementLink *) Tcl_Alloc(sizeof(IElementLink) *
 			styleTo->numElements);
 #endif
 		memset(styleFrom->elements, '\0', sizeof(IElementLink) * styleTo->numElements);

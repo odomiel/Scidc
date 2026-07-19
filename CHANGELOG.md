@@ -8,7 +8,7 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.07.19
 
-- **b1** – Fix: cmdVersion verwendet jetzt SCIDB_VERSION Makro + Phase 7 Rückbau von static_cast in C-Dateien + Versionsformat ohne Leerzeichen für C++-Kompatibilität
+- **b1** – Fix: cmdVersion verwendet jetzt SCIDB_VERSION Makro + Phase 7 Rückbau von static_cast in C-Dateien + Versionsformat ohne Leerzeichen für C++-Kompatibilität + ckalloc/ckfree durch Tcl_Alloc/Tcl_Free ersetzt
 
 ## 26.07.13
 

@@ -612,7 +612,7 @@ componentFromIndex(int i, UINT nbits, UINT shift)
 static Colormap
 win32CreateRgbColormap(PIXELFORMATDESCRIPTOR pfd)
 {
-	TkWinColormap*	cmap	= ckalloc(sizeof(TkWinColormap));
+	TkWinColormap*	cmap	= Tcl_Alloc(sizeof(TkWinColormap));
 	int				n		= 1 << pfd.cColorBits;
 	LOGPALETTE*		pPal	= LocalAlloc(LMEM_FIXED, sizeof(LOGPALETTE) + n*sizeof(PALETTEENTRY));
 	int				i;
@@ -658,7 +658,7 @@ win32CreateCiColormap(Ogl* ogl)
 {
 	// Create a colormap with size of ogl->ciColormapSize and set all entries to black
 	LOGPALETTE		logPalette;
-	TkWinColormap*	cmap = (TkWinColormap*)ckalloc(sizeof(TkWinColormap));
+	TkWinColormap*	cmap = (TkWinColormap*)Tcl_Alloc(sizeof(TkWinColormap));
 
 	logPalette.palVersion = 0x300;
 	logPalette.palNumEntries = 1;
@@ -1362,7 +1362,7 @@ ogl_objCmdDelete(ClientData clientData)
 	{
 		ogl_packageGlobals* tpg = (ogl_packageGlobals*)clientData;
 		Tk_DeleteOptionTable(tpg->optionTable);
-		ckfree((char*)clientData);
+		Tcl_Free((char*)clientData);
 	}
 }
 
@@ -1413,7 +1413,7 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 		// first time a Ogl widget is created.  The globals are
 		// saved as our client data.
 
-		tpg = (ogl_packageGlobals*)ckalloc(sizeof(ogl_packageGlobals));
+		tpg = (ogl_packageGlobals*)Tcl_Alloc(sizeof(ogl_packageGlobals));
 		if (tpg == 0)
 			return TCL_ERROR;
 		tpg->nextContextTag = 0;
@@ -1433,7 +1433,7 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 	Tk_SetClass(tkwin, "Ogl");
 
 	// Create Ogl data structure
-	ogl = (Ogl*)ckalloc(sizeof(Ogl));
+	ogl = (Ogl*)Tcl_Alloc(sizeof(Ogl));
 	if (ogl == 0)
 		return TCL_ERROR;
 
@@ -1506,7 +1506,7 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 	// Setup the Tk_ClassProcs callbacks to point at our own window creation
 	// function
 
-	procsPtr = (Tk_ClassProcs*)ckalloc(sizeof(Tk_ClassProcs));
+	procsPtr = (Tk_ClassProcs*)Tcl_Alloc(sizeof(Tk_ClassProcs));
 	procsPtr->size = sizeof(Tk_ClassProcs);
 	procsPtr->createProc = ogl_makeWindow;
 	procsPtr->worldChangedProc = ogl_worldChanged;
@@ -2533,11 +2533,11 @@ ogl_worldChanged(ClientData instanceData)
 }
 
 
-// Wrap the ckfree macro.
+// Wrap the Tcl_Free macro.
 static void
 ogl_free(char* clientData)
 {
-	ckfree(clientData);
+	Tcl_Free(clientData);
 }
 
 

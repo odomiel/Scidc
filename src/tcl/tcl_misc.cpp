@@ -69,8 +69,8 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-// # define SCIDB_VERSION	"26.07.19 b1 Beta"
-// # define SCIDB_REVISION	"1497"
+# define SCIDB_VERSION	"26.07.19 b1 Beta"
+# define SCIDB_REVISION	"1497"
 #endif
 
 using namespace tcl;

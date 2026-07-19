@@ -185,10 +185,10 @@ UniformGroupCO_Set(
 			Tcl_HashEntry *hPtr = Tcl_CreateHashEntry(&tree->uniformGroupHash,
 					Tcl_GetString(*valuePtr), &isNew);
 			if (isNew) {
-				new = (UniformGroup *) ckalloc(sizeof(UniformGroup));
+				new = (UniformGroup *) Tcl_Alloc(sizeof(UniformGroup));
 				new->refCount = 0;
 				new->hPtr = hPtr;
-				Tcl_SetHashValue(hPtr, (ClientData)new);
+				Tcl_SetHashValue(hPtr, (ClientData)( new);
 			} else {
 				new = (UniformGroup *) Tcl_GetHashValue(hPtr);
 			}
@@ -252,7 +252,7 @@ UniformGroupCO_Free(
 #endif
 	if ((uniform != NULL) && (--uniform->refCount <= 0)) {
 		Tcl_DeleteHashEntry(uniform->hPtr);
-		ckfree((char *) uniform);
+		Tcl_Free((char *) uniform);
 		*((UniformGroup **) internalPtr) = NULL;
 	}
 }
@@ -264,7 +264,7 @@ static Tk_ObjCustomOption uniformGroupCO =
 	UniformGroupCO_Get,
 	UniformGroupCO_Restore,
 	UniformGroupCO_Free,
-	(ClientData)NULL
+	(ClientData)( NULL
 };
 
 static CONST char *arrowST[] = { "none", "up", "down", (char *) NULL };
@@ -290,141 +290,141 @@ static CONST char *justifyStrings[] = {
 static Tk_OptionSpec columnSpecs[] = {
 	{TK_OPTION_STRING_TABLE, "-arrow", (char *) NULL, (char *) NULL,
 	 "none", -1, Tk_Offset(TreeColumn_, arrow),
-	 0, (ClientData)arrowST, COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
+	 0, (ClientData)( arrowST, COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-arrowbitmap", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(TreeColumn_, arrowBitmap.obj), Tk_Offset(TreeColumn_, arrowBitmap),
-	 TK_OPTION_NULL_OK, (ClientData)NULL,
+	 TK_OPTION_NULL_OK, (ClientData)( NULL,
 	 COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_STRING_TABLE, "-arrowgravity", (char *) NULL, (char *) NULL,
 	 "left", -1, Tk_Offset(TreeColumn_, arrowGravity),
-	 0, (ClientData)arrowSideST, COLU_CONF_DISPLAY},
+	 0, (ClientData)( arrowSideST, COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-arrowimage", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(TreeColumn_, arrowImage.obj), Tk_Offset(TreeColumn_, arrowImage),
-	 TK_OPTION_NULL_OK, (ClientData)NULL,
+	 TK_OPTION_NULL_OK, (ClientData)( NULL,
 	 COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-arrowpadx", (char *) NULL, (char *) NULL,
 	 "6", Tk_Offset(TreeColumn_, arrowPadXObj), Tk_Offset(TreeColumn_, arrowPadX),
-	 0, (ClientData)&TreeCtrlCO_pad, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
+	 0, (ClientData)( &TreeCtrlCO_pad, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-arrowpady", (char *) NULL, (char *) NULL,
 	 "0", Tk_Offset(TreeColumn_, arrowPadYObj), Tk_Offset(TreeColumn_, arrowPadY),
-	 0, (ClientData)&TreeCtrlCO_pad, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
+	 0, (ClientData)( &TreeCtrlCO_pad, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
 	{TK_OPTION_STRING_TABLE, "-arrowside", (char *) NULL, (char *) NULL,
 	 "right", -1, Tk_Offset(TreeColumn_, arrowSide),
-	 0, (ClientData)arrowSideST, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
+	 0, (ClientData)( arrowSideST, COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
 	 /* NOTE: -background is a per-state option, so DEF_BUTTON_BG_COLOR
 	  * must be a list of one element */
 	{TK_OPTION_CUSTOM, "-background", (char *) NULL, (char *) NULL,
 	 (char *) NULL /* initialized later */,
 	 Tk_Offset(TreeColumn_, border.obj), Tk_Offset(TreeColumn_, border),
-	 0, (ClientData)NULL, COLU_CONF_DISPLAY},
+	 0, (ClientData)( NULL, COLU_CONF_DISPLAY},
 	{TK_OPTION_BITMAP, "-bitmap", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, bitmap),
-	 TK_OPTION_NULL_OK, (ClientData)NULL,
+	 TK_OPTION_NULL_OK, (ClientData)( NULL,
 	 COLU_CONF_BITMAP | COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_PIXELS, "-borderwidth", (char *) NULL, (char *) NULL,
 	 "2", Tk_Offset(TreeColumn_, borderWidthObj), Tk_Offset(TreeColumn_, borderWidth),
-	 0, (ClientData)NULL, COLU_CONF_TWIDTH | COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
+	 0, (ClientData)( NULL, COLU_CONF_TWIDTH | COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_BOOLEAN, "-button", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeColumn_, button),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 	{TK_OPTION_BOOLEAN, "-expand", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeColumn_, expand),
-	 0, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 0, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_FONT, "-font", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, tkfont),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_NWIDTH |
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_NWIDTH |
 	 COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY | COLU_CONF_TEXT},
 	{TK_OPTION_STRING, "-image", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, imageString),
-	 TK_OPTION_NULL_OK, (ClientData)NULL,
+	 TK_OPTION_NULL_OK, (ClientData)( NULL,
 	 COLU_CONF_IMAGE | COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-imagepadx", (char *) NULL, (char *) NULL,
 	 "6", Tk_Offset(TreeColumn_, imagePadXObj),
-	 Tk_Offset(TreeColumn_, imagePadX), 0, (ClientData)&TreeCtrlCO_pad,
+	 Tk_Offset(TreeColumn_, imagePadX), 0, (ClientData)( &TreeCtrlCO_pad,
 	 COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-imagepady", (char *) NULL, (char *) NULL,
 	 "0", Tk_Offset(TreeColumn_, imagePadYObj),
-	 Tk_Offset(TreeColumn_, imagePadY), 0, (ClientData)&TreeCtrlCO_pad,
+	 Tk_Offset(TreeColumn_, imagePadY), 0, (ClientData)( &TreeCtrlCO_pad,
 	 COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_STRING, "-itembackground", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, itemBgObj), -1,
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_ITEMBG},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_ITEMBG},
 	{TK_OPTION_CUSTOM, "-itemjustify", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, itemJustify),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_JUSTIFY},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_JUSTIFY},
 	{TK_OPTION_CUSTOM, "-itemstyle", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, itemStyle),
-	 TK_OPTION_NULL_OK, (ClientData)&TreeCtrlCO_style, 0},
+	 TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_style, 0},
 	{TK_OPTION_JUSTIFY, "-justify", (char *) NULL, (char *) NULL,
 	 "left", -1, Tk_Offset(TreeColumn_, justify),
-	 0, (ClientData)NULL, COLU_CONF_DISPLAY | COLU_CONF_JUSTIFY},
+	 0, (ClientData)( NULL, COLU_CONF_DISPLAY | COLU_CONF_JUSTIFY},
 	{TK_OPTION_STRING_TABLE, "-lock", (char *) NULL, (char *) NULL,
-	 "none", -1, Tk_Offset(TreeColumn_, lock), 0, (ClientData)lockST, 0},
+	 "none", -1, Tk_Offset(TreeColumn_, lock), 0, (ClientData)( lockST, 0},
 	{TK_OPTION_PIXELS, "-maxwidth", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, maxWidthObj),
 	 Tk_Offset(TreeColumn_, maxWidth),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_PIXELS, "-minwidth", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, minWidthObj),
 	 Tk_Offset(TreeColumn_, minWidth),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_BOOLEAN, "-resize", (char *) NULL, (char *) NULL,
-	 "1", -1, Tk_Offset(TreeColumn_, resize), 0, (ClientData)NULL, 0},
+	 "1", -1, Tk_Offset(TreeColumn_, resize), 0, (ClientData)( NULL, 0},
 	{TK_OPTION_BOOLEAN, "-squeeze", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeColumn_, squeeze),
-	 0, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 0, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_STRING_TABLE, "-state", (char *) NULL, (char *) NULL,
-	 "normal", -1, Tk_Offset(TreeColumn_, state), 0, (ClientData)stateST,
+	 "normal", -1, Tk_Offset(TreeColumn_, state), 0, (ClientData)( stateST,
 	 COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_BOOLEAN, "-steady", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeColumn_, isSteady),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 #ifdef DEPRECATED
 	{TK_OPTION_PIXELS, "-stepwidth", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, stepWidthObj),
 	 Tk_Offset(TreeColumn_, stepWidth),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_RANGES},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_RANGES},
 #endif /* DEPRECATED */
 	{TK_OPTION_CUSTOM, "-tags", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, tagInfo),
-	 TK_OPTION_NULL_OK, (ClientData)&TreeCtrlCO_tagInfo, COLU_CONF_TAGS},
+	 TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_tagInfo, COLU_CONF_TAGS},
 	{TK_OPTION_STRING, "-text", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, textObj), Tk_Offset(TreeColumn_, text),
-	 TK_OPTION_NULL_OK, (ClientData)NULL,
+	 TK_OPTION_NULL_OK, (ClientData)( NULL,
 	 COLU_CONF_TEXT | COLU_CONF_NWIDTH | COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_COLOR, "-textcolor", (char *) NULL, (char *) NULL,
 	 DEF_BUTTON_FG, -1, Tk_Offset(TreeColumn_, textColor),
-	 0, (ClientData)NULL, COLU_CONF_DISPLAY},
+	 0, (ClientData)( NULL, COLU_CONF_DISPLAY},
 	{TK_OPTION_INT, "-textlines", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeColumn_, textLines),
-	 0, (ClientData)NULL, COLU_CONF_TEXT | COLU_CONF_NWIDTH |
+	 0, (ClientData)( NULL, COLU_CONF_TEXT | COLU_CONF_NWIDTH |
 	 COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-textpadx", (char *) NULL, (char *) NULL,
 	 "6", Tk_Offset(TreeColumn_, textPadXObj),
-	 Tk_Offset(TreeColumn_, textPadX), 0, (ClientData)&TreeCtrlCO_pad,
+	 Tk_Offset(TreeColumn_, textPadX), 0, (ClientData)( &TreeCtrlCO_pad,
 	 COLU_CONF_NWIDTH | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-textpady", (char *) NULL, (char *) NULL,
 	 "0", Tk_Offset(TreeColumn_, textPadYObj),
-	 Tk_Offset(TreeColumn_, textPadY), 0, (ClientData)&TreeCtrlCO_pad,
+	 Tk_Offset(TreeColumn_, textPadY), 0, (ClientData)( &TreeCtrlCO_pad,
 	 COLU_CONF_NHEIGHT | COLU_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-uniform", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeColumn_, uniform), TK_OPTION_NULL_OK,
-	 (ClientData)&uniformGroupCO, COLU_CONF_TWIDTH},
+	 (ClientData)( &uniformGroupCO, COLU_CONF_TWIDTH},
 	{TK_OPTION_INT, "-weight", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeColumn_, weight),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_PIXELS, "-width", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeColumn_, widthObj), Tk_Offset(TreeColumn_, width),
-	 TK_OPTION_NULL_OK, (ClientData)NULL, COLU_CONF_TWIDTH},
+	 TK_OPTION_NULL_OK, (ClientData)( NULL, COLU_CONF_TWIDTH},
 	{TK_OPTION_BOOLEAN, "-visible", (char *) NULL, (char *) NULL,
 	 "1", -1, Tk_Offset(TreeColumn_, visible),
-	 0, (ClientData)NULL, COLU_CONF_TWIDTH | COLU_CONF_DISPLAY},
+	 0, (ClientData)( NULL, COLU_CONF_TWIDTH | COLU_CONF_DISPLAY},
 #ifdef DEPRECATED
 	{TK_OPTION_BOOLEAN, "-widthhack", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeColumn_, widthHack),
-	 0, (ClientData)NULL, COLU_CONF_RANGES},
+	 0, (ClientData)( NULL, COLU_CONF_RANGES},
 #endif /* DEPRECATED */
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	 (char *) NULL, 0, -1, 0, 0, 0}
@@ -572,7 +572,7 @@ Tk_ObjCustomOption TreeCtrlCO_column =
 	ColumnCO_Get,
 	ColumnCO_Restore,
 	NULL,
-	(ClientData)(CFO_NOT_NULL)
+	(ClientData)( (CFO_NOT_NULL)
 };
 
 /*
@@ -588,34 +588,34 @@ Tk_ObjCustomOption TreeCtrlCO_column_NOT_TAIL =
 	ColumnCO_Get,
 	ColumnCO_Restore,
 	NULL,
-	(ClientData)(CFO_NOT_NULL | CFO_NOT_TAIL)
+	(ClientData)( (CFO_NOT_NULL | CFO_NOT_TAIL)
 };
 
 static Tk_OptionSpec dragSpecs[] = {
 	{TK_OPTION_BOOLEAN, "-enable", (char *) NULL, (char *) NULL,
 	 "0", -1, Tk_Offset(TreeCtrl, columnDrag.enable),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 	{TK_OPTION_INT, "-imagealpha", (char *) NULL, (char *) NULL,
 	 "128", -1, Tk_Offset(TreeCtrl, columnDrag.alpha),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 	{TK_OPTION_COLOR, "-imagecolor", (char *) NULL, (char *) NULL,
 	 "gray75", -1, Tk_Offset(TreeCtrl, columnDrag.color),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 	{TK_OPTION_CUSTOM, "-imagecolumn", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, columnDrag.column),
-	 TK_OPTION_NULL_OK, (ClientData)&TreeCtrlCO_column_NOT_TAIL, 0},
+	 TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_column_NOT_TAIL, 0},
 	{TK_OPTION_PIXELS, "-imageoffset", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(TreeCtrl, columnDrag.offsetObj),
-	 Tk_Offset(TreeCtrl, columnDrag.offset), 0, (ClientData)NULL, 0},
+	 Tk_Offset(TreeCtrl, columnDrag.offset), 0, (ClientData)( NULL, 0},
 	{TK_OPTION_COLOR, "-indicatorcolor", (char *) NULL, (char *) NULL,
 	 "Black", -1, Tk_Offset(TreeCtrl, columnDrag.indColor),
-	 0, (ClientData)NULL, 0},
+	 0, (ClientData)( NULL, 0},
 	{TK_OPTION_CUSTOM, "-indicatorcolumn", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeCtrl, columnDrag.indColumn),
-	 TK_OPTION_NULL_OK, (ClientData)&TreeCtrlCO_column, 0},
+	 TK_OPTION_NULL_OK, (ClientData)( &TreeCtrlCO_column, 0},
 	{TK_OPTION_STRING_TABLE, "-indicatorside", (char *) NULL, (char *) NULL,
 	 "left", -1, Tk_Offset(TreeCtrl, columnDrag.indSide),
-	 0, (ClientData)arrowSideST, 0},
+	 0, (ClientData)( arrowSideST, 0},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	 (char *) NULL, 0, -1, 0, 0, 0}
 };
@@ -1936,7 +1936,7 @@ Column_Move(
 		/* Case 2: insert empty between existing */
 		} else if (before->index < numStyles) {
 			numStyles++;
-			styles = (TreeStyle *) ckalloc(numStyles * sizeof(TreeStyle));
+			styles = (TreeStyle *) Tcl_Alloc(numStyles * sizeof(TreeStyle));
 			for (i = 0; i < before->index; i++)
 				styles[i] = tree->defaultStyle.styles[i];
 			styles[i++] = NULL;
@@ -1946,7 +1946,7 @@ Column_Move(
 		/* Case 3: move existing past end */
 		} else {
 			numStyles += before->index - numStyles;
-			styles = (TreeStyle *) ckalloc(numStyles * sizeof(TreeStyle));
+			styles = (TreeStyle *) Tcl_Alloc(numStyles * sizeof(TreeStyle));
 			style = tree->defaultStyle.styles[move->index];
 			for (i = 0; i < move->index; i++)
 				styles[i] = tree->defaultStyle.styles[i];
@@ -1968,7 +1968,7 @@ Column_Move(
 		Tcl_IncrRefCount(tree->defaultStyle.stylesObj);
 		STATIC_FREE(objv, Tcl_Obj *, numStyles);
 		if (styles != tree->defaultStyle.styles) {
-			ckfree((char *) tree->defaultStyle.styles);
+			Tcl_Free((char *) tree->defaultStyle.styles);
 			tree->defaultStyle.styles = styles;
 			tree->defaultStyle.numStyles = numStyles;
 		}
@@ -2126,7 +2126,7 @@ Column_Config(
 				} else {
 					column->image = Tk_GetImage(tree->interp, tree->tkwin,
 							column->imageString, ImageChangedProc,
-							(ClientData)column);
+							(ClientData)( column);
 					if (column->image == NULL)
 						continue;
 					maskFree |= COLU_CONF_IMAGE;
@@ -2145,7 +2145,7 @@ Column_Config(
 					if (Tcl_ListObjGetElements(tree->interp, column->itemBgObj,
 								&listObjc, &listObjv) != TCL_OK)
 						continue;
-					colors = (XColor **) ckalloc(sizeof(XColor *) * listObjc);
+					colors = (XColor **) Tcl_Alloc(sizeof(XColor *) * listObjc);
 					for (i = 0; i < listObjc; i++)
 						colors[i] = NULL;
 					for (i = 0; i < listObjc; i++) {
@@ -2347,7 +2347,7 @@ Column_Alloc(
 {
 	TreeColumn column;
 
-	column = (TreeColumn) ckalloc(sizeof(TreeColumn_));
+	column = (TreeColumn) Tcl_Alloc(sizeof(TreeColumn_));
 	memset(column, '\0', sizeof(TreeColumn_));
 	column->tree = tree;
 	column->optionTable = Tk_CreateOptionTable(tree->interp, columnSpecs);
@@ -3738,7 +3738,7 @@ ColumnTagCmd(
 							Tcl_NewStringObj((char *) tags[i], -1));
 				}
 				Tcl_SetObjResult(interp, listObj);
-				ckfree((char *) tags);
+				Tcl_Free((char *) tags);
 			}
 			break;
 		}
@@ -5019,7 +5019,7 @@ Column_Draw(
 		int tx, ty, h;
 
 		if (textLen + ellipsisLen > sizeof(staticStr))
-			text = ckalloc(textLen + ellipsisLen);
+			text = Tcl_Alloc(textLen + ellipsisLen);
 		memcpy(text, column->text, textLen);
 		if (layout.bytesThatFit != textLen) {
 			textLen = abs(layout.bytesThatFit);
@@ -5042,7 +5042,7 @@ Column_Draw(
 		Tk_DrawChars(tree->display, td.drawable, gc,
 				layout.tkfont, text, textLen, tx, ty);
 		if (text != staticStr)
-			ckfree(text);
+			Tcl_Free(text);
 	}
 
 	if (dragImage)
@@ -5120,7 +5120,7 @@ SetImageForColumn(
 	Tk_FreePixmap(tree->display, td.drawable);
 
 	return Tk_GetImage(tree->interp, tree->tkwin, "::TreeCtrl::ImageColumn",
-		NULL, (ClientData)NULL);
+		NULL, (ClientData)( NULL);
 }
 
 static void
@@ -6289,7 +6289,7 @@ TreeColumn_InitInterp(
 		Tcl_DStringAppendElement(&dString, "normal");
 		Tcl_DStringAppendElement(&dString, DEF_BUTTON_ACTIVE_BG_COLOR);
 		Tcl_DStringAppendElement(&dString, "");
-		specPtr->defValue = ckalloc(Tcl_DStringLength(&dString) + 1);
+		specPtr->defValue = Tcl_Alloc(Tcl_DStringLength(&dString) + 1);
 		strcpy((char *)specPtr->defValue, Tcl_DStringValue(&dString));
 		Tcl_DStringFree(&dString);
 	}

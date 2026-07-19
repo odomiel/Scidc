@@ -45,8 +45,8 @@
 
 /*
  * Without exception the tkhtml code uses the wrapper functions HtmlAlloc(),
- * HtmlFree() and HtmlRealloc() in place of the regular Tcl ckalloc(), ckfree()
- * and ckrealloc() functions.
+ * HtmlFree() and HtmlRealloc() in place of the regular Tcl Tcl_Alloc(), Tcl_Free()
+ * and Tcl_Realloc() functions.
  */
 #ifdef HTML_DEBUG
     #include "restrack.h"
@@ -55,9 +55,9 @@
     #define HtmlFree(x) Rt_Free((char *)(x))
     #define HtmlRealloc(zTopic, x, n) Rt_Realloc(zTopic , (char *)(x), (n))
 #else
-    #define HtmlAlloc(zTopic, n) ckalloc(n)
-    #define HtmlFree(x) ckfree((char *)(x))
-    #define HtmlRealloc(zTopic, x, n) ckrealloc((char *)(x), n)
+    #define HtmlAlloc(zTopic, n) Tcl_Alloc(n)
+    #define HtmlFree(x) Tcl_Free((char *)(x))
+    #define HtmlRealloc(zTopic, x, n) Tcl_Realloc((char *)(x), n)
 #endif
 
 /* HtmlClearAlloc() is a version of HtmlAlloc() that returns zeroed memory */

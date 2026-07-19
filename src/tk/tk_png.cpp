@@ -336,7 +336,7 @@ voidpf PNGZAlloc(voidpf opaque __attribute__((unused)), uInt items, uInt itemSz)
 static
 void PNGZFree(voidpf opaque __attribute__((unused)), voidpf ptr)
 {
-	if (ptr) ckfree((char *)ptr);
+	if (ptr) Tcl_Free((char *)ptr);
 }
 
 
@@ -461,11 +461,11 @@ PNGCleanup(PNGImage* pPNG)
 	}
 
 	if (pPNG -> mBlock.pixelPtr)
-		ckfree((char *)pPNG -> mBlock.pixelPtr);
+		Tcl_Free((char *)pPNG -> mBlock.pixelPtr);
 	if (pPNG -> mpThisLine)
-		ckfree((char *)pPNG -> mpThisLine);
+		Tcl_Free((char *)pPNG -> mpThisLine);
 	if (pPNG -> mpLastLine)
-		ckfree((char *)pPNG -> mpLastLine);
+		Tcl_Free((char *)pPNG -> mpLastLine);
 }
 
 

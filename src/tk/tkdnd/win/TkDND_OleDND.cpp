@@ -421,18 +421,18 @@ int DLLEXPORT Tkdnd_Init(Tcl_Interp *interp) {
   /* Register the various commands */
   if (Tcl_CreateObjCommand(interp, "_RegisterDragDrop",
            (Tcl_ObjCmdProc*) TkDND_RegisterDragDropObjCmd,
-           (ClientData)( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
+           static_cast<ClientData>( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
       return TCL_ERROR;
   }
   if (Tcl_CreateObjCommand(interp, "_RevokeDragDrop",
            (Tcl_ObjCmdProc*) TkDND_RevokeDragDropObjCmd,
-           (ClientData)( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
+           static_cast<ClientData>( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
       return TCL_ERROR;
   }
 
   if (Tcl_CreateObjCommand(interp, "_DoDragDrop",
            (Tcl_ObjCmdProc*) TkDND_DoDragDropObjCmd,
-           (ClientData)( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
+           static_cast<ClientData>( NULL, (Tcl_CmdDeleteProc *) NULL) == NULL) {
       return TCL_ERROR;
   }
 

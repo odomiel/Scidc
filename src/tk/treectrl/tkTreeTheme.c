@@ -145,7 +145,7 @@ static ActCtxProcs *
 GetActCtxProcs(void)
 {
 	HINSTANCE hInst;
-	ActCtxProcs *procs = (ActCtxProcs *) ckalloc(sizeof(ActCtxProcs));
+	ActCtxProcs *procs = (ActCtxProcs *) Tcl_Alloc(sizeof(ActCtxProcs));
 
 	hInst = LoadLibrary("kernel32.dll"); /* FIXME: leak? */
 	if (hInst != 0)
@@ -164,7 +164,7 @@ GetActCtxProcs(void)
 #undef LOADPROC
 	}
 
-	ckfree((char*)procs);
+	Tcl_Free((char*)procs);
 	return NULL;
 }
 
@@ -261,7 +261,7 @@ DeactivateManifestContext(ActCtxProcs *procs, HANDLE hCtx, ULONG_PTR ulpCookie)
 		procs->ReleaseActCtx(hCtx);
 	}
 
-	ckfree((char*)procs);
+	Tcl_Free((char*)procs);
 }
 
 /* http://www.manbu.net/Lib/En/Class5/Sub16/1/29.asp */
@@ -339,7 +339,7 @@ LoadXPThemeProcs(HINSTANCE *phlib)
 			 * We have successfully loaded the library. Proceed in storing the
 			 * addresses of the functions we want to use.
 			 */
-			XPThemeProcs *procs = (XPThemeProcs*)ckalloc(sizeof(XPThemeProcs));
+			XPThemeProcs *procs = (XPThemeProcs*)Tcl_Alloc(sizeof(XPThemeProcs));
 #define LOADPROC(name) \
 		(0 != (procs->name = (name ## Proc *)GetProcAddress(handle, #name) ))
 
@@ -364,7 +364,7 @@ LoadXPThemeProcs(HINSTANCE *phlib)
 				return procs;
 			}
 #undef LOADPROC
-			ckfree((char*)procs);
+			Tcl_Free((char*)procs);
 		}
 	}
 	return 0;
@@ -892,7 +892,7 @@ static void FreeAssocData(ClientData clientData, Tcl_Interp *interp)
 	PerInterpData *data = (PerInterpData *) clientData;
 
 	DestroyWindow(data->hwnd);
-	ckfree((char *) data);
+	Tcl_Free((char *) data);
 }
 
 void TreeTheme_ThemeChanged(TreeCtrl *tree)
@@ -915,7 +915,7 @@ void TreeTheme_ThemeChanged(TreeCtrl *tree)
 		return;
 
 	if (tree->themeData == NULL)
-		tree->themeData = (TreeThemeData) ckalloc(sizeof(TreeThemeData_));
+		tree->themeData = (TreeThemeData) Tcl_Alloc(sizeof(TreeThemeData_));
 
 	tree->themeData->hThemeHEADER = procs->OpenThemeData(hwnd, L"HEADER");
 	tree->themeData->hThemeTREEVIEW = procs->OpenThemeData(hwnd, L"TREEVIEW");
@@ -929,7 +929,7 @@ int TreeTheme_Init(TreeCtrl *tree)
 	if (!appThemeData->themeEnabled || !procs)
 		return TCL_ERROR;
 
-	tree->themeData = (TreeThemeData) ckalloc(sizeof(TreeThemeData_));
+	tree->themeData = (TreeThemeData) Tcl_Alloc(sizeof(TreeThemeData_));
 
 	/* http://www.codeproject.com/cs/miscctrl/themedtabpage.asp?msg=1445385#xx1445385xx */
 	/* http://msdn2.microsoft.com/en-us/library/ms649781.aspx */
@@ -946,7 +946,7 @@ int TreeTheme_Free(TreeCtrl *tree)
 			procs->CloseThemeData(tree->themeData->hThemeHEADER);
 		if (tree->themeData->hThemeTREEVIEW != NULL)
 			procs->CloseThemeData(tree->themeData->hThemeTREEVIEW);
-		ckfree((char *) tree->themeData);
+		Tcl_Free((char *) tree->themeData);
 	}
 	return TCL_OK;
 }
@@ -960,7 +960,7 @@ int TreeTheme_InitInterp(Tcl_Interp *interp)
 
 	/* This is done once per-application */
 	if (appThemeData == NULL) {
-		appThemeData = (XPThemeData *) ckalloc(sizeof(XPThemeData));
+		appThemeData = (XPThemeData *) Tcl_Alloc(sizeof(XPThemeData));
 		appThemeData->procs = LoadXPThemeProcs(&appThemeData->hlibrary);
 		appThemeData->registered = FALSE;
 		appThemeData->themeEnabled = FALSE;
@@ -988,7 +988,7 @@ int TreeTheme_InitInterp(Tcl_Interp *interp)
 	if (!hwnd)
 		return TCL_ERROR;
 
-	data = (PerInterpData *) ckalloc(sizeof(PerInterpData));
+	data = (PerInterpData *) Tcl_Alloc(sizeof(PerInterpData));
 	data->hwnd = hwnd;
 	Tcl_SetAssocData(interp, "TreeCtrlTheme", FreeAssocData, (ClientData)data);
 
@@ -2109,7 +2109,7 @@ void TreeTheme_ThemeChanged(TreeCtrl *tree)
 
 int TreeTheme_Init(TreeCtrl *tree)
 {
-	tree->themeData = (TreeThemeData) ckalloc(sizeof(TreeThemeData_));
+	tree->themeData = (TreeThemeData) Tcl_Alloc(sizeof(TreeThemeData_));
 	memset(tree->themeData, '\0', sizeof(TreeThemeData_));
 
 	return TCL_OK;
@@ -2126,7 +2126,7 @@ int TreeTheme_Free(TreeCtrl *tree)
 			eTtk_FreeLayout(themeData->buttonLayout);
 		if (themeData->headingLayout != NULL)
 			eTtk_FreeLayout(themeData->headingLayout);
-		ckfree((char *) themeData);
+		Tcl_Free((char *) themeData);
 	}
 	return TCL_OK;
 }

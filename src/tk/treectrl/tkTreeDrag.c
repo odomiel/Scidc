@@ -463,7 +463,7 @@ DragElem_Alloc(
 	TreeDragImage dragImage		/* Drag image record. */
 	)
 {
-	DragElem *elem = (DragElem *) ckalloc(sizeof(DragElem));
+	DragElem *elem = (DragElem *) Tcl_Alloc(sizeof(DragElem));
 	DragElem *walk = dragImage->elem;
 	memset(elem, '\0', sizeof(DragElem));
 	if (dragImage->elem == NULL)
@@ -527,7 +527,7 @@ TreeDragImage_Init(
 {
 	TreeDragImage dragImage;
 
-	dragImage = (TreeDragImage) ckalloc(sizeof(TreeDragImage_));
+	dragImage = (TreeDragImage) Tcl_Alloc(sizeof(TreeDragImage_));
 	memset(dragImage, '\0', sizeof(TreeDragImage_));
 	dragImage->tree = tree;
 	dragImage->optionTable = Tk_CreateOptionTable(tree->interp, optionSpecs);

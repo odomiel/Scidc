@@ -70,7 +70,7 @@ TreeMarquee_Init(
 {
 	TreeMarquee marquee;
 
-	marquee = (TreeMarquee) ckalloc(sizeof(TreeMarquee_));
+	marquee = (TreeMarquee) Tcl_Alloc(sizeof(TreeMarquee_));
 	memset(marquee, '\0', sizeof(TreeMarquee_));
 	marquee->tree = tree;
 	marquee->optionTable = Tk_CreateOptionTable(tree->interp, optionSpecs);

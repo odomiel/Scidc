@@ -563,7 +563,7 @@ selectionSend(	Tcl_Interp* ti,
 
 				if ((success = Tcl_ListObjGetElements(ti, data, &nfields, &field)))
 				{
-					uint16_t* props = reinterpret_cast<uint16_t*>(ckalloc(sizeof(uint16_t)*nfields));
+					uint16_t* props = reinterpret_cast<uint16_t*>(Tcl_Alloc(sizeof(uint16_t)*nfields));
 
 					for (int i = 0; i< nfields; ++i)
 						props[i] = strtol(Tcl_GetString(field[i]), 0, 0);
@@ -578,7 +578,7 @@ selectionSend(	Tcl_Interp* ti,
 						reinterpret_cast<unsigned char*>(props),
 						nfields);
 
-					ckfree(reinterpret_cast<char*>(props));
+					Tcl_Free(reinterpret_cast<char*>(props));
 				}
 			}
 			break;
@@ -590,7 +590,7 @@ selectionSend(	Tcl_Interp* ti,
 
 				if ((success = Tcl_ListObjGetElements(ti, data, &nfields, &field)))
 				{
-					uint32_t* props = reinterpret_cast<uint32_t*>(ckalloc(sizeof(uint32_t)*nfields));
+					uint32_t* props = reinterpret_cast<uint32_t*>(Tcl_Alloc(sizeof(uint32_t)*nfields));
 
 					for (int i = 0; i< nfields; ++i)
 						props[i] = strtol(Tcl_GetString(field[i]), 0, 0);
@@ -605,7 +605,7 @@ selectionSend(	Tcl_Interp* ti,
 						reinterpret_cast<unsigned char*>(props),
 						nfields);
 
-					ckfree(reinterpret_cast<char*>(props));
+					Tcl_Free(reinterpret_cast<char*>(props));
 				}
 			}
 			break;

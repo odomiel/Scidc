@@ -1203,7 +1203,7 @@ HtmlTagDeleteCmd(
     if (pEntry) {
         HtmlWidgetTag *pTag = (HtmlWidgetTag *)Tcl_GetHashValue(pEntry);
         context.pTag = pTag;
-        HtmlWalkTree(pTree, 0, tagDeleteCallback, (ClientData)(&context);
+        HtmlWalkTree(pTree, 0, tagDeleteCallback, static_cast<ClientData>(&context);
         HtmlFree(pTag);
         Tcl_DeleteHashEntry(pEntry);
     }

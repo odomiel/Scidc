@@ -46,7 +46,7 @@ struct InstData {
 };
 
 struct InstGlobal {
-    void (*xCall)(ClientData, int, void (*)(ClientData)(, ClientData);
+    void (*xCall)(ClientData, int, void (*)static_cast<ClientData>(, ClientData);
 
     /* List of all dynamic InstCommand commands */
     InstCommand *pGlobal;
@@ -76,7 +76,7 @@ updateInstData(InstGlobal *pGlobal, InstCommand *p, int iClicks)
     vector.p2 = p;
     pEntry = Tcl_CreateHashEntry(&pGlobal->aVector, (char *)&vector, &isNew);
     if (isNew) {
-        pData = (InstData *)ckalloc(sizeof(InstData));
+        pData = (InstData *)Tcl_Alloc(sizeof(InstData));
         memset(pData, 0, sizeof(InstData));
         Tcl_SetHashValue(pEntry, pData);
     } else {
@@ -87,7 +87,7 @@ updateInstData(InstGlobal *pGlobal, InstCommand *p, int iClicks)
 }
 
 void *
-HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)(ClientData)(, ClientData clientData)
+HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)static_cast<ClientData>(, ClientData clientData)
 {
     InstGlobal *pGlobal = (InstGlobal *)pClientData;
     InstCommand *p = &pGlobal->aCommand[iCall];
@@ -113,7 +113,7 @@ HtmlInstrumentCall2(ClientData pClientData, int iCall, void *(*xFunc)(ClientData
 }
 
 void
-HtmlInstrumentCall(ClientData pClientData, int iCall, void (*xFunc)(ClientData)(, ClientData clientData)
+HtmlInstrumentCall(ClientData pClientData, int iCall, void (*xFunc)static_cast<ClientData>(, ClientData clientData)
 {
     InstGlobal *pGlobal = (InstGlobal *)pClientData;
     InstCommand *p = &pGlobal->aCommand[iCall];
@@ -170,7 +170,7 @@ static void
 freeInstStruct(InstCommand *p)
 {
     Tcl_DecrRefCount(p->pFullName);
-    ckfree((void *)p);
+    Tcl_Free((void *)p);
 }
 
 static void
@@ -202,7 +202,7 @@ instCommand(
         return TCL_ERROR;
     }
 
-    pInst = (InstCommand *)ckalloc(sizeof(InstCommand));
+    pInst = (InstCommand *)Tcl_Alloc(sizeof(InstCommand));
     memset(pInst, 0, sizeof(InstCommand));
     Tcl_GetCommandInfoFromToken(token, &pInst->info);
     pInst->pFullName = Tcl_NewObj();
@@ -301,7 +301,7 @@ instZero(
         pEntry = Tcl_NextHashEntry(&sSearch)
     ) {
         InstData *pData = Tcl_GetHashValue(pEntry);
-        ckfree((void *)pData);
+        Tcl_Free((void *)pData);
     }
     Tcl_DeleteHashTable(&pGlobal->aVector);
     Tcl_InitHashTable(&pGlobal->aVector, sizeof(InstVector)/sizeof(int));
@@ -370,7 +370,7 @@ instDelCommand(ClientData clientData)
 void
 HtmlInstrumentInit(Tcl_Interp *interp)
 {
-    InstGlobal *p = (InstGlobal *)ckalloc(sizeof(InstGlobal));
+    InstGlobal *p = (InstGlobal *)Tcl_Alloc(sizeof(InstGlobal));
     memset(p, 0, sizeof(InstGlobal));
 
     p->xCall = HtmlInstrumentCall;
@@ -391,7 +391,7 @@ HtmlInstrumentInit(Tcl_Interp *interp)
 
     Tcl_InitHashTable(&p->aVector, sizeof(InstVector)/sizeof(int));
     Tcl_CreateObjCommand(interp,
-        "::tkhtml::instrument", instrument_objcmd, (ClientData)(p, instDelCommand
+        "::tkhtml::instrument", instrument_objcmd, static_cast<ClientData>(p, instDelCommand
     );
 }
 

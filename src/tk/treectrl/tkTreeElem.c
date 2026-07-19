@@ -464,14 +464,14 @@ IntegerCO_Alloc(
 	Tk_ObjCustomOption *co;
 
 	/* ClientData for the Tk custom option record */
-	cd = (IntegerClientData *) ckalloc(sizeof(IntegerClientData));
+	cd = (IntegerClientData *) Tcl_Alloc(sizeof(IntegerClientData));
 	cd->min = min;
 	cd->max = max;
 	cd->empty = empty;
 	cd->flags = flags;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = (char *) optionName + 1;
 	co->setProc = IntegerSet;
 	co->getProc = IntegerGet;
@@ -517,12 +517,12 @@ StringTableCO_Alloc(
 	Tk_ObjCustomOption *co;
 
 	/* ClientData for the Tk custom option record */
-	cd = (StringTableClientData *) ckalloc(sizeof(StringTableClientData));
+	cd = (StringTableClientData *) Tcl_Alloc(sizeof(StringTableClientData));
 	cd->tablePtr = tablePtr;
 	cd->msg = optionName + 1;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = (char *) optionName + 1;
 	co->setProc = StringTableSet;
 	co->getProc = StringTableGet;
@@ -2608,7 +2608,7 @@ static void TextUpdateStringRep(TreeElementArgs *args)
 
 	/* Free any string allocated as a result of -data or -textvariable. */
 	if ((elemX->text != NULL) && (elemX->text != elemX->textCfg)) {
-		ckfree(elemX->text);
+		Tcl_Free(elemX->text);
 	}
 
 	/* Forget any string, and mark the string rep as no-longer invalid. */
@@ -2637,7 +2637,7 @@ static void TextUpdateStringRep(TreeElementArgs *args)
 			 * to the internal rep of the string object? */
 			text = Tcl_GetStringFromObj(valueObj, &elemX->textLen);
 			if (elemX->textLen > 0) {
-				elemX->text = ckalloc(elemX->textLen);
+				elemX->text = Tcl_Alloc(elemX->textLen);
 				memcpy(elemX->text, text, elemX->textLen);
 			}
 		}
@@ -2770,7 +2770,7 @@ static void TextUpdateStringRep(TreeElementArgs *args)
 		if (resultObj != NULL) {
 			text = Tcl_GetStringFromObj(resultObj, &elemX->textLen);
 			if (elemX->textLen > 0) {
-				elemX->text = ckalloc(elemX->textLen);
+				elemX->text = Tcl_Alloc(elemX->textLen);
 				memcpy(elemX->text, text, elemX->textLen);
 			}
 		}
@@ -2995,7 +2995,7 @@ static void DeleteProcText(TreeElementArgs *args)
 	ElementTextLayout2 *etl2;
 
 	if ((elemX->textCfg == NULL) && (elemX->text != NULL)) {
-		ckfree(elemX->text);
+		Tcl_Free(elemX->text);
 		elemX->text = NULL;
 	}
 	etl2 = DynamicOption_FindData(elem->options, DOID_TEXT_LAYOUT2);
@@ -3310,7 +3310,7 @@ static void DisplayProcText(TreeElementArgs *args)
 		int ellipsisLen = strlen(ellipsis);
 
 		if (bufLen + ellipsisLen > sizeof(staticStr))
-			buf = ckalloc(bufLen + ellipsisLen);
+			buf = Tcl_Alloc(bufLen + ellipsisLen);
 		memcpy(buf, text, bufLen);
 		if (bytesThatFit > 0) {
 			memcpy(buf + bufLen, ellipsis, ellipsisLen);
@@ -3328,7 +3328,7 @@ static void DisplayProcText(TreeElementArgs *args)
 		}
 #endif
 		if (buf != staticStr)
-			ckfree(buf);
+			Tcl_Free(buf);
 	} else {
 		Tree_DrawChars(tree->display, args->display.drawable, gc,
 				tkfont, specialfont, text, textLen, x, y + ascent);
@@ -4371,10 +4371,10 @@ int TreeCtrl_RegisterElementType(Tcl_Interp *interp, TreeElementType *newTypePtr
 				typeList = typePtr->next;
 			else
 				prevPtr->next = typePtr->next;
-			ckfree((char *) typePtr);
+			Tcl_Free((char *) typePtr);
 		}
 	}
-	typePtr = (TreeElementType *) ckalloc(sizeof(TreeElementType));
+	typePtr = (TreeElementType *) Tcl_Alloc(sizeof(TreeElementType));
 	memcpy(typePtr, newTypePtr, sizeof(TreeElementType));
 
 	typePtr->next = typeList;
@@ -4419,10 +4419,10 @@ static void FreeAssocData(ClientData clientData, Tcl_Interp *interp)
 	while (typeList != NULL) {
 		next = typeList->next;
 		/* The ElementType.optionTables are freed when the interp is deleted */
-		ckfree((char *) typeList);
+		Tcl_Free((char *) typeList);
 		typeList = next;
 	}
-	ckfree((char *) assocData);
+	Tcl_Free((char *) assocData);
 }
 
 int TreeElement_Init(Tcl_Interp *interp)
@@ -4611,7 +4611,7 @@ int TreeElement_Init(Tcl_Interp *interp)
 		&pstBoolean, TreeStateFromObj);
 #endif
 
-	assocData = (ElementAssocData *) ckalloc(sizeof(ElementAssocData));
+	assocData = (ElementAssocData *) Tcl_Alloc(sizeof(ElementAssocData));
 	assocData->typeList = NULL;
 	Tcl_SetAssocData(interp, "TreeCtrlElementTypes", FreeAssocData, assocData);
 

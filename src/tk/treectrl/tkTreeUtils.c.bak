@@ -4342,7 +4342,7 @@ TreePtrList_Init(
 
 	if (count + 1 > TIL_STATIC_SPACE) {
 		tplPtr->space = count + 1;
-		tplPtr->pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData);
+		tplPtr->pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData)));
 	}
 
 	tplPtr->pointers[0] = NULL;
@@ -4380,12 +4380,12 @@ TreePtrList_Grow(
 		tplPtr->space *= 2;
 	if (tplPtr->pointers == tplPtr->pointerSpace) {
 		ClientData *pointers;
-		pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData);
-		memcpy(pointers, tplPtr->pointers, (tplPtr->count + 1) * sizeof(ClientData);
+		pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData)));
+		memcpy(pointers, tplPtr->pointers, (tplPtr->count + 1) * sizeof(ClientData));
 		tplPtr->pointers = pointers;
 	} else {
 		tplPtr->pointers = (ClientData *) Tcl_Realloc((char *) tplPtr->pointers,
-				tplPtr->space * sizeof(ClientData);
+				tplPtr->space * sizeof(ClientData));
 	}
 }
 
@@ -4450,7 +4450,7 @@ TreePtrList_Concat(
 #endif
 	TreePtrList_Grow(tplPtr, tplPtr->count + tpl2Ptr->count);
 	memcpy(tplPtr->pointers + tplPtr->count, tpl2Ptr->pointers,
-		tpl2Ptr->count * sizeof(ClientData);
+		tpl2Ptr->count * sizeof(ClientData));
 	tplPtr->count += tpl2Ptr->count;
 	tplPtr->pointers[tplPtr->count] = NULL;
 	return tplPtr->pointers;
@@ -6762,7 +6762,7 @@ BooleanFlagCO_Init(
 	co->getProc = BooleanFlagCO_Get;
 	co->restoreProc = BooleanFlagCO_Restore;
 	co->freeProc = NULL;
-	co->clientData = (ClientData)(long theFlag;
+	co->clientData = (ClientData)(long)theFlag;
 
 	specPtr->clientData = co;
 

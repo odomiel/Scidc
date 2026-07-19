@@ -295,7 +295,7 @@ imageChanged(ClientData clientData, int x, int y, int width, int height, int img
         if (imgWidth!=pImage->width && imgHeight!=pImage->height) {
             pImage->width = imgWidth;
             pImage->height = imgHeight;
-            HtmlWalkTree(pTree, 0, imageChangedCb, (ClientData)(pImage);
+            HtmlWalkTree(pTree, 0, imageChangedCb, static_cast<ClientData>(pImage);
         }
 
         /* If the image contents have been modified but the size is
@@ -397,7 +397,7 @@ HtmlImageServerGet(HtmlImageServer *p, const char *zUrl)
                 goto image_get_out;
             }
 
-            Tcl_SetHashValue(pEntry, (ClientData)(pImage);
+            Tcl_SetHashValue(pEntry, static_cast<ClientData>(pImage);
             Tcl_IncrRefCount(apObj[0]);
             pImage->pImageName = apObj[0];
             if (nObj == 2) {

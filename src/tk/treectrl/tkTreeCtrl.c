@@ -406,7 +406,7 @@ TreeObjCmd(
 
 	optionTable = Tk_CreateOptionTable(interp, optionSpecs);
 
-	tree = (TreeCtrl *) ckalloc(sizeof(TreeCtrl));
+	tree = (TreeCtrl *) Tcl_Alloc(sizeof(TreeCtrl));
 	memset(tree, '\0', sizeof(TreeCtrl));
 	tree->tkwin					= tkwin;
 	tree->display				= Tk_Display(tkwin);
@@ -1325,14 +1325,14 @@ TreeConfigure(
 						tree->defaultStyle.stylesObj, &listObjc, &listObjv)
 						!= TCL_OK)) continue;
 					tree->defaultStyle.styles =
-						(TreeStyle *) ckalloc(sizeof(TreeStyle) * listObjc);
+						(TreeStyle *) Tcl_Alloc(sizeof(TreeStyle) * listObjc);
 					tree->defaultStyle.numStyles = listObjc;
 					for (i = 0; i < listObjc; i++) {
 						if (ObjectIsEmpty(listObjv[i])) {
 							style = NULL;
 						} else {
 							if (TreeStyle_FromObj(tree, listObjv[i], &style) != TCL_OK) {
-								ckfree((char *) tree->defaultStyle.styles);
+								Tcl_Free((char *) tree->defaultStyle.styles);
 								break;
 							}
 						}
@@ -1447,7 +1447,7 @@ badWrap:
 #ifdef DEPRECATED
 			if (mask & TREE_CONF_DEFSTYLE) {
 				if (saved.defaultStyle.styles != NULL)
-					ckfree((char *) saved.defaultStyle.styles);
+					Tcl_Free((char *) saved.defaultStyle.styles);
 			}
 #endif
 			Tk_FreeSavedOptions(&savedOptions);
@@ -1464,7 +1464,7 @@ badWrap:
 				Tree_FreeImage(tree, tree->backgroundImage);
 #ifdef DEPRECATED
 			if (maskFree & TREE_CONF_DEFSTYLE)
-				ckfree((char *) tree->defaultStyle.styles);
+				Tcl_Free((char *) tree->defaultStyle.styles);
 #endif
 			/*
 			 * Restore old values.
@@ -1821,7 +1821,7 @@ TreeDestroy(
 
 	for (i = STATE_USER - 1; i < 32; i++)
 		if (tree->stateNames[i] != NULL)
-			ckfree(tree->stateNames[i]);
+			Tcl_Free(tree->stateNames[i]);
 
 	Tk_FreeConfigOptions((char *) tree, tree->debug.optionTable,
 			tree->tkwin);
@@ -1832,7 +1832,7 @@ TreeDestroy(
 	while (hPtr != NULL) {
 		TreeImageRef *ref = (TreeImageRef *) Tcl_GetHashValue(hPtr);
 		Tk_FreeImage(ref->image);
-		ckfree((char *) ref);
+		Tcl_Free((char *) ref);
 		hPtr = Tcl_NextHashEntry(&search);
 	}
 	Tcl_DeleteHashTable(&tree->imageNameHash);
@@ -1842,7 +1842,7 @@ TreeDestroy(
 
 #ifdef DEPRECATED
 	if (tree->defaultStyle.styles != NULL)
-		ckfree((char *) tree->defaultStyle.styles);
+		Tcl_Free((char *) tree->defaultStyle.styles);
 #endif
 #ifdef ALLOC_HAX
 	TreeAlloc_Finalize(tree->allocData);
@@ -2153,7 +2153,7 @@ Tree_GetImage(
 			Tcl_DeleteHashEntry(hPtr);
 			return NULL;
 		}
-		ref = (TreeImageRef *) ckalloc(sizeof(TreeImageRef));
+		ref = (TreeImageRef *) Tcl_Alloc(sizeof(TreeImageRef));
 		ref->count = 0;
 		ref->image = image;
 		ref->hPtr = hPtr;
@@ -2201,7 +2201,7 @@ Tree_FreeImage(
 			Tcl_DeleteHashEntry(ref->hPtr); /* imageNameHash */
 			Tcl_DeleteHashEntry(hPtr);
 			Tk_FreeImage(ref->image);
-			ckfree((char *) ref);
+			Tcl_Free((char *) ref);
 		}
 	}
 }
@@ -2595,7 +2595,7 @@ TreeStateCmd(
 				FormatResult(interp, "cannot define any more states");
 				return TCL_ERROR;
 			}
-			tree->stateNames[slot] = ckalloc(length + 1);
+			tree->stateNames[slot] = Tcl_Alloc(length + 1);
 			strcpy(tree->stateNames[slot], string);
 			break;
 		}
@@ -2645,7 +2645,7 @@ TreeStateCmd(
 						1L << index);
 				PerStateInfo_Undefine(tree, &pstImage, &tree->buttonImage,
 						1L << index);
-				ckfree(tree->stateNames[index]);
+				Tcl_Free(tree->stateNames[index]);
 				tree->stateNames[index] = NULL;
 			}
 			break;
@@ -4279,7 +4279,7 @@ LoupeCmd(
 	/* See TkPostscriptImage */
 
 	ncolors = visual->map_entries;
-	xcolors = (XColor *) ckalloc(sizeof(XColor) * ncolors);
+	xcolors = (XColor *) Tcl_Alloc(sizeof(XColor) * ncolors);
 
 	if ((visual->class == DirectColor) || (visual->class == TrueColor)) {
 		separated = 1;
@@ -4347,7 +4347,7 @@ LoupeCmd(
 
 	Tcl_Free((char *) pixelPtr);
 #if !defined(WIN32) && !defined(MAC_OSX_TK)
-	ckfree((char *) xcolors);
+	Tcl_Free((char *) xcolors);
 	XDestroyImage(ximage);
 #endif
 

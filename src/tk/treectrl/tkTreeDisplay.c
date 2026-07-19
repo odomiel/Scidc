@@ -294,7 +294,7 @@ Range_Redo(
 	Tree_UpdateItemIndex(tree);
 
 	if (dInfo->rItemMax < tree->itemVisCount) {
-		dInfo->rItem = (RItem *) ckrealloc((char *) dInfo->rItem,
+		dInfo->rItem = (RItem *) Tcl_Realloc((char *) dInfo->rItem,
 				tree->itemVisCount * sizeof(RItem));
 		dInfo->rItemMax = tree->itemVisCount;
 	}
@@ -303,7 +303,7 @@ Range_Redo(
 		item = TreeItem_NextVisible(tree, item);
 	while (item != NULL) {
 		if (rangeList == NULL)
-			range = (Range *) ckalloc(sizeof(Range));
+			range = (Range *) Tcl_Alloc(sizeof(Range));
 		else {
 			range = rangeList;
 			rangeList = rangeList->next;
@@ -415,12 +415,12 @@ freeRanges:
 			return;
 
 		if (dInfo->rItemMax < tree->itemVisCount) {
-			dInfo->rItem = (RItem *) ckrealloc((char *) dInfo->rItem,
+			dInfo->rItem = (RItem *) Tcl_Realloc((char *) dInfo->rItem,
 					tree->itemVisCount * sizeof(RItem));
 			dInfo->rItemMax = tree->itemVisCount;
 		}
 
-		dInfo->rangeLock = (Range *) ckalloc(sizeof(Range));
+		dInfo->rangeLock = (Range *) Tcl_Alloc(sizeof(Range));
 		range = dInfo->rangeLock;
 
 		pixels = 0;
@@ -1030,7 +1030,7 @@ Increment_AddX(
 	}
 	if (dInfo->xScrollIncrementCount + 1 > size) {
 		size *= 2;
-		dInfo->xScrollIncrements = (int *) ckrealloc(
+		dInfo->xScrollIncrements = (int *) Tcl_Realloc(
 			(char *) dInfo->xScrollIncrements, size * sizeof(int));
 	}
 	dInfo->xScrollIncrements[dInfo->xScrollIncrementCount++] = offset;
@@ -1073,7 +1073,7 @@ Increment_AddY(
 	}
 	if (dInfo->yScrollIncrementCount + 1 > size) {
 		size *= 2;
-		dInfo->yScrollIncrements = (int *) ckrealloc(
+		dInfo->yScrollIncrements = (int *) Tcl_Realloc(
 			(char *) dInfo->yScrollIncrements, size * sizeof(int));
 	}
 	dInfo->yScrollIncrements[dInfo->yScrollIncrementCount++] = offset;
@@ -1115,7 +1115,7 @@ RItemsToIncrementsX(
 		return;
 
 	size = 10;
-	dInfo->xScrollIncrements = (int *) ckalloc(size * sizeof(int));
+	dInfo->xScrollIncrements = (int *) Tcl_Alloc(size * sizeof(int));
 
 	if (rangeFirst == NULL) {
 		/* Only the column headers are shown. */
@@ -1195,7 +1195,7 @@ RItemsToIncrementsY(
 		return;
 
 	size = 10;
-	dInfo->yScrollIncrements = (int *) ckalloc(size * sizeof(int));
+	dInfo->yScrollIncrements = (int *) Tcl_Alloc(size * sizeof(int));
 
 	/* If only locked columns are visible, we still scroll vertically. */
 	rangeFirst = dInfo->rangeFirst;
@@ -1278,7 +1278,7 @@ RangesToIncrementsX(
 
 	/* First increment is zero */
 	size = 10;
-	dInfo->xScrollIncrements = (int *) ckalloc(size * sizeof(int));
+	dInfo->xScrollIncrements = (int *) Tcl_Alloc(size * sizeof(int));
 	dInfo->xScrollIncrements[dInfo->xScrollIncrementCount++] = 0;
 
 	if (dInfo->rangeFirst != NULL) {
@@ -1330,7 +1330,7 @@ RangesToIncrementsY(
 
 	/* First increment is zero */
 	size = 10;
-	dInfo->yScrollIncrements = (int *) ckalloc(size * sizeof(int));
+	dInfo->yScrollIncrements = (int *) Tcl_Alloc(size * sizeof(int));
 	dInfo->yScrollIncrements[dInfo->yScrollIncrementCount++] = 0;
 
 	range = dInfo->rangeFirst->next;
@@ -1372,13 +1372,13 @@ Increment_Redo(
 
 	/* Free x */
 	if (dInfo->xScrollIncrements != NULL)
-		ckfree((char *) dInfo->xScrollIncrements);
+		Tcl_Free((char *) dInfo->xScrollIncrements);
 	dInfo->xScrollIncrements = NULL;
 	dInfo->xScrollIncrementCount = 0;
 
 	/* Free y */
 	if (dInfo->yScrollIncrements != NULL)
-		ckfree((char *) dInfo->yScrollIncrements);
+		Tcl_Free((char *) dInfo->yScrollIncrements);
 	dInfo->yScrollIncrements = NULL;
 	dInfo->yScrollIncrementCount = 0;
 
@@ -2418,7 +2418,7 @@ DItem_Alloc(
 		dInfo->dItemFree = dItem->next;
 	/* No free DItems, alloc a new one */
 	} else {
-		dItem = (DItem *) ckalloc(sizeof(DItem));
+		dItem = (DItem *) Tcl_Alloc(sizeof(DItem));
 	}
 	memset(dItem, '\0', sizeof(DItem));
 #ifdef TREECTRL_DEBUG
@@ -2840,7 +2840,7 @@ TrackOnScreenColumnsForItem(
 	/* value is NULL if the item just came onscreen. */
 	value = (TreeColumn *) Tcl_GetHashValue(hPtr);
 	if (value == NULL) {
-		value = (TreeColumn *) ckalloc(sizeof(TreeColumn) * (count + 1));
+		value = (TreeColumn *) Tcl_Alloc(sizeof(TreeColumn) * (count + 1));
 		value[0] = NULL;
 	}
 
@@ -2885,7 +2885,7 @@ TrackOnScreenColumnsForItem(
 	/* Set the list of onscreen columns unless it is the same or the item
 	* is hidden. */
 	if (n > 0 && dItem != NULL) {
-		value = (TreeColumn *) ckrealloc((char *) value,
+		value = (TreeColumn *) Tcl_Realloc((char *) value,
 				sizeof(TreeColumn) * (count + 1));
 		memcpy(value, (TreeColumn *) columns.pointers,
 				sizeof(TreeColumn) * count);
@@ -5726,7 +5726,7 @@ displayRetry:
 
 			/* Haven't seen this column before. */
 			if (dColumn == NULL) {
-				dColumn = (TreeColumnDInfo) ckalloc(sizeof(TreeColumnDInfo_));
+				dColumn = (TreeColumnDInfo) Tcl_Alloc(sizeof(TreeColumnDInfo_));
 				TreeColumn_SetDInfo(treeColumn, dColumn);
 				if (width > 0)
 					redoRanges = drawItems = drawHeader = TRUE;
@@ -5916,7 +5916,7 @@ displayRetry:
 			hPtr = Tcl_FindHashEntry(&dInfo->itemVisHash, (char *) item);
 #ifdef DCOLUMN
 			TrackOnScreenColumnsForItem(tree, item, hPtr);
-			ckfree((char *) Tcl_GetHashValue(hPtr));
+			Tcl_Free((char *) Tcl_GetHashValue(hPtr));
 #endif
 			Tcl_DeleteHashEntry(hPtr);
 		}
@@ -7359,7 +7359,7 @@ TreeDisplay_ItemDeleted(
 	hPtr = Tcl_FindHashEntry(&dInfo->itemVisHash, (char *) item);
 	if (hPtr != NULL) {
 #ifdef DCOLUMN
-		ckfree((char *) Tcl_GetHashValue(hPtr));
+		Tcl_Free((char *) Tcl_GetHashValue(hPtr));
 #endif
 		Tcl_DeleteHashEntry(hPtr);
 	}
@@ -7443,7 +7443,7 @@ TreeDisplay_FreeColumnDInfo(
 	TreeColumnDInfo dColumn = TreeColumn_GetDInfo(column);
 
 	if (dColumn != NULL)
-		ckfree((char *) dColumn);
+		Tcl_Free((char *) dColumn);
 }
 
 /*
@@ -7851,7 +7851,7 @@ TreeDInfo_Init(
 	TreeDInfo dInfo;
 	XGCValues gcValues;
 
-	dInfo = (TreeDInfo) ckalloc(sizeof(TreeDInfo_));
+	dInfo = (TreeDInfo) Tcl_Alloc(sizeof(TreeDInfo_));
 	memset(dInfo, '\0', sizeof(TreeDInfo_));
 	gcValues.graphics_exposures = True;
 	dInfo->scrollGC = Tk_GetGC(tree->tkwin, GCGraphicsExposures, &gcValues);
@@ -7892,9 +7892,9 @@ TreeDInfo_Free(
 	Tcl_HashSearch search;
 
 	if (dInfo->rItem != NULL)
-		ckfree((char *) dInfo->rItem);
+		Tcl_Free((char *) dInfo->rItem);
 	if (dInfo->rangeLock != NULL)
-		ckfree((char *) dInfo->rangeLock);
+		Tcl_Free((char *) dInfo->rangeLock);
 	while (dInfo->dItem != NULL) {
 		DItem *next = dInfo->dItem->next;
 		WFREE(dInfo->dItem, DItem);
@@ -7917,15 +7917,15 @@ TreeDInfo_Free(
 	if (dInfo->pixmapT.drawable != None)
 		Tk_FreePixmap(tree->display, dInfo->pixmapT.drawable);
 	if (dInfo->xScrollIncrements != NULL)
-		ckfree((char *) dInfo->xScrollIncrements);
+		Tcl_Free((char *) dInfo->xScrollIncrements);
 	if (dInfo->yScrollIncrements != NULL)
-		ckfree((char *) dInfo->yScrollIncrements);
+		Tcl_Free((char *) dInfo->yScrollIncrements);
 	Tree_FreeRegion(tree, dInfo->wsRgn);
 	TkDestroyRegion(dInfo->dirtyRgn);
 #ifdef DCOLUMN
 	hPtr = Tcl_FirstHashEntry(&dInfo->itemVisHash, &search);
 	while (hPtr != NULL) {
-		ckfree((char *) Tcl_GetHashValue(hPtr));
+		Tcl_Free((char *) Tcl_GetHashValue(hPtr));
 		hPtr = Tcl_NextHashEntry(&search);
 	}
 #endif

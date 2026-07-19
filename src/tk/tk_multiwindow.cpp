@@ -686,13 +686,13 @@ RaiseSlave(	MultiWindow* mw,	// Information about multi window
 	if (index == mw->numSlaves)
 		return;
 
-	slaves = (Slave**)ckalloc(sizeof(Slave*)*mw->numSlaves);
+	slaves = (Slave**)Tcl_Alloc(sizeof(Slave*)*mw->numSlaves);
 	memcpy(slaves, mw->slaves, sizeof(Slave*)*mw->numSlaves);
 
 	memcpy(mw->slaves, slaves + index, sizeof(Slave*)*(mw->numSlaves - index));
 	memcpy(mw->slaves + mw->numSlaves - index, slaves, sizeof(Slave*)*index);
 
-	ckfree((char*)slaves);
+	Tcl_Free((char*)slaves);
 }
 
 
@@ -976,7 +976,7 @@ SlaveStructureProc(	ClientData clientData,	// Pointer to record describing windo
 	{
 		Unlink(slave);
 		slave->tkwin = nullptr;
-		ckfree((char*)slave);
+		Tcl_Free((char*)slave);
 		ComputeGeometry(mw);
 	}
 }
@@ -1151,7 +1151,7 @@ ConfigureSlaves(	MultiWindow* mw,			// Information about multi window
 	// structures corresponding to the windows specified. Some of those
 	// structures may already have existed, some may be new.
 
-	inserts = (Slave**)ckalloc(sizeof(Slave*)*(firstOptionArg - 2));
+	inserts = (Slave**)Tcl_Alloc(sizeof(Slave*)*(firstOptionArg - 2));
 	insertIndex = 0;
 
 	// Populate the inserts array, creating new slave structures as necessary,
@@ -1209,7 +1209,7 @@ ConfigureSlaves(	MultiWindow* mw,			// Information about multi window
 			// Create a new slave structure and initialize it. All slaves start
 			// out with their "natural" dimensions.
 
-			Slave* slave = (Slave*)ckalloc(sizeof(Slave));
+			Slave* slave = (Slave*)Tcl_Alloc(sizeof(Slave));
 			memset(slave, 0, sizeof(Slave));
 			Tk_InitOptions(interp, (char *)slave, mw->slaveOpts, mw->tkwin);
 			Tk_SetOptions(	interp,
@@ -1240,7 +1240,7 @@ ConfigureSlaves(	MultiWindow* mw,			// Information about multi window
 	// Allocate the new slaves array, then copy the slaves into it, in order.
 
 	i = sizeof(Slave*)*(mw->numSlaves + numNewSlaves);
-	newSlaves = (Slave**)ckalloc((unsigned)i);
+	newSlaves = (Slave**)Tcl_Alloc((unsigned)i);
 	memset(newSlaves, 0, (size_t)i);
 
 	if (index == -1)
@@ -1283,8 +1283,8 @@ ConfigureSlaves(	MultiWindow* mw,			// Information about multi window
 
 	// Make the new slaves array the multi window's slave array, and clean up.
 
-	ckfree((char*)mw->slaves);
-	ckfree((char*)inserts);
+	Tcl_Free((char*)mw->slaves);
+	Tcl_Free((char*)inserts);
 	mw->slaves = newSlaves;
 
 	// Set the multi window's slave count to the new value.
@@ -1822,12 +1822,12 @@ DestroyMultiWindow(MultiWindow* mw)		// Info about multi window widget
 										static_cast<ClientData>(mw->slaves[i]));
 		Tk_ManageGeometry(mw->slaves[i]->tkwin, nullptr, nullptr);
 		Tk_FreeConfigOptions((char*)mw->slaves[i], mw->slaveOpts, mw->tkwin);
-		ckfree((char*)mw->slaves[i]);
+		Tcl_Free((char*)mw->slaves[i]);
 		mw->slaves[i] = nullptr;
 	}
 
 	if (mw->slaves)
-		ckfree((char*)mw->slaves);
+		Tcl_Free((char*)mw->slaves);
 
 	// Remove the widget command from the interpreter.
 	Tcl_DeleteCommandFromToken(mw->interp, mw->widgetCmd);
@@ -1941,7 +1941,7 @@ static void
 DestroyOptionTables(	ClientData clientData,	// Pointer to the OptionTables struct
 							Tcl_Interp* interp)		// Pointer to the calling interp
 {
-	ckfree((char*)clientData);
+	Tcl_Free((char*)clientData);
 }
 
 
@@ -2011,7 +2011,7 @@ MultiWindowLostSlaveProc(	ClientData clientData,	// Grid structure for slave win
 									static_cast<ClientData>(slave));
     Tk_UnmapWindow(slave->tkwin);
     slave->tkwin = nullptr;
-    ckfree((char*)slave);
+    Tcl_Free((char*)slave);
     ComputeGeometry(mw);
 }
 
@@ -2058,7 +2058,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 		// a pointer to the tables as the command's clinical so we'll have
 		// easy access to it in the future.
 
-		mwOpts = (OptionTables*)ckalloc(sizeof(OptionTables));
+		mwOpts = (OptionTables*)Tcl_Alloc(sizeof(OptionTables));
 
 		// Set up an exit handler to free the optionTables struct.
 		Tcl_SetAssocData(interp, "MultiWindowOptionTables", DestroyOptionTables, static_cast<ClientData>(mwOpts));
@@ -2071,7 +2071,7 @@ Tk_MultiWindowObjCmd(	ClientData clientData,	// nullptr
 	Tk_SetClass(tkwin, "Multiwindow");
 
 	// Allocate and initialize the widget record.
-	mw = (MultiWindow*)ckalloc(sizeof(MultiWindow));
+	mw = (MultiWindow*)Tcl_Alloc(sizeof(MultiWindow));
 	memset((void*)mw, 0, sizeof(MultiWindow));
 	mw->tkwin = tkwin;
 	mw->interp = interp;

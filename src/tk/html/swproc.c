@@ -212,7 +212,7 @@ swproc_rtCmd(
             SwprocConf *aScriptConf;
             Tcl_Obj **apVars;
 
-            aScriptConf = (SwprocConf *)ckalloc(
+            aScriptConf = (SwprocConf *)Tcl_Alloc(
                     nConf * sizeof(Tcl_Obj*) +
                     (nConf + 1) * sizeof(SwprocConf)
             );
@@ -265,7 +265,7 @@ swproc_rtCmd(
                 }
             }
 
-            ckfree((char *)aScriptConf);
+            Tcl_Free((char *)aScriptConf);
         }
 
         for (ii = 0; ii < sizeof(apObj)/sizeof(apObj[0]); ii++) {

@@ -293,7 +293,7 @@ static const Tk_OptionSpec optionSpecs[] = {
 	DEF_TEXT_INSERT_BG, -1, Tk_Offset(TkText, insertBorder), 0, 0, 0},
     {TK_OPTION_PIXELS, "-insertborderwidth", "insertBorderWidth",
 	"BorderWidth", DEF_TEXT_INSERT_BD_COLOR, -1, Tk_Offset(TkText, insertBorderWidth), 0,
-	(ClientData)( DEF_TEXT_INSERT_BD_MONO, 0},
+	static_cast<ClientData>( DEF_TEXT_INSERT_BD_MONO, 0},
     {TK_OPTION_COLOR, "-insertforeground", "insertForeground", "InsertForeground",
 	DEF_TEXT_BG_COLOR, -1, Tk_Offset(TkText, insertFgColor), 0, 0, 0},
     {TK_OPTION_INT, "-insertofftime", "insertOffTime", "OffTime",
@@ -2625,7 +2625,7 @@ TextWidgetObjCmd(
 	    } else {
 		if (!append && *script == '\0') {
 		    if (textPtr->pendingAfterSync) {
-			Tcl_CancelIdleCall(RunAfterSyncCmd, (ClientData)( textPtr);
+			Tcl_CancelIdleCall(RunAfterSyncCmd, static_cast<ClientData>( textPtr);
 			textPtr->pendingAfterSync = false;
 		    }
 		    cmd = NULL;
@@ -2641,7 +2641,7 @@ TextWidgetObjCmd(
 	    if (!textPtr->pendingAfterSync) {
 		textPtr->pendingAfterSync = true;
 		if (!TkTextPendingSync(textPtr)) {
-		    Tcl_DoWhenIdle(RunAfterSyncCmd, (ClientData)( textPtr);
+		    Tcl_DoWhenIdle(RunAfterSyncCmd, static_cast<ClientData>( textPtr);
 		}
 	    }
 	} else {
@@ -3496,11 +3496,11 @@ DestroyText(
      */
 
     if (textPtr->pendingAfterSync) {
-	Tcl_CancelIdleCall(RunAfterSyncCmd, (ClientData)( textPtr);
+	Tcl_CancelIdleCall(RunAfterSyncCmd, static_cast<ClientData>( textPtr);
 	textPtr->pendingAfterSync = false;
     }
     if (textPtr->pendingFireEvent) {
-	Tcl_CancelIdleCall(FireWidgetViewSyncEvent, (ClientData)( textPtr);
+	Tcl_CancelIdleCall(FireWidgetViewSyncEvent, static_cast<ClientData>( textPtr);
 	textPtr->pendingFireEvent = false;
     }
     if (textPtr->afterSyncCmd) {
@@ -8513,13 +8513,13 @@ GetBindings(
     Tcl_Obj **argv;
     int argc, i;
 
-    Tk_GetAllBindings(interp, bindingTable, (ClientData)( name);
+    Tk_GetAllBindings(interp, bindingTable, static_cast<ClientData>( name);
     Tcl_ListObjGetElements(interp, Tcl_GetObjResult(interp), &argc, &argv);
     Tcl_DStringInit(&str2);
 
     for (i = 0; i < argc; ++i) {
 	const char *event = Tcl_GetString(argv[i]);
-	const char *binding = Tk_GetBinding(interp, bindingTable, (ClientData)( name, event);
+	const char *binding = Tk_GetBinding(interp, bindingTable, static_cast<ClientData>( name, event);
 	char *p;
 
 	Tcl_ListObjGetElements(interp, Tcl_GetObjResult(interp), &argc, &argv);
@@ -9989,12 +9989,12 @@ TkTextTriggerWatchCmd(
 
     textPtr->refCount += 1;
 
-    Tcl_Preserve((ClientData)( textPtr->interp);
+    Tcl_Preserve(static_cast<ClientData>( textPtr->interp);
     if (Tcl_EvalEx(textPtr->interp, Tcl_DStringValue(&cmd), Tcl_DStringLength(&cmd), 0) != TCL_OK) {
 	Tcl_AddErrorInfo(textPtr->interp, "\n    (triggering the \"watch\" command failed)");
 	Tcl_BackgroundException(textPtr->interp, TCL_ERROR);
     }
-    Tcl_Release((ClientData)( textPtr->interp);
+    Tcl_Release(static_cast<ClientData>( textPtr->interp);
 
     Tcl_DStringFree(&cmd);
     return !TkTextDecrRefCountAndTestIfDestroyed(textPtr);
@@ -10158,7 +10158,7 @@ TkTextRunAfterSyncCmd(
     textPtr->afterSyncCmd = NULL;
     textPtr->refCount += 1;
 
-    Tcl_Preserve((ClientData)( textPtr->interp);
+    Tcl_Preserve(static_cast<ClientData>( textPtr->interp);
     if (!(textPtr->flags & DESTROYED)) {
 	code = Tcl_EvalObjEx(textPtr->interp, afterSyncCmd, TCL_EVAL_GLOBAL);
 	if (code == TCL_ERROR && !error) {
@@ -10168,7 +10168,7 @@ TkTextRunAfterSyncCmd(
 	}
     }
     Tcl_GuardedDecrRefCount(afterSyncCmd);
-    Tcl_Release((ClientData)( textPtr->interp);
+    Tcl_Release(static_cast<ClientData>( textPtr->interp);
     TkTextDecrRefCountAndTestIfDestroyed(textPtr);
 }
 
@@ -10276,9 +10276,9 @@ FireWidgetViewSyncEvent(
     textPtr->prevSyncState = syncState;
 
     interp = textPtr->interp;
-    Tcl_Preserve((ClientData)( interp);
+    Tcl_Preserve(static_cast<ClientData>( interp);
     SendVirtualEvent(textPtr->tkwin, "WidgetViewSync", Tcl_NewBooleanObj(syncState));
-    Tcl_Release((ClientData)( interp);
+    Tcl_Release(static_cast<ClientData>( interp);
 }
 
 void
@@ -10289,9 +10289,9 @@ TkTextGenerateWidgetViewSyncEvent(
     if (!textPtr->pendingFireEvent) {
 	textPtr->pendingFireEvent = true;
 	if (sendImmediately) {
-	    FireWidgetViewSyncEvent((ClientData)( textPtr);
+	    FireWidgetViewSyncEvent(static_cast<ClientData>( textPtr);
 	} else {
-	    Tcl_DoWhenIdle(FireWidgetViewSyncEvent, (ClientData)( textPtr);
+	    Tcl_DoWhenIdle(FireWidgetViewSyncEvent, static_cast<ClientData>( textPtr);
 	}
     }
 }

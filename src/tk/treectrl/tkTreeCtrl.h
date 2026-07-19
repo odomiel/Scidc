@@ -944,7 +944,7 @@ MODULE_SCOPE int TreeTheme_IsDesktopComposited(TreeCtrl *tree);
 #define WIPE(p,s)
 #endif
 #define CWIPE(p,t,c) WIPE(p, sizeof(t) * (c))
-#define WIPEFREE(p,s) { WIPE(p, s); ckfree((char *) p); }
+#define WIPEFREE(p,s) { WIPE(p, s); Tcl_Free((char *) p); }
 #define WFREE(p,t) WIPEFREE(p, sizeof(t))
 #define WCFREE(p,t,c) WIPEFREE(p, sizeof(t) * (c))
 
@@ -1209,13 +1209,13 @@ MODULE_SCOPE Tk_ObjCustomOption TreeCtrlCO_style;
 #define STATIC_SIZE 20
 #define STATIC_ALLOC(P,T,C) \
 	if (C > STATIC_SIZE) \
-		P = (T *) ckalloc(sizeof(T) * (C))
+		P = (T *) Tcl_Alloc(sizeof(T) * (C))
 #define STATIC_FREE(P,T,C) \
 	CWIPE(P, T, C); \
 	if (C > STATIC_SIZE) \
-		ckfree((char *) P)
+		Tcl_Free((char *) P)
 #define STATIC_FREE2(P,P2) \
 	if (P != P2) \
-		ckfree((char *) P)
+		Tcl_Free((char *) P)
 
 /* vi:set ts=4 sw=4: */
