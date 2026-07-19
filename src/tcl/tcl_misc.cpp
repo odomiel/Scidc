@@ -1086,7 +1086,7 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int
 cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
-	setResult(SCIDB_VERSION);
+	setResult("26.07.19 b1 Beta");
 	return TCL_OK;
 }
 

@@ -436,7 +436,7 @@ Tree_Ellipsis(
 	else
 		bytesTest = Tcl_UtfPrev(string + bytesThatFit, string) - string;
 	if (bytesTest + ellipsisNumBytes > sizeof(staticStr))
-		tmpStr = ckalloc(bytesTest + ellipsisNumBytes);
+		tmpStr = Tcl_Alloc(bytesTest + ellipsisNumBytes);
 	memcpy(tmpStr, string, bytesTest);
 	while (bytesTest > 0) {
 		memcpy(tmpStr + bytesTest, ellipsis, ellipsisNumBytes);
@@ -446,7 +446,7 @@ Tree_Ellipsis(
 		if (numBytes == bytesTest + ellipsisNumBytes) {
 			(*maxPixels) = pixelsTest;
 			if (tmpStr != staticStr)
-				ckfree(tmpStr);
+				Tcl_Free(tmpStr);
 			return bytesTest;
 		}
 		bytesTest = Tcl_UtfPrev(string + bytesTest, string) - string;
@@ -463,7 +463,7 @@ Tree_Ellipsis(
 		-1, 0, &pixels);
 	(*maxPixels) = pixels;
 	if (tmpStr != staticStr)
-		ckfree(tmpStr);
+		Tcl_Free(tmpStr);
 	return bytesThatFit;
 }
 
@@ -1714,7 +1714,7 @@ Tree_XImage2Photo(
 	/* See TkPoscriptImage */
 
 	ncolors = visual->map_entries;
-	xcolors = (XColor *) ckalloc(sizeof(XColor) * ncolors);
+	xcolors = (XColor *) Tcl_Alloc(sizeof(XColor) * ncolors);
 
 	if ((visual->class == DirectColor) || (visual->class == TrueColor)) {
 		separated = 1;
@@ -1787,7 +1787,7 @@ Tree_XImage2Photo(
 			TK_PHOTO_COMPOSITE_SET);
 
 	Tcl_Free((char *) pixelPtr);
-	ckfree((char *) xcolors);
+	Tcl_Free((char *) xcolors);
 }
 
 #endif /* X11 */
@@ -1878,7 +1878,7 @@ static LayoutChunk *NewChunk(LayoutInfo **layoutPtrPtr, int *maxPtr,
 	if (layoutPtr->numChunks == layoutPtr->maxChunks) {
 		layoutPtr->maxChunks *= 2;
 		s = sizeof(LayoutInfo) + ((layoutPtr->maxChunks - 1) * sizeof(LayoutChunk));
-		layoutPtr = (LayoutInfo *) ckrealloc((char *) layoutPtr, s);
+		layoutPtr = (LayoutInfo *) Tcl_Realloc((char *) layoutPtr, s);
 
 		*layoutPtrPtr = layoutPtr;
 	}
@@ -1887,7 +1887,7 @@ static LayoutChunk *NewChunk(LayoutInfo **layoutPtrPtr, int *maxPtr,
 	if (layoutPtr->numChunks == maxChunks) {
 		maxChunks *= 2;
 		s = sizeof(LayoutInfo) + ((maxChunks - 1) * sizeof(LayoutChunk));
-		layoutPtr = (LayoutInfo *) ckrealloc((char *) layoutPtr, s);
+		layoutPtr = (LayoutInfo *) Tcl_Realloc((char *) layoutPtr, s);
 
 		*layoutPtrPtr = layoutPtr;
 		*maxPtr = maxChunks;
@@ -1957,7 +1957,7 @@ TextLayout TextLayout_Compute(
 		freeLayoutInfo = layoutPtr->nextFree;
 	} else {
 		maxChunks = 1;
-		layoutPtr = (LayoutInfo *) ckalloc(sizeof(LayoutInfo) +
+		layoutPtr = (LayoutInfo *) Tcl_Alloc(sizeof(LayoutInfo) +
 			(maxChunks - 1) * sizeof(LayoutChunk));
 		layoutPtr->maxChunks = maxChunks;
 	}
@@ -1965,7 +1965,7 @@ TextLayout TextLayout_Compute(
 #else
 	maxChunks = 1;
 
-	layoutPtr = (LayoutInfo *) ckalloc(sizeof(LayoutInfo) + (maxChunks - 1) * sizeof(LayoutChunk));
+	layoutPtr = (LayoutInfo *) Tcl_Alloc(sizeof(LayoutInfo) + (maxChunks - 1) * sizeof(LayoutChunk));
 #endif
 	layoutPtr->tkfont = tkfont;
 	layoutPtr->string = string;
@@ -2169,7 +2169,7 @@ wrapLine:
 			}
 
 			if (chunkPtr->numBytes + ellipsisLen > sizeof(staticStr))
-				buf = ckalloc(chunkPtr->numBytes + ellipsisLen);
+				buf = Tcl_Alloc(chunkPtr->numBytes + ellipsisLen);
 			memcpy(buf, chunkPtr->start, chunkPtr->numBytes);
 			memcpy(buf + chunkPtr->numBytes, ellipsis, ellipsisLen);
 			Tree_MeasureChars(tkfont, specialfont, buf,
@@ -2182,7 +2182,7 @@ wrapLine:
 			if (chunkPtr->x + chunkPtr->displayWidth > maxWidth)
 				maxWidth = chunkPtr->x + chunkPtr->displayWidth;
 			if (buf != staticStr)
-				ckfree(buf);
+				Tcl_Free(buf);
 		}
 	}
 finish:
@@ -2247,7 +2247,7 @@ void TextLayout_Free(TextLayout textLayout)
 	freeLayoutInfo = layoutPtr;
 	Tcl_MutexUnlock(&textLayoutMutex);
 #else
-	ckfree((char *) layoutPtr);
+	Tcl_Free((char *) layoutPtr);
 #endif
 }
 
@@ -2509,14 +2509,14 @@ void TextLayout_Draw(
 				int ellipsisLen = strlen(ellipsis);
 
 				if ((lastByte - firstByte) + ellipsisLen > sizeof(staticStr))
-					buf = ckalloc((lastByte - firstByte) + ellipsisLen);
+					buf = Tcl_Alloc((lastByte - firstByte) + ellipsisLen);
 				memcpy(buf, firstByte, (lastByte - firstByte));
 				memcpy(buf + (lastByte - firstByte), ellipsis, ellipsisLen);
 				Tree_DrawChars(display, drawable, gc, layoutPtr->tkfont, &layoutPtr->specialfont,
 					buf, (lastByte - firstByte) + ellipsisLen,
 					x + chunkPtr->x + drawX, y + chunkPtr->y);
 				if (buf != staticStr)
-					ckfree(buf);
+					Tcl_Free(buf);
 			} else
 #endif
 			Tree_DrawChars(display, drawable, gc, layoutPtr->tkfont, &layoutPtr->specialfont,
@@ -2735,7 +2735,7 @@ PadAmountOptionSet(clientData, interp, tkwin, valuePtr, recordPtr,
 	if (internalOffset >= 0) {
 		internalPtr = (int **) (recordPtr + internalOffset);
 		*(int **) saveInternalPtr = *internalPtr;
-		new = (int *) ckalloc(2 * sizeof(int));
+		new = (int *) Tcl_Alloc(2 * sizeof(int));
 		new[PAD_TOP_LEFT]     = topLeft;
 		new[PAD_BOTTOM_RIGHT] = bottomRight;
 		*internalPtr = new;
@@ -2775,7 +2775,7 @@ PadAmountOptionFree(clientData, tkwin, internalPtr)
 								 * form (of type "int *") resides. */
 {
 	if (*(int **)internalPtr != NULL) {
-		ckfree((char *) *(int **)internalPtr);
+		Tcl_Free((char *) *(int **)internalPtr);
 	}
 }
 
@@ -2916,7 +2916,7 @@ PerStateInfo_FromObj(
 		pData = (PerStateData *) TreeAlloc_CAlloc(tree->allocData,
 			typePtr->name, typePtr->size, 1, PERSTATE_ROUNDUP);
 #else
-		pData = (PerStateData *) ckalloc(typePtr->size);
+		pData = (PerStateData *) Tcl_Alloc(typePtr->size);
 #endif
 		pData->stateOff = pData->stateOn = 0; /* all states */
 		if ((*typePtr->fromObjProc)(tree, objv[0], pData) != TCL_OK) {
@@ -2942,7 +2942,7 @@ PerStateInfo_FromObj(
 	pData = (PerStateData *) TreeAlloc_CAlloc(tree->allocData,
 		typePtr->name, typePtr->size, objc / 2, PERSTATE_ROUNDUP);
 #else
-	pData = (PerStateData *) ckalloc(typePtr->size * (objc / 2));
+	pData = (PerStateData *) Tcl_Alloc(typePtr->size * (objc / 2));
 #endif
 	pInfo->data = pData;
 	for (i = 0; i < objc; i += 2) {
@@ -3230,7 +3230,7 @@ Tree_GetGC(
 		return pGC->gc;
 	}
 
-	pGC = (GCCache *) ckalloc(sizeof(*pGC));
+	pGC = (GCCache *) Tcl_Alloc(sizeof(*pGC));
 	pGC->gcValues = (*gcValues);
 	pGC->mask = mask;
 	pGC->gc = Tk_GetGC(tree->tkwin, mask, gcValues);
@@ -3662,7 +3662,7 @@ PSDImageFromObj(
 		pImage->image = Tree_GetImage(tree, string);
 		if (pImage->image == NULL)
 			return TCL_ERROR;
-		pImage->string = ckalloc(length + 1);
+		pImage->string = Tcl_Alloc(length + 1);
 		strcpy(pImage->string, string);
 	}
 	return TCL_OK;
@@ -3674,7 +3674,7 @@ PSDImageFree(
 	PerStateDataImage *pImage)
 {
 	if (pImage->string != NULL)
-		ckfree(pImage->string);
+		Tcl_Free(pImage->string);
 	if (pImage->image != NULL)
 		Tree_FreeImage(tree, pImage->image);
 }
@@ -3915,7 +3915,7 @@ AllocStats_Get(
 		stats = stats->next;
 	}
 	if (stats == NULL) {
-		stats = (AllocStats *) ckalloc(sizeof(AllocStats));
+		stats = (AllocStats *) Tcl_Alloc(sizeof(AllocStats));
 		stats->id = id;
 		stats->count = 0;
 		stats->size = 0;
@@ -3994,7 +3994,7 @@ TreeAlloc_Alloc(
 		freeList = freeList->next;
 
 	if (freeList == NULL) {
-		freeList = (AllocList *) ckalloc(sizeof(AllocList));
+		freeList = (AllocList *) Tcl_Alloc(sizeof(AllocList));
 		freeList->size = size;
 		freeList->head = NULL;
 		freeList->next = freeLists;
@@ -4007,7 +4007,7 @@ TreeAlloc_Alloc(
 	if (freeList->head == NULL) {
 		unsigned elemSize = TCL_ALIGN(BODY_OFFSET + size);
 
-		block = (AllocBlock *) ckalloc(Tk_Offset(AllocBlock, elem) +
+		block = (AllocBlock *) Tcl_Alloc(Tk_Offset(AllocBlock, elem) +
 				elemSize * freeList->blockSize);
 		block->count = freeList->blockSize;
 		block->next = freeList->blocks;
@@ -4245,7 +4245,7 @@ TreeAlloc_CFree(
 ClientData
 TreeAlloc_Init(void)
 {
-	AllocData *data = (AllocData *) ckalloc(sizeof(AllocData));
+	AllocData *data = (AllocData *) Tcl_Alloc(sizeof(AllocData));
 	data->freeLists = NULL;
 #ifdef ALLOC_STATS
 	data->stats = NULL;
@@ -4286,22 +4286,22 @@ TreeAlloc_Finalize(
 		AllocBlock *block = freeList->blocks;
 		while (block != NULL) {
 			AllocBlock *nextBlock = block->next;
-			ckfree((char *) block);
+			Tcl_Free((char *) block);
 			block = nextBlock;
 		}
-		ckfree((char *) freeList);
+		Tcl_Free((char *) freeList);
 		freeList = nextList;
 	}
 
 #ifdef ALLOC_STATS
 	while (stats != NULL) {
 		AllocStats *next = stats->next;
-		ckfree((char *) stats);
+		Tcl_Free((char *) stats);
 		stats = next;
 	}
 #endif
 
-	ckfree((char *) data);
+	Tcl_Free((char *) data);
 }
 
 #endif /* ALLOC_HAX */
@@ -4342,7 +4342,7 @@ TreePtrList_Init(
 
 	if (count + 1 > TIL_STATIC_SPACE) {
 		tplPtr->space = count + 1;
-		tplPtr->pointers = (ClientData *) ckalloc(tplPtr->space * sizeof(ClientData);
+		tplPtr->pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData)));
 	}
 
 	tplPtr->pointers[0] = NULL;
@@ -4380,11 +4380,11 @@ TreePtrList_Grow(
 		tplPtr->space *= 2;
 	if (tplPtr->pointers == tplPtr->pointerSpace) {
 		ClientData *pointers;
-		pointers = (ClientData *) ckalloc(tplPtr->space * sizeof(ClientData);
+		pointers = (ClientData *) Tcl_Alloc(tplPtr->space * sizeof(ClientData)));
 		memcpy(pointers, tplPtr->pointers, (tplPtr->count + 1) * sizeof(ClientData);
 		tplPtr->pointers = pointers;
 	} else {
-		tplPtr->pointers = (ClientData *) ckrealloc((char *) tplPtr->pointers,
+		tplPtr->pointers = (ClientData *) Tcl_Realloc((char *) tplPtr->pointers,
 				tplPtr->space * sizeof(ClientData);
 	}
 }
@@ -4482,7 +4482,7 @@ TreePtrList_Free(
 		panic("TreePtrList_Free: using uninitialized list");
 #endif
 	if (tplPtr->pointers != tplPtr->pointerSpace) {
-		ckfree((char *) tplPtr->pointers);
+		Tcl_Free((char *) tplPtr->pointers);
 	}
 	tplPtr->pointers = tplPtr->pointerSpace;
 	tplPtr->count = 0;
@@ -4527,7 +4527,7 @@ TagInfo_Add(
 			tagInfo = (TagInfo *) TreeAlloc_Alloc(tree->allocData, TagInfoUid,
 					sizeof(TagInfo));
 #else
-			tagInfo = (TagInfo *) ckalloc(sizeof(TagInfo));
+			tagInfo = (TagInfo *) Tcl_Alloc(sizeof(TagInfo));
 #endif
 			tagInfo->tagSpace = TREE_TAG_SPACE;
 		} else {
@@ -4538,7 +4538,7 @@ if (tagSpace % TREE_TAG_SPACE) panic("TagInfo_Add miscalc");
 			tagInfo = (TagInfo *) TreeAlloc_Alloc(tree->allocData, TagInfoUid,
 				TAG_INFO_SIZE(tagSpace));
 #else
-			tagInfo = (TagInfo *) ckalloc(TAG_INFO_SIZE(tagSpace));
+			tagInfo = (TagInfo *) Tcl_Alloc(TAG_INFO_SIZE(tagSpace));
 #endif
 			tagInfo->tagSpace = tagSpace;
 		}
@@ -4559,7 +4559,7 @@ if (tagSpace % TREE_TAG_SPACE) panic("TagInfo_Add miscalc");
 					TAG_INFO_SIZE(tagInfo->tagSpace - TREE_TAG_SPACE),
 					TAG_INFO_SIZE(tagInfo->tagSpace));
 #else
-				tagInfo = (TagInfo *) ckrealloc((char *) tagInfo,
+				tagInfo = (TagInfo *) Tcl_Realloc((char *) tagInfo,
 					TAG_INFO_SIZE(tagInfo->tagSpace));
 #endif
 			}
@@ -4655,11 +4655,11 @@ TagInfo_Names(
 		if ((tags == NULL) || (numTags == tagSpace)) {
 			if (tags == NULL) {
 				tagSpace = 32;
-				tags = (Tk_Uid *) ckalloc(sizeof(Tk_Uid) * tagSpace);
+				tags = (Tk_Uid *) Tcl_Alloc(sizeof(Tk_Uid) * tagSpace);
 			}
 			else {
 				tagSpace *= 2;
-				tags = (Tk_Uid *) ckrealloc((char *) tags,
+				tags = (Tk_Uid *) Tcl_Realloc((char *) tags,
 					sizeof(Tk_Uid) * tagSpace);
 			}
 		}
@@ -4700,7 +4700,7 @@ TagInfo_Copy(
 		copy = (TagInfo *) TreeAlloc_Alloc(tree->allocData, TagInfoUid,
 				TAG_INFO_SIZE(tagSpace));
 #else
-		copy = (TagInfo *) ckalloc(TAG_INFO_SIZE(tagSpace));
+		copy = (TagInfo *) Tcl_Alloc(TAG_INFO_SIZE(tagSpace));
 #endif
 		memcpy((void *) copy->tagPtr, tagInfo->tagPtr, tagInfo->numTags * sizeof(Tk_Uid));
 		copy->numTags = tagInfo->numTags;
@@ -4736,7 +4736,7 @@ TagInfo_Free(
 		TreeAlloc_Free(tree->allocData, TagInfoUid, (char *) tagInfo,
 			TAG_INFO_SIZE(tagInfo->tagSpace));
 #else
-		ckfree((char *) tagInfo);
+		Tcl_Free((char *) tagInfo);
 #endif
 }
 
@@ -4972,7 +4972,7 @@ TagExpr_Init(
 
 	/* Allocate buffer for rewritten tags (after de-escaping) */
 	if (expr->stringLength >= sizeof(expr->staticRWB))
-		expr->rewritebuffer = ckalloc(expr->stringLength + 1);
+		expr->rewritebuffer = Tcl_Alloc(expr->stringLength + 1);
 
 	if (TagExpr_Scan(expr) != TCL_OK) {
 		TagExpr_Free(expr);
@@ -5085,11 +5085,11 @@ TagExpr_Scan(
 			expr->allocated += 15;
 			if (expr->uids != expr->staticUids) {
 				expr->uids =
-					(Tk_Uid *) ckrealloc((char *)(expr->uids),
+					(Tk_Uid *) Tcl_Realloc((char *)(expr->uids),
 					(expr->allocated)*sizeof(Tk_Uid));
 			} else {
 				expr->uids =
-					(Tk_Uid *) ckalloc((expr->allocated)*sizeof(Tk_Uid));
+					(Tk_Uid *) Tcl_Alloc((expr->allocated)*sizeof(Tk_Uid));
 				memcpy((void *) expr->uids, expr->staticUids, sizeof(expr->staticUids));
 			}
 		}
@@ -5481,9 +5481,9 @@ TagExpr_Free(
 	)
 {
 	if (expr->rewritebuffer != expr->staticRWB)
-		ckfree(expr->rewritebuffer);
+		Tcl_Free(expr->rewritebuffer);
 	if (expr->uids != expr->staticUids)
-		ckfree((char *) expr->uids);
+		Tcl_Free((char *) expr->uids);
 }
 
 /*
@@ -5644,7 +5644,7 @@ PerStateCO_Set(
 		}
 		OptionHax_Remember(tree, saveInternalPtr);
 		if (internalPtr->obj != NULL) {
-			hax = (PerStateInfo *) ckalloc(sizeof(PerStateInfo));
+			hax = (PerStateInfo *) Tcl_Alloc(sizeof(PerStateInfo));
 			*hax = *internalPtr;
 			*((PerStateInfo **) saveInternalPtr) = hax;
 		} else {
@@ -5687,7 +5687,7 @@ PerStateCO_Restore(
 #endif
 		psi->data = hax->data;
 		psi->count = hax->count;
-		ckfree((char *) hax);
+		Tcl_Free((char *) hax);
 	} else {
 #ifdef TREECTRL_DEBUG
 		psi->type = NULL;
@@ -5717,7 +5717,7 @@ PerStateCO_Free(
 		if (hax != NULL) {
 /*			objPtr = hax->obj;*/
 			PerStateInfo_Free(tree, cd->typePtr, hax);
-			ckfree((char *) hax);
+			Tcl_Free((char *) hax);
 		}
 	} else {
 /*dbwin("PerStateCO_Free %p %s\n", internalPtr, cd->typePtr->name);*/
@@ -5755,12 +5755,12 @@ PerStateCO_Alloc(
 	Tk_ObjCustomOption *co;
 
 	/* ClientData for the Tk custom option record */
-	cd = (PerStateCOClientData *) ckalloc(sizeof(PerStateCOClientData));
+	cd = (PerStateCOClientData *) Tcl_Alloc(sizeof(PerStateCOClientData));
 	cd->typePtr = typePtr;
 	cd->proc = proc;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = (char *) optionName + 1;
 	co->setProc = PerStateCO_Set;
 	co->getProc = PerStateCO_Get;
@@ -5916,7 +5916,7 @@ dbwin("DynamicOption_AllocIfNeeded allocated id=%d\n", id);
 	opt = (DynamicOption *) TreeAlloc_Alloc(tree->allocData, DynamicOptionUid,
 			Tk_Offset(DynamicOption, data) + size);
 #else
-	opt = (DynamicOption *) ckalloc(Tk_Offset(DynamicOption, data) + size);
+	opt = (DynamicOption *) Tcl_Alloc(Tk_Offset(DynamicOption, data) + size);
 #endif
 	opt->id = id;
 	memset(opt->data, '\0', size);
@@ -6005,7 +6005,7 @@ DynamicCO_Set(
 	if (cd->objOffset >= 0)
 		objPtrPtr = (Tcl_Obj **) (opt->data + cd->objOffset);
 
-	save = (DynamicCOSave *) ckalloc(sizeof(DynamicCOSave));
+	save = (DynamicCOSave *) Tcl_Alloc(sizeof(DynamicCOSave));
 #ifdef DEBUG_DYNAMIC
 dbwin("DynamicCO_Set id=%d saveInternalPtr=%p save=%p\n", cd->id, saveInternalPtr, save);
 #endif
@@ -6021,7 +6021,7 @@ else
 	if (cd->custom->setProc(cd->custom->clientData, interp, tkwin, value,
 			opt->data, cd->internalOffset, (char *) &save->internalForm,
 			flags) != TCL_OK) {
-		ckfree((char *) save);
+		Tcl_Free((char *) save);
 		return TCL_ERROR;
 	}
 
@@ -6116,7 +6116,7 @@ else
 		*objPtrPtr = save->objPtr;
 	}
 
-	ckfree((char *) save);
+	Tcl_Free((char *) save);
 	OptionHax_Forget(tree, saveInternalPtr);
 }
 
@@ -6152,7 +6152,7 @@ else
 				Tcl_DecrRefCount(save->objPtr);
 			}
 		}
-		ckfree((char *) save);
+		Tcl_Free((char *) save);
 	} else {
 		DynamicOption *first = *(DynamicOption **) internalPtr;
 		DynamicOption *opt = DynamicOption_Find(first, cd->id);
@@ -6230,7 +6230,7 @@ DynamicCO_Init(
 		return TCL_OK;
 
 	/* ClientData for the Tk custom option record */
-	cd = (DynamicCOClientData *) ckalloc(sizeof(DynamicCOClientData));
+	cd = (DynamicCOClientData *) Tcl_Alloc(sizeof(DynamicCOClientData));
 	cd->id = id;
 	cd->size = size;
 	cd->objOffset = objOffset;
@@ -6239,7 +6239,7 @@ DynamicCO_Init(
 	cd->init = init;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = (char *) optionName + 1;
 	co->setProc = DynamicCO_Set;
 	co->getProc = DynamicCO_Get;
@@ -6304,7 +6304,7 @@ DynamicOption_Free(
 			TreeAlloc_Free(tree->allocData, DynamicOptionUid, (char *) opt,
 					Tk_Offset(DynamicOption, data) + cd->size);
 #else
-			ckfree((char *) opt);
+			Tcl_Free((char *) opt);
 #endif
 			break;
 		}
@@ -6350,7 +6350,7 @@ DynamicOption_Free1(
 			TreeAlloc_Free(tree->allocData, DynamicOptionUid, (char *) opt,
 					Tk_Offset(DynamicOption, data) + size);
 #else
-			ckfree((char *) opt);
+			Tcl_Free((char *) opt);
 #endif
 			return;
 		}
@@ -6409,7 +6409,7 @@ StringCO_Set(
 	if (internalPtr != NULL) {
 		if (*valuePtr != NULL) {
 			value = Tcl_GetStringFromObj(*valuePtr, &length);
-			new = ckalloc((unsigned) (length + 1));
+			new = Tcl_Alloc((unsigned) (length + 1));
 			strcpy(new, value);
 		} else {
 			new = NULL;
@@ -6453,7 +6453,7 @@ StringCO_Free(
 	)
 {
 	if (*((char **) internalPtr) != NULL) {
-		ckfree(*((char **) internalPtr));
+		Tcl_Free(*((char **) internalPtr));
 		*((char **) internalPtr) = NULL;
 	}
 }
@@ -6756,7 +6756,7 @@ BooleanFlagCO_Init(
 		return TCL_OK;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = "boolean";
 	co->setProc = BooleanFlagCO_Set;
 	co->getProc = BooleanFlagCO_Get;
@@ -6894,13 +6894,13 @@ ItemButtonCO_Init(
 		return TCL_OK;
 
 	/* ClientData for the Tk custom option record. */
-	cd = (struct ItemButtonCOClientData *)ckalloc(
+	cd = (struct ItemButtonCOClientData *)Tcl_Alloc(
 			sizeof(struct ItemButtonCOClientData));
 	cd->flag1 = flag1;
 	cd->flag2 = flag2;
 
 	/* The Tk custom option record */
-	co = (Tk_ObjCustomOption *) ckalloc(sizeof(Tk_ObjCustomOption));
+	co = (Tk_ObjCustomOption *) Tcl_Alloc(sizeof(Tk_ObjCustomOption));
 	co->name = "button option";
 	co->setProc = ItemButtonCO_Set;
 	co->getProc = ItemButtonCO_Get;
