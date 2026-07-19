@@ -115,7 +115,7 @@ sys::file::size(char const* filename)
 	if (ret != -1)
 		size = long(Tcl_GetSizeFromStat(buf));
 
-	Tcl_Free(buf);
+	Tcl_Free(reinterpret_cast<char*>(buf));
 	return size;
 }
 
@@ -135,7 +135,7 @@ sys::file::changed(char const* filename, uint32_t& time)
 	if (ret != -1)
 		time = Tcl_GetChangeTimeFromStat(buf);
 
-	Tcl_Free(buf);
+	Tcl_Free(reinterpret_cast<char*>(buf));
 	return ret != -1;
 }
 
