@@ -3012,7 +3012,7 @@ searchSortedCanvas(
     CanvasItemSorter sSorter;
     memset(&sSorter, 0, sizeof(CanvasItemSorter));
 
-    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)(&sSorter, 1);
+    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)&sSorter, 1);
     sorterIterate(pTree, &sSorter, xFunc, clientData);
     sorterReset(&sSorter);
 }
