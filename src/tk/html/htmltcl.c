@@ -399,15 +399,14 @@ static void runLayoutEngine(ClientData clientData);
 
 #if defined(TKHTML_ENABLE_PROFILE)
   #define INSTRUMENTED(name, id)                                             \
-    static void real_ ## name (ClientData)(;                                  \
+    static void real_ ## name (ClientData clientData);                        \
     static void name (clientData)                                            \
       ClientData clientData;                                                 \
     {                                                                        \
       HtmlTree *p = (HtmlTree *)clientData;                                  \
       HtmlInstrumentCall(p->pInstrumentData, id, real_ ## name, clientData); \
     }                                                                        \
-    static void real_ ## name (clientData)                                   \
-      ClientData clientData;
+    static void real_ ## name (ClientData clientData)
 #else
   #define INSTRUMENTED(name, id)                                             \
     static void name (clientData)                                            \
@@ -618,7 +617,7 @@ INSTRUMENTED(callbackHandler, HTML_INSTRUMENT_CALLBACK)
 
     if (pTree->cb.pDamage) {
         pTree->cb.flags = HTML_DAMAGE;
-        Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+        Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
     }
 
     offscreen = MAX(0,
@@ -671,7 +670,7 @@ HtmlCallbackForce(HtmlTree *pTree)
         (pTree->cb.flags & ~(HTML_DAMAGE|HTML_SCROLL|HTML_NODESCROLL)) &&
         (!pTree->cb.inProgress)
     ) {
-        ClientData clientData = (ClientData)(pTree;
+        ClientData clientData = (ClientData)pTree;
         assert(!pTree->cb.isForce);
         pTree->cb.isForce++;
         callbackHandler(clientData);
@@ -782,7 +781,7 @@ HtmlCallbackRestyle(HtmlTree *pTree, HtmlNode *pNode)
         snapshotLayout(pTree);
         if (upgradeRestylePoint(&pTree->cb.pRestyle, pNode)) {
             if (!pTree->cb.flags) {
-                Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+                Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
             }
             pTree->cb.flags |= HTML_RESTYLE;
             assert(pTree->cb.pSnapshot);
@@ -830,7 +829,7 @@ HtmlCallbackDynamic(HtmlTree *pTree, HtmlNode *pNode)
     if (pNode) {
         if (upgradeRestylePoint(&pTree->cb.pDynamic, pNode)) {
             if (!pTree->cb.flags) {
-                Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+                Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
             }
             pTree->cb.flags |= HTML_DYNAMIC;
         }
@@ -863,7 +862,7 @@ HtmlCallbackLayout(HtmlTree *pTree, HtmlNode *pNode)
 
         snapshotLayout(pTree);
         if (!pTree->cb.flags) {
-            Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+            Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
         }
         pTree->cb.flags |= HTML_LAYOUT;
         assert(pTree->cb.pSnapshot);
@@ -1129,7 +1128,7 @@ HtmlCallbackDamage(HtmlTree *pTree, int x, int y, int w, int h)
 #endif
 
     if (!pTree->cb.flags) {
-        Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+        Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
     }
     pTree->cb.flags |= HTML_DAMAGE;
 }
@@ -1138,7 +1137,7 @@ void
 HtmlCallbackScrollY(HtmlTree *pTree, int y)
 {
     if (!pTree->cb.flags) {
-        Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+        Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
     }
     pTree->cb.flags |= HTML_SCROLL;
     pTree->cb.iScrollY = y;
@@ -1148,7 +1147,7 @@ void
 HtmlCallbackScrollX(HtmlTree *pTree, int x)
 {
     if (!pTree->cb.flags) {
-        Tcl_DoWhenIdle(callbackHandler, (ClientData)(pTree);
+        Tcl_DoWhenIdle(callbackHandler, (ClientData)pTree);
     }
     pTree->cb.flags |= HTML_SCROLL;
     pTree->cb.iScrollX = x;
@@ -1229,7 +1228,7 @@ deleteWidget(ClientData clientData)
     HtmlCssSearchShutdown(pTree);
 
     /* Cancel any pending idle callback */
-    Tcl_CancelIdleCall(callbackHandler, (ClientData)(pTree);
+    Tcl_CancelIdleCall(callbackHandler, (ClientData)pTree);
     if (pTree->delayToken) {
         Tcl_DeleteTimerHandler(pTree->delayToken);
     }
@@ -1561,7 +1560,7 @@ configureCmd(
         OBJ(fonttable, "fontTable", "FontTable", "8 9 10 11 13 15 17", FT_MASK),
 
         {TK_OPTION_STRING_TABLE, "-mode", "mode", "Mode", "standards",
-             -1, Tk_Offset(HtmlOptions, mode), 0, (ClientData)(azModes, 0
+             -1, Tk_Offset(HtmlOptions, mode), 0, (ClientData)azModes, 0
         },
 
         {TK_OPTION_END, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -1843,7 +1842,7 @@ relayoutCmd(
 
     if (objc == 2) {
         HtmlCallbackRestyle(pTree, pTree->pRoot);
-        HtmlWalkTree(pTree, pTree->pRoot, relayoutCb, (ClientData)(0);
+        HtmlWalkTree(pTree, pTree->pRoot, relayoutCb, (ClientData)0);
     } else {
         char *zArg3 = ((objc >= 3) ? Tcl_GetString(objv[2]) : 0);
         char *zArg4 = ((objc >= 4) ? Tcl_GetString(objv[3]) : 0);
@@ -2375,7 +2374,7 @@ handlerCmd(
             Tcl_DecrRefCount(pOld);
         }
         Tcl_IncrRefCount(pScript);
-        Tcl_SetHashValue(pEntry, (ClientData)(pScript);
+        Tcl_SetHashValue(pEntry, (ClientData)pScript);
     }
 
     return TCL_OK;
@@ -2983,18 +2982,18 @@ newWidget(
     /* Set up an event handler for the widget window */
     Tk_CreateEventHandler(pTree->tkwin,
             ExposureMask|StructureNotifyMask|VisibilityChangeMask,
-            eventHandler, (ClientData)(pTree
+            eventHandler, (ClientData)pTree
     );
 
 #ifdef FIX_EVENT_HANDLING
-    Tk_CreateEventHandler(pTree->docwin, ExposureMask, docwinEventHandler, (ClientData)(pTree);
+    Tk_CreateEventHandler(pTree->docwin, ExposureMask, docwinEventHandler, (ClientData)pTree);
 #else
     Tk_CreateEventHandler(pTree->docwin,
         ExposureMask|ButtonMotionMask|ButtonPressMask|
         ButtonReleaseMask|PointerMotionMask|PointerMotionHintMask|
         Button1MotionMask|Button2MotionMask|Button3MotionMask|
         Button4MotionMask|Button5MotionMask|ButtonMotionMask,
-        docwinEventHandler, (ClientData)(pTree
+        docwinEventHandler, (ClientData)pTree
     );
 #endif
 

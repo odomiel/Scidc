@@ -2606,7 +2606,7 @@ normalFlowLayoutBlock(
         normalFlowMarginCollapse(pLayout, pNode, pNormal, pY);
     } else {
         sNormalFlowCallback.xCallback = setValueCallback;
-        sNormalFlowCallback.clientData = (ClientData)((&yBorderOffset);
+        sNormalFlowCallback.clientData = (ClientData)&yBorderOffset;
         sNormalFlowCallback.pNext = 0;
         normalFlowCbAdd(pNormal, &sNormalFlowCallback);
     }
@@ -3451,7 +3451,7 @@ normalFlowLayout(
     pCache->iMarginCollapse = PIXELVAL_AUTO;
 
     sCallback.xCallback = setValueCallback;
-    sCallback.clientData = (ClientData)( &pCache->iMarginCollapse;
+    sCallback.clientData = (ClientData)&pCache->iMarginCollapse;
     sCallback.pNext = 0;
     normalFlowCbAdd(pNormal, &sCallback);
 

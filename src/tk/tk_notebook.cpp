@@ -244,11 +244,11 @@ static const Tk_OptionSpec optionSpecs[] =
 {
    {TK_OPTION_BORDER, "-background", "background", "Background",
 	 DEF_NOTEBOOK_BG_COLOR, -1, Tk_Offset(Notebook, background),
-	 0, static_cast<ClientData>(DEF_NOTEBOOK_BG_MONO)},
+	 0, (ClientData)(DEF_NOTEBOOK_BG_MONO)},
    {TK_OPTION_SYNONYM, "-bd", nullptr, nullptr,
-	 nullptr, 0, -1, 0, static_cast<ClientData>("-borderwidth")},
+	 nullptr, 0, -1, 0, (ClientData)("-borderwidth")},
    {TK_OPTION_SYNONYM, "-bg", nullptr, nullptr,
-	 nullptr, 0, -1, 0, static_cast<ClientData>("-background")},
+	 nullptr, 0, -1, 0, (ClientData)("-background")},
    {TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth",
 	 DEF_NOTEBOOK_BORDERWIDTH, -1, Tk_Offset(Notebook, borderWidth),
 	 0, 0, GEOMETRY},
@@ -273,14 +273,14 @@ static const Tk_OptionSpec optionSpecs[] =
 	 0, 0, 0},
 	{TK_OPTION_CUSTOM, "-padding", "padding", "Padding", "0",
 	 -1, Tk_Offset(Notebook, padding), 0,
-	 static_cast<ClientData>(&paddingOption), GEOMETRY },
+	 (ClientData)(&paddingOption), GEOMETRY },
    {TK_OPTION_RELIEF, "-relief", "relief", "Relief",
 	 DEF_NOTEBOOK_RELIEF, -1, Tk_Offset(Notebook, relief), 0, 0, 0},
 	{TK_OPTION_STRING_TABLE, "-state", "", "",
 	 "normal", -1, Tk_Offset(Notebook, state), 0, ClientData(stateStrings), 0 },
    {TK_OPTION_BORDER, "-tabbackground", "tabBackground", "TabBackground",
 	 DEF_NOTEBOOK_TAB_BG_COLOR, -1, Tk_Offset(Notebook, tabBackground),
-	 0, static_cast<ClientData>(DEF_NOTEBOOK_BG_MONO)},
+	 0, (ClientData)(DEF_NOTEBOOK_BG_MONO)},
    {TK_OPTION_PIXELS, "-width", "width", "Width",
 	 DEF_NOTEBOOK_WIDTH, Tk_Offset(Notebook, widthObj),
 	 Tk_Offset(Notebook, width), TK_OPTION_NULL_OK, 0, GEOMETRY},
@@ -315,10 +315,10 @@ static const Tk_OptionSpec paneOptionSpecs[] =
 	 Tk_Offset(Slave, minheight), TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_CUSTOM, "-padding", nullptr, nullptr, "2 2 2 2",
 	 -1, Tk_Offset(Slave, padding), 0,
-	 static_cast<ClientData>(&paddingOption), GEOMETRY },
+	 (ClientData)(&paddingOption), GEOMETRY },
    {TK_OPTION_CUSTOM, "-sticky", nullptr, nullptr,
 	 DEF_NOTEBOOK_PANE_STICKY, -1, Tk_Offset(Slave, sticky), 0,
-	 static_cast<ClientData>(&stickyOption), GEOMETRY },
+	 (ClientData)(&stickyOption), GEOMETRY },
 	{TK_OPTION_STRING, "-text", nullptr, nullptr, "",
 	 Tk_Offset(Slave,textObj), -1, 0, 0, GEOMETRY },
 	{TK_OPTION_INT, "-underline", nullptr, nullptr,
@@ -882,7 +882,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 	if (nb->currentIndex == -1)
 		return;
 
-	Tcl_Preserve(static_cast<ClientData>(nb));
+	Tcl_Preserve((ClientData)(nb));
 	LayoutTabs(nb);
 
 	slave = nb->slaves[nb->currentIndex];
@@ -909,7 +909,7 @@ ArrangePane(ClientData clientData)	// Structure describing parent whose slaves a
 		Tk_MaintainGeometry(slave->tkwin, nb->tkwin, slaveX, slaveY, slaveWidth, slaveHeight);
 	}
 
-	Tcl_Release(static_cast<ClientData>(nb));
+	Tcl_Release((ClientData)(nb));
 }
 
 
@@ -1204,7 +1204,7 @@ DisplayNotebook(ClientData clientData)	// Information about window
 	int			height;
 
 	if (nb->flags & REDRAW_TABS_PENDING)
-		Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+		Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 
 	nb->flags &= ~(REDRAW_PENDING | REDRAW_TABS_PENDING);
 	if ((nb->tkwin == nullptr) || !Tk_IsMapped(tkwin))
@@ -1347,11 +1347,11 @@ ComputeGeometry(Notebook* nb)		// Pointer to the Notebook structure
 	if (Tk_IsMapped(nb->tkwin) && !(nb->flags & REDRAW_PENDING))
 	{
 		nb->flags |= REDRAW_PENDING;
-		Tcl_DoWhenIdle(DisplayNotebook, static_cast<ClientData>(nb));
+		Tcl_DoWhenIdle(DisplayNotebook, (ClientData)(nb));
 
 		if (nb->flags & REDRAW_TABS_PENDING)
 		{
-			Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+			Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 			nb->flags &= ~REDRAW_TABS_PENDING;
 		}
 	}
@@ -1408,11 +1408,11 @@ Unlink(Slave* slave)		// Window to unlink
 	if (Tk_IsMapped(nb->tkwin) && !(nb->flags & REDRAW_PENDING))
 	{
 		nb->flags |= REDRAW_PENDING;
-		Tcl_DoWhenIdle(DisplayNotebook, static_cast<ClientData>(nb));
+		Tcl_DoWhenIdle(DisplayNotebook, (ClientData)(nb));
 
 		if (nb->flags & REDRAW_TABS_PENDING)
 		{
-			Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+			Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 			nb->flags &= ~REDRAW_TABS_PENDING;
 		}
 	}
@@ -1711,8 +1711,8 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 			Tk_CreateEventHandler(	slave->tkwin,
 											StructureNotifyMask,
 											SlaveStructureProc,
-											static_cast<ClientData>(slave));
-			Tk_ManageGeometry(slave->tkwin, &notebookMgrType, static_cast<ClientData>(slave));
+											(ClientData)(slave));
+			Tk_ManageGeometry(slave->tkwin, &notebookMgrType, (ClientData)(slave));
 			inserts[insertIndex++] = slave;
 			numNewSlaves++;
 		}
@@ -1843,12 +1843,12 @@ NotebookWorldChanged(ClientData instanceData)	// Information about the notebook
 
 	if (Tk_IsMapped(nb->tkwin) && !(nb->flags & REDRAW_PENDING))
 	{
-		Tcl_DoWhenIdle(DisplayNotebook, static_cast<ClientData>(nb));
+		Tcl_DoWhenIdle(DisplayNotebook, (ClientData)(nb));
 		nb->flags |= REDRAW_PENDING;
 
 		if (nb->flags & REDRAW_TABS_PENDING)
 		{
-			Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+			Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 			nb->flags &= ~REDRAW_TABS_PENDING;
 		}
 	}
@@ -1895,7 +1895,7 @@ ConfigureNotebook(Tcl_Interp* interp,		// Used for error reporting
 	}
 
 	Tk_FreeSavedOptions(&savedOptions);
-	NotebookWorldChanged(static_cast<ClientData>(nb));
+	NotebookWorldChanged((ClientData)(nb));
 
 	// If an option that affects geometry has changed, make a re-layout request.
 
@@ -1997,7 +1997,7 @@ NotebookWidgetObjCmd(ClientData clientData,	// Information about square widget
 	if (Tcl_GetIndexFromObj(interp, objv[1], optionStrings, "command", 0, &index) != TCL_OK)
 		return TCL_ERROR;
 
-	Tcl_Preserve(static_cast<ClientData>(nb));
+	Tcl_Preserve((ClientData)(nb));
 
 	switch ((enum options)index)
 	{
@@ -2113,12 +2113,12 @@ NotebookWidgetObjCmd(ClientData clientData,	// Information about square widget
 
 							if (slave->master)
 							{
-								Tk_ManageGeometry(slaveWindow, nullptr, static_cast<ClientData>(nullptr));
+								Tk_ManageGeometry(slaveWindow, nullptr, (ClientData)(nullptr));
 								Tk_UnmaintainGeometry(slave->tkwin, nb->tkwin);
 								Tk_DeleteEventHandler(	slave->tkwin,
 																StructureNotifyMask,
 																SlaveStructureProc,
-																static_cast<ClientData>(slave));
+																(ClientData)(slave));
 								Tk_UnmapWindow(slave->tkwin);
 								Unlink(slave);
 							}
@@ -2284,7 +2284,7 @@ NotebookWidgetObjCmd(ClientData clientData,	// Information about square widget
 			break;
 	}
 
-	Tcl_Release(static_cast<ClientData>(nb));
+	Tcl_Release((ClientData)(nb));
 	return result;
 }
 
@@ -2316,13 +2316,13 @@ DestroyNotebook(Notebook* nb)		// Info about notebook widget
 	// Cancel idle callbacks for redrawing the widget and for rearranging the panes.
 
 	if (nb->flags & REDRAW_TABS_PENDING)
-		Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+		Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 
 	if (nb->flags & REDRAW_PENDING)
-		Tcl_CancelIdleCall(DisplayNotebook, static_cast<ClientData>(nb));
+		Tcl_CancelIdleCall(DisplayNotebook, (ClientData)(nb));
 
 	if (nb->flags & RESIZE_PENDING)
-		Tcl_CancelIdleCall(ArrangePane, static_cast<ClientData>(nb));
+		Tcl_CancelIdleCall(ArrangePane, (ClientData)(nb));
 
 	if (nb->gc)
 		Tk_FreeGC(Tk_Display(nb->tkwin), nb->gc);
@@ -2343,7 +2343,7 @@ DestroyNotebook(Notebook* nb)		// Info about notebook widget
 		Tk_DeleteEventHandler(	nb->slaves[i]->tkwin,
 										StructureNotifyMask,
 										SlaveStructureProc,
-										static_cast<ClientData>(nb->slaves[i]));
+										(ClientData)(nb->slaves[i]));
 		Tk_ManageGeometry(nb->slaves[i]->tkwin, nullptr, nullptr);
 		Tk_FreeConfigOptions((char*)nb->slaves[i], nb->paneOptions, nb->tkwin);
 		Tcl_Free((char*)nb->slaves[i]);
@@ -2359,9 +2359,9 @@ DestroyNotebook(Notebook* nb)		// Info about notebook widget
 	// Let Tk_FreeConfigOptions clean up the rest.
 
 	Tk_FreeConfigOptions((char*)nb, nb->optionTable, nb->tkwin);
-	Tcl_Release(static_cast<ClientData>(nb->tkwin));
+	Tcl_Release((ClientData)(nb->tkwin));
 	nb->tkwin = nullptr;
-	Tcl_EventuallyFree(static_cast<ClientData>(nb), TCL_DYNAMIC);
+	Tcl_EventuallyFree((ClientData)(nb), TCL_DYNAMIC);
 }
 
 
@@ -2395,12 +2395,12 @@ NotebookEventProc(ClientData clientData,	// Information about window
 		case Expose:
 			if (nb->tkwin != nullptr && !(nb->flags & REDRAW_PENDING))
 			{
-				Tcl_DoWhenIdle(DisplayNotebook, static_cast<ClientData>(nb));
+				Tcl_DoWhenIdle(DisplayNotebook, (ClientData)(nb));
 				nb->flags |= REDRAW_PENDING;
 
 				if (nb->flags & REDRAW_TABS_PENDING)
 				{
-					Tcl_CancelIdleCall(DisplayTabs, static_cast<ClientData>(nb));
+					Tcl_CancelIdleCall(DisplayTabs, (ClientData)(nb));
 					nb->flags &= ~REDRAW_TABS_PENDING;
 				}
 			}
@@ -2502,7 +2502,7 @@ NotebookReqProc(	ClientData clientData,	// Notebook's information about window
 	if (Tk_IsMapped(nb->tkwin) && !(nb->flags & RESIZE_PENDING))
 	{
 		nb->flags |= RESIZE_PENDING;
-		Tcl_DoWhenIdle(ArrangePane, static_cast<ClientData>(nb));
+		Tcl_DoWhenIdle(ArrangePane, (ClientData)(nb));
 	}
 }
 
@@ -2537,7 +2537,7 @@ NotebookLostSlaveProc(	ClientData clientData,	// Grid structure for slave window
     Tk_DeleteEventHandler(	slave->tkwin,
 	 								StructureNotifyMask,
 									SlaveStructureProc,
-									static_cast<ClientData>(slave));
+									(ClientData)(slave));
     Tk_UnmapWindow(slave->tkwin);
     slave->tkwin = nullptr;
     Tcl_Free((char*)slave);
@@ -2590,7 +2590,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 		nbOptions = (OptionTables*)Tcl_Alloc(sizeof(OptionTables));
 
 		// Set up an exit handler to free the optionTables struct.
-		Tcl_SetAssocData(interp, "NotebookOptionTables", DestroyOptionTables, static_cast<ClientData>(nbOptions));
+		Tcl_SetAssocData(interp, "NotebookOptionTables", DestroyOptionTables, (ClientData)(nbOptions));
 
 		// Create the notebook option tables.
 		nbOptions->nbOptions = Tk_CreateOptionTable(interp, optionSpecs);
@@ -2608,7 +2608,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 								interp,
 								Tk_PathName(nb->tkwin),
 								NotebookWidgetObjCmd,
-								static_cast<ClientData>(nb),
+								(ClientData)(nb),
 								NotebookCmdDeletedProc);
 	nb->optionTable = nbOptions->nbOptions;
 	nb->paneOptions = nbOptions->paneOptions;
@@ -2630,7 +2630,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 	// Keep a hold of the associated tkwin until we destroy the widget,
 	// otherwise Tk might free it while we still need it.
 
-	Tcl_Preserve(static_cast<ClientData>(nb->tkwin));
+	Tcl_Preserve((ClientData)(nb->tkwin));
 
 	if (Tk_InitOptions(interp, (char*)nb, nbOptions->nbOptions, tkwin) != TCL_OK)
 	{
@@ -2641,7 +2641,7 @@ Tk_NotebookObjCmd(ClientData clientData,	// nullptr
 	Tk_CreateEventHandler(	nb->tkwin,
 									ExposureMask|StructureNotifyMask,
 									NotebookEventProc,
-									static_cast<ClientData>(nb));
+									(ClientData)(nb));
 
 	if (ConfigureNotebook(interp, nb, objc - 2, objv + 2) != TCL_OK)
 	{

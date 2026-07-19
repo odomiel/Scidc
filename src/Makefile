@@ -313,7 +313,7 @@ $(TK_PROGRAM): tkscidc.o $(LIBS) $(TCL_LIBS) $(TK_LIBS)
 
 .cpp.o:
 	@echo "Compiling `awk 'BEGIN { printf "%-30s", "$<" }'`  [$(ALL_CXXFLAGS:  = )]"
-	@$(CXX) -c $(ALL_CXXFLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_DEBUG_FLAGS) $(ALL_INCLUDE) -DSHAREDIR='"$(DATADIR)"' -DSCIDB_VERSION='"26.07.19-b1-Beta"' -DSCIDB_REVISION='"1497"' $<
+	@$(CXX) -c $(ALL_CXXFLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_DEBUG_FLAGS) $(ALL_INCLUDE) -DSHAREDIR='"$(DATADIR)"' -DSCIDB_VERSION='"26.07.19-b2-Beta"' -DSCIDB_REVISION='"1497"' $<
 
 # vi:set ts=3 sw=3:
 # DO NOT DELETE THIS LINE -- make depend depends on it.

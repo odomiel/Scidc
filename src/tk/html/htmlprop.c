@@ -2400,10 +2400,10 @@ HtmlComputedValuesFinish(HtmlComputedValuesCreator *p)
     pEntry = Tcl_CreateHashEntry(pFontHash, (char *)&p->fontKey, &ne);
     if (ne) {
 #ifndef TKHTML_ENABLE_PROFILE
-        pFont = (HtmlFont *)allocateNewFont((ClientData)(p);
+        pFont = (HtmlFont *)allocateNewFont((ClientData)p);
 #else
         pFont = (HtmlFont *)HtmlInstrumentCall2(p->pTree->pInstrumentData,
-             HTML_INSTRUMENT_ALLOCATE_FONT, allocateNewFont, (ClientData)(p
+             HTML_INSTRUMENT_ALLOCATE_FONT, allocateNewFont, (ClientData)p
         );
 #endif
         assert(pFont);
