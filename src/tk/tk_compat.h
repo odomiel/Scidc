@@ -53,6 +53,27 @@
 
 #endif // __cplusplus
 
+// C++ Versionen der Makros als inline-Funktionen
+#if defined(__cplusplus)
+
+inline ClientData TkWinGetInstanceData(Tk_Window tkwin) {
+    return ((TkWindow *) tkwin)->instanceData;
+}
+
+inline void* TkWinGetPrivatePtr(Tk_Window tkwin) {
+    return ((TkWindow *) tkwin)->privatePtr;
+}
+
+inline TkMainInfo* TkWinGetMainPtr(Tk_Window tkwin) {
+    return ((TkWindow *) tkwin)->mainPtr;
+}
+
+inline TkWindow* TkWinGetChildList(Tk_Window tkwin) {
+    return ((TkWindow *) tkwin)->childList;
+}
+
+#endif // __cplusplus
+
 // Forward-Deklaration für Tk-interne Typen
 // In Tk 8.6: typedef struct TkWindow TkWindow;
 // In Tk 9.0: andere Struktur
