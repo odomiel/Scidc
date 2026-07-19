@@ -3040,7 +3040,7 @@ HtmlDrawSnapshot(HtmlTree *pTree, int isDrawable)
 
     p = HtmlNew(CanvasItemSorter);
     p->iSnapshot = (++pTree->iLastSnapshotId);
-    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)(p, 1);
+    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)p, 1);
 
     return (HtmlCanvasSnapshot *)p;
 }
@@ -3169,7 +3169,7 @@ HtmlDrawSnapshotDamage(HtmlTree *pTree, HtmlCanvasSnapshot *pSnapshot, HtmlCanva
 
     /* Create a new current snapshot. */
     pNew = HtmlNew(CanvasItemSorter);
-    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)(pNew, 1);
+    searchCanvas(pTree, ymin, ymax, sorterCb, (ClientData)pNew, 1);
 
     pNewSlot = nextItem(pNew, &iNewLevel, &iNewItem);
     pOldSlot = nextItem(pOld, &iOldLevel, &iOldItem);
@@ -3239,7 +3239,7 @@ HtmlDrawSnapshotFree(HtmlTree *pTree, HtmlCanvasSnapshot *pSnapshot)
     if (pSnapshot) {
         CanvasItemSorter *p = (CanvasItemSorter *)pSnapshot;
         if (p->iSnapshot) {
-            sorterIterate(pTree, p, snapshotReleaseItemsCb, (ClientData)(pTree);
+            sorterIterate(pTree, p, snapshotReleaseItemsCb, (ClientData)pTree);
         }
         sorterReset(p);
         HtmlFree(pSnapshot);
@@ -3561,7 +3561,7 @@ getPixmap(
         );
     }
 
-    clientData = (ClientData)(&sQuery;
+    clientData = (ClientData)&sQuery;
 #if 0
     searchCanvas(pTree, ycanvas, ycanvas+h, 0, pixmapQueryCb, clientData);
 #else
@@ -3818,7 +3818,7 @@ layoutNodeIndexCmd(
     int y)                  /* Document (not viewport) Y coordinate */
 {
     NodeIndexQuery sQuery;
-    ClientData cd = (ClientData)(&sQuery;
+    ClientData cd = (ClientData)&sQuery;
     int rc;
 
     memset(&sQuery, 0, sizeof(NodeIndexQuery));
@@ -4015,7 +4015,7 @@ layoutNodeCmd(HtmlTree *pTree, int x, int y)
     sQuery.x = x;
     sQuery.y = y;
 
-    searchCanvas(pTree, y-1, y+1, layoutNodeCb, (ClientData)(&sQuery, 1);
+    searchCanvas(pTree, y-1, y+1, layoutNodeCb, (ClientData)&sQuery, 1);
 
     if (sQuery.nNode == 1) {
         Tcl_SetObjResult(pTree->interp, HtmlNodeCommand(pTree, *sQuery.apNode));
@@ -4201,7 +4201,7 @@ HtmlWidgetBboxCmd(
             if (!pTree->isBboxOk) {
                 BboxContext sContext;
                 sContext.pPrevNode = 0;
-                searchCanvas(pTree, -1, -1, bboxCb, (ClientData)(&sContext, 1);
+                searchCanvas(pTree, -1, -1, bboxCb, (ClientData)&sContext, 1);
                 pTree->isBboxOk = 1;
             }
 
@@ -4253,7 +4253,7 @@ HtmlWidgetVisBboxCmd(
         }
         if (!HtmlNodeIsOrphan(pNode)) {
             if (!pTree->isBboxOk) {
-                searchCanvas(pTree, -1, -1, visbboxCb, (ClientData)(pNode, 1);
+                searchCanvas(pTree, -1, -1, visbboxCb, (ClientData)pNode, 1);
                 pTree->isBboxOk = 1;
             }
 
@@ -4443,7 +4443,7 @@ HtmlWidgetDamageText(
     ymin = pTree->iScrollY;
     ymax = pTree->iScrollY + Tk_Height(pTree->tkwin);
 
-    searchCanvas(pTree,ymin,ymax,paintNodesSearchCb,(ClientData)(&sQuery,1);
+    searchCanvas(pTree,ymin,ymax,paintNodesSearchCb,(ClientData)&sQuery,1);
 
     x = sQuery.left - pTree->iScrollX;
     w = (sQuery.right - pTree->iScrollX) - x;
@@ -4484,7 +4484,7 @@ HtmlWidgetBboxText(
     sQuery.top = pTree->canvas.bottom;
     sQuery.bottom = pTree->canvas.top;
 
-    searchCanvas(pTree, -1, -1, paintNodesSearchCb, (ClientData)(&sQuery, 1);
+    searchCanvas(pTree, -1, -1, paintNodesSearchCb, (ClientData)&sQuery, 1);
 
     *piL = sQuery.left;
     *piR = sQuery.right;
@@ -4589,7 +4589,7 @@ HtmlWidgetNodeTop(HtmlTree *pTree, HtmlNode *pNode)
     sQuery.iMinNode = 0;
     sQuery.iReturn = 0;
     sQuery.pTree = pTree;
-    searchCanvas(pTree, -1, -1, scrollToNodeCb, (ClientData)(&sQuery, 1);
+    searchCanvas(pTree, -1, -1, scrollToNodeCb, (ClientData)&sQuery, 1);
     return sQuery.iReturn;
 }
 
@@ -4671,7 +4671,7 @@ HtmlWidgetNodeBox(HtmlTree *pTree, HtmlNode *pNode, int *pX, int *pY, int *pW, i
             origin_x += pItem->x.o.x;
             origin_y += pItem->x.o.y;
         } else {
-            layoutBboxCb(pTree, pItem, origin_x, origin_y, 0, (ClientData)(&sQuery);
+            layoutBboxCb(pTree, pItem, origin_x, origin_y, 0, (ClientData)&sQuery);
         }
     }
 
