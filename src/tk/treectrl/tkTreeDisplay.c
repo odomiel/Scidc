@@ -2890,7 +2890,7 @@ TrackOnScreenColumnsForItem(
 		memcpy(value, (TreeColumn *) columns.pointers,
 				sizeof(TreeColumn) * count);
 		value[count] = NULL;
-		Tcl_SetHashValue(hPtr, (ClientData)( value);
+		Tcl_SetHashValue(hPtr, (ClientData)value);
 	}
 
 	Tcl_DStringFree(&dString);
@@ -5686,7 +5686,7 @@ Tree_Display(
 	}
 
 	/* */
-	Tcl_Preserve((ClientData)( tree);
+	Tcl_Preserve((ClientData)tree);
 	Tree_PreserveItems(tree);
 
 displayRetry:
@@ -6374,7 +6374,7 @@ displayRetry:
 displayExit:
 	dInfo->flags &= ~(DINFO_REDRAW_PENDING);
 	Tree_ReleaseItems(tree);
-	Tcl_Release((ClientData)( tree);
+	Tcl_Release((ClientData)tree);
 }
 
 /*
@@ -6997,7 +6997,7 @@ Tree_EventuallyRedraw(
 		return;
 	}
 	dInfo->flags |= DINFO_REDRAW_PENDING;
-	Tcl_DoWhenIdle(Tree_Display, (ClientData)( tree);
+	Tcl_DoWhenIdle(Tree_Display, (ClientData)tree);
 }
 
 /*
@@ -7909,7 +7909,7 @@ TreeDInfo_Free(
 		range = Range_Free(tree, range);
 	Tk_FreeGC(tree->display, dInfo->scrollGC);
 	if (dInfo->flags & DINFO_REDRAW_PENDING)
-		Tcl_CancelIdleCall(Tree_Display, (ClientData)( tree);
+		Tcl_CancelIdleCall(Tree_Display, (ClientData)tree);
 	if (dInfo->pixmapW.drawable != None)
 		Tk_FreePixmap(tree->display, dInfo->pixmapW.drawable);
 	if (dInfo->pixmapI.drawable != None)

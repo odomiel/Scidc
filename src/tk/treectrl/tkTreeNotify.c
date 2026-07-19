@@ -559,7 +559,7 @@ TreeNotify_OpenClose(
 		event.type = EVENT_COLLAPSE;
 		event.detail = before ? DETAIL_COLLAPSE_BEFORE : DETAIL_COLLAPSE_AFTER;
 	}
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }
 
@@ -601,7 +601,7 @@ TreeNotify_Selection(
 
 	event.type = EVENT_SELECTION;
 	event.detail = 0;
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }
@@ -642,7 +642,7 @@ TreeNotify_ActiveItem(
 
 	event.type = EVENT_ACTIVEITEM;
 	event.detail = 0;
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }
@@ -685,7 +685,7 @@ TreeNotify_Scroll(
 
 	event.type = EVENT_SCROLL;
 	event.detail = vertical ? DETAIL_SCROLL_Y : DETAIL_SCROLL_X;
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }
@@ -760,7 +760,7 @@ TreeNotify_ItemDeleted(
 
 	event.type = EVENT_ITEM_DELETE;
 	event.detail = 0;
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }
@@ -801,7 +801,7 @@ TreeNotify_ItemVisibility(
 
 	event.type = EVENT_ITEM_VISIBILITY;
 	event.detail = 0;
-	event.clientData = (ClientData)( &data;
+	event.clientData = (ClientData)&data;
 
 	(void) QE_BindEvent(tree->bindingTable, &event);
 }

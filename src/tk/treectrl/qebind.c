@@ -242,10 +242,10 @@ int QE_InstallEvent(QE_BindingTable bindingTable, char *name, QE_ExpandProc expa
 	eiPtr->command = NULL;
 #endif
 
-	Tcl_SetHashValue(hPtr, (ClientData)( eiPtr);
+	Tcl_SetHashValue(hPtr, (ClientData)eiPtr);
 
 	hPtr = Tcl_CreateHashEntry(&bindPtr->eventTableByType, (char *) INT2PTR(type), &isNew);
-	Tcl_SetHashValue(hPtr, (ClientData)( eiPtr);
+	Tcl_SetHashValue(hPtr, (ClientData)eiPtr);
 
 	/* List of EventInfos */
 	eiPtr->next = bindPtr->eventList;
@@ -307,7 +307,7 @@ int QE_InstallDetail(QE_BindingTable bindingTable, char *name, int eventType, QE
 	key.type = eventType;
 	key.detail = code;
 	hPtr = Tcl_CreateHashEntry(&bindPtr->detailTableByType, (char *) &key, &isNew);
-	Tcl_SetHashValue(hPtr, (ClientData)( dPtr);
+	Tcl_SetHashValue(hPtr, (ClientData)dPtr);
 
 	/* List of Details */
 	dPtr->next = eiPtr->detailList;
@@ -602,7 +602,7 @@ void QE_DeleteBindingTable(QE_BindingTable bindingTable)
 		WinTableValue *cd = (WinTableValue *) Tcl_GetHashValue(hPtr);
 
 		Tk_DeleteEventHandler(cd->tkwin, StructureNotifyMask,
-			TkWinEventProc, (ClientData)( cd);
+			TkWinEventProc, (ClientData)cd);
 		Tcl_Free((char *) cd);
 		hPtr = Tcl_NextHashEntry(&search);
 	}
@@ -651,8 +651,8 @@ int QE_CreateBinding(QE_BindingTable bindingTable, ClientData object,
 					cd->tkwin = tkwin2;
 					cd->count = 0;
 					Tk_CreateEventHandler(tkwin2, StructureNotifyMask,
-						TkWinEventProc, (ClientData)( cd);
-					Tcl_SetHashValue(hPtr, (ClientData)( cd);
+						TkWinEventProc, (ClientData)cd);
+					Tcl_SetHashValue(hPtr, (ClientData)cd);
 				}
 				else
 				{
@@ -679,7 +679,7 @@ int QE_CreateBinding(QE_BindingTable bindingTable, ClientData object,
 		{
 			valuePtr->nextValue = (BindValue *) Tcl_GetHashValue(hPtr);
 		}
-		Tcl_SetHashValue(hPtr, (ClientData)( valuePtr);
+		Tcl_SetHashValue(hPtr, (ClientData)valuePtr);
 	}
 
 	cmdOld = valuePtr->command;
@@ -841,7 +841,7 @@ static int DeleteBinding(BindingTable *bindPtr, BindValue *valuePtr)
 			if (cd->count == 0)
 			{
 				Tk_DeleteEventHandler(cd->tkwin, StructureNotifyMask,
-					TkWinEventProc, (ClientData)( cd);
+					TkWinEventProc, (ClientData)cd);
 				Tcl_Free((char *) cd);
 				Tcl_DeleteHashEntry(hPtr);
 			}
@@ -882,7 +882,7 @@ int QE_GetAllObjects(QE_BindingTable bindingTable)
 			if (i >= count)
 			{
 				Tcl_DStringAppend(&dString, (char *) &valuePtr->object,
-					sizeof(ClientData)();
+					sizeof(ClientData));
 				count++;
 			}
 			valuePtr = valuePtr->nextValue;
@@ -1144,7 +1144,7 @@ static void BindEvent(BindingTable *bindPtr, QE_Event *eventPtr, int wantDetail,
 			data.command = command;
 			data.eventPtr = eiPtr;
 			data.detailPtr = dPtr;
-			eventPtr->clientData = (ClientData)( &data;
+			eventPtr->clientData = (ClientData)&data;
 			ExpandPercents(bindPtr, valuePtr->object, valuePtr->command,
 				eventPtr, Percents_Command, &scripts);
 		}
@@ -1157,7 +1157,7 @@ static void BindEvent(BindingTable *bindPtr, QE_Event *eventPtr, int wantDetail,
 			 * b) a dynamic event with no percentsCommand installed and
 			 *    no percentsCommand argument
 			 */
-			eventPtr->clientData = (ClientData)( gdPtr;
+			eventPtr->clientData = (ClientData)gdPtr;
 			ExpandPercents(bindPtr, valuePtr->object, valuePtr->command,
 				eventPtr, Percents_CharMap, &scripts);
 		}
@@ -1441,7 +1441,7 @@ static int FindSequence(BindingTable *bindPtr, ClientData object,
 			/* This binding is active */
 			valuePtr->active = 1;
 #endif /* BIND_ACTIVE */
-			Tcl_SetHashValue(hPtr, (ClientData)( valuePtr);
+			Tcl_SetHashValue(hPtr, (ClientData)valuePtr);
 		}
 
 		if (created) (*created) = isNew;
@@ -1577,11 +1577,11 @@ int QE_BindCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 		{
 			return TCL_ERROR;
 		}
-		object = (ClientData)( Tk_GetUid(Tk_PathName(tkwin2));
+		object = (ClientData)Tk_GetUid(Tk_PathName(tkwin2));
 	}
 	else
 	{
-		object = (ClientData)( Tk_GetUid(string);
+		object = (ClientData)Tk_GetUid(string);
 	}
 
 	if (objC == 4)
@@ -1643,11 +1643,11 @@ int QE_UnbindCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 		{
 			return TCL_ERROR;
 		}
-		object = (ClientData)( Tk_GetUid(Tk_PathName(tkwin2));
+		object = (ClientData)Tk_GetUid(Tk_PathName(tkwin2));
 	}
 	else
 	{
-		object = (ClientData)( Tk_GetUid(string);
+		object = (ClientData)Tk_GetUid(string);
 	}
 
 	if (objC == 2)
@@ -1822,11 +1822,11 @@ QE_ConfigureCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 		{
 			return TCL_ERROR;
 		}
-		object = (ClientData)( Tk_GetUid(Tk_PathName(tkwin2));
+		object = (ClientData)Tk_GetUid(Tk_PathName(tkwin2));
 	}
 	else
 	{
-		object = (ClientData)( Tk_GetUid(t);
+		object = (ClientData)Tk_GetUid(t);
 	}
 
 	if (FindSequence(bindPtr, object, eventString, 0, NULL, &valuePtr) != TCL_OK)

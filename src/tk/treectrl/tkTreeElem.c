@@ -265,7 +265,7 @@ static Tk_ObjCustomOption booleanCO =
 	BooleanGet,
 	BooleanRestore,
 	NULL,
-	(ClientData)(NULL)
+	(ClientData)NULL
 };
 
 static void
@@ -477,7 +477,7 @@ IntegerCO_Alloc(
 	co->getProc = IntegerGet;
 	co->restoreProc = IntegerRestore;
 	co->freeProc = NULL;
-	co->clientData = (ClientData)(cd);
+	co->clientData = (ClientData)cd;
 
 	return co;
 }
@@ -528,7 +528,7 @@ StringTableCO_Alloc(
 	co->getProc = StringTableGet;
 	co->restoreProc = StringTableRestore;
 	co->freeProc = NULL;
-	co->clientData = (ClientData)(cd);
+	co->clientData = (ClientData)cd;
 
 	return co;
 }
@@ -660,23 +660,23 @@ static Tk_OptionSpec bitmapOptionSpecs[] = {
 	{TK_OPTION_CUSTOM, "-background", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBitmap, bg.obj), Tk_Offset(ElementBitmap, bg),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BITMAP_CONF_BG},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BITMAP_CONF_BG},
 	{TK_OPTION_CUSTOM, "-bitmap", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBitmap, bitmap.obj), Tk_Offset(ElementBitmap, bitmap),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BITMAP_CONF_BITMAP},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BITMAP_CONF_BITMAP},
 #ifdef DEPRECATED
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBitmap, draw.obj), Tk_Offset(ElementBitmap, draw),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BITMAP_CONF_DRAW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BITMAP_CONF_DRAW},
 #endif
 	{TK_OPTION_CUSTOM, "-foreground", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBitmap, fg.obj), Tk_Offset(ElementBitmap, fg),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BITMAP_CONF_FG},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BITMAP_CONF_FG},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void DeleteProcBitmap(TreeElementArgs *args)
@@ -982,34 +982,34 @@ static Tk_OptionSpec borderOptionSpecs[] = {
 	{TK_OPTION_CUSTOM, "-background", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBorder, border.obj), Tk_Offset(ElementBorder, border),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_BG},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_BG},
 #ifdef DEPRECATED
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBorder, draw.obj), Tk_Offset(ElementBorder, draw),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_DRAW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_DRAW},
 #endif
 	{TK_OPTION_CUSTOM, "-filled", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementBorder, filled),
-	 TK_OPTION_NULL_OK, (ClientData)(&booleanCO), BORDER_CONF_FILLED},
+	 TK_OPTION_NULL_OK, (ClientData)&booleanCO, BORDER_CONF_FILLED},
 	{TK_OPTION_PIXELS, "-height", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementBorder, heightObj),
 	 Tk_Offset(ElementBorder, height),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_SIZE},
 	{TK_OPTION_CUSTOM, "-relief", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementBorder, relief.obj), Tk_Offset(ElementBorder, relief),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_RELIEF},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_RELIEF},
 	{TK_OPTION_PIXELS, "-thickness", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementBorder, thicknessObj),
 	 Tk_Offset(ElementBorder, thickness),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_THICKNESS},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_THICKNESS},
 	{TK_OPTION_PIXELS, "-width", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementBorder, widthObj),
 	 Tk_Offset(ElementBorder, width),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), BORDER_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, BORDER_CONF_SIZE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void DeleteProcBorder(TreeElementArgs *args)
@@ -1306,12 +1306,12 @@ struct ElementCheckButton
 static Tk_OptionSpec chkbutOptionSpecs[] = {
 	{TK_OPTION_STRING, "-image", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementCheckButton, image.obj), -1,
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), CHKBUT_CONF_IMAGE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, CHKBUT_CONF_IMAGE},
 	{TK_OPTION_STRING_TABLE, "-state", (char *) NULL, (char *) NULL,
 	 "normal", -1, Tk_Offset(ElementCheckButton, state),
-	 0, (ClientData)(chkbutStateST), CHKBUT_CONF_STATE},
+	 0, (ClientData)chkbutStateST, CHKBUT_CONF_STATE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void DeleteProcCheckButton(TreeElementArgs *args)
@@ -1645,23 +1645,23 @@ static Tk_OptionSpec imageOptionSpecs[] = {
 #ifdef DEPRECATED
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), IMAGE_CONF_DRAW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, IMAGE_CONF_DRAW},
 #endif
 	{TK_OPTION_CUSTOM, "-height", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), IMAGE_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, IMAGE_CONF_SIZE},
 	{TK_OPTION_CUSTOM, "-image", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementImage, image.obj), Tk_Offset(ElementImage, image),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), IMAGE_CONF_IMAGE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, IMAGE_CONF_IMAGE},
 	{TK_OPTION_CUSTOM, "-tiled", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), IMAGE_CONF_DISPLAY},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, IMAGE_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-width", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), IMAGE_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, IMAGE_CONF_SIZE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void DeleteProcImage(TreeElementArgs *args)
@@ -1976,36 +1976,36 @@ static Tk_OptionSpec rectOptionSpecs[] = {
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementRect, draw.obj), Tk_Offset(ElementRect, draw),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_DRAW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_DRAW},
 #endif
 	{TK_OPTION_CUSTOM, "-fill", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementRect, fill.obj), Tk_Offset(ElementRect, fill),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_FILL},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_FILL},
 	{TK_OPTION_PIXELS, "-height", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementRect, heightObj),
 	 Tk_Offset(ElementRect, height),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_SIZE},
 	{TK_OPTION_STRING, "-open", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementRect, openString),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_OPEN},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_OPEN},
 	{TK_OPTION_CUSTOM, "-outline", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementRect, outline.obj), Tk_Offset(ElementRect, outline),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_OUTLINE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_OUTLINE},
 	{TK_OPTION_PIXELS, "-outlinewidth", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementRect, outlineWidthObj),
 	 Tk_Offset(ElementRect, outlineWidth),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_OUTWIDTH},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_OUTWIDTH},
 	{TK_OPTION_CUSTOM, "-showfocus", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementRect, showFocus),
-	 TK_OPTION_NULL_OK, (ClientData)(&booleanCO), RECT_CONF_FOCUS},
+	 TK_OPTION_NULL_OK, (ClientData)&booleanCO, RECT_CONF_FOCUS},
 	{TK_OPTION_PIXELS, "-width", (char *) NULL, (char *) NULL,
 	 (char *) NULL, Tk_Offset(ElementRect, widthObj),
 	 Tk_Offset(ElementRect, width),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), RECT_CONF_SIZE},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, RECT_CONF_SIZE},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void DeleteProcRect(TreeElementArgs *args)
@@ -2507,58 +2507,58 @@ static CONST char *textWrapST[] = { "char", "none", "word", (char *) NULL };
 static Tk_OptionSpec textOptionSpecs[] = {
 	{TK_OPTION_CUSTOM, "-data", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_STRINGREP},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_STRINGREP},
 	{TK_OPTION_CUSTOM, "-datatype", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_STRINGREP},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_STRINGREP},
 #ifdef DEPRECATED
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_DISPLAY},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_DISPLAY},
 #endif
 	{TK_OPTION_CUSTOM, "-fill", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL),  TEXT_CONF_DISPLAY},
+	 TK_OPTION_NULL_OK, (ClientData)NULL,  TEXT_CONF_DISPLAY},
 	{TK_OPTION_CUSTOM, "-font", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-format", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_STRINGREP},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_STRINGREP},
 	{TK_OPTION_CUSTOM, "-justify", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-lines", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-lmargin1", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-lmargin2", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-specialfont", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_STRING, "-text", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementText, textCfg),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_STRINGREP},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_STRINGREP},
 #ifdef TEXTVAR
 	{TK_OPTION_CUSTOM, "-textvariable", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_STRINGREP | TEXT_CONF_TEXTVAR},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_STRINGREP | TEXT_CONF_TEXTVAR},
 #endif
 #ifdef TEXT_STYLE
 	{TK_OPTION_CUSTOM, "-underline", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_DISPLAY},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_DISPLAY},
 #endif
 	{TK_OPTION_CUSTOM, "-width", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_CUSTOM, "-wrap", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(TreeElement_, options),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), TEXT_CONF_LAYOUT},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, TEXT_CONF_LAYOUT},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	 (char *) NULL, 0, -1, 0, 0, 0}
 };
@@ -2933,7 +2933,7 @@ static void TextTraceSet(Tcl_Interp *interp, ElementText *elemX)
 		Tcl_TraceVar2(interp, Tcl_GetString(varNameObj),
 			NULL,
 			TCL_GLOBAL_ONLY | TCL_TRACE_WRITES | TCL_TRACE_UNSETS,
-			VarTraceProc_Text, (ClientData)(elemX));
+			VarTraceProc_Text, (ClientData)elemX);
 	}
 }
 
@@ -2946,7 +2946,7 @@ static void TextTraceUnset(Tcl_Interp *interp, ElementText *elemX)
 		Tcl_UntraceVar2(interp, Tcl_GetString(varNameObj),
 			NULL,
 			TCL_GLOBAL_ONLY | TCL_TRACE_WRITES | TCL_TRACE_UNSETS,
-			VarTraceProc_Text, (ClientData)(elemX));
+			VarTraceProc_Text, (ClientData)elemX);
 	}
 }
 
@@ -3725,22 +3725,22 @@ static Tk_OptionSpec windowOptionSpecs[] = {
 #ifdef CLIP_WINDOW
 	{TK_OPTION_CUSTOM, "-clip", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementWindow, clip),
-	 TK_OPTION_NULL_OK, (ClientData)(&booleanCO), 0},
+	 TK_OPTION_NULL_OK, (ClientData)&booleanCO, 0},
 #endif
 	{TK_OPTION_CUSTOM, "-destroy", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementWindow, destroy),
-	 TK_OPTION_NULL_OK, (ClientData)(&booleanCO), 0},
+	 TK_OPTION_NULL_OK, (ClientData)&booleanCO, 0},
 #ifdef DEPRECATED
 	{TK_OPTION_CUSTOM, "-draw", (char *) NULL, (char *) NULL,
 	 (char *) NULL,
 	 Tk_Offset(ElementWindow, draw.obj), Tk_Offset(ElementWindow, draw),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), EWIN_CONF_DRAW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, EWIN_CONF_DRAW},
 #endif
 	{TK_OPTION_WINDOW, "-window", (char *) NULL, (char *) NULL,
 	 (char *) NULL, -1, Tk_Offset(ElementWindow, tkwin),
-	 TK_OPTION_NULL_OK, (ClientData)(NULL), EWIN_CONF_WINDOW},
+	 TK_OPTION_NULL_OK, (ClientData)NULL, EWIN_CONF_WINDOW},
 	{TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	 (char *) NULL, 0, -1, 0, (ClientData)(NULL), 0}
+	 (char *) NULL, 0, -1, 0, (ClientData)NULL, 0}
 };
 
 static void
@@ -3788,20 +3788,20 @@ WinItemLostSlaveProc(
 	 * about both windows. */
 	if (elemX->child != NULL) {
 		Tk_DeleteEventHandler(elemX->child, StructureNotifyMask,
-				WinItemStructureProc, (ClientData)(elemX));
+				WinItemStructureProc, (ClientData)elemX);
 		if (tkwin != elemX->child) {
 			Tk_ManageGeometry(elemX->child, (Tk_GeomMgr *) NULL,
-					(ClientData)(NULL));
+					(ClientData)NULL);
 			Tk_UnmapWindow(elemX->child);
 		}
 		elemX->child = NULL;
 	}
 	if (elemX->tkwin != NULL) {
 		Tk_DeleteEventHandler(elemX->tkwin, StructureNotifyMask,
-				WinItemStructureProc, (ClientData)(elemX));
+				WinItemStructureProc, (ClientData)elemX);
 		if (tkwin != elemX->tkwin) {
 			Tk_ManageGeometry(elemX->tkwin, (Tk_GeomMgr *) NULL,
-					(ClientData)(NULL));
+					(ClientData)NULL);
 			if (tree->tkwin != Tk_Parent(elemX->tkwin)) {
 				Tk_UnmaintainGeometry(elemX->tkwin, tree->tkwin);
 			}
@@ -3811,7 +3811,7 @@ WinItemLostSlaveProc(
 	}
 #else
 	Tk_DeleteEventHandler(elemX->tkwin, StructureNotifyMask,
-			WinItemStructureProc, (ClientData)(elemX));
+			WinItemStructureProc, (ClientData)elemX);
 	if (tree->tkwin != Tk_Parent(elemX->tkwin)) {
 		Tk_UnmaintainGeometry(elemX->tkwin, tree->tkwin);
 	}
@@ -3839,17 +3839,17 @@ static void DeleteProcWindow(TreeElementArgs *args)
 #ifdef CLIP_WINDOW
 		if (elemX->child != NULL) {
 			Tk_DeleteEventHandler(elemX->child, StructureNotifyMask,
-					WinItemStructureProc, (ClientData)(elemX));
+					WinItemStructureProc, (ClientData)elemX);
 			Tk_ManageGeometry(elemX->child, (Tk_GeomMgr *) NULL,
-					(ClientData)(NULL));
+					(ClientData)NULL);
 			Tk_UnmapWindow(elemX->child);
 			elemX->child = NULL;
 		}
 #endif
 		Tk_DeleteEventHandler(elemX->tkwin, StructureNotifyMask,
-				WinItemStructureProc, (ClientData)(elemX));
+				WinItemStructureProc, (ClientData)elemX);
 		Tk_ManageGeometry(elemX->tkwin, (Tk_GeomMgr *) NULL,
-				(ClientData)(NULL));
+				(ClientData)NULL);
 		if (tree->tkwin != Tk_Parent(elemX->tkwin)) {
 			Tk_UnmaintainGeometry(elemX->tkwin, tree->tkwin);
 		}
@@ -3929,17 +3929,17 @@ static int ConfigProcWindow(TreeElementArgs *args)
 #ifdef CLIP_WINDOW
 			if (elemX->child != NULL) {
 				Tk_DeleteEventHandler(elemX->child, StructureNotifyMask,
-						WinItemStructureProc, (ClientData)(elemX));
+						WinItemStructureProc, (ClientData)elemX);
 				Tk_ManageGeometry(elemX->child, (Tk_GeomMgr *) NULL,
-						(ClientData)(NULL));
+						(ClientData)NULL);
 				Tk_UnmapWindow(elemX->child);
 				elemX->child = NULL;
 			}
 #endif
 			Tk_DeleteEventHandler(savedX.tkwin, StructureNotifyMask,
-					WinItemStructureProc, (ClientData)(elemX));
+					WinItemStructureProc, (ClientData)elemX);
 			Tk_ManageGeometry(savedX.tkwin, (Tk_GeomMgr *) NULL,
-					(ClientData)(NULL));
+					(ClientData)NULL);
 			Tk_UnmaintainGeometry(savedX.tkwin, tree->tkwin);
 			Tk_UnmapWindow(savedX.tkwin);
 		}
@@ -3980,16 +3980,16 @@ static int ConfigProcWindow(TreeElementArgs *args)
 				elemX->child = (Tk_Window) TkWinGetChildList(elemX->tkwin);
 				if (elemX->child != NULL) {
 					Tk_CreateEventHandler(elemX->child, StructureNotifyMask,
-							WinItemStructureProc, (ClientData)(elemX));
+							WinItemStructureProc, (ClientData)elemX);
 					Tk_ManageGeometry(elemX->child, &winElemGeomType,
-							(ClientData)(elemX));
+							(ClientData)elemX);
 				}
 			}
 #endif
 			Tk_CreateEventHandler(elemX->tkwin, StructureNotifyMask,
-					WinItemStructureProc, (ClientData)(elemX));
+					WinItemStructureProc, (ClientData)elemX);
 			Tk_ManageGeometry(elemX->tkwin, &winElemGeomType,
-					(ClientData)(elemX));
+					(ClientData)elemX);
 		}
 	}
 #if 0

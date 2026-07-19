@@ -79,6 +79,7 @@ inline TkWindow* TkWinGetChildList(Tk_Window tkwin) {
 // In Tk 9.0: andere Struktur
 struct TkWindow;
 
+#ifdef __cplusplus
 namespace tkCompat {
 
 // ======================================================================
@@ -269,6 +270,7 @@ inline void setButtonWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr);
 inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr);
 
 } // namespace tkCompat
+#endif
 
 // ======================================================================
 // Implementierung - Tk 8.6 spezifisch (Standard)
@@ -279,6 +281,7 @@ inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr);
 
 #include <tkInt.h> // Für TkWindow-Struktur in Tk 8.6
 
+#ifdef __cplusplus
 namespace tkCompat {
 
 inline TkWindow* getParentWinPtr(TkWindow* winPtr) {
@@ -465,6 +468,7 @@ inline int& getGrabFlagsRef(struct TkDisplay* dispPtr) {
 }
 
 } // namespace tkCompat
+#endif
 
 #endif // TK_8_6
 
@@ -481,6 +485,7 @@ inline int& getGrabFlagsRef(struct TkDisplay* dispPtr) {
 // Die meisten Felder sind nicht mehr direkt zugänglich.
 // Stattdessen müssen öffentliche APIs verwendet werden.
 
+#ifdef __cplusplus
 namespace tkCompat {
 
 // ======================================================================
@@ -759,7 +764,9 @@ inline void setServerWinPtr(struct TkDisplay* dispPtr, TkWindow* winPtr) {
 }
 
 } // namespace tkCompat
+#endif
 
 #endif // TK_9_0_COMPAT
 
 #endif // _tk_compat_included
+
