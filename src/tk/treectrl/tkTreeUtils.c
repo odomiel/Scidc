@@ -16,6 +16,7 @@
  */
 
 #include "tkTreeCtrl.h"
+#include "../tk_compat.h"
 
 /* Tk 8.6 / Tk 9.0 Compatibility Layer - lokale Makros für C-Code */
 /* Diese Makros abstrahieren direkte TkWindow-Strukturzugriffe */
@@ -4817,7 +4818,7 @@ TagInfoCO_Set(
 	int flags
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	int objEmpty;
 	TagInfo *new = 0, **internalPtr;
 
@@ -4852,7 +4853,7 @@ TagInfoCO_Get(
 	int internalOffset
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	TagInfo *value = *(TagInfo **) (recordPtr + internalOffset);
 	return TagInfo_ToObj(tree, value);
 }
@@ -4876,7 +4877,7 @@ TagInfoCO_Free(
 								 * form resides. */
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 
 	TagInfo_Free(tree, *(TagInfo **)internalPtr);
 }
@@ -5612,7 +5613,7 @@ PerStateCO_Set(
 	)
 {
 	PerStateCOClientData *cd = (PerStateCOClientData *) clientData;
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	int objEmpty;
 	PerStateInfo new, *internalPtr, *hax;
 
@@ -5676,7 +5677,7 @@ PerStateCO_Restore(
 	char *saveInternalPtr
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	PerStateInfo *psi = (PerStateInfo *) internalPtr;
 	PerStateInfo *hax = *(PerStateInfo **) saveInternalPtr;
 /*dbwin("PerStateCO_Restore\n");*/
@@ -5707,7 +5708,7 @@ PerStateCO_Free(
 	)
 {
 	PerStateCOClientData *cd = (PerStateCOClientData *) clientData;
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	PerStateInfo *hax;
 /*	Tcl_Obj *objPtr = NULL;*/
 
@@ -5988,7 +5989,7 @@ DynamicCO_Set(
 	int flags
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	DynamicCOClientData *cd = clientData;
 	DynamicOption **firstPtr, *opt;
 	DynamicCOSave *save;
@@ -6082,7 +6083,7 @@ DynamicCO_Restore(
 	char *saveInternalPtr
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	DynamicCOClientData *cd = clientData;
 	DynamicOption *first = *(DynamicOption **) internalPtr;
 	DynamicOption *opt = DynamicOption_Find(first, cd->id);
@@ -6126,7 +6127,7 @@ DynamicCO_Free(
 	char *internalPtr
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	DynamicCOClientData *cd = clientData;
 	Tcl_Obj **objPtrPtr = NULL;
 
@@ -6590,7 +6591,7 @@ StyleCO_Set(
 	int flags
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	int objEmpty;
 	TreeStyle *internalPtr, new;
 

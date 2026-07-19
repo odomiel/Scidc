@@ -19,6 +19,7 @@
  */
 
 #include "tkTreeCtrl.h"
+#include "../tk_compat.h"
 
 typedef struct TreeColumn_ TreeColumn_;
 
@@ -164,7 +165,7 @@ UniformGroupCO_Set(
 	int flags
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	int objEmpty;
 	UniformGroup **internalPtr, *new;
 
@@ -214,7 +215,7 @@ UniformGroupCO_Get(
 	int internalOffset
 	)
 {
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	UniformGroup *uniform = *(UniformGroup **) (recordPtr + internalOffset);
 
 	if (uniform == NULL)
@@ -244,7 +245,7 @@ UniformGroupCO_Free(
 	UniformGroup *uniform = *(UniformGroup **) internalPtr;
 
 #ifdef TREECTRL_DEBUG
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	if (tree->debug.enable && uniform != NULL) {
 		dbwin("UniformGroupCO_Free: %s refCount=%d\n", Tcl_GetHashKey(&tree->uniformGroupHash, uniform->hPtr), uniform->refCount - 1);
 	}
@@ -467,7 +468,7 @@ ColumnCO_Set(
 	)
 {
 	int cfoFlags = (long) clientData;
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	int objEmpty;
 	TreeColumn new = 0, *internalPtr;
 
@@ -522,7 +523,7 @@ ColumnCO_Get(
 	)
 {
 	TreeColumn value = *(TreeColumn *) (recordPtr + internalOffset);
-	TreeCtrl *tree = (TreeCtrl *) ((TkWindow *) tkwin)->instanceData;
+	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
 	if (value == NULL)
 		return NULL;
 #if 0

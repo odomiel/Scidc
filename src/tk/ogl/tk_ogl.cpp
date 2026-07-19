@@ -24,6 +24,7 @@
 // ======================================================================
 
 #include "tk_ogl.h"
+#include "../tk_compat.h"
 
 #define namespace namespace_	// bug in tcl8.6/tkInt.h
 #include <tkInt.h>
@@ -62,7 +63,7 @@
 # include <ApplicationServices/ApplicationServices.h>
 
 # define MacOSXGetDrawablePort(ogl) \
-	TkMacOSXGetDrawablePort((Drawable)((TkWindow *)ogl->tkWin)->privatePtr)
+	TkMacOSXGetDrawablePort((Drawable)TkWinGetPrivatePtr(ogl->tkWin))
 
 #else
 
@@ -905,7 +906,7 @@ setMacBufRect(Ogl* ogl)
 {
 	GLint				wrect[4];
 	Rect				r;
-	MacDrawable*	d = ((TkWindow *)ogl->tkWin)->privatePtr;
+	MacDrawable*	d = TkWinGetPrivatePtr(ogl->tkWin);
 
 	// set wrect[0,1] to lower left corner of widget
 	wrect[2] = Tk_Width(ogl->tkWin);

@@ -24,6 +24,7 @@
 #include "tkRangeList.h"
 #include "tkAlloc.h"
 #include "tkInt.h"
+#include "../tk_compat.h"
 
 #ifdef _WIN32
 # include "tkWinInt.h"
@@ -69,7 +70,7 @@ static int
 TkpDrawingIsDisabled(
    Tk_Window tkwin)
 {
-    MacDrawable *macWin = ((TkWindow *) tkwin)->privatePtr;
+    MacDrawable *macWin = TkWinGetPrivatePtr(tkwin);
     return macWin && !!(macWin->flags & TK_DO_NOT_DRAW);
 }
 #else

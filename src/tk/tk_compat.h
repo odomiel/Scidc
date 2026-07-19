@@ -28,6 +28,31 @@
 
 #include <tk.h>
 
+// ======================================================================
+// C Makros für direkte TkWindow-Zugriffe (für C-Code)
+// ======================================================================
+
+#ifndef __cplusplus
+
+// Für C-Code: Makros für den Zugriff auf TkWindow-Felder
+// In Tk 8.6: direkte Feldzugriffe
+// In Tk 9.0: öffentliche APIs (wenn verfügbar, sonst fallback)
+
+// Makro zum Holen von instanceData aus einem Tk_Window
+// Usage: TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
+#define TkWinGetInstanceData(tkwin) ((TkWindow *)(tkwin))->instanceData
+
+// Makro zum Holen von privatePtr aus einem Tk_Window
+#define TkWinGetPrivatePtr(tkwin) ((TkWindow *)(tkwin))->privatePtr
+
+// Makro zum Holen von mainPtr aus einem Tk_Window
+#define TkWinGetMainPtr(tkwin) ((TkWindow *)(tkwin))->mainPtr
+
+// Makro zum Holen von childList aus einem Tk_Window
+#define TkWinGetChildList(tkwin) ((TkWindow *)(tkwin))->childList
+
+#endif // __cplusplus
+
 // Forward-Deklaration für Tk-interne Typen
 // In Tk 8.6: typedef struct TkWindow TkWindow;
 // In Tk 9.0: andere Struktur

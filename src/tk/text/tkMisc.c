@@ -8,6 +8,7 @@
 
 #include "tk.h"
 #include "tkInt.h"
+#include "../tk_compat.h"
 /* Ubuntu 24.04: hide symbols that conflict with system Tk */
 
 #if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 7)
@@ -80,7 +81,7 @@ int
 TkpAlwaysShowSelection(
     Tk_Window tkwin)
 {
-    return ((TkWindow *) tkwin)->mainPtr->alwaysShowSelection;
+    return TkWinGetMainPtr(tkwin)->alwaysShowSelection;
 }
 
 
@@ -309,7 +310,7 @@ int
 TkpDrawingIsDisabled(
    Tk_Window tkwin)
 {
-    MacDrawable *macWin = ((TkWindow *) tkwin)->privatePtr;
+    MacDrawable *macWin = TkWinGetPrivatePtr(tkwin);
     return macWin && !!(macWin->flags & TK_DO_NOT_DRAW);
 }
 

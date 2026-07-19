@@ -17,6 +17,7 @@
 
 #include "tkTreeCtrl.h"
 #include "tkTreeElem.h"
+#include "../tk_compat.h"
 
 /*
  *----------------------------------------------------------------------
@@ -3976,7 +3977,7 @@ static int ConfigProcWindow(TreeElementArgs *args)
 			}
 #ifdef CLIP_WINDOW
 			if ((elemX->clip == 1) || ((masterX != NULL) && (masterX->clip == 1))) {
-				elemX->child = (Tk_Window) ((TkWindow *) elemX->tkwin)->childList;
+				elemX->child = (Tk_Window) TkWinGetChildList(elemX->tkwin);
 				if (elemX->child != NULL) {
 					Tk_CreateEventHandler(elemX->child, StructureNotifyMask,
 							WinItemStructureProc, static_cast<ClientData>(elemX));
