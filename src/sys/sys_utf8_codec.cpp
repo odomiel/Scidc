@@ -762,7 +762,7 @@ fitsRegion2(mstl::string const& s)
 //	{
 //		Tcl_UniChar ch;
 //
-//		if (static_cast<unsigned char>(*p) >= 0xc0)
+//		if ((unsigned char)(*p) >= 0xc0)
 //		{
 //			p += Tcl_UtfToUniChar(p, &ch);
 //			printf("%u ", ch);
@@ -1801,15 +1801,15 @@ findConversion(sys::utf8::uchar code)
 static int
 compareEncodings(void const* lhs, void const* rhs)
 {
-	return ::strcmp(	Tcl_GetString(*static_cast<Tcl_Obj*const*>(lhs)),
-							Tcl_GetString(*static_cast<Tcl_Obj*const*>(rhs)));
+	return ::strcmp(	Tcl_GetString(*(Tcl_Obj*const*)(lhs)),
+							Tcl_GetString(*(Tcl_Obj*const*)(rhs)));
 }
 
 
 inline static int
 utfToUniChar(char const* s, Tcl_UniChar& ch)
 {
-	if (static_cast<unsigned char>(*s) >= 0xc0)
+	if ((unsigned char)(*s) >= 0xc0)
 		return Tcl_UtfToUniChar(s, &ch);
 
 	ch = *s;
@@ -2035,7 +2035,7 @@ Codec::convertFromUtf8(mstl::string const& in, mstl::string& out)
 			case TCL_CONVERT_UNKNOWN:
 				flags |= TCL_ENCODING_START;
 
-				if (static_cast<unsigned char>(*src) & 0x80)
+				if ((unsigned char)(*src) & 0x80)
 				{
 					unsigned		charLen;
 					utf8::uchar	code(utf8::getChar(src, charLen));
@@ -2360,8 +2360,8 @@ Codec::isConvertibleToLatin1(mstl::string const& str) const
 		if (c & 0x80)
 		{
 			if (  c == 0xef
-				 && static_cast<unsigned char>(s[1]) == 0xbf
-				 && static_cast<unsigned char>(s[2]) == 0xbd)
+				 && (unsigned char)(s[1]) == 0xbf
+				 && (unsigned char)(s[2]) == 0xbd)
 			{
 			  // the UTF-8 replacement character is convertible
 			  s += 2;
@@ -2415,7 +2415,7 @@ Codec::removeInvalidSequences(mstl::string& str, mstl::string const& replacement
 
 	while (s < e)
 	{
-		if (static_cast<unsigned char>(s[0]) < 0x80)							// 0bbbbbbb
+		if ((unsigned char)(s[0]) < 0x80)							// 0bbbbbbb
 		{
 			result.append(*s++);
 		}
@@ -2447,26 +2447,26 @@ Codec::removeInvalidSequences(mstl::string& str, mstl::string const& replacement
 				result.append(replacement);
 				removed += 1;
 			}
-			else if (	static_cast<unsigned char>(s[0]) == 0xe0
-						&& (static_cast<unsigned char>(s[1]) & 0xe0) == 0x80)		// overlong
+			else if (	(unsigned char)(s[0]) == 0xe0
+						&& ((unsigned char)(s[1]) & 0xe0) == 0x80)		// overlong
 			{
 				fprintf(stderr, "overlong three-byte UTF-8 sequence detected\n");
 				result.append(s[2] & 0x7f);
 			}
-			else if (	static_cast<unsigned char>(s[0]) == 0xed
-						&& (static_cast<unsigned char>(s[1]) & 0xe0) == 0xa0)		// surrogate
+			else if (	(unsigned char)(s[0]) == 0xed
+						&& ((unsigned char)(s[1]) & 0xe0) == 0xa0)		// surrogate
 			{
 				fprintf(stderr, "invalid three-byte surrogate in UTF-8 sequence detected\n");
 				result.append(replacement);
 				removed += 1;
 			}
-			else if (	static_cast<unsigned char>(s[0]) == 0xef
-						&& static_cast<unsigned char>(s[1]) == 0xbf
-						&& (static_cast<unsigned char>(s[2]) & 0xfe) == 0xbe)	// U+FFFE or U+FFFF
+			else if (	(unsigned char)(s[0]) == 0xef
+						&& (unsigned char)(s[1]) == 0xbf
+						&& ((unsigned char)(s[2]) & 0xfe) == 0xbe)	// U+FFFE or U+FFFF
 			{
 				fprintf(	stderr,
 							"invalid code point U+FFF%c in UTF-8 sequence detected\n",
-							static_cast<unsigned char>(s[2]) == 0xbf ? 'E' : 'F');
+							(unsigned char)(s[2]) == 0xbf ? 'E' : 'F');
 				result.append(replacement);
 				removed += 1;
 			}
@@ -2477,7 +2477,7 @@ Codec::removeInvalidSequences(mstl::string& str, mstl::string const& replacement
 
 			s += 3;
 		}
-		else if ((static_cast<unsigned char>(s[0]) & 0xf8) == 0xf0)	// 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
+		else if (((unsigned char)(s[0]) & 0xf8) == 0xf0)	// 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
 		{
 			if ((s[1] & 0xc0) != 0x80 || (s[2] & 0xc0) != 0x80 || (s[3] & 0xc0) != 0x80)	// invalid
 			{
@@ -2485,15 +2485,15 @@ Codec::removeInvalidSequences(mstl::string& str, mstl::string const& replacement
 				result.append(replacement);
 				removed += 1;
 			}
-			else if (	static_cast<unsigned char>(s[0]) == 0xf0
-						&& (static_cast<unsigned char>(s[1]) & 0xf0) == 0x80)	// overlong
+			else if (	(unsigned char)(s[0]) == 0xf0
+						&& ((unsigned char)(s[1]) & 0xf0) == 0x80)	// overlong
 			{
 				fprintf(stderr, "overlong four-byte UTF-8 sequence detected\n");
 				result.append(s[3] & 0x7f);
 			}
-			else if (	(	static_cast<unsigned char>(s[0]) == 0xf4
-							&& static_cast<unsigned char>(s[1]) > 0x8f)
-						|| static_cast<unsigned char>(s[0]) > 0xf4)	// > U+10FFFF
+			else if (	(	(unsigned char)(s[0]) == 0xf4
+							&& (unsigned char)(s[1]) > 0x8f)
+						|| (unsigned char)(s[0]) > 0xf4)	// > U+10FFFF
 			{
 				fprintf(stderr, "invalid code point > U+10FFFF in UTF-8 sequence detected\n");
 				result.append(replacement);

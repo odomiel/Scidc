@@ -1537,7 +1537,7 @@ Codec::reloadTournamentData(mstl::string const& rootname, util::Progress& progre
 				if (!sys::utf8::validate(city))
 					m_codec->forceValidUtf8(city);
 
-				siteBase.rename(static_cast<NamebaseEvent*>(m_eventMap[i])->site(), city);
+				siteBase.rename(((NamebaseEvent*)m_eventMap[i])->site(), city);
 			}
 
 			strm.seekg(RecordSize - 79, mstl::ios_base::cur);
@@ -2035,8 +2035,8 @@ Codec::getPlayer(uint32_t ref)
 
 	if (p != m_playerMap.end())
 	{
-		static_cast<NamebasePlayer*>(p->second)->incrRef();
-		return static_cast<NamebasePlayer*>(p->second);
+		((NamebasePlayer*)(p->second))->incrRef();
+		return ((NamebasePlayer*)(p->second));
 	}
 
 	if (m_illegalPlayer == 0)
@@ -2057,7 +2057,7 @@ Codec::getEvent(uint32_t ref)
 
 	if (p != m_eventMap.end())
 	{
-		NamebaseEvent* event = static_cast<NamebaseEvent*>(p->second);
+		NamebaseEvent* event = (NamebaseEvent*)(p->second);
 
 		if (event->frequency() == 0)
 			event->site()->incrRef();
@@ -2106,7 +2106,7 @@ Codec::getSource(uint32_t ref)
 
 	p->second->incrRef();
 
-	return static_cast<Source*>(p->second);
+	return (Source*)(p->second);
 }
 
 
@@ -2633,7 +2633,7 @@ Codec::findExactPosition(	GameInfo const& info,
 	Byte buf[32768];
 
 	ByteStream gStrm(buf, sizeof(buf));
-	ByteStream aStrm(static_cast<Byte*>(0), static_cast<Byte*>(0));
+	ByteStream aStrm((Byte*)(0), (Byte*)(0));
 
 	bool isChess960;
 

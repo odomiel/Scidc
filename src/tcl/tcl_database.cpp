@@ -2757,7 +2757,7 @@ cmdPlayerCard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		int rc = controller.processInput(script, dst, &out, &out);
 
 		if (rc == TeXt::Controller::OpenInputFileFailed)
-			out.write(static_cast<Log*>(myLog.get())->str);
+			out.write(((Log*)myLog.get())->str);
 	}
 
 	mstl::string htm(dst.str());
@@ -3586,7 +3586,7 @@ cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		Cmd_DatabaseSwitched, Cmd_Tree,
 	};
 
-	MySubscriber* subscriber = static_cast<MySubscriber*>(scidb->subscriber());
+	MySubscriber* subscriber = (MySubscriber*)(scidb->subscriber());
 
 	if (subscriber == 0)
 	{
@@ -3623,7 +3623,7 @@ cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 			return error(	::CmdSubscribe,
 								nullptr, nullptr,
 								"invalid argument %s",
-								static_cast<char const*>(Tcl_GetString(objv[1])));
+								(char const*)(Tcl_GetString(objv[1])));
 	}
 
 	if (type != ::MySubscriber::None)
@@ -3659,7 +3659,7 @@ cmdUnsubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		Cmd_GameClose, Cmd_DatabaseSwitched, Cmd_Tree,
 	};
 
-	MySubscriber* subscriber = static_cast<MySubscriber*>(scidb->subscriber());
+	MySubscriber* subscriber = (MySubscriber*)(scidb->subscriber());
 
 	if (subscriber == 0)
 		return TCL_OK;
@@ -4061,7 +4061,7 @@ cmdMatch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		{
 			case Namebase::Player:
 				{
-					NamebasePlayer const* player = static_cast<NamebasePlayer const*>(entry);
+					NamebasePlayer const* player = (NamebasePlayer const*)(entry);
 
 					uint32_t fideID = player->fideID();
 
@@ -4093,7 +4093,7 @@ cmdMatch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 			case Namebase::Event:
 				{
-					NamebaseEvent const* event = static_cast<NamebaseEvent const*>(entry);
+					NamebaseEvent const* event = (NamebaseEvent const*)(entry);
 
 					objs[n++] = Tcl_NewStringObj(event->site()->name(), -1);
 					objs[n++] = Tcl_NewStringObj(country::toString(event->site()->country()), -1);
@@ -4106,7 +4106,7 @@ cmdMatch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 			case Namebase::Site:
 				{
-					NamebaseSite const* site = static_cast<NamebaseSite const*>(entry);
+					NamebaseSite const* site = (NamebaseSite const*)(entry);
 					objs[n++] = Tcl_NewStringObj(entry->name(), -1);
 					objs[n++] = Tcl_NewStringObj(country::toString(site->country()), -1);
 				}

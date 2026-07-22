@@ -127,13 +127,13 @@ ListToken::isEqualTo(Token const& token) const
 {
 	M_REQUIRE(dynamic_cast<ListToken const*>(&token));
 
-	if (m_tokenList.size() != static_cast<ListToken const&>(token).m_tokenList.size())
+	if (m_tokenList.size() != (*(ListToken const*)(&token)).m_tokenList.size())
 		return false;
 
 	for (unsigned i = 0; i < m_tokenList.size(); ++i)
 	{
 		Token const* lhs = m_tokenList[i].get();
-		Token const* rhs = static_cast<ListToken const&>(token).m_tokenList[i].get();
+		Token const* rhs = (*(ListToken const*)(&token)).m_tokenList[i].get();
 
 		if (!(*lhs == *rhs))
 			return false;

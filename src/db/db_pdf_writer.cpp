@@ -56,7 +56,7 @@ static void
 errorHandler(HPDF_STATUS errorNo, HPDF_STATUS detailNo, void* user_data)
 {
 
-	static_cast<PdfWriter*>(user_data)->errorHandler(errorNo, PdfWriter::errorMessage(detailNo));
+	((PdfWriter*)user_data)->errorHandler(errorNo, PdfWriter::errorMessage(detailNo));
 }
 
 

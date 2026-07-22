@@ -39,7 +39,7 @@ performExpandafter(Environment& env)
 	{
 		case Token::T_List:
 			{
-				ListToken* list = static_cast<ListToken*>(token2.get());
+				ListToken* list = (ListToken*)token2.get();
 
 				if (!list->isEmpty())
 					env.pushProducer(Environment::ProducerP(list->getProducer(token2)));
@@ -48,7 +48,7 @@ performExpandafter(Environment& env)
 
 		case Token::T_Text:
 			{
-				TextToken* list = static_cast<TextToken*>(token2.get());
+				TextToken* list = (TextToken*)token2.get();
 
 				if (!list->isEmpty())
 					env.pushProducer(Environment::ProducerP(list->getProducer(token2)));

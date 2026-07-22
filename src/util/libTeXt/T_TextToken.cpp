@@ -51,7 +51,7 @@ bool
 TextToken::isEqualTo(Token const& token) const
 {
 	M_REQUIRE(dynamic_cast<TextToken const*>(&token));
-	return m_str == static_cast<TextToken const&>(token).m_str;
+	return m_str == (*(TextToken const*)(&token)).m_str;
 }
 
 
@@ -152,7 +152,7 @@ TextToken::convert(Environment& env, TokenP token)
 					token.reset(new ListToken(token)); // MEMORY
 					break;
 			}
-			static_cast<ListToken*>(token.get())->flatten();
+			((ListToken*)token.get())->flatten();
 			token.reset(new TextToken(token->text())); // MEMORY
 			break;
 	}

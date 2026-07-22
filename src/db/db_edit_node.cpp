@@ -487,7 +487,7 @@ Comment::operator<(Node const* node) const
 	if (type() < node->type())	return true;
 	if (type() > node->type())	return false;
 
-	Comment const* comment = static_cast<Comment const*>(node);
+	Comment const* comment = (Comment const*)(node);
 
 	if (m_varPos < comment->m_varPos) return true;
 	if (m_varPos > comment->m_varPos) return false;
@@ -536,7 +536,7 @@ Annotation::operator<(Node const* node) const
 	if (type() < node->type())	return true;
 	if (type() > node->type())	return false;
 
-	return m_position < static_cast<Annotation const*>(node)->m_position;
+	return m_position < ((Annotation const*)node)->m_position;
 }
 
 
@@ -643,9 +643,9 @@ Opening::operator==(Node const* node) const
 	M_ASSERT(node);
 	M_ASSERT(dynamic_cast<Opening const*>(node));
 
-	return	m_idn == static_cast<Opening const*>(node)->m_idn
-			&& m_eco == static_cast<Opening const*>(node)->m_eco
-			&& m_board.isEqualZHPosition(static_cast<Opening const*>(node)->m_board);
+	return	m_idn == ((Opening const*)node)->m_idn
+			&& m_eco == ((Opening const*)node)->m_eco
+			&& m_board.isEqualZHPosition(((Opening const*)node)->m_board);
 }
 
 
@@ -848,8 +848,8 @@ Variation::difference(Root const* root, Variation const* var, unsigned level, No
 			{
 				if (lhsType == TVariation)
 				{
-					Variation const* lhsVar = static_cast<Variation const*>(lhs);
-					Variation const* rhsVar = static_cast<Variation const*>(rhs);
+					Variation const* lhsVar = (Variation const*)(lhs);
+					Variation const* rhsVar = (Variation const*)(rhs);
 
 					lhsVar->difference(root, rhsVar, level + 1, nodes);
 				}
@@ -859,8 +859,8 @@ Variation::difference(Root const* root, Variation const* var, unsigned level, No
 
 					if (lhsType == TMove)
 					{
-						const Ply* lhsPly = static_cast<Move const*>(lhs)->ply();
-						const Ply* rhsPly = static_cast<Move const*>(rhs)->ply();
+						const Ply* lhsPly = ((Move const*)lhs)->ply();
+						const Ply* rhsPly = ((Move const*)rhs)->ply();
 
 						if (lhsPly && rhsPly)
 						{
@@ -891,8 +891,8 @@ Variation::difference(Root const* root, Variation const* var, unsigned level, No
 
 							for ( ; lhsIter != lhsLast; ++lhsIter, ++rhsIter)
 							{
-								Move const* m1 = static_cast<Move const*>(*lhsIter);
-								Move const* m2 = static_cast<Move const*>(*rhsIter);
+								Move const* m1 = (Move const*)(*lhsIter);
+								Move const* m2 = (Move const*)(*rhsIter);
 
 								const_cast<Move*>(m1)->markDifferences(*m2);
 							}
@@ -909,10 +909,10 @@ Variation::difference(Root const* root, Variation const* var, unsigned level, No
 							for ( ; rhsIter != rhsEnd; ++rhsIter)
 							{
 								if (	(*rhsIter)->type() == TMove
-									&& static_cast<Move const*>(*rhsIter)->ply() == 0)
+									&& ((Move const*)(*rhsIter))->ply() == 0)
 								{
-									Move const* m1 = static_cast<Move const*>(lhs);
-									Move const* m2 = static_cast<Move const*>(*rhsIter);
+									Move const* m1 = (Move const*)(lhs);
+									Move const* m2 = (Move const*)(*rhsIter);
 
 									const_cast<Move*>(m1)->markDifferences(*m2);
 									break;
@@ -1017,7 +1017,7 @@ Variation::pushRemove(	Root const* root,
 {
 	if (!nodes.empty() && nodes.back()->type() == TAction)
 	{
-		Action* action = static_cast<Action*>(const_cast<Node*>(nodes.back()));
+		Action* action = (Action*)(const_cast<Node*>(nodes.back()));
 
 		if (action->command() == Action::Remove && action->end() == start)
 			return action->replace(level, action->start(), end);
@@ -1692,7 +1692,7 @@ Root::makeList(Work& work,
 			|| node->annotation().contains(nag::DiagramFromBlack)))
 	{
 		work.pushParagraph(Spacing::Diagram);
-		work.pop(const_cast<Move*>(static_cast<Move const*>(result.back()))->m_list);
+		work.pop(const_cast<Move*>((Move const*)(result.back()))->m_list);
 		result.push_back(new Diagram(
 			work, node->annotation().contains(nag::Diagram) ? color::White : color::Black));
 		work.m_isVirgin = false;
@@ -1755,7 +1755,7 @@ Root::traverseLine(Work& work, KeyNode::List& result, MoveNode const* node, vari
 					|| node->annotation().contains(nag::DiagramFromBlack)))
 			{
 				work.pushParagraph(Spacing::Diagram);
-				work.pop(const_cast<Move*>(static_cast<Move const*>(result.back()))->m_list);
+				work.pop(const_cast<Move*>((Move const*)(result.back()))->m_list);
 				M_ASSERT(work.m_board.isValidMove(node->move(), variant));
 				work.m_board.doMove(node->move(), variant);
 				result.push_back(new Diagram(

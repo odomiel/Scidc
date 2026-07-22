@@ -220,10 +220,10 @@ sys::utf8::bits::toUniChar__(char const* s, unsigned charLen)
 	M_ASSERT(charLen > 1);
 
 	sys::utf8::uchar value =
-		(static_cast<unsigned char>(*s) & (0xff >> (charLen + 1))) << ((charLen - 1)*6);
+		((unsigned char)(*s) & (0xff >> (charLen + 1))) << ((charLen - 1)*6);
 
 	for (charLen -= 1, s += 1; charLen > 0; --charLen, ++s)
-		value |= (static_cast<unsigned char>(*s) - 0x80) << ((charLen - 1)*6);
+		value |= ((unsigned char)(*s) - 0x80) << ((charLen - 1)*6);
 
 	return value;
 }
@@ -339,7 +339,7 @@ unsigned
 sys::utf8::bits::charLength(char const* str)
 {
 	M_ASSERT(str);
-	M_ASSERT(static_cast<unsigned char>(*str) >= 0x80);
+	M_ASSERT((unsigned char)(*str) >= 0x80);
 
 	char c = *str;
 

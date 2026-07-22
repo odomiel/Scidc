@@ -1181,7 +1181,7 @@ Environment::TokenProducer::next(Environment&)
 		case Tokenizer::Char:
 			M_ASSERT(m_name.size() == 1);
 			M_ASSERT((m_name[0] & 0x80) == 0);
-			return m_impl.lookupMacro(RefID(static_cast<unsigned char>(m_name[0])));
+			return m_impl.lookupMacro(RefID((unsigned char)(m_name[0])));
 
 		case Tokenizer::Unicode:
 			return TokenP(new TextToken(m_name)); // MEMORY
@@ -1758,7 +1758,7 @@ Environment::performMacro(TokenP token)
 
 	TokenP t(m_current);
 	m_current = token;
-	static_cast<MacroToken*>(token.get())->perform(*this);
+	((MacroToken*)token.get())->perform(*this);
 	m_current = t;
 }
 

@@ -5427,10 +5427,10 @@ PgnReader::nextToken(Token prevToken)
 		if (__builtin_expect(c & 0x80, 0))
 		{
 			if (	c == 194
-				&& static_cast<unsigned char>(m_linePos[0]) == 189
+				&& (unsigned char)(m_linePos[0]) == 189
 				&& m_linePos[1] == '-'
-				&& static_cast<unsigned char>(m_linePos[2]) == 194
-				&& static_cast<unsigned char>(m_linePos[3]) == 189)
+				&& (unsigned char)(m_linePos[2]) == 194
+				&& (unsigned char)(m_linePos[3]) == 189)
 			{
 				// catch "½-½"
 				advanceLinePos(4);

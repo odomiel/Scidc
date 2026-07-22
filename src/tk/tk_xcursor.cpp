@@ -72,7 +72,7 @@ cmdSetCursor(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const obj
 	if (Tk_WindowId(tkwin) == None)
 		Tk_MakeWindowExist(tkwin);
 
-	XDefineCursor(Tk_Display(tkwin), Tk_WindowId(tkwin), static_cast<Cursor>(xid));
+	XDefineCursor(Tk_Display(tkwin), Tk_WindowId(tkwin), (Cursor)(xid));
 	return TCL_OK;
 }
 
@@ -108,7 +108,7 @@ cmdLoadCursorFromFile(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* 
 		return TCL_ERROR;
 	}
 
-	Tcl_SetObjResult(ti, Tcl_NewLongObj(static_cast<long>(cursor)));
+	Tcl_SetObjResult(ti, Tcl_NewLongObj((long)(cursor)));
 	return TCL_OK;
 }
 
@@ -127,7 +127,7 @@ cmdFreeCursor(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const ob
 	if (Tcl_GetLongFromObj(ti, objv[1], &xid) != TCL_OK)
 		return TCL_ERROR;
 
-	XFreeCursor(Tk_Display(Tk_MainWindow(ti)), static_cast<Cursor>(xid));
+	XFreeCursor(Tk_Display(Tk_MainWindow(ti)), (Cursor)(xid));
 	return TCL_OK;
 }
 

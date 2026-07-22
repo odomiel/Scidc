@@ -69,8 +69,8 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"26.07.19 b2 Beta"
-# define SCIDB_REVISION	"1497"
+# define SCIDB_VERSION	"26.07.19 b4 Beta"
+# define SCIDB_REVISION	"1532"
 #endif
 
 using namespace tcl;
@@ -131,7 +131,7 @@ struct XmlData
 static void
 startXmlElement(void* clData, XML_Char const* elem, char const** attr)
 {
-	XmlData* data = static_cast<XmlData*>(clData);
+	XmlData* data = (XmlData*)(clData);
 
 	if (strcmp(elem, "xml") != 0)
 	{
@@ -145,7 +145,7 @@ startXmlElement(void* clData, XML_Char const* elem, char const** attr)
 static void
 endXmlElement(void* clData, XML_Char const* elem)
 {
-	XmlData* data = static_cast<XmlData*>(clData);
+	XmlData* data = (XmlData*)(clData);
 
 	if (strcmp(elem, "xml") != 0)
 	{
@@ -164,7 +164,7 @@ endXmlElement(void* clData, XML_Char const* elem)
 static void
 xmlContent(void* clData, XML_Char const* s, int len)
 {
-	XmlData* data = static_cast<XmlData*>(clData);
+	XmlData* data = (XmlData*)(clData);
 
 	if (data->prevAttr == data->attribute && data->size > 0)
 	{
@@ -1086,7 +1086,7 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int
 cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
-	setResult("26.07.19 b2 Beta");
+	setResult("26.07.19 b4 Beta");
 	return TCL_OK;
 }
 
@@ -1720,7 +1720,7 @@ cmdContainsUnicodeChar(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj*
 
 	for ( ; *s; ++s)
 	{
-		if (static_cast<unsigned char>(*s) >= 0x80)
+		if ((unsigned char)(*s) >= 0x80)
 		{
 			setResult(true);
 			return TCL_OK;

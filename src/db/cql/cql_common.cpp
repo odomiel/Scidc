@@ -49,7 +49,7 @@ struct CountryLookup
 static int
 compareCountryCodes(void const* lhs, const void* rhs)
 {
-	return ::strncasecmp(static_cast<char const*>(lhs), static_cast<CountryLookup const*>(rhs)->code, 2);
+	return ::strncasecmp((char const*)(lhs), ((CountryLookup const*)rhs)->code, 2);
 }
 
 
@@ -316,8 +316,8 @@ cql::country::lookupIso3166_2(mstl::string const& s)
 										sizeof(Table[0]),
 										compareCountryCodes);
 
-	if (p && ::strncasecmp(s, static_cast<CountryLookup const*>(p)->code, 2))
-		return static_cast<CountryLookup const*>(p)->result;
+	if (p && ::strncasecmp(s, ((CountryLookup const*)p)->code, 2))
+		return ((CountryLookup const*)p)->result;
 
 	return Unknown;
 }

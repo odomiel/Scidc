@@ -426,7 +426,7 @@ Macros::performCsname(Environment& env)
 				break;
 
 			case Token::T_Text:
-				csname += static_cast<TextToken*>(token.get())->content();
+				csname += ((TextToken*)token.get())->content();
 				break;
 
 			case Token::T_Parameter:
@@ -466,7 +466,7 @@ Macros::bindMacro(Environment& env, TokenP const& cs, TokenP const& newToken)
 {
 	M_REQUIRE(dynamic_cast<GenericAssignmentToken const*>(env.currentToken().get()));
 
-	int uplevel = static_cast<GenericAssignmentToken*>(env.currentToken().get())->uplevel();
+	int uplevel = ((GenericAssignmentToken*)env.currentToken().get())->uplevel();
 
 	if (cs->type() == Token::T_Variable)
 	{

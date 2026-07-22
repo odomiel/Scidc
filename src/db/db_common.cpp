@@ -194,8 +194,8 @@ static tag::ID Ordered[tag::BughouseTag];
 static int
 compareTags(void const* lhs, const void* rhs)
 {
-	mstl::string const* s = static_cast<mstl::string const*>(lhs);
-	mstl::string const& t = static_cast<Pair const*>(rhs)->name;
+	mstl::string const* s = (mstl::string const*)(lhs);
+	mstl::string const& t = ((Pair const*)rhs)->name;
 
 	int rc = ::strncasecmp(s->c_str(), t, s->size());
 	return rc ? rc : (t.size() == s->size() ? 0 : -1);
@@ -1214,10 +1214,10 @@ static Pair const NameMap[] =
 static int
 compareNames(void const* lhs, const void* rhs)
 {
-	M_ASSERT(strlen(static_cast<char const*>(lhs)) >= 3);
-	M_ASSERT(static_cast<mstl::string const*>(rhs)->size() == 3);
+	M_ASSERT(strlen((char const*)(lhs)) >= 3);
+	M_ASSERT(((mstl::string const*)rhs)->size() == 3);
 
-	return ::strncmp(static_cast<char const*>(lhs), static_cast<mstl::string const*>(rhs)->c_str(), 3);
+	return ::strncmp((char const*)(lhs), ((mstl::string const*)rhs)->c_str(), 3);
 }
 
 } // namespace country
@@ -1370,7 +1370,7 @@ piece::fromLetter(char piece)
 	};
 
 	M_REQUIRE(piece > 0);
-	return Lookup[static_cast<unsigned char>(piece) & 0x7f];
+	return Lookup[(unsigned char)(piece) & 0x7f];
 }
 
 
@@ -1400,7 +1400,7 @@ piece::pieceFromLetter(char piece)
 	};
 
 	M_REQUIRE(piece > 0);
-	return Lookup[static_cast<unsigned char>(piece) & 0x7f];
+	return Lookup[(unsigned char)(piece) & 0x7f];
 }
 
 
@@ -1643,8 +1643,8 @@ tag::fromName(mstl::string const& tag)
 										sizeof(NameMap[0]),
 										compareTags);
 
-	if (p && ::isCaseEqual(tag, static_cast<Pair const*>(p)->name))
-		return static_cast<Pair const*>(p)->id;
+	if (p && ::isCaseEqual(tag, ((Pair const*)p)->name))
+		return ((Pair const*)p)->id;
 
 	return ExtraTag;
 }
@@ -3633,8 +3633,8 @@ country::fromString(char const* country)
 										sizeof(NameMap[0]),
 										compareNames);
 
-	if (p && ::strncmp(static_cast<Pair const*>(p)->name, country, 3) == 0)
-		return static_cast<Pair const*>(p)->code;
+	if (p && ::strncmp(((Pair const*)p)->name, country, 3) == 0)
+		return ((Pair const*)p)->code;
 
 	return Unknown;
 }

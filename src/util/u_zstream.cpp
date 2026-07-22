@@ -43,16 +43,16 @@
 using namespace util;
 
 
-#define ZIP_FILE	static_cast<ZStream::Handle*>(cookie)->file
-#define ZIP_DIR	static_cast<ZStream::Handle*>(cookie)->dir
-#define HANDLE		static_cast<ZStream::Handle*>(cookie)->handle
+#define ZIP_FILE	((ZStream::Handle*)cookie)->file
+#define ZIP_DIR	((ZStream::Handle*)cookie)->dir
+#define HANDLE		((ZStream::Handle*)cookie)->handle
 #define GZHANDLE	reinterpret_cast<gzFile>(HANDLE)
 
-#define IS_READABLE	(static_cast<ZStream::Handle*>(cookie)->mode & mstl::ios_base::in)
-#define IS_WRITEABLE	(static_cast<ZStream::Handle*>(cookie)->mode & mstl::ios_base::out)
+#define IS_READABLE	(((ZStream::Handle*)cookie)->mode & mstl::ios_base::in)
+#define IS_WRITEABLE	(((ZStream::Handle*)cookie)->mode & mstl::ios_base::out)
 
 
-static unsigned char const gzipMagic [2] = { '\037', static_cast<unsigned char>('\213') };
+static unsigned char const gzipMagic [2] = { '\037', (unsigned char)('\213') };
 static unsigned char const zzipMagic [4] = { 'P', 'K', '\003', '\004' };
 
 
@@ -89,9 +89,9 @@ fileOpen(void* cookie)
 		if (!zzip_dir_read(ZIP_DIR, &entry))
 			return 0;
 
-		M_ASSERT(static_cast<ZStream::Handle*>(cookie)->suffixes);
+		M_ASSERT(((ZStream::Handle*)cookie)->suffixes);
 
-		if (match(*static_cast<ZStream::Handle*>(cookie)->suffixes, entry.d_name))
+		if (match(*((ZStream::Handle*)cookie)->suffixes, entry.d_name))
 			return ::zzip_file_open(ZIP_DIR, entry.d_name, 0);
 	}
 
@@ -462,7 +462,7 @@ uint64_t
 ZStream::goffset()
 {
 	if (m_type == GZip)
-		return gzoffset(static_cast<gzFile>(m_handle.handle));
+		return gzoffset((gzFile)(m_handle.handle));
 
 	return tellg();
 }

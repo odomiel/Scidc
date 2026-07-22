@@ -28,26 +28,26 @@ struct File::Cookie
 	static __ssize_t
 	read(void* cookie, char* buf, size_t len)
 	{
-		return Tcl_Read(static_cast<File*>(cookie)->m_chan, buf, len);
+		return Tcl_Read(((File*)cookie)->m_chan, buf, len);
 	}
 
 	static int
 	seek(void* cookie, __off64_t* pos, int whence)
 	{
-		return Tcl_Seek(static_cast<File*>(cookie)->m_chan, *pos, whence);
+		return Tcl_Seek(((File*)cookie)->m_chan, *pos, whence);
 	}
 
 	static int
 	close(void* cookie)
 	{
-		static_cast<File*>(cookie)->m_fp = 0;
+		((File*)cookie)->m_fp = 0;
 		return 0;
 	}
 
 	static __ssize_t
 	write(void* cookie, char const* buf, size_t len)
 	{
-		return Tcl_Write(static_cast<File*>(cookie)->m_chan, buf, len);
+		return Tcl_Write(((File*)cookie)->m_chan, buf, len);
 	}
 };
 

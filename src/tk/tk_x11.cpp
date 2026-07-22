@@ -165,7 +165,7 @@ getRegion(char const* subcmd, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 			}
 
 			Tk_PhotoPutBlock(ti, handle, &block, 0, 0, width, height, TK_PHOTO_COMPOSITE_SET);
-			if (static_cast<void*>(ximage->data) != static_cast<void*>(block.pixelPtr))
+			if ((void*)(ximage->data) != (void*)(block.pixelPtr))
 				delete [] block.pixelPtr;
 			XDestroyImage(ximage);
 		}

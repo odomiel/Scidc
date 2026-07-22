@@ -150,7 +150,7 @@ struct Alignment::AlignmentFilter : public OutputFilter
 	void put(Environment& env, mstl::string const& s) override
 	{
 		for (size_t i = 0; i < s.size(); ++i)
-			put(env, static_cast<unsigned char>(s[i]));
+			put(env, (unsigned char)(s[i]));
 	}
 
 	void put(Environment& env, Value number) override
@@ -169,7 +169,7 @@ struct Alignment::AlignmentFilter : public OutputFilter
 		if (!m_buffer.empty())
 		{
 			for (size_t i = 0; i < m_buffer.size(); ++i)
-				next().put(env, static_cast<unsigned char>(m_buffer[i]));
+				next().put(env, (unsigned char)(m_buffer[i]));
 
 			m_buffer.clear();
 		}

@@ -146,7 +146,7 @@ MemoryBlock::alloc()
 
 	M_ASSERT(!(destroyed = false));	// initialization
 
-	Object* base = static_cast<Object*>(::malloc(ChunkSize));
+	Object* base = (Object*)(::malloc(ChunkSize));
 	Object* curr = base;
 	Object* prev = 0;
 	Object* next = MemoryBlock::succ(base);
@@ -213,7 +213,7 @@ Memory::release(void* obj)
 {
 	M_ASSERT(!::memBlock.destroyed);
 
-	::memBlock.freeNode.prepend(static_cast<Object*>(obj));
+	::memBlock.freeNode.prepend((Object*)obj);
 	::memBlock.numFree++;
 }
 

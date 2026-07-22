@@ -39,8 +39,8 @@ using namespace db;
 static int
 cmpEco(void const* lhs, void const* rhs)
 {
-	return	int(static_cast<PlayerStats::MapType const*>(rhs)->second)
-			 - int(static_cast<PlayerStats::MapType const*>(lhs)->second);
+	return	int(((PlayerStats::MapType const*)rhs)->second)
+			 - int(((PlayerStats::MapType const*)lhs)->second);
 }
 
 

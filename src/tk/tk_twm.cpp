@@ -1561,7 +1561,7 @@ Node::Lookup Node::m_lookup;
 static void
 Perform(ClientData clientData)
 {
-	Node* root = static_cast<Node*>(clientData);
+	Node* root = (Node*)(clientData);
 
 	if (root->exists() && !root->isLocked())
 		root->perform();
@@ -1571,7 +1571,7 @@ Perform(ClientData clientData)
 static void
 Adjust(ClientData clientData)
 {
-	Node* root = static_cast<Node*>(clientData);
+	Node* root = (Node*)(clientData);
 
 	if (root->exists())
 		root->adjust();
@@ -1585,15 +1585,15 @@ WindowEventProc(ClientData clientData, XEvent* event)
 	{
 		case ConfigureNotify:
 		{
-			static_cast<Node*>(clientData)->updateDimen(
+			((Node*)clientData)->updateDimen(
 				event->xconfigure.x, event->xconfigure.y,
 				event->xconfigure.width, event->xconfigure.height);
 			break;
 		}
 
-		case DestroyNotify:	static_cast<Node*>(clientData)->destroyed(false); break;
-		case UnmapNotify:		static_cast<Node*>(clientData)->destroyed(true); break;
-		case MapNotify:		static_cast<Node*>(clientData)->setSelected(); break;
+		case DestroyNotify:	((Node*)clientData)->destroyed(false); break;
+		case UnmapNotify:		((Node*)clientData)->destroyed(true); break;
+		case MapNotify:		((Node*)clientData)->setSelected(); break;
 	}
 }
 

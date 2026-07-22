@@ -202,7 +202,7 @@ libfamHandler(ClientData clientData, int)
 
 		if (FAMNextEvent(libfamConnection, &event) == 1)
 		{
-			Request const* request(static_cast<Request*>(event.userdata));
+			Request const* request((Request*)(event.userdata));
 
 			switch (int(event.code))
 			{
@@ -303,7 +303,7 @@ monitorFAM(mstl::string const& path, Request& req, file::Type type, unsigned sta
 		}
 	}
 
-	++static_cast<LibfamRequest*>(req.m_data)->m_ref;
+	++(LibfamRequest*)(req.m_data)->m_ref;
 	return true;
 }
 
@@ -315,7 +315,7 @@ cancelMonitorFAM(Request& req)
 
 	if (req.m_data)
 	{
-		LibfamRequest*	request(static_cast<LibfamRequest*>(req.m_data));
+		LibfamRequest*	request((LibfamRequest*)(req.m_data));
 
 		M_ASSERT(request->m_ref > 0);
 
@@ -488,7 +488,7 @@ closeFAM()
 
 			for (InotifyMap::const_iterator i = inotifyMap.begin(); i != inotifyMap.end(); ++i)
 			{
-				InotifyRequest* r = static_cast<InotifyRequest*>(i->second->m_data);
+				InotifyRequest* r = (InotifyRequest*)(i->second->m_data);
 				inotify_rm_watch(inotifyFD, r->m_wd);
 				delete r;
 			}
@@ -552,7 +552,7 @@ monitorFAM(mstl::string const& path, Request& req, file::Type type, unsigned sta
 		inotifyMap.insert_unique(wd, &req);
 	}
 
-	++static_cast<InotifyRequest*>(req.m_data)->m_ref;
+	++((InotifyRequest*)req.m_data)->m_ref;
 	return true;
 }
 
@@ -562,7 +562,7 @@ cancelMonitorFAM(Request& req)
 {
 	if (inotifyFD != -1 && req.m_data)
 	{
-		InotifyRequest* r = static_cast<InotifyRequest*>(req.m_data);
+		InotifyRequest* r = (InotifyRequest*)(req.m_data);
 
 		M_ASSERT(r->m_ref > 0);
 
@@ -768,7 +768,7 @@ closeFAM()
 	{
 		for (FcntlMap::const_iterator i = fcntlMap.begin(); i != fcntlMap.end(); ++i)
 		{
-			FcntlRequest* r = static_cast<FcntlRequest*>(i->second->m_data);
+			FcntlRequest* r = (FcntlRequest*)(i->second->m_data);
 			close(r->m_fd);
 			delete r;
 		}
@@ -842,7 +842,7 @@ cancelMonitorFAM(Request& req)
 {
 	if (req.m_data)
 	{
-		FcntlRequest* r = static_cast<FcntlRequest*>(req.m_data);
+		FcntlRequest* r = (FcntlRequest*)(req.m_data);
 
 		M_ASSERT(r->m_ref > 0);
 

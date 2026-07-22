@@ -626,7 +626,7 @@ merge(MoveNode* node,
 static int
 compMoveIndex(void const* lhs, void const* rhs)
 {
-	return *static_cast<Moves::value_type const*>(lhs) - *static_cast<Moves::value_type const*>(rhs);
+	return *((Moves::value_type const*)lhs) - *((Moves::value_type const*)rhs);
 }
 
 

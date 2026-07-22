@@ -170,13 +170,13 @@ struct IndexEntry
 #define TYPEOF(var) mstl::remove_reference<decltype(var)>::type
 
 #define BF_MASK(type, pos, len) \
-	(((static_cast<type>(1) << (len)) - 1) << (pos))
+	((((type)(1) << (len)) - 1) << (pos))
 
 #define BF_GET(var, pos, len) \
-	((var >> (pos)) & ((static_cast<TYPEOF(var)>(1) << (len)) - 1))
+	((var >> (pos)) & (((TYPEOF(var))(1) << (len)) - 1))
 
 #define BF_SET(var, val, pos, len) \
-	var |= ((static_cast<TYPEOF(var)>(val) << (pos)) & BF_MASK(TYPEOF(var), pos, len))
+	var |= (((TYPEOF(var))(val) << (pos)) & BF_MASK(TYPEOF(var), pos, len))
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 

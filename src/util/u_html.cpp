@@ -443,14 +443,14 @@ Search::htmlStartElement(void* cbData, XML_Char const* elem, char const** attr)
 	{
 //		case 'A':
 //			if (elem[1] == '\0')
-//				++static_cast<Search*>(cbData)->m_skip;
+//				++((Search*)cbData)->m_skip;
 //			break;
 
 		case 'H':
 		{
 			if (::isdigit(elem[1]))
 			{
-				Search* self = static_cast<Search*>(cbData);
+				Search* self = (Search*)(cbData);
 
 				if (elem[1] == '1')
 					self->m_isTitle = true;
@@ -460,13 +460,13 @@ Search::htmlStartElement(void* cbData, XML_Char const* elem, char const** attr)
 			}
 			else if (::strcasecmp(elem, "head") == 0)
 			{
-				++static_cast<Search*>(cbData)->m_skip;
+				++((Search*)cbData)->m_skip;
 			}
 		}
 		break;
 	}
 
-	static_cast<Search*>(cbData)->m_partialMatch = 0;
+	((Search*)cbData)->m_partialMatch = 0;
 }
 
 
@@ -479,14 +479,14 @@ Search::htmlEndElement(void* cbData, XML_Char const* elem)
 	{
 //		case 'A':
 //			if (elem[1] == '\0')
-//				--static_cast<Search*>(cbData)->m_skip;
+//				--((Search*)cbData)->m_skip;
 //			break;
 
 		case 'H':
 		{
 			if (::isdigit(elem[1]))
 			{
-				Search* self = static_cast<Search*>(cbData);
+				Search* self = (Search*)(cbData);
 
 				self->m_isTitle = false;
 
@@ -495,7 +495,7 @@ Search::htmlEndElement(void* cbData, XML_Char const* elem)
 			}
 			else if (::strcasecmp(elem, "head") == 0)
 			{
-				--static_cast<Search*>(cbData)->m_skip;
+				--((Search*)cbData)->m_skip;
 			}
 		}
 		break;
@@ -532,7 +532,7 @@ Search::htmlContent(void* cbData, XML_Char const* s, int len)
 	if (*s == '\n' && len == 1)
 		return;
 
-	Search* self = static_cast<Search*>(cbData);
+	Search* self = (Search*)(cbData);
 
 	if (self->m_isTitle)
 		self->m_title.append(s, len);

@@ -46,7 +46,7 @@ unsigned char const*
 Mapping::address() const
 {
 	M_REQUIRE(isOpen());
-	return static_cast<unsigned char const*>(m_address);
+	return (unsigned char const*)(m_address);
 }
 
 
@@ -57,7 +57,7 @@ Mapping::address()
 	M_REQUIRE(isOpen());
 	M_REQUIRE(isWriteable());
 
-	return static_cast<unsigned char*>(m_address);
+	return (unsigned char*)(m_address);
 }
 
 } // namespace file

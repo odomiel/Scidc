@@ -526,7 +526,7 @@ struct Thread::Synchonize
 	{
 		M_ASSERT(Thread::insideMainThread());
 
-		Synchonize* sync = static_cast<Synchonize*>(data);
+		Synchonize* sync = (Synchonize*)(data);
 
 		Serialize serialize;
 		int signal;
@@ -558,8 +558,8 @@ bool Thread::insideMainThread() { return GetCurrentThreadId() == m_mainThread.th
 unsigned
 Thread::startThread(void* arg)
 {
-	startRoutine(static_cast<Thread*>(arg)->m_runnable, static_cast<Thread*>(arg)->m_exception);
-	static_cast<Thread*>(arg)->finishThread();
+	startRoutine(((Thread*)arg)->m_runnable, ((Thread*)arg)->m_exception);
+	((Thread*)arg)->finishThread();
 	return 0;
 }
 
@@ -610,8 +610,8 @@ bool Thread::insideMainThread() { return pthread_self() == m_mainThread.threadId
 void*
 Thread::startThread(void* arg)
 {
-	startRoutine(static_cast<Thread*>(arg)->m_runnable, static_cast<Thread*>(arg)->m_exception);
-	static_cast<Thread*>(arg)->finishThread();
+	startRoutine(((Thread*)arg)->m_runnable, ((Thread*)arg)->m_exception);
+	((Thread*)arg)->finishThread();
 	return 0;
 }
 

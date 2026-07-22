@@ -61,7 +61,7 @@ operator<(Alpha alpha, Edge const& edge)
 int
 Edge::compare(void const* lhs, void const* rhs)
 {
-	return int(static_cast<Edge const*>(lhs)->m_alpha) - int(static_cast<Edge const*>(rhs)->m_alpha);
+	return int(((Edge const*)lhs)->m_alpha) - int(((Edge const*)rhs)->m_alpha);
 }
 
 

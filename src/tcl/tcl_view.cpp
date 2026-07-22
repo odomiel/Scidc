@@ -808,7 +808,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		int rc = controller.processInput(scriptPath, dst, &out, &out);
 
 		if (rc == TeXt::Controller::OpenInputFileFailed)
-			out.write(static_cast<Log*>(myLog.get())->str);
+			out.write(((Log*)myLog.get())->str);
 	}
 
 	significant = view::makeLangList(ti, CmdPrint, languageList, languages);

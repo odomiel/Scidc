@@ -225,7 +225,7 @@ changeProperty1(Display* display, Window window, Atom which, void* data, int nel
 							which,
 							32,
 							PropModeReplace,
-							static_cast<unsigned char*>(data),
+							(unsigned char*)(data),
 							nelements);
 }
 
@@ -239,7 +239,7 @@ changeProperty2(Display* display, Window window, Atom prop, void* data, int nele
 							XA_ATOM,
 							32,
 							PropModeReplace,
-							static_cast<unsigned char*>(data),
+							(unsigned char*)(data),
 							nelements);
 }
 

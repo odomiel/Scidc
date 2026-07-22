@@ -168,7 +168,7 @@ skipMove(char const* s)
 static int
 compare(void const* lhs, void const* rhs)
 {
-	return static_cast<MoveInfo const*>(lhs)->compare(*static_cast<MoveInfo const*>(rhs));
+	return ((MoveInfo const*)lhs)->compare(*((MoveInfo const*)rhs));
 }
 
 

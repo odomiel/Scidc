@@ -78,10 +78,10 @@ selectionGet(Tcl_Interp* ti, Tk_Window tkwin, Atom selection, Atom target, unsig
 					// "{fst file.pgn} snd-file.pgn".
 					//
 					// Probably it is possible to interpret hdrop as a file list:
-					// Tcl_UniChar const* files = static_cast<Tcl_UniChar const*>(GlobalLock(handle));
+					// Tcl_UniChar const* files = (Tcl_UniChar const*)(GlobalLock(handle));
 
-					HDROP hdrop = static_cast<HDROP>(GlobalLock(handle));
-					int count = DragQueryFileW(hdrop, static_cast<unsigned>(-1), 0, 0);
+					HDROP hdrop = (HDROP)(GlobalLock(handle));
+					int count = DragQueryFileW(hdrop, (unsigned)(-1), 0, 0);
 					mstl::string result;
 
 					result.reserve(count*50);
@@ -196,7 +196,7 @@ mapToUnixNewline(char* s, char const* e)
 inline static int
 utfToUniChar(char const* s, Tcl_UniChar& ch)
 {
-	if (static_cast<unsigned char>(*s) >= 0xc0)
+	if ((unsigned char)(*s) >= 0xc0)
 		return Tcl_UtfToUniChar(s, &ch);
 
 	ch = *s;
@@ -400,7 +400,7 @@ selTimeoutProc(ClientData clientData)
 
 	if (m_flags == 0)
 	{
-		Tcl_SetResult(	static_cast<Tcl_Interp*>(clientData),
+		Tcl_SetResult(	(Tcl_Interp*)(clientData),
 							const_cast<char*>("selection owner didn't respond"),
 							TCL_STATIC);
 	}

@@ -45,7 +45,7 @@ struct ZlibOStream::Cookie
 	static int
 	close(void* cookie)
 	{
-		ZlibOStream* that = static_cast<ZlibOStream*>(cookie);
+		ZlibOStream* that = (ZlibOStream*)cookie;
 
 		if (that->m_dst == 0)
 			return -1;
@@ -92,7 +92,7 @@ struct ZlibOStream::Cookie
 	static __ssize_t
 	write(void* cookie, char const* buf, size_t len)
 	{
-		ZlibOStream*	that	= static_cast<ZlibOStream*>(cookie);
+		ZlibOStream*	that	= (ZlibOStream*)(cookie);
 		z_stream*		zstrm	= that->m_zstrm;
 
 		if (that->m_dst == 0)

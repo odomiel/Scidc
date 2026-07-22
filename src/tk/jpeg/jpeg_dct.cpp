@@ -441,8 +441,8 @@ public:
 
 	static void operator delete(void* p)
 	{
-		long offset = static_cast<char*>(p)[-1];
-		delete [] (static_cast<char*>(p) - (offset ? offset : 256));
+		long offset = ((char*)p)[-1];
+		delete [] ((char*)(p) - (offset ? offset : 256));
 	}
 
 private:
@@ -579,7 +579,7 @@ inline
 static JPEGSample
 asInt(float x)
 {
-	return (static_cast<JPEGSample>(x + 0.5) + (1 << (Shift - 1))) >> Shift;
+	return ((JPEGSample)(x + 0.5) + (1 << (Shift - 1))) >> Shift;
 }
 
 
@@ -755,8 +755,8 @@ DCT::Impl::~Impl()
 DCT::DCT(int bitsInSample)
 #ifdef __SSE2__
 	:m_impl(cpu_provides_sse2()
-				? static_cast<Impl*>(new ConcreteDCT<true>(bitsInSample))
-				: static_cast<Impl*>(new ConcreteDCT<false>(bitsInSample)))
+				? (Impl*)(new ConcreteDCT<true>(bitsInSample))
+				: (Impl*)(new ConcreteDCT<false>(bitsInSample)))
 #else
 	:m_impl(new ConcreteDCT<false>(bitsInSample))
 #endif

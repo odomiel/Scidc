@@ -2103,8 +2103,8 @@ db::Guess::evaluatePassedPawnRaces()
 
 			uint64_t const* plus8Dir	= isWhite(side) ? ::Plus8Dir : ::Minus8Dir;
 			int (*bitIndex)(uint64_t)	= (isWhite(side)
-														? static_cast<int (*)(uint64_t)>(msb)
-														: static_cast<int (*)(uint64_t)>(lsb));
+														? (int (*)(uint64_t))msb
+														: (int (*)(uint64_t))lsb);
 
 			while (passed)
 			{

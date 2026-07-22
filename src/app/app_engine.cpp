@@ -1882,7 +1882,7 @@ Engine::updateConfiguration(mstl::string const& script)
 	M_REQUIRE(protocol() == WinBoard);
 
 	if (isActive())
-		static_cast<winboard::Engine*>(m_engine)->sendConfiguration(script);
+		((winboard::Engine*)m_engine)->sendConfiguration(script);
 	else
 		m_script.assign(script);
 }

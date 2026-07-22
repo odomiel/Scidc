@@ -63,7 +63,7 @@ Timer::timeout()
 void
 Timer::timerEvent(void* clientData)
 {
-	Timer* timer = static_cast<Timer*>(clientData);
+	Timer* timer = (Timer*)clientData;
 
 	timer->m_expired = true;
 	timer->timeout();

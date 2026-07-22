@@ -46,7 +46,7 @@ static Tcl_Obj* m_message			= 0;
 static void
 informTermination(ClientData clientData)
 {
-	Tcl_Obj* cmd = static_cast<Tcl_Obj*>(clientData);
+	Tcl_Obj* cmd = (Tcl_Obj*)clientData;
 	Tcl_EvalObjEx(interp(), cmd, TCL_EVAL_GLOBAL);
 	Tcl_DecrRefCount(cmd);
 }

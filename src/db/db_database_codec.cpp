@@ -1125,19 +1125,19 @@ DatabaseCodec::saveGame(ByteStream const& gameData, TagSet const& tags, Provider
 
 		if (!info)
 		{
-			if (!static_cast<si3::Codec*>(this)->saveRoundEntry(index, tags.value(tag::Round)))
+			if (!((si3::Codec*)this)->saveRoundEntry(index, tags.value(tag::Round)))
 			{
-				static_cast<si3::Codec*>(this)->useOverflowEntry(index);
+				((si3::Codec*)this)->useOverflowEntry(index);
 				state = save::TooManyRoundNames;
 			}
 		}
-		else if (static_cast<si3::Codec*>(this)->getRoundEntry(index) != tags.value(tag::Round))
+		else if (((si3::Codec*)this)->getRoundEntry(index) != tags.value(tag::Round))
 		{
-			static_cast<si3::Codec*>(this)->releaseRoundEntry(index);
+			((si3::Codec*)this)->releaseRoundEntry(index);
 
-			if (!static_cast<si3::Codec*>(this)->saveRoundEntry(index, tags.value(tag::Round)))
+			if (!((si3::Codec*)this)->saveRoundEntry(index, tags.value(tag::Round)))
 			{
-				static_cast<si3::Codec*>(this)->useOverflowEntry(index);
+				((si3::Codec*)this)->useOverflowEntry(index);
 				state = save::TooManyRoundNames;
 			}
 		}
@@ -1161,7 +1161,7 @@ DatabaseCodec::saveGame(ByteStream const& gameData, TagSet const& tags, Provider
 		if (format() != format::Scidb)
 		{
 			M_ASSERT(!m_db->m_memoryOnly);
-			static_cast<si3::Codec*>(this)->restoreRoundEntry(index);
+			((si3::Codec*)this)->restoreRoundEntry(index);
 		}
 
 		namebases().update();
@@ -1296,10 +1296,10 @@ DatabaseCodec::addGame(ByteStream const& gameData, GameInfo const& info, Allocat
 		M_ASSERT(format() == format::Scid3 || format() == format::Scid4 || format() == format::Scid5);
 		M_ASSERT(!m_db->m_memoryOnly);
 
-		if (!static_cast<si3::Codec*>(this)->saveRoundEntry(	m_db->infoListSize(),
+		if (!((si3::Codec*)this)->saveRoundEntry(	m_db->infoListSize(),
 																				info.roundAsString()))
 		{
-			static_cast<si3::Codec*>(this)->useOverflowEntry(m_db->infoListSize());
+			((si3::Codec*)this)->useOverflowEntry(m_db->infoListSize());
 			state = save::TooManyRoundNames;
 		}
 	}
@@ -1311,7 +1311,7 @@ DatabaseCodec::addGame(ByteStream const& gameData, GameInfo const& info, Allocat
 		if (format() != format::Scidb)
 		{
 			M_ASSERT(!m_db->m_memoryOnly);
-			static_cast<si3::Codec*>(this)->restoreRoundEntry(m_db->infoListSize());
+			((si3::Codec*)this)->restoreRoundEntry(m_db->infoListSize());
 		}
 
 		namebases().update();
@@ -1424,13 +1424,13 @@ DatabaseCodec::updateCharacteristics(unsigned index, TagSet const& tags)
 		M_ASSERT(format() == format::Scid3 || format() == format::Scid4 || format() == format::Scid5);
 		M_ASSERT(!m_db->m_memoryOnly);
 
-		if (static_cast<si3::Codec*>(this)->getRoundEntry(index) != tags.value(tag::Round))
+		if (((si3::Codec*)this)->getRoundEntry(index) != tags.value(tag::Round))
 		{
-			static_cast<si3::Codec*>(this)->releaseRoundEntry(index);
+			((si3::Codec*)this)->releaseRoundEntry(index);
 
-			if (!static_cast<si3::Codec*>(this)->saveRoundEntry(index, tags.value(tag::Round)))
+			if (!((si3::Codec*)this)->saveRoundEntry(index, tags.value(tag::Round)))
 			{
-				static_cast<si3::Codec*>(this)->useOverflowEntry(index);
+				((si3::Codec*)this)->useOverflowEntry(index);
 				state = save::TooManyRoundNames;
 			}
 		}
@@ -1443,7 +1443,7 @@ DatabaseCodec::updateCharacteristics(unsigned index, TagSet const& tags)
 		if (format() != format::Scidb)
 		{
 			M_ASSERT(!m_db->m_memoryOnly);
-			static_cast<si3::Codec*>(this)->restoreRoundEntry(index);
+			((si3::Codec*)this)->restoreRoundEntry(index);
 		}
 
 		namebases().update();

@@ -28,7 +28,7 @@ using namespace JPEG;
 
 Exception::Exception(char const* fmt, ...)
 {
-	m_msg = static_cast<char*>(::malloc(1024));
+	m_msg = (char*)(::malloc(1024));
 
 	va_list args;
 	va_start(args, fmt);

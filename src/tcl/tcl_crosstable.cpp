@@ -375,7 +375,7 @@ cmdEmit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		int rc = controller.processInput(stringFromObj(objc, objv, 4), dst, &out, &out);
 
 		if (rc == TeXt::Controller::OpenInputFileFailed)
-			out.write(static_cast<Log*>(myLog.get())->str);
+			out.write(((Log*)myLog.get())->str);
 	}
 
 	mstl::string htm(dst.str());

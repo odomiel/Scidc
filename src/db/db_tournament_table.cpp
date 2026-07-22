@@ -311,16 +311,16 @@ cmpClashRound(void const* lhs, void const* rhs)
 static int
 cmpName(void const* lhs, void const* rhs)
 {
-	return ::strcmp(	(*static_cast<TournamentTable::Player* const*>(lhs))->entry->name(),
-							(*static_cast<TournamentTable::Player* const*>(rhs))->entry->name());
+	return ::strcmp(	(*(TournamentTable::Player* const*)(lhs))->entry->name(),
+							(*(TournamentTable::Player* const*)(rhs))->entry->name());
 }
 
 
 static int
 cmpRating(void const* lhs, void const* rhs)
 {
-	return	int((*static_cast<TournamentTable::Player* const*>(rhs))->elo)
-			 - int((*static_cast<TournamentTable::Player* const*>(lhs))->elo);
+	return	int((*(TournamentTable::Player* const*)(rhs))->elo)
+			 - int((*(TournamentTable::Player* const*)(lhs))->elo);
 }
 
 
@@ -328,16 +328,16 @@ static int
 cmpFederation(void const* lhs, void const* rhs)
 {
 	return country::compare(
-				(*static_cast<TournamentTable::Player* const*>(lhs))->entry->findFederation(),
-				(*static_cast<TournamentTable::Player* const*>(rhs))->entry->findFederation());
+				(*(TournamentTable::Player* const*)(lhs))->entry->findFederation(),
+				(*(TournamentTable::Player* const*)(rhs))->entry->findFederation());
 }
 
 
 static int
 cmpScore(void const* lhs, void const* rhs)
 {
-	TournamentTable::Player const* pl = *static_cast<TournamentTable::Player* const*>(lhs);
-	TournamentTable::Player const* pr = *static_cast<TournamentTable::Player* const*>(rhs);
+	TournamentTable::Player const* pl = *(TournamentTable::Player* const*)(lhs);
+	TournamentTable::Player const* pr = *(TournamentTable::Player* const*)(rhs);
 
 	unsigned lscore = pl->score[pl->scoringSystem];
 	unsigned rscore = pr->score[pr->scoringSystem];
@@ -352,8 +352,8 @@ cmpScore(void const* lhs, void const* rhs)
 static int
 cmpProgress(void const* lhs, void const* rhs)
 {
-	TournamentTable::Player const* pl = *static_cast<TournamentTable::Player* const*>(lhs);
-	TournamentTable::Player const* pr = *static_cast<TournamentTable::Player* const*>(rhs);
+	TournamentTable::Player const* pl = *(TournamentTable::Player* const*)(lhs);
+	TournamentTable::Player const* pr = *(TournamentTable::Player* const*)(rhs);
 
 	if (pl->maxRound != pr->maxRound)
 		return int(pr->maxRound) - int(pl->maxRound);
@@ -371,8 +371,8 @@ cmpProgress(void const* lhs, void const* rhs)
 static int
 cmpTiebreak(void const* lhs, void const* rhs)
 {
-	TournamentTable::Player const* pl = *static_cast<TournamentTable::Player* const*>(lhs);
-	TournamentTable::Player const* pr = *static_cast<TournamentTable::Player* const*>(rhs);
+	TournamentTable::Player const* pl = *(TournamentTable::Player* const*)(lhs);
+	TournamentTable::Player const* pr = *(TournamentTable::Player* const*)(rhs);
 
 	M_ASSERT(size_t(m_tiebreakRule) < U_NUMBER_OF(pl->tiebreak));
 	return int(pr->tiebreak[m_tiebreakRule]) - int(pl->tiebreak[m_tiebreakRule]);
@@ -382,8 +382,8 @@ cmpTiebreak(void const* lhs, void const* rhs)
 static int
 cmpRefinement(void const* lhs, void const* rhs)
 {
-	TournamentTable::Player const* pl = *static_cast<TournamentTable::Player* const*>(lhs);
-	TournamentTable::Player const* pr = *static_cast<TournamentTable::Player* const*>(rhs);
+	TournamentTable::Player const* pl = *(TournamentTable::Player* const*)(lhs);
+	TournamentTable::Player const* pr = *(TournamentTable::Player* const*)(rhs);
 
 	M_ASSERT(size_t(m_tiebreakRule) < U_NUMBER_OF(pl->refinedBuchholz));
 	return int(pr->refinedBuchholz[m_tiebreakRule]) - int(pl->refinedBuchholz[m_tiebreakRule]);
@@ -393,8 +393,8 @@ cmpRefinement(void const* lhs, void const* rhs)
 static int
 cmpGroup(void const* lhs, void const* rhs)
 {
-	TournamentTable::Player const* pl = *static_cast<TournamentTable::Player* const*>(lhs);
-	TournamentTable::Player const* pr = *static_cast<TournamentTable::Player* const*>(rhs);
+	TournamentTable::Player const* pl = *(TournamentTable::Player* const*)(lhs);
+	TournamentTable::Player const* pr = *(TournamentTable::Player* const*)(rhs);
 
 	return int(pl->group) - int(pr->group);
 }

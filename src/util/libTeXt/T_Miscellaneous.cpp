@@ -220,7 +220,7 @@ performMap(Environment& env)
 	if (!text || !mapping)
 		Messages::errmessage(env, "unterminated map definition", Messages::Incorrigible);
 
-	static_cast<TextToken*>(text.get())->map(env, mapping);
+	((TextToken*)text.get())->map(env, mapping);
 	env.putFinalToken(text);
 }
 

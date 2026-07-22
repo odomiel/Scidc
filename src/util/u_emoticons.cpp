@@ -320,13 +320,13 @@ emoticons::parseEmotion(char const*& first, char const* last, Emotion& emotion)
 #undef RETURN
 		}
 
-		unsigned char sym = Map_Char_Tbl[static_cast<unsigned char>(*first)];
+		unsigned char sym = Map_Char_Tbl[(unsigned char)(*first)];
 
 		if (sym == 0)
 		{
 			if (state > 0)
 			{
-				char entry = State_Transition_Tbl[static_cast<unsigned char>(state)][0];
+				char entry = State_Transition_Tbl[(unsigned char)(state)][0];
 
 				if (entry < 0)
 				{
@@ -339,7 +339,7 @@ emoticons::parseEmotion(char const*& first, char const* last, Emotion& emotion)
 		}
 		else
 		{
-			char const* stateTbl = State_Transition_Tbl[static_cast<unsigned char>(state)];
+			char const* stateTbl = State_Transition_Tbl[(unsigned char)(state)];
 
 			char nextState = stateTbl[sym];
 
@@ -367,7 +367,7 @@ emoticons::parseEmotion(char const*& first, char const* last, Emotion& emotion)
 
 	if (state > 0)
 	{
-		char entry = State_Transition_Tbl[static_cast<unsigned char>(state)][0];
+		char entry = State_Transition_Tbl[(unsigned char)(state)][0];
 
 		if (entry < 0)
 		{

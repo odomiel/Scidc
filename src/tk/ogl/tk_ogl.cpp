@@ -343,29 +343,29 @@ static Tk_OptionSpec optionSpecs[] = {
 	{TK_OPTION_STRING, "-createcommand", "createCommand",
 		"CallbackCommand", 0, Tk_Offset(Ogl, createProc), -1, TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_SYNONYM, "-create", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-createcommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-createcommand"), 0},
 	{TK_OPTION_STRING, "-displaycommand", "displayCommand",
 		"CallbackCommand", 0, Tk_Offset(Ogl, displayProc), -1, TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_SYNONYM, "-display", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-displaycommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-displaycommand"), 0},
 	{TK_OPTION_STRING, "-reshapecommand", "reshapeCommand",
 		"CallbackCommand", 0, Tk_Offset(Ogl, reshapeProc), -1, TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_SYNONYM, "-reshape", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-reshapecommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-reshapecommand"), 0},
 	{TK_OPTION_STRING, "-destroycommand", "destroyCommand",
 		"CallbackCommand", 0, Tk_Offset(Ogl, destroyProc), -1, TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_SYNONYM, "-destroy", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-destroycommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-destroycommand"), 0},
 	{TK_OPTION_STRING, "-timercommand", "timerCommand",
 		"CallbackCommand", 0, Tk_Offset(Ogl, timerProc), -1, TK_OPTION_NULL_OK, 0, 0},
 	{TK_OPTION_SYNONYM, "-timer", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-timercommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-timercommand"), 0},
 	{TK_OPTION_SYNONYM, "-createproc", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-createcommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-createcommand"), 0},
 	{TK_OPTION_SYNONYM, "-displayproc", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-displaycommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-displaycommand"), 0},
 	{TK_OPTION_SYNONYM, "-reshapeproc", 0, 0,
-		0, -1, -1, 0, static_cast<ClientData>("-reshapecommand"), 0},
+		0, -1, -1, 0,  (ClientData) ("-reshapecommand"), 0},
 	{TK_OPTION_END, 0, 0, 0, 0, -1, -1, 0, 0, 0}
 };
 
@@ -786,7 +786,7 @@ ogl_timer(ClientData clientData)
 			// Re-register this callback since Tcl/Tk timers are "one-shot".
 			// That is, after the timer callback is called it not normally
 			// called again.  That's not the behavior we want for Ogl.
-			ogl->timerHandler = Tcl_CreateTimerHandler(ogl->timerInterval, ogl_timer, static_cast<ClientData>(ogl));
+			ogl->timerHandler = Tcl_CreateTimerHandler(ogl->timerInterval, ogl_timer,  (ClientData) (ogl));
 		}
 	}
 }
@@ -1009,7 +1009,7 @@ ogl_objConfigure(Tcl_Interp* ti, Ogl* ogl, int objc, Tcl_Obj* const* objv)
 
 		if (mask & GEOMETRY_MASK)
 		{
-			ogl_worldChanged(static_cast<ClientData>(ogl));
+			ogl_worldChanged( (ClientData) (ogl));
 #if OPA
 			// Reset width and height so ConfigureNotify event will call reshape callback
 			ogl->width = oldWidth;
@@ -1062,7 +1062,7 @@ ogl_objConfigure(Tcl_Interp* ti, Ogl* ogl, int objc, Tcl_Obj* const* objv)
 			{
 				ogl->timerHandler = Tcl_CreateTimerHandler(	ogl->timerInterval,
 																			ogl_timer,
-																			static_cast<ClientData>(ogl));
+																			 (ClientData) (ogl));
 			}
 
 			undoMask |= TIMER_MASK;
@@ -1117,7 +1117,7 @@ ogl_objWidget(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj *const* o
 		return TCL_ERROR;
 	}
 
-	Tk_Preserve(static_cast<ClientData>(ogl));
+	Tk_Preserve( (ClientData) (ogl));
 	result = Tcl_GetIndexFromObj(ti, objv[1], commands, "option", 0, &index);
 
 	switch (index)
@@ -1202,7 +1202,7 @@ ogl_objWidget(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj *const* o
 			// force the widget to be redrawn
 			if (objc == 2)
 			{
-				ogl_render(static_cast<ClientData>(ogl));
+				ogl_render( (ClientData) (ogl));
 			}
 			else
 			{
@@ -1349,7 +1349,7 @@ ogl_objWidget(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj *const* o
 			break;
 	}
 
-	Tk_Release(static_cast<ClientData>(ogl));
+	Tk_Release( (ClientData) (ogl));
 	return result;
 }
 
@@ -1421,7 +1421,7 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 		tpg->oglHead = 0;
 		name = Tcl_GetString(objv[0]);
 		Tcl_GetCommandInfo(ti, name, &info);
-		info.objClientData = static_cast<ClientData>(tpg);
+		info.objClientData =  (ClientData) (tpg);
 		Tcl_SetCommandInfo(ti, name, &info);
 	}
 
@@ -1500,7 +1500,7 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 	ogl->widgetCmd = Tcl_CreateObjCommand(	ti,
 														Tk_PathName(tkwin),
 														ogl_objWidget,
-														static_cast<ClientData>(ogl),
+														 (ClientData) (ogl),
 														ogl_oglCmdDeletedProc);
 
 	// Setup the Tk_ClassProcs callbacks to point at our own window creation
@@ -1511,9 +1511,9 @@ ogl_objCmd(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const* objv
 	procsPtr->createProc = ogl_makeWindow;
 	procsPtr->worldChangedProc = ogl_worldChanged;
 	procsPtr->modalProc = 0;
-	Tk_SetClassProcs(ogl->tkWin, procsPtr, static_cast<ClientData>(ogl));
+	Tk_SetClassProcs(ogl->tkWin, procsPtr,  (ClientData) (ogl));
 
-	Tk_CreateEventHandler(tkwin, ExposureMask | StructureNotifyMask, ogl_eventProc, static_cast<ClientData>(ogl));
+	Tk_CreateEventHandler(tkwin, ExposureMask | StructureNotifyMask, ogl_eventProc,  (ClientData) (ogl));
 
 	// Configure Ogl widget
 	if (	Tk_InitOptions(ti, reinterpret_cast<char*>(ogl), tpg->optionTable, tkwin) != TCL_OK
@@ -2562,10 +2562,10 @@ ogl_oglCmdDeletedProc(ClientData clientData)
 	// destroys the widget.
 
 	if (tkwin)
-		Tk_DeleteEventHandler(tkwin, ExposureMask | StructureNotifyMask, ogl_eventProc, static_cast<ClientData>(ogl));
+		Tk_DeleteEventHandler(tkwin, ExposureMask | StructureNotifyMask, ogl_eventProc,  (ClientData) (ogl));
 
-	Tk_Preserve(static_cast<ClientData>(ogl));
-	Tcl_EventuallyFree(static_cast<ClientData>(ogl), ogl_free);
+	Tk_Preserve( (ClientData) (ogl));
+	Tcl_EventuallyFree( (ClientData) (ogl), ogl_free);
 
 	if (ogl->destroyProc)
 	{
@@ -2581,7 +2581,7 @@ ogl_oglCmdDeletedProc(ClientData clientData)
 	}
 	if (ogl->updatePending)
 	{
-		Tcl_CancelIdleCall(ogl_render, static_cast<ClientData>(ogl));
+		Tcl_CancelIdleCall(ogl_render,  (ClientData) (ogl));
 		ogl->updatePending = False;
 	}
 	if (ogl->cursor != None)
@@ -2638,7 +2638,7 @@ ogl_oglCmdDeletedProc(ClientData clientData)
 		Tk_DestroyWindow(tkwin);
 	}
 
-	Tk_Release(static_cast<ClientData>(ogl));
+	Tk_Release( (ClientData) (ogl));
 }
 
 
@@ -2737,7 +2737,7 @@ ogl_postRedisplay(Ogl* ogl)
 	if (!ogl->updatePending)
 	{
 		ogl->updatePending = True;
-		Tk_DoWhenIdle(ogl_render, static_cast<ClientData>(ogl));
+		Tk_DoWhenIdle(ogl_render,  (ClientData) (ogl));
 	}
 }
 

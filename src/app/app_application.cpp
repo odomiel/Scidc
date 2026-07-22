@@ -2816,7 +2816,7 @@ Application::addEngine(Engine* engine)
 
 	EngineList::iterator i = mstl::find(m_engineList.begin(),
 													m_engineList.end(),
-													static_cast<Engine const*>(nullptr));
+													(Engine const*)nullptr);
 
 	if (i == m_engineList.end())
 		i = m_engineList.insert(i, 0);
@@ -3672,7 +3672,7 @@ Application::retrieveMoveList(sys::Thread& thread,
 	M_REQUIRE(cursor.isValidView(view));
 	M_REQUIRE(rangeOfGames.right() <= cursor.view(view).count(table::Games));
 
-	MoveListThread& moveListThread = static_cast<MoveListThread&>(thread);
+	MoveListThread& moveListThread = *(MoveListThread*)(&thread);
 	moveListThread.retrieve(cursor, view, length, fen, notation, rangeOfView, rangeOfGames, progress);
 }
 

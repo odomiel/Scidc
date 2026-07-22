@@ -401,7 +401,7 @@ Process::gets(mstl::string& result)
 
 	if (bytesRead >= 0)
 	{
-		result.assign(static_cast<char const*>(Tcl_DStringValue(m_buffer)), Tcl_DStringLength(m_buffer));
+		result.assign((char const*)(Tcl_DStringValue(m_buffer)), Tcl_DStringLength(m_buffer));
 	}
 	else if (!Tcl_InputBlocked(m_chan) && !Tcl_Eof(m_chan))
 	{
@@ -600,14 +600,14 @@ Process::signalResumed()
 void
 Process::callStopped(void* clientData)
 {
-	static_cast<Process*>(clientData)->stopped();
+	((Process*)clientData)->stopped();
 }
 
 
 void
 Process::callResumed(void* clientData)
 {
-	static_cast<Process*>(clientData)->resumed();
+	((Process*)clientData)->resumed();
 }
 
 // vi:set ts=3 sw=3:

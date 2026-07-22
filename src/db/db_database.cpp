@@ -583,7 +583,7 @@ Database::compact(util::Progress& progress)
 	unsigned reportAfter	= frequency;
 
 	M_ASSERT(dynamic_cast<sci::Codec*>(m_codec));
-	static_cast<sci::Codec*>(m_codec)->compact(progress);
+	((sci::Codec*)m_codec)->compact(progress);
 
 	util::ProgressWatcher watcher(progress, numGames);
 	progress.start(numGames);
@@ -877,7 +877,7 @@ Database::computeChecksum(unsigned index) const
 
 	if (isScidFormat(format()))
 	{
-		mstl::string const& round = static_cast<si3::Codec*>(m_codec)->getRoundEntry(index);
+		mstl::string const& round = ((si3::Codec*)m_codec)->getRoundEntry(index);
 		crc = ::util::crc::compute(crc, round, round.size());
 	}
 
@@ -1576,7 +1576,7 @@ Database::exportGames(	Destination& destination,
 			if (dstFormat == format::Scidb && isScidFormat(srcFormat))
 			{
 				unsigned unused;
-				mstl::string const& round = static_cast<si3::Codec const&>(codec()).getRoundEntry(index);
+				mstl::string const& round = ((const si3::Codec&)codec()).getRoundEntry(index);
 
 				if (!Reader::parseRound(round, unused, unused))
 				{
@@ -1738,7 +1738,7 @@ Database::setupTags(unsigned index, TagSet& tags) const
 	gameInfo(index).setupTags(tags, m_variant);
 
 	if (isScidFormat(format()))
-		tags.set(tag::Round, static_cast<si3::Codec*>(m_codec)->getRoundEntry(index));
+		tags.set(tag::Round, ((si3::Codec*)m_codec)->getRoundEntry(index));
 }
 
 

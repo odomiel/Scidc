@@ -57,7 +57,7 @@ toUniChar(char const* s, uchar& ch)
 
 	unsigned charLen;
 
-	if (static_cast<unsigned char>(*s) < 0x80)
+	if ((unsigned char)(*s) < 0x80)
 	{
 		ch = *s;
 		charLen = 1;
@@ -87,7 +87,7 @@ unsigned
 sys::utf8::charLength(char const* str)
 {
 	M_REQUIRE(str);
-	return static_cast<unsigned char>(*str) < 0x80 ? 1 : bits::charLength(str);
+	return (unsigned char)(*str) < 0x80 ? 1 : bits::charLength(str);
 }
 
 
@@ -255,7 +255,7 @@ char const*
 sys::utf8::nextChar(char const* str)
 {
 	M_REQUIRE(str);
-	return str + (static_cast<unsigned char>(*str) < 0x80 ? 1 : charLength(str));
+	return str + ((unsigned char)(*str) < 0x80 ? 1 : charLength(str));
 }
 
 

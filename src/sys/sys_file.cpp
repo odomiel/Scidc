@@ -56,7 +56,7 @@ sys::file::internalName(char const* externalName)
 		Tcl_IncrRefCount(pathObj);
 		// Tcl version 8.6 is returning "void const*".
 		// Tcl version 8.5 is returning "char const*".
-		result.assign(static_cast<char const*>(Tcl_FSGetNativePath(pathObj)));
+		result.assign((char const*)(Tcl_FSGetNativePath(pathObj)));
 		Tcl_DecrRefCount(pathObj);
 	}
 	else
@@ -378,7 +378,7 @@ Mapping::resize(unsigned newSize)
 		::munmap(m_address, m_size);
 		// suppress compiler warning, we do not expect errors
 		int rc __attribute__((unused)) = ::ftruncate(m_fd, newSize);
-		m_address = static_cast<char*>(::mmap(0, newSize, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0));
+		m_address = (char*)(::mmap(0, newSize, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0));
 
 		if (m_address == MAP_FAILED)
 		{

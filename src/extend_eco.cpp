@@ -123,7 +123,7 @@ error(char const* fmt, ...)
 int
 cmpMove(void const* lhs, void const* rhs)
 {
-	return *static_cast<uint32_t const*>(lhs) - *static_cast<uint32_t const*>(rhs);
+	return *((uint32_t const*)lhs) - *((uint32_t const*)rhs);
 }
 
 

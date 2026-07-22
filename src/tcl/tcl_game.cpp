@@ -1823,7 +1823,7 @@ cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	unsigned			position			= unsignedFromObj(objc, objv, 2);
 	bool				mainlineOnly	= false;
 	Game&				game				= scidb->game(position);
-	MySubscriber*	subscriber		= static_cast<MySubscriber*>(game.subscriber().get());
+	MySubscriber*	subscriber		= (MySubscriber*)(game.subscriber().get());
 	Tcl_Obj*			arg				= objectFromObj(objc, objv, 3);
 
 	if (!subscriber)
@@ -1861,7 +1861,7 @@ cmdUnsubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	Game&			game	= scidb->game(position);
 	Tcl_Obj*		arg	= objectFromObj(objc, objv, 3);
 
-	MySubscriber* subscriber = static_cast<MySubscriber*>(game.subscriber().get());
+	MySubscriber* subscriber = (MySubscriber*)(game.subscriber().get());
 
 	if (!subscriber)
 		return error(::CmdUnsubscribe, nullptr, nullptr, "cannot unsubscribe");
@@ -3854,7 +3854,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		int rc = controller.processInput(scriptPath, dst, &out, &out);
 
 		if (rc == TeXt::Controller::OpenInputFileFailed)
-			out.write(static_cast<Log*>(myLog.get())->str);
+			out.write(((Log*)myLog.get())->str);
 	}
 
 	Scidb->printGame(	Application::InvalidPosition,

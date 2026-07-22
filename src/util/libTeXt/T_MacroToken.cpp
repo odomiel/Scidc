@@ -178,7 +178,7 @@ popArgument(Environment& env, ListMarkers& markers)
 				break;
 
 			case Token::T_Variable:
-				static_cast<VariableToken*>(token.get())->fixLevel(env.contextLevel());
+				((VariableToken*)token.get())->fixLevel(env.contextLevel());
 				markers.push_back(false);
 				break;
 
@@ -309,8 +309,8 @@ MacroToken::isEqualTo(Token const& token) const
 {
 	M_REQUIRE(dynamic_cast<MacroToken const*>(&token));
 
-	return	m_data->m_parameters == static_cast<MacroToken const&>(token).m_data->m_parameters
-			&& *m_data->m_body == *static_cast<MacroToken const&>(token).m_data->m_body;
+	return	m_data->m_parameters == ((MacroToken const&)token).m_data->m_parameters
+			&& *m_data->m_body == *((MacroToken const&)token).m_data->m_body;
 }
 
 

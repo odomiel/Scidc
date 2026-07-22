@@ -257,7 +257,7 @@ invokeProc(Tcl_Interp* ti, char const* which, Tcl_Obj* proc, bool arg)
 static void
 callbackDie(SmcConn smcConn, SmPointer clientData)
 {
-	invokeProc(static_cast<Tcl_Interp*>(clientData), "dieProc", m_dieProc);
+	invokeProc((Tcl_Interp*)(clientData), "dieProc", m_dieProc);
 	SmcCloseConnection(smcConn, 0, 0);
    exit(0);
 }
@@ -266,7 +266,7 @@ callbackDie(SmcConn smcConn, SmPointer clientData)
 static void
 saveYourselfInteraction(SmcConn smcConn, SmPointer clientData)
 {
-	Tcl_Interp* ti = static_cast<Tcl_Interp*>(clientData);
+	Tcl_Interp* ti = (Tcl_Interp*)(clientData);
 
 	bool cancelShutdown = false;
 
@@ -315,7 +315,7 @@ callbackSaveYourself(SmcConn smcConn,
 	{
 		int objc = 0;
 		Tcl_Obj** objv = 0;
-		Tcl_Interp* ti = static_cast<Tcl_Interp*>(clientData);
+		Tcl_Interp* ti = (Tcl_Interp*)(clientData);
 
 		Tcl_ListObjGetElements(ti, m_argv, &objc, &objv);
 
@@ -381,7 +381,7 @@ callbackSaveYourself(SmcConn smcConn,
 			vals.restart[n].length = strlen(Tcl_GetString(objv[i]));
 		}
 
-		vals.restart[m_restartIndex].value = const_cast<void*>(static_cast<void const*>(SessionIdOption));
+		vals.restart[m_restartIndex].value = const_cast<void*>((void const*)(SessionIdOption));
 		vals.restart[m_restartIndex].length = strlen(SessionIdOption);
 		vals.restart[m_restartIndex + 1].value = Tcl_GetString(m_sessionId);
 		vals.restart[m_restartIndex + 1].length = strlen(Tcl_GetString(m_sessionId));
@@ -405,7 +405,7 @@ callbackSaveYourself(SmcConn smcConn,
 			return;
 		}
 
-		invokeProc(	static_cast<Tcl_Interp*>(clientData),
+		invokeProc(	(Tcl_Interp*)(clientData),
 						"saveYourselfProc",
 						m_saveYourselfProc,
 						shutdown);
@@ -418,14 +418,14 @@ callbackSaveYourself(SmcConn smcConn,
 static void
 callbackShutdownCancelled(SmcConn smcConn, SmPointer clientData)
 {
-	invokeProc(static_cast<Tcl_Interp*>(clientData), "shutdownCancelledProc", m_shutdownCancelledProc);
+	invokeProc((Tcl_Interp*)(clientData), "shutdownCancelledProc", m_shutdownCancelledProc);
 }
 
 
 static void
 callbackSaveComplete(SmcConn smcConn, SmPointer clientData)
 {
-	invokeProc(static_cast<Tcl_Interp*>(clientData), "saveCompleteProc", m_saveCompleteProc);
+	invokeProc((Tcl_Interp*)(clientData), "saveCompleteProc", m_saveCompleteProc);
 }
 
 

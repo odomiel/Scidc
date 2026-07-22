@@ -166,7 +166,7 @@ inline
 mstl::string const&
 Application::fetchMoveList(sys::Thread& thread, unsigned index) const
 {
-	return static_cast<MoveListThread&>(thread).moveList(index);
+	return (*(MoveListThread*)(&thread)).moveList(index);
 }
 
 
@@ -174,7 +174,7 @@ inline
 void
 Application::clearMoveList(sys::Thread& thread)
 {
-	static_cast<MoveListThread&>(thread).clear();
+	(*(MoveListThread*)(&thread)).clear();
 }
 
 } // namespace app

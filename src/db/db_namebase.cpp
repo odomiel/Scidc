@@ -118,7 +118,7 @@ inline
 bool
 operator<(Namebase::Entry* lhs, NamebaseSite::Key const& rhs)
 {
-	return static_cast<NamebaseSite const&>(*lhs) < rhs;
+	return (NamebaseSite const&)*lhs < rhs;
 }
 
 
@@ -126,7 +126,7 @@ inline
 bool
 operator<(Namebase::Entry* lhs, NamebaseEvent::Key const& rhs)
 {
-	return static_cast<NamebaseEvent const&>(*lhs) < rhs;
+	return (NamebaseEvent const&)*lhs < rhs;
 }
 
 
@@ -134,7 +134,7 @@ inline
 bool
 operator<(Namebase::Entry* lhs, NamebasePlayer::Key const& rhs)
 {
-	return static_cast<NamebasePlayer const&>(*lhs) < rhs;
+	return (NamebasePlayer const&)*lhs < rhs;
 }
 
 } // namespace db
@@ -144,7 +144,7 @@ template <typename T>
 static int
 compare(void const* lhs, void const* rhs)
 {
-	return *static_cast<T const*>(rhs) < *static_cast<T const*>(lhs);
+	return *(T const*)(rhs) < *(T const*)(lhs);
 }
 
 
@@ -370,8 +370,8 @@ Namebase::insertSite(mstl::string const& name,
 
 		List::iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-		if (i != m_list.end() && *static_cast<SiteEntry const*>(*i) == key)
-			return static_cast<SiteEntry*>(*i);
+		if (i != m_list.end() && *(SiteEntry const*)(*i) == key)
+			return (SiteEntry*)(*i);
 
 		if (m_list.size() >= limit)
 			return nullptr;
@@ -428,8 +428,8 @@ Namebase::insertEvent(	mstl::string const& name,
 
 		List::iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-		if (i != m_list.end() && *static_cast<EventEntry const*>(*i) == key)
-			return static_cast<EventEntry*>(*i);
+		if (i != m_list.end() && *(EventEntry const*)(*i) == key)
+			return (EventEntry*)(*i);
 
 		if (m_list.size() >= limit)
 			return nullptr;
@@ -601,8 +601,8 @@ Namebase::insertPlayer(	mstl::string const& name,
 
 		List::iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-		if (i != m_list.end() && *static_cast<PlayerEntry const*>(*i) == key)
-			return static_cast<PlayerEntry*>(*i);
+		if (i != m_list.end() && *(PlayerEntry const*)(*i) == key)
+			return (PlayerEntry*)(*i);
 
 		if (m_list.size() >= limit)
 			return nullptr;
@@ -738,7 +738,7 @@ Namebase::findPlayerIndex(	mstl::string const& name,
 
 	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-	if (i != m_list.end() && (*i)->frequency() > 0 && *static_cast<PlayerEntry const*>(*i) == key)
+	if (i != m_list.end() && (*i)->frequency() > 0 && *(PlayerEntry const*)(*i) == key)
 		return i - m_list.begin();
 
 	return -1;
@@ -760,7 +760,7 @@ Namebase::findEventIndex(	mstl::string const& name,
 
 	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-	if (i != m_list.end() && (*i)->frequency() > 0 && *static_cast<EventEntry const*>(*i) == key)
+	if (i != m_list.end() && (*i)->frequency() > 0 && *(EventEntry const*)(*i) == key)
 		return i - m_list.begin();
 
 	return -1;
@@ -776,7 +776,7 @@ Namebase::findSiteIndex(mstl::string const& name, country::Code country) const
 
 	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-	if (i != m_list.end() && (*i)->frequency() > 0 && *static_cast<SiteEntry const*>(*i) == key)
+	if (i != m_list.end() && (*i)->frequency() > 0 && *(SiteEntry const*)(*i) == key)
 		return i - m_list.begin();
 
 	return -1;
@@ -790,7 +790,7 @@ Namebase::findAnnotatorIndex(mstl::string const& name) const
 
 	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), name);
 
-	if (i != m_list.end() && (*i)->frequency() > 0 && *static_cast<Entry const*>(*i) == name)
+	if (i != m_list.end() && (*i)->frequency() > 0 && *(Entry const*)(*i) == name)
 		return i - m_list.begin();
 
 	return -1;
@@ -806,8 +806,8 @@ Namebase::findSite(mstl::string const& name, country::Code country) const
 
 	List::const_iterator i = mstl::lower_bound(m_list.begin(), m_list.end(), key);
 
-	if (i != m_list.end() && (*i)->frequency() > 0 && *static_cast<SiteEntry const*>(*i) == key)
-		return static_cast<NamebaseSite*>(*i);
+	if (i != m_list.end() && (*i)->frequency() > 0 && *(SiteEntry const*)(*i) == key)
+		return (NamebaseSite*)(*i);
 
 	return nullptr;
 }

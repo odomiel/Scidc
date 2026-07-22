@@ -261,7 +261,7 @@ match(char const* lhs, char const* rhs, int n)
 static int
 cmp_color(void const* p1, const void* p2)
 {
-	return strcmp(static_cast<named_color const*>(p1)->name, static_cast<named_color const*>(p2)->name);
+	return strcmp(((named_color const*)p1)->name, ((named_color const*)p2)->name);
 }
 
 
@@ -371,7 +371,7 @@ parser::parse(char const* svg_data, unsigned len)
 void
 parser::start_element(void* data, char const* el, char const** attr)
 {
-	parser& self = *static_cast<parser*>(data);
+	parser& self = *(parser*)(data);
 
 	if (::match(el, "title"))
 	{
@@ -441,7 +441,7 @@ parser::start_element(void* data, char const* el, char const** attr)
 void
 parser::end_element(void* data, char const* el)
 {
-	parser& self = *static_cast<parser*>(data);
+	parser& self = *(parser*)(data);
 
 	if (::match(el, "title"))
 	{
@@ -475,7 +475,7 @@ parser::end_element(void* data, char const* el)
 void
 parser::content(void* data, char const* s, int len)
 {
-	parser& self = *static_cast<parser*>(data);
+	parser& self = *(parser*)(data);
 
 	// m_title_flag signals that the <title> tag is being parsed now.
 	// The following code concatenates the pieces of content of the <title> tag.
@@ -1121,7 +1121,7 @@ parser::parse_color(char const* str)
 		if (__builtin_expect(!p, 0))
 			SVG_RAISE("parse_color: invalid color name '%s'", str);
 
-		named_color const* pc = static_cast<named_color const*>(p);
+		named_color const* pc = (named_color const*)(p);
 		return agg::rgba8(pc->r, pc->g, pc->b, pc->a);
 	}
 }

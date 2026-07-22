@@ -1300,7 +1300,7 @@ match(char const* lhs, char const* rhs)
 static void
 xmlContent(void* cbData, XML_Char const* s, int len)
 {
-	XmlData* data = static_cast<XmlData*>(cbData);
+	XmlData* data = (XmlData*)(cbData);
 
 	switch (data->state)
 	{
@@ -1338,7 +1338,7 @@ xmlContent(void* cbData, XML_Char const* s, int len)
 static void
 startXmlElement(void* cbData, XML_Char const* elem, char const** attr)
 {
-	XmlData* data = static_cast<XmlData*>(cbData);
+	XmlData* data = (XmlData*)(cbData);
 
 	switch (*elem)
 	{
@@ -1397,7 +1397,7 @@ startXmlElement(void* cbData, XML_Char const* elem, char const** attr)
 static void
 endXmlElement(void* cbData, XML_Char const* elem)
 {
-	XmlData* data = static_cast<XmlData*>(cbData);
+	XmlData* data = (XmlData*)(cbData);
 
 	switch (*elem)
 	{
@@ -1467,7 +1467,7 @@ checkLang(HtmlData* data)
 static void
 htmlContent(void* cbData, XML_Char const* s, int len)
 {
-	HtmlData* data = static_cast<HtmlData*>(cbData);
+	HtmlData* data = (HtmlData*)(cbData);
 
 	if (data->insideNag)
 	{
@@ -1636,7 +1636,7 @@ htmlContent(void* cbData, XML_Char const* s, int len)
 static void
 startHtmlElement(void* cbData, XML_Char const* elem, char const** attr)
 {
-	HtmlData* data = static_cast<HtmlData*>(cbData);
+	HtmlData* data = (HtmlData*)(cbData);
 
 	switch (elem[0])
 	{
@@ -1742,7 +1742,7 @@ startHtmlElement(void* cbData, XML_Char const* elem, char const** attr)
 static void
 endHtmlElement(void* cbData, XML_Char const* elem)
 {
-	HtmlData* data = static_cast<HtmlData*>(cbData);
+	HtmlData* data = (HtmlData*)(cbData);
 
 	switch (elem[0])
 	{

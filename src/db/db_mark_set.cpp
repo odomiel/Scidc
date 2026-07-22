@@ -38,7 +38,7 @@ using namespace db;
 static int
 compare(void const* lhs, void const* rhs)
 {
-	return static_cast<Mark const*>(lhs)->compare(*static_cast<Mark const*>(rhs));
+	return ((Mark const*)lhs)->compare(*((Mark const*)rhs));
 }
 
 

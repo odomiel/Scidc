@@ -1267,7 +1267,7 @@ Codec::decodeIndex(mstl::fstream &fstrm, util::Progress& progress)
 	if (m_isVersion5 && infoList.size() == 0) {
 		long fileSize = fstrm.size();
 		if (fileSize > 0)
-			infoList.resize(static_cast<unsigned>(fileSize / m_indexEntrySize));
+			infoList.resize((unsigned)(fileSize / m_indexEntrySize));
 	}
 
 	m_roundLookup.resize(infoList.size());
@@ -1360,16 +1360,16 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	if (siteID  > maxSiteID)   siteID  = 0;
 	if (roundID > maxRoundID)  roundID = 0;
 	NamebasePlayer* whitePlayer =
-		::check(static_cast<NamebasePlayer*>(m_playerList->lookup(whiteID)->entry));
+		::check((NamebasePlayer*)(m_playerList->lookup(whiteID)->entry));
 	NamebasePlayer* blackPlayer =
-		::check(static_cast<NamebasePlayer*>(m_playerList->lookup(blackID)->entry));
+		::check((NamebasePlayer*)(m_playerList->lookup(blackID)->entry));
 	whitePlayer->incrRef(); blackPlayer->incrRef();
 	item.m_player[color::White] = whitePlayer;
 	item.m_player[color::Black] = blackPlayer;
 
-	NamebaseEvent* event = ::check(static_cast<NamebaseEvent*>(m_eventList->lookup(eventID)->entry));
-	NamebaseSite*  site  = ::check(static_cast<NamebaseSite* >(m_siteList->lookup(siteID)->entry));
-	NamebaseEntry* round = ::check(static_cast<NamebaseEntry*>(m_roundList->lookup(roundID)->entry));
+	NamebaseEvent* event = ::check((NamebaseEvent*)(m_eventList->lookup(eventID)->entry));
+	NamebaseSite*  site  = ::check((NamebaseSite* )(m_siteList->lookup(siteID)->entry));
+	NamebaseEntry* round = ::check((NamebaseEntry*)(m_roundList->lookup(roundID)->entry));
 
 	m_roundLookup[index] = round;
 	unsigned rnd, subrnd;
@@ -1509,8 +1509,8 @@ Codec::encodeIndexSi5(GameInfo const& item, unsigned index, ByteStream& buf)
 	uint32_t halfMoves = mstl::min(unsigned(item.m_plyCount), 0x3FFu);
 
 	// Game offset and length
-	uint32_t offsetLow  = static_cast<uint32_t>(item.m_gameOffset & 0xFFFFFFFF);
-	uint32_t offsetHigh = static_cast<uint32_t>(item.m_gameOffset >> 32) & 0x7FFF;
+	uint32_t offsetLow  = (uint32_t)(item.m_gameOffset & 0xFFFFFFFF);
+	uint32_t offsetHigh = (uint32_t)(item.m_gameOffset >> 32) & 0x7FFF;
 	uint32_t gameLen    = item.gameRecordLength() & 0x1FFFF;
 
 	// HomePawns
@@ -1557,10 +1557,10 @@ Codec::writeNamebasesSi5(mstl::string const& filename)
 
 		auto writeVarint = [&](uint64_t val) {
 			while (val >= 128) {
-				fstrm.put(static_cast<char>((val & 0x7F) | 0x80));
+				fstrm.put((char)((val & 0x7F) | 0x80));
 				val >>= 7;
 			}
-			fstrm.put(static_cast<char>(val));
+			fstrm.put((char)(val));
 		};
 		auto writeEntry = [&](mstl::string const& name, unsigned type) {
 			// Empty names must be written as "?" to match buildList() which substitutes
@@ -1568,7 +1568,7 @@ Codec::writeNamebasesSi5(mstl::string const& filename)
 			// ID mismatches that trigger m_lookup[id]==null assertions on re-open.
 			char const* s = name.empty() ? "?" : name.c_str();
 			size_t len = name.empty() ? 1 : name.size();
-			uint64_t hdr = (static_cast<uint64_t>(len) << 3) | type;
+			uint64_t hdr = ((uint64_t)(len) << 3) | type;
 			writeVarint(hdr);
 			fstrm.write(s, len);
 		};
@@ -1637,27 +1637,27 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 
 	while ((ch = fstrm.get()) != EOF) {
 		uint64_t res=0; int shift=0;
-		uint8_t bval = static_cast<uint8_t>(ch);
+		uint8_t bval = (uint8_t)(ch);
 		while (true) {
 			if (shift < 64)
-				res |= (static_cast<uint64_t>(bval & 0x7F) << shift);
+				res |= ((uint64_t)(bval & 0x7F) << shift);
 			if (bval < 128) break;
 			shift += 7;
 			if (shift >= 64) { while (fstrm.get() >= 128) {} break; } // discard malformed varint
 			int nxt = fstrm.get();
 			if (nxt == EOF) break;
-			bval = static_cast<uint8_t>(nxt);
+			bval = (uint8_t)(nxt);
 		}
-		uint8_t  nt  = static_cast<uint8_t>(res & 0x7);
+		uint8_t  nt  = (uint8_t)(res & 0x7);
 		uint64_t len = res >> 3;
 		if (len == 0 || len >= sizeof(buf)) {
 			for (uint64_t i=0; i<len; ++i) if (fstrm.get()==EOF) break;
 			continue;
 		}
-		fstrm.read(buf, static_cast<size_t>(len));
+		fstrm.read(buf, (size_t)(len));
 		if (fstrm.fail()) break;
 		buf[len] = '\0';
-		mstl::string name(buf, static_cast<unsigned>(len));
+		mstl::string name(buf, (unsigned)(len));
 		unsigned id = (nt < 4) ? typeCounts[nt]++ : 0;
 		switch (nt) {
 			case 0: players.push_back(IdName(id,name)); break;
@@ -1802,9 +1802,9 @@ Codec::decodeIndex(ByteStream& strm, unsigned index)
 	uint32_t blackId			= strm.uint16() | (whiteBlackHigh & 0x0f) << 16;
 
 	NamebasePlayer* whitePlayer =
-		::check(static_cast<NamebasePlayer*>(m_playerList->lookup(whiteId)->entry));
+		::check((NamebasePlayer*)(m_playerList->lookup(whiteId)->entry));
 	NamebasePlayer* blackPlayer =
-		::check(static_cast<NamebasePlayer*>(m_playerList->lookup(blackId)->entry));
+		::check((NamebasePlayer*)(m_playerList->lookup(blackId)->entry));
 
 	whitePlayer->incrRef(); blackPlayer->incrRef();
 
@@ -1817,9 +1817,9 @@ Codec::decodeIndex(ByteStream& strm, unsigned index)
 	uint32_t siteId				= strm.uint16() | (((eventSiteRnd_High >> 2) & 7) << 16);
 	uint32_t roundId				= strm.uint16() | ((eventSiteRnd_High & 3) << 16);
 
-	NamebaseEvent* event	= ::check(static_cast<NamebaseEvent*>(m_eventList->lookup(eventId)->entry));
-	NamebaseSite*  site	= ::check(static_cast<NamebaseSite* >(m_siteList->lookup(siteId)->entry));
-	NamebaseEntry* round	= ::check(static_cast<NamebaseEntry*>(m_roundList->lookup(roundId)->entry));
+	NamebaseEvent* event	= ::check((NamebaseEvent*)(m_eventList->lookup(eventId)->entry));
+	NamebaseSite*  site	= ::check((NamebaseSite* )(m_siteList->lookup(siteId)->entry));
+	NamebaseEntry* round	= ::check((NamebaseEntry*)(m_roundList->lookup(roundId)->entry));
 
 	m_roundLookup[index] = round;
 
@@ -2592,7 +2592,7 @@ Codec::writeNamebases(mstl::ostream& stream, util::Progress* progress)
 
 		if (event->entry)
 		{
-			unsigned siteId = static_cast<NamebaseEvent*>(event->entry)->site()->id();
+			unsigned siteId = ((NamebaseEvent*)event->entry)->site()->id();
 			m_siteList->updateMaxFrequency(m_siteList->lookup(siteId)->frequency += event->frequency);
 		}
 	}
@@ -2828,7 +2828,7 @@ Codec::getAttributes(mstl::string const& filename,
 
 	// SI5 has no file header; index entries start at byte 0 with fixed size 56
 	if (util::misc::file::suffix(filename) == "si5") {
-		numGames = static_cast<int>(strm.size() / 56);
+		numGames = (int)(strm.size() / 56);
 		type = type::Unspecific;
 		if (description)
 			description->clear();

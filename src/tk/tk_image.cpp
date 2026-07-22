@@ -480,9 +480,9 @@ struct pixbuf
 		{
 			double c = alpha*i + 0.5;
 
-			s->r = static_cast<unsigned char>(rc + c);
-			s->g = static_cast<unsigned char>(gc + c);
-			s->b = static_cast<unsigned char>(bc + c);
+			s->r = (unsigned char)(rc + c);
+			s->g = (unsigned char)(gc + c);
+			s->b = (unsigned char)(bc + c);
 		}
 
 		for (int r = 0; r < m_rows; ++r)
@@ -1370,7 +1370,7 @@ zoom_image(PixBuf const& src, PixBuf& dst)
 
 	typedef typename PixBuf::agg_span_gen_type span_gen_type;
 	agg::image_filter<agg::image_filter_hermite> filter;
-	span_gen_type sg(src_img, interpolator, static_cast<agg::image_filter_lut const&>(filter));
+	span_gen_type sg(src_img, interpolator, (agg::image_filter_lut const&)filter);
 
 	agg::scanline_u8 sl;
 	agg::span_allocator<agg::rgba8> sa;
