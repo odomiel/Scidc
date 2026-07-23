@@ -230,7 +230,7 @@ template <typename T>
 unsigned
 count_bits(T x)
 {
-	return bits::popcount(static_cast<typename bits::remove_sign<sizeof(T)>::type>(x));
+	return bits::popcount((typename bits::remove_sign<sizeof(T)>::type)(x));
 }
 
 
@@ -273,7 +273,7 @@ template <typename T>
 unsigned
 msb_index(T x)
 {
-	return bits::msb(static_cast<typename bits::remove_sign<sizeof(T)>::type>(x));
+	return bits::msb((typename bits::remove_sign<sizeof(T)>::type)(x));
 }
 
 
@@ -283,7 +283,7 @@ template <typename T>
 unsigned
 lsb_index(T x)
 {
-	return bits::lsb(static_cast<typename bits::remove_sign<sizeof(T)>::type>(x));
+	return bits::lsb((typename bits::remove_sign<sizeof(T)>::type)(x));
 }
 
 
@@ -291,7 +291,7 @@ template <typename T>
 T
 reverse(T x)
 {
-	return bits::reverse(static_cast<typename bits::remove_sign<sizeof(T)>::type>(x));
+	return bits::reverse((typename bits::remove_sign<sizeof(T)>::type)(x));
 }
 
 

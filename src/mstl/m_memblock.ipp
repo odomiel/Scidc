@@ -34,7 +34,7 @@ template <typename T>
 inline
 memblock<T>::memblock(size_t n)
 {
-	m_start = static_cast<T*>(operator new(n*sizeof(T)));
+	m_start = (T*)(operator new(n*sizeof(T)));
 	m_finish = m_start;
 	m_end_of_storage = m_start + n;
 }

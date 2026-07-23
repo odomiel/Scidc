@@ -45,8 +45,8 @@ struct cast_helper<T,0>
 template <class T>
 struct cast_helper<T,1>
 {
-	template <class U> static T* cast_ptr(U* p) { return static_cast<T*>(p); }
-	template <class U> static T& cast_ref(U& p) { return static_cast<T&>(p); }
+	template <class U> static T* cast_ptr(U* p) { return (T*)(p); }
+	template <class U> static T& cast_ref(U& p) { return (T&)(p); }
 };
 
 } // namespace cast_

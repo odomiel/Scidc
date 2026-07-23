@@ -37,7 +37,7 @@ template <typename T>
 inline typename stack<T>::const_iterator stack<T>::end() const		{ return this->m_finish + 1; }
 
 
-template <typename T> inline stack<T>::stack() : memblock<T>(static_cast<T*>(0) - 1) {}
+template <typename T> inline stack<T>::stack() : memblock<T>((T*)(0) - 1) {}
 
 
 template <typename T>
@@ -252,7 +252,7 @@ inline
 void
 stack<T>::swap(stack& v)
 {
-	static_cast<memblock<T>&>(*this).swap(static_cast<memblock<T>&>(v));
+	((memblock<T>&)*this).swap(((memblock<T>&)v));
 }
 
 
@@ -267,7 +267,7 @@ inline
 stack<T>&
 stack<T>::operator=(stack&& v)
 {
-	static_cast<memblock<T>&>(*this) = mstl::move(*this);
+	((memblock<T>&)*this) = mstl::move(*this);
 	return *this;
 }
 

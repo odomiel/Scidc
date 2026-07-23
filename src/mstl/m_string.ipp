@@ -766,8 +766,8 @@ inline
 void
 swap(string::reference lhs, string::reference rhs)
 {
-	string::value_type c = static_cast<string::value_type>(lhs);
-	lhs = static_cast<string::value_type>(rhs);
+	string::value_type c = (string::value_type)(lhs);
+	lhs = (string::value_type)(rhs);
 	rhs = c;
 }
 

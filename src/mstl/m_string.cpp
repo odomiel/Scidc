@@ -86,7 +86,7 @@ static unsigned const Arabic[] =
 char const* string::m_empty = "";
 
 __attribute__((init_priority(101)))
-string const string::empty_string(static_cast<__EMPTY__ const&>(string::__EMPTY__()));
+string const string::empty_string((__EMPTY__ const&)(string::__EMPTY__()));
 
 
 template <typename T>

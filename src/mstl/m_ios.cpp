@@ -79,7 +79,7 @@ vasprintf(char** strp, const char* fmt, va_list ap)
 	do
 	{
 		bufSize += bufSize;
-		*strp = static_cast<char*>(::realloc(*strp, bufSize));
+		*strp = (char*)(::realloc(*strp, bufSize));
 		size = ::vsnprintf(*strp, bufSize, fmt, ap);
 	}
 	while (size >= bufSize);

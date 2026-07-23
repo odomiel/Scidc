@@ -139,7 +139,7 @@ chunk_allocator<T,Zero>::new_chunk()
 {
 	m_chunk_list.push();
 	chunk& c = m_chunk_list.top();
-	c.curr = c.base = static_cast<T*>(::malloc(m_chunk_size));
+	c.curr = c.base = (T*)(::malloc(m_chunk_size));
 
 	if (Zero)
 		::memset(c.base, 0, m_chunk_size);

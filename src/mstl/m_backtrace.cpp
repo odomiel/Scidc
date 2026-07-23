@@ -273,7 +273,7 @@ proc_stream::proc_stream(string const& cmd)
 				throw "dup2() failed";
 
 			::close(sd);
-			::execl("/bin/sh", "sh", "-c", cmd.c_str(), static_cast<char*>(0));
+			::execl("/bin/sh", "sh", "-c", cmd.c_str(), (char*)(0));
 
 			throw "execl() failed";
 		}
@@ -714,7 +714,7 @@ mstl::backtrace::symbols_linux()
 
 	while (func != "main" && (address = ::frameAddress(m_nframes)))
 	{
-		m_addresses[m_nframes] = static_cast<void**>(address)[1];
+		m_addresses[m_nframes] = ((void**)address)[1];
 
 		stream << m_addresses[m_nframes];
 		stream << '\n';
