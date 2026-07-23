@@ -61,7 +61,7 @@ typename ring<T>::iterator::reference
 ring<T>::iterator::operator*() const
 {
 	M_ASSERT(m_node);
-	return static_cast<node*>(m_node)->m_data;
+	return ((node*)m_node)->m_data;
 }
 
 
@@ -71,7 +71,7 @@ typename ring<T>::iterator::pointer
 ring<T>::iterator::operator->() const
 {
 	M_ASSERT(m_node);
-	return &static_cast<node*>(m_node)->m_data;
+	return &((node*)m_node)->m_data;
 }
 
 
@@ -264,7 +264,7 @@ typename ring<T>::const_iterator::reference
 ring<T>::const_iterator::operator*() const
 {
 	M_ASSERT(m_node);
-	return static_cast<node const*>(m_node)->m_data;
+	return ((node const*)m_node)->m_data;
 }
 
 
@@ -274,7 +274,7 @@ typename ring<T>::const_iterator::pointer
 ring<T>::const_iterator::operator->() const
 {
 	M_ASSERT(m_node);
-	return &static_cast<node const*>(m_node)->m_data;
+	return &((node const*)m_node)->m_data;
 }
 
 
@@ -464,9 +464,9 @@ void
 ring<T>::push_back(const_reference v)
 {
 	m_last->m_data = v;
-	m_last = static_cast<node*>(m_last->m_next);
+	m_last = (node*)m_last->m_next;
 	if (m_first == m_last)
-		m_first = static_cast<node*>(m_first->m_next);
+		m_first = (node*)m_first->m_next;
 }
 
 
@@ -569,7 +569,7 @@ typename ring<T>::reference
 ring<T>::back()
 {
 	M_REQUIRE(!empty());
-	return static_cast<node*>(m_last->m_prev)->m_data;
+	return (node*)m_last->m_prev->m_data;
 }
 
 
@@ -579,7 +579,7 @@ typename ring<T>::const_reference
 ring<T>::back() const
 {
 	M_REQUIRE(!empty());
-	return static_cast<node const*>(m_last->m_prev)->m_data;
+	return (node const*)m_last->m_prev->m_data;
 }
 
 
@@ -643,7 +643,7 @@ inline
 void
 ring<T>::resize(const_iterator i)
 {
-	m_last = static_cast<node*>(const_cast<bits::node_base*>(i.base()));
+	m_last = (node*)const_cast<bits::node_base*>(i.base());
 }
 
 

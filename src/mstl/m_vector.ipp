@@ -541,7 +541,7 @@ vector<T>::erase(iterator position)
 	if (is_movable<T>::value)
 	{
 		mstl::bits::destroy(pointer(position));
-		::memmove(	static_cast<void*>(position),
+		::memmove(	(void*)position,
 						position + 1,
 						mstl::distance(position + 1, end())*sizeof(value_type));
 		--this->m_finish;
@@ -579,7 +579,7 @@ vector<T>::erase(iterator first, iterator last)
 	if (is_movable<T>::value)
 	{
 		size_t distance = mstl::distance(last, end());
-		::memmove(static_cast<void*>(first), last, distance*sizeof(value_type));
+		::memmove((void*)first, last, distance*sizeof(value_type));
 		i = first + distance;
 	}
 	else
@@ -653,7 +653,7 @@ vector<T>::fill_insert(iterator position, size_type n, const_reference value)
 		{
 			if (is_movable<T>::value)
 			{
-				::memmove(	static_cast<void*>(pointer(position) + n),
+				::memmove(	(void*)pointer(position + n),
 								pointer(position),
 								mstl::distance(position, end())*sizeof(value_type));
 				this->m_finish += n;
@@ -698,7 +698,7 @@ vector<T>::insert_aux(iterator position, const_reference value)
 	{
 		if (is_movable<T>::value)
 		{
-			::memmove(	static_cast<void*>(pointer(position) + 1),
+			::memmove(	(void*)pointer(position + 1),
 							pointer(position),
 							mstl::distance(position, end())*sizeof(value_type));
 			mstl::bits::construct(pointer(position), value);
@@ -762,7 +762,7 @@ void
 vector<T>::zero()
 {
 	if (mstl::is_pod<value_type>::value)
-		::memset(static_cast<void*>(this->m_start), 0, size()*sizeof(value_type));
+		::memset((void*)this->m_start, 0, size()*sizeof(value_type));
 	else
 		mstl::fill_n(this->m_start, size(), value_type());
 }
@@ -789,7 +789,7 @@ inline
 vector<T>&
 vector<T>::operator=(vector&& v)
 {
-	static_cast<memblock<T>&>(*this) = mstl::move(*this);
+	((memblock<T>&)*this) = mstl::move(*this);
 	return *this;
 }
 

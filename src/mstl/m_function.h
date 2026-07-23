@@ -91,7 +91,7 @@ public:
 //	{
 //		function<int (int)> f(foo);
 //		boost::function<int (int)> g(boost::bind1st(boost::mem_fun(&Baz::operator()), &baz));
-//		function<int (int)> h(&Baz::operator(), static_cast<Baz const*>(&baz));
+//		function<int (int)> h(&Baz::operator(), (Baz const*)&baz);
 //		function<int (int)> i(&baz);
 //
 //		f(1);				// 12 time units

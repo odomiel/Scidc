@@ -257,7 +257,7 @@ bitset::test(size_type n) const
 	M_REQUIRE(!compressed());
 	M_REQUIRE(n < size());
 
-	return static_cast<bitfield const&>(m_bits[word_index(n)])[bitfield::word_index(n)];
+	return m_bits[word_index(n)][bitfield::word_index(n)];
 }
 
 
@@ -382,7 +382,7 @@ void
 bitset::fill(size_type first, size_type last, unsigned char value)
 {
 	M_ASSERT(first <= last);
-	::memset(static_cast<void*>(m_bits + first), value, sizeof(m_bits[0])*(last - first));
+	::memset((void*)m_bits + first, value, sizeof(m_bits[0])*(last - first));
 }
 
 

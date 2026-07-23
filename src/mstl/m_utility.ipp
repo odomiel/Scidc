@@ -77,7 +77,7 @@ inline
 typename mstl::remove_reference<T>::type&&
 move(T&& t) noexcept
 {
-	return static_cast<typename mstl::remove_reference<T>::type&&>(t);
+	return (typename mstl::remove_reference<T>::type&&)t;
 }
 
 
@@ -86,7 +86,7 @@ inline
 T&&
 forward(typename mstl::remove_reference<T>::type& t) noexcept
 {
-	return static_cast<T&&>(t);
+	return (T&&)t;
 }
 
 #else
@@ -175,7 +175,7 @@ inline
 void*
 advance(void* i, size_t offset)
 {
-	return static_cast<char*>(i) + offset;
+	return (char*)i + offset;
 }
 
 
@@ -184,7 +184,7 @@ inline
 constexpr ptrdiff_t
 distance(void* first, void* last)
 {
-	return static_cast<char*>(last) - static_cast<char*>(first);
+	return (char*)last - (char*)first;
 }
 
 

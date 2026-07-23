@@ -62,7 +62,7 @@ typename list<T>::iterator::reference
 list<T>::iterator::operator*() const
 {
 	M_ASSERT(m_node);
-	return static_cast<node*>(m_node)->m_data;
+	return ((node*)m_node)->m_data;
 }
 
 
@@ -72,7 +72,7 @@ typename list<T>::iterator::pointer
 list<T>::iterator::operator->() const
 {
 	M_ASSERT(m_node);
-	return &static_cast<node*>(m_node)->m_data;
+	return &((node*)m_node)->m_data;
 }
 
 
@@ -265,7 +265,7 @@ typename list<T>::const_iterator::reference
 list<T>::const_iterator::operator*() const
 {
 	M_ASSERT(m_node);
-	return static_cast<node const*>(m_node)->m_data;
+	return ((node const*)m_node)->m_data;
 }
 
 
@@ -275,7 +275,7 @@ typename list<T>::const_iterator::pointer
 list<T>::const_iterator::operator->() const
 {
 	M_ASSERT(m_node);
-	return &static_cast<node const*>(m_node)->m_data;
+	return &((node const*)m_node)->m_data;
 }
 
 
@@ -608,7 +608,7 @@ typename list<T>::reference
 list<T>::front()
 {
 	M_REQUIRE(!empty());
-	return static_cast<node*>(m_node.m_next)->m_data;
+	return ((node*)m_node.m_next)->m_data;
 }
 
 
@@ -618,7 +618,7 @@ typename list<T>::const_reference
 list<T>::front() const
 {
 	M_REQUIRE(!empty());
-	return static_cast<node const*>(m_node.m_next)->m_data;
+	return ((node const*)m_node.m_next)->m_data;
 }
 
 
@@ -628,7 +628,7 @@ typename list<T>::reference
 list<T>::back()
 {
 	M_REQUIRE(!empty());
-	return static_cast<node*>(m_node.m_prev)->m_data;
+	return ((node*)m_node.m_prev)->m_data;
 }
 
 
@@ -638,7 +638,7 @@ typename list<T>::const_reference
 list<T>::back() const
 {
 	M_REQUIRE(!empty());
-	return static_cast<node const*>(m_node.m_prev)->m_data;
+	return ((node const*)m_node.m_prev)->m_data;
 }
 
 
@@ -647,7 +647,7 @@ inline
 typename list<T>::node*
 list<T>::create_node(T const& x)
 {
-	node* p = static_cast<node*>(::operator new(sizeof(node)));
+	node* p = (node*)::operator new(sizeof(node));
 
 	try
 	{
@@ -702,7 +702,7 @@ list<T>::erase(bits::node_base* n)
 {
 	--m_size;
 	n->unhook();
-	node* tmp = static_cast<node*>(n);
+	node* tmp = (node*)n;
 	mstl::bits::destroy(&tmp->m_data);
 	::operator delete(tmp);
 }
@@ -766,12 +766,12 @@ inline
 void
 list<T>::clear()
 {
-	node* curr = static_cast<node*>(m_node.m_next);
+	node* curr = (node*)m_node.m_next;
 
 	while (curr != &m_node)
 	{
 		node* n = curr;
-		curr = static_cast<node*>(curr->m_next);
+		curr = (node*)curr->m_next;
 		mstl::bits::destroy(&n->m_data);
 		::operator delete(n);
 	}

@@ -47,9 +47,9 @@ struct destroy<1>
 
 
 template<typename T, typename U>
-inline void construct(T* p, U const& value) { new(static_cast<void*>(p)) T(value); }
+inline void construct(T* p, U const& value) { new((void*)p) T(value); }
 
-template<typename T> inline void construct(T* p) { new(static_cast<void*>(p)) T(); }
+template<typename T> inline void construct(T* p) { new((void*)p) T(); }
 
 template<typename T>
 inline void destroy(T* pointer) { pointer->~T(); }

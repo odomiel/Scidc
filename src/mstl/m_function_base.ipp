@@ -76,7 +76,7 @@ function<R ()>::function(R (*func)())
 template <typename R>
 inline
 function<R ()>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -135,7 +135,7 @@ inline
 R
 function<R ()>::invoke_mem<Obj>::invoke(function_base* f)
 {
-	return (static_cast<Obj*>(f->p_)->*reinterpret_cast<R (Obj::*)()>(f->m_))();
+	return ((Obj*)f->p_->*reinterpret_cast<R (Obj::*)()>(f->m_))();
 }
 
 
@@ -145,7 +145,7 @@ inline
 R
 function<R ()>::invoke_mem<Obj>::invoke(function_base const* f)
 {
-	return (static_cast<Obj const*>(f->p_)->*reinterpret_cast<R (Obj::*)() const>(f->m_))();
+	return ((Obj const*)f->p_->*reinterpret_cast<R (Obj::*)() const>(f->m_))();
 }
 
 
@@ -155,7 +155,7 @@ inline
 R
 function<R ()>::invoke_obj<Functor>::invoke(function_base* f)
 {
-	return (*static_cast<Functor*>(f->p_))();
+	return (*(Functor*)f->p_)();
 }
 
 
@@ -165,7 +165,7 @@ inline
 R
 function<R ()>::invoke_obj<Functor>::invoke(function_base const* f)
 {
-	return (*static_cast<Functor const*>(f->p_))();
+	return (*(Functor const*)f->p_)();
 }
 
 
@@ -199,7 +199,7 @@ function<R (T1)>::function(R (*func)(T1))
 template <typename R, typename T1>
 inline
 function<R (T1)>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -269,7 +269,7 @@ inline
 R
 function<R (T1)>::invoke_mem<Obj>::invoke(function_base* f, T1 t1)
 {
-	return (static_cast<Obj*>(f->p_)->*reinterpret_cast<R (Obj::*)(T1)>(f->m_))(t1);
+	return ((Obj*)f->p_->*reinterpret_cast<R (Obj::*)(T1)>(f->m_))(t1);
 }
 
 
@@ -279,7 +279,7 @@ inline
 R
 function<R (T1)>::invoke_mem<Obj>::invoke(function_base const* f, T1 t1)
 {
-	return (static_cast<Obj const*>(f->p_)->*reinterpret_cast<R (Obj::*)(T1) const>(f->m_))(t1);
+	return ((Obj const*)f->p_->*reinterpret_cast<R (Obj::*)(T1) const>(f->m_))(t1);
 }
 
 
@@ -289,7 +289,7 @@ inline
 R
 function<R (T1)>::invoke_obj<Functor>::invoke(function_base* f, T1 t1)
 {
-	return (*static_cast<Functor*>(f->p_))(t1);
+	return (*(Functor*)f->p_)(t1);
 }
 
 
@@ -299,7 +299,7 @@ inline
 R
 function<R (T1)>::invoke_obj<Functor>::invoke(function_base const* f, T1 t1)
 {
-	return (*static_cast<Functor const*>(f->p_))(t1);
+	return (*(Functor const*)f->p_)(t1);
 }
 
 
@@ -333,7 +333,7 @@ function<R (T1,T2)>::function(R (*func)(T1, T2))
 template <typename R, typename T1, typename T2>
 inline
 function<R (T1,T2)>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -403,7 +403,7 @@ inline
 R
 function<R (T1,T2)>::invoke_mem<Obj>::invoke(function_base* f, T1 t1, T2 t2)
 {
-	return (static_cast<Obj*>(f->p_)->*reinterpret_cast<R (Obj::*)(T1, T2)>(f->m_))(t1, t2);
+	return ((Obj*)f->p_->*reinterpret_cast<R (Obj::*)(T1, T2)>(f->m_))(t1, t2);
 }
 
 
@@ -413,7 +413,7 @@ inline
 R
 function<R (T1,T2)>::invoke_mem<Obj>::invoke(function_base const* f, T1 t1, T2 t2)
 {
-	return (static_cast<Obj const*>(f->p_)->*reinterpret_cast<R (Obj::*)(T1, T2) const>(f->m_))(t1, t2);
+	return ((Obj const*)f->p_->*reinterpret_cast<R (Obj::*)(T1, T2) const>(f->m_))(t1, t2);
 }
 
 
@@ -423,7 +423,7 @@ inline
 R
 function<R (T1,T2)>::invoke_obj<Functor>::invoke(function_base* f, T1 t1, T2 t2)
 {
-	return (*static_cast<Functor*>(f->p_))(t1, t2);
+	return (*(Functor*)f->p_)(t1, t2);
 }
 
 
@@ -433,7 +433,7 @@ inline
 R
 function<R (T1,T2)>::invoke_obj<Functor>::invoke(function_base const* f, T1 t1, T2 t2)
 {
-	return (*static_cast<Functor const*>(f->p_))(t1, t2);
+	return (*(Functor const*)f->p_)(t1, t2);
 }
 
 
@@ -467,7 +467,7 @@ function<R (T1,T2,T3)>::function(R (*func)(T1, T2, T3))
 template <typename R, typename T1, typename T2, typename T3>
 inline
 function<R (T1,T2,T3)>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -537,7 +537,7 @@ inline
 R
 function<R (T1,T2,T3)>::invoke_mem<Obj>::invoke(function_base* f, T1 t1, T2 t2, T3 t3)
 {
-	return (static_cast<Obj*>(f->p_)->*
+	return ((Obj*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3)>(f->m_))(t1, t2, t3);
 }
 
@@ -548,7 +548,7 @@ inline
 R
 function<R (T1,T2,T3)>::invoke_mem<Obj>::invoke(function_base const* f, T1 t1, T2 t2, T3 t3)
 {
-	return (static_cast<Obj const*>(f->p_)->*
+	return ((Obj const*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3) const>(f->m_))(t1, t2, t3);
 }
 
@@ -559,7 +559,7 @@ inline
 R
 function<R (T1,T2,T3)>::invoke_obj<Functor>::invoke(function_base* f, T1 t1, T2 t2, T3 t3)
 {
-	return (*static_cast<Functor*>(f->p_))(t1, t2, t3);
+	return (*(Functor*)f->p_)(t1, t2, t3);
 }
 
 
@@ -569,7 +569,7 @@ inline
 R
 function<R (T1,T2,T3)>::invoke_obj<Functor>::invoke(function_base const* f, T1 t1, T2 t2, T3 t3)
 {
-	return (*static_cast<Functor const*>(f->p_))(t1, t2, t3);
+	return (*(Functor const*)f->p_)(t1, t2, t3);
 }
 
 
@@ -603,7 +603,7 @@ function<R (T1,T2,T3,T4)>::function(R (*func)(T1, T2, T3, T4))
 template <typename R, typename T1, typename T2, typename T3, typename T4>
 inline
 function<R (T1,T2,T3,T4)>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -663,7 +663,7 @@ inline
 R
 function<R (T1,T2,T3,T4)>::invoke_mem<Obj>::invoke(function_base* f, T1 t1, T2 t2, T3 t3, T4 t4)
 {
-	return (static_cast<Obj*>(f->p_)->*
+	return ((Obj*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3, T4)>(f->m_))(t1, t2, t3, t4);
 }
 
@@ -674,7 +674,7 @@ inline
 R
 function<R (T1,T2,T3,T4)>::invoke_mem<Obj>::invoke(function_base const* f, T1 t1, T2 t2, T3 t3, T4 t4)
 {
-	return (static_cast<Obj const*>(f->p_)->*
+	return ((Obj const*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3, T4) const>(f->m_))(t1, t2, t3, t4);
 }
 
@@ -685,7 +685,7 @@ inline
 R
 function<R (T1,T2,T3,T4)>::invoke_obj<Functor>::invoke(function_base* f, T1 t1, T2 t2, T3 t3, T4 t4)
 {
-	return (*static_cast<Functor*>(f->p_))(t1, t2, t3, t4);
+	return (*(Functor*)f->p_)(t1, t2, t3, t4);
 }
 
 
@@ -696,7 +696,7 @@ R
 function<R (T1,T2,T3,T4)>::invoke_obj<Functor>::invoke(	function_base const* f,
 																			T1 t1, T2 t2, T3 t3, T4 t4)
 {
-	return (*static_cast<Functor const*>(f->p_))(t1, t2, t3, t4);
+	return (*(Functor const*)f->p_)(t1, t2, t3, t4);
 }
 
 
@@ -721,7 +721,7 @@ function<R (T1,T2,T3,T4)>::invoke_null::invoke(function_base*, T1, T2, T3, T4)
 template <typename R, typename T1, typename T2, typename T3, typename T4, typename T5>
 inline
 function<R (T1,T2,T3,T4,T5)>::function()
-	:function_base(static_cast<void*>(0))
+	:function_base((void*)0)
 	,invoker_(invoke_null::invoke)
 {
 }
@@ -791,7 +791,7 @@ R
 function<R (T1,T2,T3,T4,T5)>::invoke_mem<Obj>::invoke(function_base* f,
 																		T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
 {
-	return (static_cast<Obj*>(f->p_)->*
+	return ((Obj*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3, T4, T5)>(f->m_))(t1, t2, t3, t4, t5);
 }
 
@@ -803,7 +803,7 @@ R
 function<R (T1,T2,T3,T4,T5)>::invoke_mem<Obj>::invoke(	function_base const* f,
 																			T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
 {
-	return (static_cast<Obj const*>(f->p_)->*
+	return ((Obj const*)f->p_->*
 				reinterpret_cast<R (Obj::*)(T1, T2, T3, T4, T5) const>(f->m_))(t1, t2, t3, t4, t5);
 }
 
@@ -815,7 +815,7 @@ R
 function<R (T1,T2,T3,T4,T5)>::invoke_obj<Functor>::invoke(	function_base* f,
 																				T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
 {
-	return (*static_cast<Functor*>(f->p_))(t1, t2, t3, t4, t5);
+	return (*(Functor*)f->p_)(t1, t2, t3, t4, t5);
 }
 
 
@@ -826,7 +826,7 @@ R
 function<R (T1,T2,T3,T4,T5)>::invoke_obj<Functor>::invoke(	function_base const* f,
 																				T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
 {
-	return (*static_cast<Functor const*>(f->p_))(t1, t2, t3, t4, t5);
+	return (*(Functor const*)f->p_)(t1, t2, t3, t4, t5);
 }
 
 

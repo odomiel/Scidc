@@ -892,7 +892,7 @@ qsort(T (&array)[N], int (*compare)(T const& lhs, T const& rhs))
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::doitf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -907,7 +907,7 @@ qsort(T (&array)[N], int (*compare)(T lhs, T rhs))
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::doitf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -935,7 +935,7 @@ qsort(T* array, unsigned len, int (*compare)(T const& lhs, T const& rhs))
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::doitf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -950,7 +950,7 @@ qsort(T* array, unsigned len, int (*compare)(T lhs, T rhs))
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::doitf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -980,7 +980,7 @@ qsort(T (&array)[N], int (*compare)(T const& lhs, T const& rhs, Arg const& arg),
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T const&,Arg>::doit),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -997,7 +997,7 @@ qsort(T (&array)[N], int (*compare)(T lhs, T rhs, Arg const& arg), Arg const& ar
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T,Arg>::doit),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1017,7 +1017,7 @@ qsort(T* array,
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T const&,Arg>::doit),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1034,7 +1034,7 @@ qsort(T* array, unsigned len, int (*compare)(T lhs, T rhs, Arg const& arg), Arg 
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T,Arg>::doit),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1049,7 +1049,7 @@ qsort(T (&array)[N], Comparison comparison)
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare_obj<T,Comparison>::doit),
-					static_cast<void*>(&comparison));
+					(void*)&comparison);
 }
 
 
@@ -1066,7 +1066,7 @@ qsort(T* array, unsigned len, Comparison comparison)
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare_obj<T,Comparison>::doit),
-					static_cast<void*>(&comparison));
+					(void*)&comparison);
 }
 
 
@@ -1081,7 +1081,7 @@ qsort_reverse(T (&array)[N], int (*compare)(T const& lhs, T const& rhs))
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::dnegf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -1096,7 +1096,7 @@ qsort_reverse(T (&array)[N], int (*compare)(T lhs, T rhs))
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::dnegf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -1111,7 +1111,7 @@ qsort_reverse(T* array, unsigned len, int (*compare)(T const& lhs, T const& rhs)
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::dnegf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -1126,7 +1126,7 @@ qsort_reverse(T* array, unsigned len, int (*compare)(T lhs, T rhs))
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare<T>::dnegf),
-					static_cast<void*>(compare));
+					(void*)compare);
 }
 
 
@@ -1160,7 +1160,7 @@ qsort_reverse(T (&array)[N], int (*compare)(T const& lhs, T const& rhs, Arg cons
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T const&,Arg>::dneg),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1177,7 +1177,7 @@ qsort_reverse(T (&array)[N], int (*compare)(T lhs, T rhs, Arg const& arg), Arg c
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T,Arg>::dneg),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1197,7 +1197,7 @@ qsort_reverse(	T* array,
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T const&,Arg>::dneg),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1214,7 +1214,7 @@ qsort_reverse(T* array, unsigned len, int (*compare)(T lhs, T rhs, Arg const& ar
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::argf<T,Arg>::dneg),
-					static_cast<void*>(&argf));
+					(void*)&argf);
 }
 
 
@@ -1229,7 +1229,7 @@ qsort_reverse(T (&array)[N], Comparison comparison)
 					N,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare_obj<T,Comparison>::dneg),
-					static_cast<void*>(&comparison));
+					(void*)&comparison);
 }
 
 
@@ -1246,7 +1246,7 @@ qsort_reverse(T* array, unsigned len, Comparison comparison)
 					len,
 					sizeof(T),
 					reinterpret_cast<bits::Comparison>(bits::algo::compare_obj<T,Comparison>::dneg),
-					static_cast<void*>(&comparison));
+					(void*)&comparison);
 }
 
 
