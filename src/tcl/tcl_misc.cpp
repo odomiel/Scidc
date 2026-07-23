@@ -52,6 +52,7 @@
 #include "sys_file.h"
 #include "sys_info.h"
 #include "sys_vfs.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_backtrace.h"
 #include "m_string.h"
@@ -69,7 +70,7 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"26.07.19 b4 Beta"
+# define SCIDB_VERSION	"26.07.23 b1 Beta"
 # define SCIDB_REVISION	"1532"
 #endif
 
@@ -372,7 +373,7 @@ ToList::resolveSpaces()
 {
 	if (m_first)
 	{
-		int objc;
+		Tcl_Size objc;
 		Tcl_Obj** objv;
 
 		Tcl_ListObjGetElements(0, m_first, &objc, &objv);
@@ -400,7 +401,7 @@ ToList::resolveSpaces()
 
 	if (m_last)
 	{
-		int objc;
+		Tcl_Size objc;
 		Tcl_Obj** objv;
 
 		Tcl_ListObjGetElements(0, m_last, &objc, &objv);
@@ -658,7 +659,7 @@ ToList::finish()
 {
 	M_ASSERT(!m_stack.empty());
 
-	int length = 0;
+	Tcl_Size length = 0;
 
 	putContent();
 	Tcl_ListObjLength(0, m_stack.top(), &length);
@@ -756,16 +757,16 @@ Parser::processModes()
 mstl::string
 Parser::parse()
 {
-	int objc;
+	Tcl_Size objc;
 	Tcl_Obj** objv;
 
 	Tcl_ListObjGetElements(0, m_obj, &objc, &objv);
 
 	m_xml.append("<xml>", 5);
 
-	for (int i = 0; i < objc; ++i)
+	for (Tcl_Size i = 0; i < objc; ++i)
 	{
-		int argc;
+		Tcl_Size argc;
 		Tcl_Obj** argv;
 
 		Tcl_ListObjGetElements(0, objv[i], &argc, &argv);
@@ -776,16 +777,16 @@ Parser::parse()
 		char const* lang = Tcl_GetString(argv[0]);
 
 		m_xml.format("<:%s>", lang);
-		Tcl_ListObjGetElements(0, argv[1], &argc, &argv);
+		Tcl_ListObjGetElements(0, argv[1], &argc, &argvnargc, &argc, &argvnargv);
 
-		for (int k = 0; k < argc; ++k)
+		for (Tcl_Size k = 0; k < nargc; ++k)
 		{
-			int objn;
+			Tcl_Size objn;
 			Tcl_Obj** objs;
 
-			Tcl_ListObjGetElements(0, argv[k], &objn, &objs);
+			Tcl_ListObjGetElements(0, nargv[k], &objn, &objs);
 
-			char const* token = Tcl_GetStringFromObj(objs[0], nullptr);
+			char const* token = Tcl_GetStringFromObj(nobjs[0], nullptr);
 
 			switch (*token)
 			{
@@ -796,8 +797,8 @@ Parser::parse()
 						{
 							case 't':	// "str"
 								{
-									int len;
-									char const* str = Tcl_GetStringFromObj(objs[1], &len);
+									Tcl_Size len;
+									char const* str = Tcl_GetStringFromObj(nobjs[1], &len);
 									mstl::string::size_type appendSpaces = 0;
 
 									if (k == 0)
@@ -1339,7 +1340,7 @@ cmdHtmlHyphenate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return TCL_ERROR;
 	}
 
-	int length;
+	Tcl_Size length;
 	char const* document = Tcl_GetStringFromObj(objv[3], &length);
 
 	html::Hyphenate hyphenate(
@@ -1363,7 +1364,7 @@ cmdHtmlLigatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return TCL_ERROR;
 	}
 
-	int length;
+	Tcl_Size length;
 	char const* document = Tcl_GetStringFromObj(objv[1], &length);
 
 	html::BuildLigatures ligatures;
@@ -1426,8 +1427,8 @@ cmdHtmlSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	html::Search search(noCase, entireWord, titleOnly, maxMatches);
 
-	int lengthHaystack;
-	int lengthNeedle;
+	Tcl_Size lengthHaystack;
+	Tcl_Size lengthNeedle;
 
 	char const*	haystack	= Tcl_GetStringFromObj(objv[objc - 1], &lengthHaystack);
 	char const*	needle	= Tcl_GetStringFromObj(objv[objc - 2], &lengthNeedle);

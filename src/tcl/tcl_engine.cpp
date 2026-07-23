@@ -34,6 +34,7 @@
 #include "db_game.h"
 
 #include "sys_process.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_ofstream.h"
 #include "m_string.h"
@@ -974,7 +975,7 @@ cmdSetFeatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 		::app::Engine* engine = tcl::app::scidb->engine(id);
 
-		int size;
+		Tcl_Size size;
 		Tcl_Obj** objs;
 
 		if (Tcl_ListObjGetElements(ti, objectFromObj(objc, objv, 2), &size, &objs) != TCL_OK)
@@ -1063,7 +1064,7 @@ cmdSetOptions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 			{
 				::app::Engine::Options opts;
 
-				int size;
+				Tcl_Size size;
 				Tcl_Obj** objs;
 
 				if (Tcl_ListObjGetElements(ti, objectFromObj(objc, objv, 3), &size, &objs) != TCL_OK)

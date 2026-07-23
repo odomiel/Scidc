@@ -19,6 +19,7 @@
 #include "sys_utf8_codec.h"
 #include "sys_utf8.h"
 #include "sys_base.h"
+#include "sys_compat_tcl9.h"
 
 #include "tcl_base.h"
 

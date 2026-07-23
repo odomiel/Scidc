@@ -43,6 +43,7 @@
 #include "m_sstream.h"
 #include "m_hash.h"
 #include "m_assert.h"
+#include "sys_compat_tcl9.h"
 
 #include <tcl.h>
 #include <cstring>
@@ -320,7 +321,7 @@ cmdEmit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	}
 
 	{
-		int argc;
+		Tcl_Size argc;
 		Tcl_Obj** argv;
 
 		if (Tcl_ListObjGetElements(ti, objectFromObj(objc, objv, 9), &argc, &argv) != TCL_OK)

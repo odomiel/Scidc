@@ -35,6 +35,7 @@
 #include "u_match.h"
 
 #include "m_utility.h"
+#include "sys_compat_tcl9.h"
 
 #include <tcl.h>
 #include <cstring>
@@ -156,7 +157,7 @@ static bool
 getMinMax(Tcl_Interp* ti, Tcl_Obj* val, int& min, int& max, char const* msg)
 {
 	Tcl_Obj** objs;
-	int len;
+	Tcl_Size len;
 	if (	Tcl_ListObjGetElements(ti, val, &len, &objs) != TCL_OK
 		|| len != 2
 		|| Tcl_GetIntFromObj(ti, objs[0], &min) != TCL_OK

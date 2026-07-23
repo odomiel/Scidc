@@ -58,6 +58,7 @@
 
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_sstream.h"
 #include "m_vector.h"
@@ -1397,7 +1398,7 @@ int
 		::memcpy(rt, *ratings, sizeof(rt));
 
 	int maxSignificance[2] = { 1, 1 };
-	int objc;
+	Tcl_Size objc;
 
 	if (Tcl_ListObjGetElements(interp(), taglist, &objc, &objv) != TCL_OK)
 	{
@@ -3805,12 +3806,14 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		{
 			Tcl_Obj* mapObj = objv[objc - 1];
 
-			if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objs) != TCL_OK)
+			if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objsnagObjc, &objc, &objsnagObjs) != TCL_OK)
 				error(CmdExport, 0, 0, "invalid nag map");
 
-			for (int i = 0; i < objc; ++i)
+			for (Tcl_Size i = 0; i < nagObjc; ++i)
 			{
 				Tcl_Obj** pair;
+				Tcl_Size nagObjc;
+				Tcl_Obj** nagObjs;
 				int nelems;
 
 				if (Tcl_ListObjGetElements(ti, objs[i], &nelems, &pair) != TCL_OK || nelems != 2)
@@ -4016,7 +4019,7 @@ cmdMerge(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return error(CmdMerge, nullptr, nullptr, "unexpected order '%s'", trans);
 
 	unsigned primary = unsignedFromObj(objc, objv, 1);
-	int nargs;
+	Tcl_Size nargs;
 	Tcl_Obj** objs;
 
 	if (Tcl_ListObjGetElements(ti, args, &nargs, &objs) != TCL_OK)

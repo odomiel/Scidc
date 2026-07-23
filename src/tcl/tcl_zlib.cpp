@@ -20,6 +20,7 @@
 
 #include "m_assert.h"
 #include "m_utility.h"
+#include "sys_compat_tcl9.h"
 
 #include <tcl.h>
 #include <zlib.h>
@@ -273,7 +274,7 @@ cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 		return TCL_ERROR;
 	}
 
-	int len;
+	Tcl_Size len;
 	char const* data = Tcl_GetStringFromObj(objv[1], &len);
 	unsigned crc = 0;
 

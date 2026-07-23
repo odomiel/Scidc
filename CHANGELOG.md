@@ -6,6 +6,10 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den 4 Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.07.23
+
+- **b1** – Modernisierung: Phase 8 Teil 2 – Tcl_Size-Anpassungen für Tcl API-Funktionen (Tcl_ListObjGetElements, Tcl_ListObjLength, Tcl_GetStringFromObj, Tcl_GetByteArrayFromObj) in tcl_base.cpp, tcl_board.cpp, tcl_compare.cpp, tcl_crosstable.cpp, tcl_engine.cpp, tcl_game.cpp, tcl_misc.cpp, tcl_player.cpp, tcl_sort.cpp, tcl_view.cpp, tcl_zlib.cpp, sys_utf8_codec.cpp
+
 ## 26.07.19
 
 - **b1** – Fix: cmdVersion verwendet jetzt SCIDB_VERSION Makro + Phase 7 Rückbau von static_cast in C-Dateien + Versionsformat ohne Leerzeichen für C++-Kompatibilität + ckalloc/ckfree durch Tcl_Alloc/Tcl_Free ersetzt

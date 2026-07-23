@@ -37,6 +37,7 @@
 #include "m_utility.h"
 #include "m_ios.h"
 #include "m_stdio.h"
+#include "sys_compat_tcl9.h"
 
 #include <tcl.h>
 
@@ -130,7 +131,7 @@ tcl::newListObj(char const* s, unsigned len)
 		return newObj();
 	
 	Tcl_Obj* obj = newObj(s, len);
-	int unused;
+	Tcl_Size unused;
 
 	Tcl_ListObjLength(nullptr, obj, &unused); // converting to a list
 	return obj;
@@ -176,7 +177,7 @@ tcl::asString(Tcl_Obj* obj, unsigned& len)
 {
 	M_REQUIRE(obj);
 
-	int size;
+	Tcl_Size size;
 	char const* str = Tcl_GetStringFromObj(obj, &size);
 	len = size;
 	return str;
@@ -234,7 +235,7 @@ tcl::getElements(Tcl_Obj* obj, Tcl_Obj**& objv)
 {
 	M_ASSERT(obj);
 
-	int num;
+	Tcl_Size num;
 
 	if (Tcl_ListObjGetElements(interp(), obj, &num, &objv) != TCL_OK)
 		M_THROW(tcl::Error());
@@ -647,7 +648,7 @@ static bool
 getCommandInfo(Tcl_Obj* cmd, Tcl_CmdInfo& info)
 {
 	Tcl_Obj** objv;
-	int num = 0;
+	Tcl_Size num = 0;
 
 	if (Tcl_ListObjGetElements(interp(), cmd, &num, &objv) == TCL_OK)
 	{

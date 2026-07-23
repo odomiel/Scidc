@@ -32,6 +32,7 @@
 #include "u_base.h"
 
 #include "sys_utf8.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_string.h"
 #include "m_auto_ptr.h"
@@ -95,7 +96,7 @@ tcl::compare::compare(Tcl_Obj* lhs, Tcl_Obj* rhs)
 
 	typedef sys::utf8::uchar const uchar;
 
-	int lhsLen, rhsLen;
+	Tcl_Size lhsLen, rhsLen;
 
 	uchar* lhsArr = reinterpret_cast<uchar*>(Tcl_GetByteArrayFromObj(lhs, &lhsLen));
 	uchar* rhsArr = reinterpret_cast<uchar*>(Tcl_GetByteArrayFromObj(rhs, &rhsLen));
@@ -260,7 +261,7 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 		return TCL_OK;
 
 	Tcl_Obj **entries;
-	int nentries;
+	Tcl_Size nentries;
 
 	if (Tcl_ListObjGetElements(interp(), table, &nentries, &entries) != TCL_OK)
 		return TCL_ERROR;
@@ -309,7 +310,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 		return TCL_OK;
 
 	Tcl_Obj **entries;
-	int nentries;
+	Tcl_Size nentries;
 
 	if (Tcl_ListObjGetElements(interp(), table, &nentries, &entries) != TCL_OK)
 		return TCL_ERROR;
@@ -333,7 +334,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 		for (int i = 0; i < nentries; ++i)
 		{
 			Tcl_Obj **subEntries;
-			int nsubEntries;
+			Tcl_Size nsubEntries;
 
 			if (Tcl_ListObjGetElements(interp(), entries[i], &nsubEntries, &subEntries) != TCL_OK)
 				return TCL_ERROR;
@@ -362,7 +363,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 			if (Tcl_Obj* list = used[i])
 			{
 				Tcl_Obj **entries;
-				int nentries;
+				Tcl_Size nentries;
 
 				Tcl_ListObjGetElements(interp(), list, &nentries, &entries);
 

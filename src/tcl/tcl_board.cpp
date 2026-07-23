@@ -37,6 +37,7 @@
 #include "m_string.h"
 #include "m_vector.h"
 #include "m_bit_functions.h"
+#include "sys_compat_tcl9.h"
 
 #include <tcl.h>
 #include <cstring>
@@ -373,7 +374,7 @@ cmdMakeFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		pos.setHolding(holding);
 
 	Tcl_Obj** squares;
-	int nsquares;
+	Tcl_Size nsquares;
 
 	if (Tcl_ListObjGetElements(ti, promoted, &nsquares, &squares) != TCL_OK)
 		return error(CmdMakeFen, nullptr, nullptr, "list of squares expected");

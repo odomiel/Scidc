@@ -49,6 +49,7 @@
 
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_ofstream.h"
 #include "m_sstream.h"
@@ -158,7 +159,7 @@ static SubscriberMap subscriberMap;
 static SearchP
 buildSearch(Database const& db, Tcl_Interp* ti, Tcl_Obj* query)
 {
-	int objc;
+	Tcl_Size objc;
 	Tcl_Obj** objv;
 
 	Tcl_ListObjGetElements(ti, query, &objc, &objv);
@@ -333,7 +334,7 @@ tcl::view::makeLangList(Tcl_Interp* ti,
 	for (int i = 0; i < objc; ++i)
 	{
 		Tcl_Obj** objs;
-		int n;
+		Tcl_Size n;
 
 		if (Tcl_ListObjGetElements(ti, objv[i], &n, &objs) != TCL_OK || n != 2)
 		{
@@ -777,15 +778,17 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	::memset(nagMap, 0, sizeof(nagMap));
 
-	if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objs) != TCL_OK)
+		Tcl_Size nagObjc;
+		Tcl_Obj** nagObjs;
+	if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objsnagObjc, &objc, &objsnagObjs) != TCL_OK)
 		error(CmdExport, 0, 0, "invalid nag map");
 
-	for (int i = 0; i < objc; ++i)
+	for (Tcl_Size i = 0; i < nagObjc; ++i)
 	{
 		Tcl_Obj** pair;
-		int nelems;
+		Tcl_Size nelems;
 
-		if (Tcl_ListObjGetElements(ti, objs[i], &nelems, &pair) != TCL_OK || nelems != 2)
+		if (Tcl_ListObjGetElements(ti, nagObjs[i], &nelems, &pair) != TCL_OK || nelems != 2)
 			error(CmdExport, 0, 0, "invalid nag map");
 
 		int lhs = intFromObj(2, pair, 0);
@@ -937,13 +940,15 @@ cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	if (::strcmp(what, "moveInfo") == 0)
 	{
 		Tcl_Obj** objs;
+		Tcl_Size nobjc;
+		Tcl_Obj** nobjs;
 
-		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objs) != TCL_OK)
+		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objsnobjc, &objc, &objsnobjs) != TCL_OK)
 			return error(CmdStrip, 0, 0, "list of attributes expected");
 
 		unsigned types = 0;
 
-		for (int i = 0; i < objc; ++i)
+		for (Tcl_Size i = 0; i < nobjc; ++i)
 		{
 			char const* attr = Tcl_GetString(objs[i]);
 
@@ -974,13 +979,15 @@ cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		typedef Application::TagMap TagMap;
 
 		Tcl_Obj**	objs;
+		Tcl_Size nobjc2;
+		Tcl_Obj** nobjs2;
 		TagMap		tags;
 
-		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objs) != TCL_OK)
+		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objsnobjc2, &objc, &objsnobjs2) != TCL_OK)
 			return error(CmdStrip, 0, 0, "list of attributes expected");
 
-		for (int i = 0; i < objc; ++i)
-			tags[Tcl_GetString(objs[i])] = 1;
+		for (Tcl_Size i = 0; i < nobjc2; ++i)
+			tags[Tcl_GetString(nobjs2[i])] = 1;
 
 		setResult(scidb->stripTags(view, tags, progress, Application::UpdateGameInfo));
 	}

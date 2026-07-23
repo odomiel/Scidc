@@ -29,6 +29,7 @@
 #include "tcl_compare.h"
 
 #include "sys_utf8.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_utility.h"
 #include "m_types.h" // for nullptr
@@ -83,8 +84,8 @@ private:
 
 	Tcl_Interp*	m_interp;
 	int*			m_indexVec;
-	int			m_indexCount;
-	int			m_numElements;
+	Tcl_Size		m_indexCount;
+	Tcl_Size		m_numElements;
 	bool			m_noCase;
 	bool			m_unique;
 	bool			m_skipPunctuation;
@@ -379,7 +380,7 @@ Sort::selectObjFromSublist(Tcl_Obj *objPtr, Tcl_Obj** currentObj)
 
 	for (int i = 0; i < m_indexCount; i++)
 	{
-		int listLen;
+		Tcl_Size listLen;
 
 		if (Tcl_ListObjLength(m_interp, objPtr, &listLen) != TCL_OK)
 		{
