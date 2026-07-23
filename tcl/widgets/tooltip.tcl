@@ -116,7 +116,7 @@
 # We don't need this package.
 catch { package forget tooltip }
 
-package require Tk 8.6
+package require Tk 8.6-
 package provide tooltip 1.5.0
 
 proc tooltip {args} { return [::tooltip::tooltip {*}$args ] }

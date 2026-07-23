@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.6
+package require Tk 8.6-
 package provide toolbar 1.0
 
 namespace eval toolbar {

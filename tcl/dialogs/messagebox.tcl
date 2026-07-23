@@ -17,7 +17,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.6
+package require Tk 8.6-
 if {[catch { package require tkpng }]} { package require Img }
 package provide messagebox 1.0
 

@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.6
+package require Tk 8.6-
 package require choosecolor
 package require place
 if {[catch { package require tkpng }]} { package require Img }
