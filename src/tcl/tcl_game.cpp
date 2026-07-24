@@ -1410,7 +1410,7 @@ int
 	if (objc % 2)
 		return error("save/update", nullptr, nullptr, "odd number of elements in tag list");
 
-	for (int i = 0; i < objc; i += 2)
+	for (Tcl_Size i = 0; i < objc; i += 2)
 	{
 		tag::ID tid = tag::fromName(stringFromObj(objc, objv, i));
 
@@ -1457,7 +1457,7 @@ int
 		}
 	}
 
-	for (int i = 0; i < objc; i += 2)
+	for (Tcl_Size i = 0; i < objc; i += 2)
 	{
 		tag::ID tid = tag::fromName(stringFromObj(objc, objv, i));
 
@@ -2210,9 +2210,9 @@ cmdLangSet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	else if (*s)
 	{
 		Game::LanguageSet set;
-		int n = countElements(languages);
+		Tcl_Size n = countElements(languages);
 
-		for (int i = 0; i < n; ++i)
+		for (Tcl_Size i = 0; i < n; ++i)
 		{
 			Tcl_Obj* lang;
 			Tcl_ListObjIndex(ti, languages, i, &lang);

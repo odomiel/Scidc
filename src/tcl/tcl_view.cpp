@@ -298,7 +298,7 @@ tcl::view::buildTagSet(Tcl_Interp* ti, char const* cmd, Tcl_Obj* allowedTags, ::
 	}
 	else
 	{
-		for (int i = 0; i < tagCount; ++i)
+		for (Tcl_Size i = 0; i < tagCount; ++i)
 		{
 			if (*Tcl_GetString(tags[i]))
 			{

@@ -280,9 +280,9 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 
 	::memset(m_sortMappingTable, 0, sizeof(m_sortMappingTable));
 
-	int n = mstl::div2(nentries);
+	Tcl_Size n = mstl::div2(nentries);
 
-	for (int i = 0; i < n; i += 2)
+	for (Tcl_Size i = 0; i < n; i += 2)
 	{
 		sys::utf8::uchar index = sys::utf8::getChar(Tcl_GetString(entries[i]));
 
@@ -331,7 +331,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 		::memset(used, 0, sizeof(used));
 		::memset(m_sortOrderTable, 0, sizeof(m_sortOrderTable));
 
-		for (int i = 0; i < nentries; ++i)
+		for (Tcl_Size i = 0; i < nentries; ++i)
 		{
 			Tcl_Obj **subEntries;
 			Tcl_Size nsubEntries;

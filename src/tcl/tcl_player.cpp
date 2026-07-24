@@ -631,7 +631,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	char const*	opStr		= stringFromObj(objc, objv, 1);
 	Tcl_Obj*		filter	= objectFromObj(objc, objv, 2);
-	int			length;
+	Tcl_Size		length;
 
 	if (Tcl_ListObjLength(ti, filter, &length) != TCL_OK || mstl::is_odd(length))
 		return error(CmdInfo, nullptr, nullptr, "list of name/value pairs expected");
@@ -665,7 +665,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	if (length > 0)
 	{
-		for (int i = 0; i < length; i += 2)
+		for (Tcl_Size i = 0; i < length; i += 2)
 		{
 			Tcl_Obj* key;
 			Tcl_Obj* val;
@@ -760,7 +760,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 						case 'r':	// trophy
 						{
 							Tcl_Obj** objs;
-							int len;
+							Tcl_Size len;
 							if (Tcl_ListObjGetElements(ti, val, &len, &objs) != TCL_OK || len != 2)
 							{
 								return error(	CmdFilter,
@@ -771,7 +771,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 							unsigned flags = 0;
 							if (Tcl_ListObjGetElements(ti, objs[1], &len, &objs) != TCL_OK)
 								return error(CmdFilter, nullptr, nullptr, "list of flags expected");
-							for (int i = 0; i < len; ++i)
+							for (Tcl_Size i = 0; i < len; ++i)
 							{
 								char const* flag = Tcl_GetString(objs[i]);
 								switch (::tolower(*flag))

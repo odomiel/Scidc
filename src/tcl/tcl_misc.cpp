@@ -845,7 +845,7 @@ Parser::parse()
 									{
 										processModes();
 
-										for (int j = 0; j < len; ++j)
+										for (Tcl_Size j = 0; j < len; ++j)
 										{
 											switch (str[j])
 											{
