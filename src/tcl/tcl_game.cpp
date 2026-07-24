@@ -4026,7 +4026,7 @@ cmdMerge(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	bool rc = false;
 
-	for (int i = 0; i < nargs; ++i)
+	for (Tcl_Size i = 0; i < nargs; ++i)
 	{
 		unsigned to = unsignedFromObj(nargs, objs, i);
 		unsigned modState = 0;

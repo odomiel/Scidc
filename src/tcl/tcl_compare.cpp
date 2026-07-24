@@ -367,7 +367,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 
 				Tcl_ListObjGetElements(interp(), list, &nentries, &entries);
 
-				for (int k = 1; k < nentries; ++k)
+				for (Tcl_Size k = 1; k < nentries; ++k)
 				{
 					char const* s = Tcl_GetString(entries[k]);
 

@@ -1073,7 +1073,7 @@ cmdSetOptions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 				if ((size % 2) == 1)
 					return error(CmdActivate, 0, 0, "options list must have even size");
 
-				for (int i = 0; i < size; i += 2)
+				for (Tcl_Size i = 0; i < size; i += 2)
 					engine->setOption(Tcl_GetString(objs[i]), Tcl_GetString(objs[i + 1]));
 
 				break;
