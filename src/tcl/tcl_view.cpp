@@ -771,7 +771,6 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	tcl::Log				log(objv[15], objv[16]);
 	Cursor&				cursor(scidb->cursor(database, variant));
 	View&					v(cursor.view(view));
-	Tcl_Obj**			objs;
 	View::NagMap		nagMap;
 	View::Languages	languages;
 	int					significant;
@@ -780,7 +779,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 		Tcl_Size nagObjc;
 		Tcl_Obj** nagObjs;
-	if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objsnagObjc, &objc, &objsnagObjs) != TCL_OK)
+	if (Tcl_ListObjGetElements(ti, mapObj, &nagObjc, &nagObjs) != TCL_OK)
 		error(CmdExport, 0, 0, "invalid nag map");
 
 	for (Tcl_Size i = 0; i < nagObjc; ++i)
@@ -941,9 +940,8 @@ cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	{
 		Tcl_Obj** objs;
 		Tcl_Size nobjc;
-		Tcl_Obj** nobjs;
 
-		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objsnobjc, &objc, &objsnobjs) != TCL_OK)
+		if (Tcl_ListObjGetElements(ti, attrs, &nobjc, &objs) != TCL_OK)
 			return error(CmdStrip, 0, 0, "list of attributes expected");
 
 		unsigned types = 0;
@@ -980,14 +978,13 @@ cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 		Tcl_Obj**	objs;
 		Tcl_Size nobjc2;
-		Tcl_Obj** nobjs2;
 		TagMap		tags;
 
-		if (Tcl_ListObjGetElements(ti, attrs, &objc, &objsnobjc2, &objc, &objsnobjs2) != TCL_OK)
+		if (Tcl_ListObjGetElements(ti, attrs, &nobjc2, &objs) != TCL_OK)
 			return error(CmdStrip, 0, 0, "list of attributes expected");
 
 		for (Tcl_Size i = 0; i < nobjc2; ++i)
-			tags[Tcl_GetString(nobjs2[i])] = 1;
+			tags[Tcl_GetString(objs[i])] = 1;
 
 		setResult(scidb->stripTags(view, tags, progress, Application::UpdateGameInfo));
 	}

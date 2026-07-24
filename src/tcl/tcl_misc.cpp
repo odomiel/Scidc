@@ -777,16 +777,20 @@ Parser::parse()
 		char const* lang = Tcl_GetString(argv[0]);
 
 		m_xml.format("<:%s>", lang);
-		Tcl_ListObjGetElements(0, argv[1], &argc, &argvnargc, &argc, &argvnargv);
+		Tcl_Size argc2;
+		Tcl_Obj** argv2;
+		if (Tcl_ListObjGetElements(0, argv[1], &argc2, &argv2) != TCL_OK)
+			M_RAISE("invalid xml list");
 
-		for (Tcl_Size k = 0; k < nargc; ++k)
+		for (Tcl_Size k = 0; k < argc2; ++k)
 		{
 			Tcl_Size objn;
 			Tcl_Obj** objs;
 
-			Tcl_ListObjGetElements(0, nargv[k], &objn, &objs);
+			if (Tcl_ListObjGetElements(0, argv2[k], &objn, &objs) != TCL_OK)
+				M_RAISE("invalid xml list");
 
-			char const* token = Tcl_GetStringFromObj(nobjs[0], nullptr);
+			char const* token = Tcl_GetStringFromObj(objs[0], nullptr);
 
 			switch (*token)
 			{
@@ -798,7 +802,7 @@ Parser::parse()
 							case 't':	// "str"
 								{
 									Tcl_Size len;
-									char const* str = Tcl_GetStringFromObj(nobjs[1], &len);
+									char const* str = Tcl_GetStringFromObj(objs[1], &len);
 									mstl::string::size_type appendSpaces = 0;
 
 									if (k == 0)
