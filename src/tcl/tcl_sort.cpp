@@ -218,7 +218,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 
 				m_indexVec = new int[m_indexCount];
 
-				for (int j = 0; j < m_indexCount; j++)
+				for (Tcl_Size j = 0; j < m_indexCount; j++)
 				{
 					if (Tcl_GetIntFromObj(m_interp, indices[j], &m_indexVec[j]) != TCL_OK)
 					{

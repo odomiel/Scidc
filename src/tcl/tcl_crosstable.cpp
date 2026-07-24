@@ -327,10 +327,10 @@ cmdEmit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		if (Tcl_ListObjGetElements(ti, objectFromObj(objc, objv, 9), &argc, &argv) != TCL_OK)
 			return error(CmdEmit, nullptr, nullptr, "list of tiebreak rules expected");
 
-		if (size_t(argc) > U_NUMBER_OF(tiebreakRules))
+		if (argc > Tcl_Size(U_NUMBER_OF(tiebreakRules)))
 			return error(CmdEmit, nullptr, nullptr, "too many rules");
 
-		for (int i = 0; i < argc; ++i)
+		for (Tcl_Size i = 0; i < argc; ++i)
 		{
 			char const* rule = stringFromObj(argc, argv, i);
 

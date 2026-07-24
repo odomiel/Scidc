@@ -684,7 +684,7 @@ cmdProbe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	char const*	protocol		= stringFromObj(objc, objv, 3);
 	unsigned		timeout		= 2000;
 	Tcl_Obj**	objs;
-	int			size;
+	Tcl_Size	size;
 
 	if (objc >= 5)
 		timeout = unsignedFromObj(objc, objv, 4);
@@ -702,7 +702,7 @@ cmdProbe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return error(CmdProbe, 0, 0, "list expected");
 
 	::app::Engine::Command command;
-	for (int i = 0; i < size; ++i)
+	for (Tcl_Size i = 0; i < size; ++i)
 		command.push_back(Tcl_GetString(objs[i]));
 
 	ProbeEngine engine(prot, command, directory);
@@ -906,7 +906,7 @@ cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	Tcl_Obj*		updateCmd	= objectFromObj(objc, objv, 6);
 	Tcl_Obj*		clientData	= objectFromObj(objc, objv, 7);
 	Tcl_Obj**	objs;
-	int			size;
+	Tcl_Size	size;
 
 	Engine::Protocol prot;
 
@@ -921,7 +921,7 @@ cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return error(CmdStart, 0, 0, "list expected");
 
 	::app::Engine::Command command;
-	for (int i = 0; i < size; ++i)
+	for (Tcl_Size i = 0; i < size; ++i)
 		command.push_back(Tcl_GetString(objs[i]));
 
 	Engine* engine = new Engine(prot, command, directory, isReadyCmd, signalCmd, updateCmd, clientData);
@@ -984,7 +984,7 @@ cmdSetFeatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		if ((size % 2) == 1)
 			return error(CmdActivate, 0, 0, "feature list must have even size");
 
-		for (int i = 0; i < size; i += 2)
+		for (Tcl_Size i = 0; i < size; i += 2)
 		{
 			int index;
 

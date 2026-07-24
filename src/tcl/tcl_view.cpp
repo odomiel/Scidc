@@ -285,7 +285,7 @@ bool
 tcl::view::buildTagSet(Tcl_Interp* ti, char const* cmd, Tcl_Obj* allowedTags, ::db::tag::TagSet& tagBits)
 {
 	Tcl_Obj**	tags;
-	int			tagCount;
+	Tcl_Size		tagCount;
 	bool			extraTags	= false;
 
 	if (Tcl_ListObjGetElements(ti, allowedTags, &tagCount, &tags) != TCL_OK)
@@ -326,12 +326,12 @@ tcl::view::makeLangList(Tcl_Interp* ti,
 
 	int			significant;
 	Tcl_Obj**	objv;
-	int			objc;
+	Tcl_Size	objc;
 
 	if (Tcl_ListObjGetElements(ti, languageList, &objc, &objv) != TCL_OK)
 		error(cmd, 0, 0, "invalid language list");
 
-	for (int i = 0; i < objc; ++i)
+	for (Tcl_Size i = 0; i < objc; ++i)
 	{
 		Tcl_Obj** objs;
 		Tcl_Size n;
