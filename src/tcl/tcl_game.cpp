@@ -3786,7 +3786,6 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	unsigned			options			= 0;
 	char const*		trace				= "";
 
-	Tcl_Obj**			objs;
 	View::NagMap		nagMap;
 	View::Languages	languages;
 	int					significant(-1);
@@ -3805,18 +3804,18 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		else if (equal(option, "-nags"))
 		{
 			Tcl_Obj* mapObj = objv[objc - 1];
+			Tcl_Size nagObjc;
+			Tcl_Obj** nagObjs;
 
-			if (Tcl_ListObjGetElements(ti, mapObj, &objc, &objsnagObjc, &objc, &objsnagObjs) != TCL_OK)
+			if (Tcl_ListObjGetElements(ti, mapObj, &nagObjc, &nagObjs) != TCL_OK)
 				error(CmdExport, 0, 0, "invalid nag map");
 
 			for (Tcl_Size i = 0; i < nagObjc; ++i)
 			{
 				Tcl_Obj** pair;
-				Tcl_Size nagObjc;
-				Tcl_Obj** nagObjs;
 				int nelems;
 
-				if (Tcl_ListObjGetElements(ti, objs[i], &nelems, &pair) != TCL_OK || nelems != 2)
+				if (Tcl_ListObjGetElements(ti, nagObjs[i], &nelems, &pair) != TCL_OK || nelems != 2)
 					error(CmdPrint, 0, 0, "invalid nag map");
 
 				int lhs = intFromObj(2, pair, 0);

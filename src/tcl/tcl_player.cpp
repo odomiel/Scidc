@@ -490,12 +490,12 @@ cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		else if (::strcmp(arg, "-trophyageset") == 0)
 		{
 			Tcl_Obj** objs;
-			int len;
+			Tcl_Size len;
 
 			if (Tcl_ListObjGetElements(ti, objectFromObj(objc, objv, objc - 1), &len, &objs) != TCL_OK)
 				return error(::CmdInfo, nullptr, nullptr, "list of ages expected");
 
-			for (int i = 0; i < len; ++i)
+			for (Tcl_Size i = 0; i < len; ++i)
 			{
 				int age;
 
@@ -710,7 +710,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 				case 'r': // rating
 				{
 					Tcl_Obj** objs;
-					int len, min, max;
+					Tcl_Size len; int min, max;
 					rating::Type type;
 					if (	Tcl_ListObjGetElements(ti, val, &len, &objs) != TCL_OK
 						|| len != 3
@@ -731,7 +731,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 						case 'i':	// titles
 						{
 							Tcl_Obj** objs;
-							int len, minYear, maxYear;
+							Tcl_Size len; int minYear, maxYear;
 							if (	Tcl_ListObjGetElements(ti, val, &len, &objs) != TCL_OK
 								|| len != 3
 								|| Tcl_GetIntFromObj(ti, objs[1], &minYear) != TCL_OK
@@ -740,11 +740,13 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 								return error(CmdFilter, nullptr, nullptr, "'titles min-year max-year' expected");
 							}
 							unsigned titles = 0;
-							if (Tcl_ListObjGetElements(ti, objs[0], &len, &objs) != TCL_OK)
+							Tcl_Size innerLen;
+							Tcl_Obj** innerObjs;
+							if (Tcl_ListObjGetElements(ti, objs[0], &innerLen, &innerObjs) != TCL_OK)
 								return error(CmdFilter, nullptr, nullptr, "list of titles expected");
-							for (int i = 0; i < len; ++i)
+							for (Tcl_Size i = 0; i < innerLen; ++i)
 							{
-								char const* s = Tcl_GetString(objs[i]);
+								char const* s = Tcl_GetString(innerObjs[i]);
 								title::ID title = title::fromString(s);
 								if (title == title::None)
 									return error(CmdFilter, nullptr, nullptr, "invalid title '%s'", s);

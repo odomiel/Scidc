@@ -312,8 +312,8 @@ $(TK_PROGRAM): tkscidc.o $(LIBS) $(TCL_LIBS) $(TK_LIBS)
 	@$(CXX) -o $@ $< $(LDFLAGS) $(PROFILING) $(ALL_TK_LIBS) $(ALL_LIBS)
 
 .cpp.o:
-	@echo "Compiling `awk 'BEGIN { printf "%-30s", "$<" }'`  [$(ALL_CXXFLAGS:  = )]"
-	@$(CXX) -c $(ALL_CXXFLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_DEBUG_FLAGS) $(ALL_INCLUDE) -DSHAREDIR='"$(DATADIR)"' -DSCIDB_VERSION='"26.07.19-b4-Beta"' -DSCIDB_REVISION='"1497"' $<
+	@echo "Compiling $@  [$(ALL_CXXFLAGS:  = )]"
+	@$(CXX) -c $(ALL_CXXFLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_DEBUG_FLAGS) $(ALL_INCLUDE) -DSHAREDIR="$(DATADIR)" -DSCIDB_VERSION="26.07.23-b1-Beta" -DSCIDB_REVISION="1532" $<
 
 # vi:set ts=3 sw=3:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
