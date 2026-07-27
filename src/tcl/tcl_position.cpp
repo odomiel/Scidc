@@ -28,6 +28,8 @@
 #include "tcl_application.h"
 #include "tcl_base.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "app_application.h"
 #include "app_cursor.h"
 
@@ -140,7 +142,7 @@ pos::dumpFen(mstl::string const& position, variant::Type variant, mstl::string& 
 /// a move. Used for smart move completion.
 /// Returns -1 if no legal moves go to or from the square.
 static int
-cmdGuess(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGuess(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square square = squareFromObj(objc, objv, 1);
 
@@ -190,7 +192,7 @@ cmdGuess(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGuessNext(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGuessNext(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square square = squareFromObj(objc, objv, 1);
 
@@ -237,7 +239,7 @@ cmdGuessNext(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSearchDepth(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSearchDepth(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	m_searchDepth = unsignedFromObj(objc, objv, 1);
 	resetMoveCache();
@@ -246,7 +248,7 @@ cmdSearchDepth(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStm(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdStm(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(color::isWhite(Scidb->game().currentBoard().sideToMove()) ? "w" : "b");
 	return TCL_OK;
@@ -254,7 +256,7 @@ cmdStm(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdNextMoves(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdNextMoves(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj* result = Tcl_NewListObj(0, 0);
 
@@ -263,7 +265,7 @@ cmdNextMoves(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	if (game.subVariationCount() > 0)
 	{
-		for (int i = -1; i < int(game.subVariationCount()); ++i)
+		for (Tcl_Size i = -1; i < int(game.subVariationCount()); ++i)
 		{
 			mstl::string	san;
 			Move				move(i == -1 ? game.nextMove() : game.nextMove(i));
@@ -285,7 +287,7 @@ cmdNextMoves(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDestination(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdDestination(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Game const& game = Scidb->game();
 	int dest = -1;
@@ -299,7 +301,7 @@ cmdDestination(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdBoard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdBoard(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	mstl::string result;
 	dumpBoard(Scidb->game().currentBoard(), result);
@@ -309,7 +311,7 @@ cmdBoard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdChecks(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdChecks(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj *objs[2];
 
@@ -329,7 +331,7 @@ cmdChecks(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->game().currentBoard().toFen(Scidb->game().variant()));
 	return TCL_OK;
@@ -337,7 +339,7 @@ cmdFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->game().setStartPosition(stringFromObj(objc, objv, 1));
 	return TCL_OK;
@@ -345,7 +347,7 @@ cmdSetup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIdn(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdIdn(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->game().currentBoard().computeIdn(Scidb->game().variant()));
 	return TCL_OK;
@@ -353,7 +355,7 @@ cmdIdn(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdValid(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdValid(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square sq1 = squareFromObj(objc, objv, 1);
 	Square sq2 = squareFromObj(objc, objv, 2);
@@ -408,7 +410,7 @@ cmdValid(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLegal(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLegal(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square sq1 = squareFromObj(objc, objv, 1);
 	Square sq2 = squareFromObj(objc, objv, 2);
@@ -468,7 +470,7 @@ cmdLegal(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPromotion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPromotion(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square sq1 = squareFromObj(objc, objv, 1);
 	Square sq2 = squareFromObj(objc, objv, 2);
@@ -509,7 +511,7 @@ cmdPromotion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInHand(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInHand(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool sideToMoveOnly = false;
 	Square destination = sq::Null;
@@ -527,7 +529,7 @@ cmdInHand(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		}
 	}
 
-	for (int i = firstArg; i < objc; ++i)
+	for (Tcl_Size i = firstArg; i < objc; ++i)
 	{
 		if (strcmp(Tcl_GetString(objv[i]), "-stm") == 0)
 		{
@@ -596,7 +598,7 @@ cmdInHand(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSan(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSan(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Square	sq1	= squareFromObj(objc, objv, 1);
 	Square	sq2	= squareFromObj(objc, objv, 2);

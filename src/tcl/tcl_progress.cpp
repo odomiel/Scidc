@@ -20,6 +20,8 @@
 #include "tcl_exception.h"
 #include "tcl_base.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "m_string.h"
 
 #include <tcl.h>
@@ -267,12 +269,12 @@ Progress::finish() noexcept
 
 
 static int
-cmdInterrupt(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInterrupt(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool		wait		= false;
 	Tcl_Obj*	inform	= 0;
 
-	for (int i = 1; i < objc; i += 2)
+	for (Tcl_Size i = 1; i < objc; i += 2)
 	{
 		char const* option = stringFromObj(objc, objv, i);
 
@@ -301,7 +303,7 @@ cmdInterrupt(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInterruptable(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInterruptable(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(m_currentProgress && m_currentProgress->interruptable());
 	return TCL_OK;

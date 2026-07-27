@@ -6,6 +6,10 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den 4 Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.07.27
+
+- **b1** – Modernisierung: Phase 8 Teil 3 – Tcl_Size-Anpassungen für Command-Funktionen (int objc → Tcl_Size objc) und lokale Variablen in allen C++-Dateien (tcl_application.cpp, tcl_board.cpp, tcl_compare.cpp, tcl_crosstable.cpp, tcl_database.cpp, tcl_engine.cpp, tcl_game.cpp, tcl_misc.cpp, tcl_player.cpp, tcl_position.cpp, tcl_progress.cpp, tcl_sort.cpp, tcl_tree.cpp, tcl_view.cpp, tcl_zlib.cpp, tk_busy.cpp, tk_image.cpp, tk_jpeg.cpp, tk_multiwindow.cpp, tk_notebook.cpp, tk_panedwindow.cpp, tk_png.cpp, tk_selection.cpp, tk_session_manager.cpp, tk_twm.cpp, tk_window_manager.cpp, tk_x11.cpp, sys_utf8_codec.cpp)
+
 ## 26.07.23
 
 - **b1** – Modernisierung: Phase 8 Teil 2 – Tcl_Size-Anpassungen für Tcl API-Funktionen (Tcl_ListObjGetElements, Tcl_ListObjLength, Tcl_GetStringFromObj, Tcl_GetByteArrayFromObj) in tcl_base.cpp, tcl_board.cpp, tcl_compare.cpp, tcl_crosstable.cpp, tcl_engine.cpp, tcl_game.cpp, tcl_misc.cpp, tcl_player.cpp, tcl_sort.cpp, tcl_view.cpp, tcl_zlib.cpp, sys_utf8_codec.cpp

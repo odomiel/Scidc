@@ -25,6 +25,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "tcl_base.h"
 
@@ -3066,7 +3067,7 @@ static int
 ObjectIsEmpty(
     Tcl_Obj *objPtr)		/* Object to test. May be NULL. */
 {
-    int length;
+    Tcl_Size length;
 
     if (objPtr == NULL) {
 	return 1;

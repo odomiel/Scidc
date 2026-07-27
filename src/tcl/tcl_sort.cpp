@@ -182,7 +182,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 	bool useMapping	= false;
 	bool indices		= false;
 
-	for (int i = 1; i < objc - 1; i++)
+	for (Tcl_Size i = 1; i < objc - 1; i++)
 	{
 		int index;
 
@@ -294,7 +294,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 	::memset(m_subList, 0, sizeof(m_subList));
 	::memset(m_elements, 0, m_numElements*sizeof(Element));
 
-	for (int i = 0; i < m_numElements; i++)
+	for (Tcl_Size i = 0; i < m_numElements; i++)
 	{
 		Tcl_Obj* indexPtr;
 		Tcl_Obj* currentObj;
@@ -351,7 +351,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 
 	if (useMapping)
 	{
-		for (int i = 0; i < m_numElements; i++)
+		for (Tcl_Size i = 0; i < m_numElements; i++)
 			Tcl_IncrRefCount(m_elements[i].m_mapped);
 	}
 
@@ -378,7 +378,7 @@ Sort::selectObjFromSublist(Tcl_Obj *objPtr, Tcl_Obj** currentObj)
 	if (m_indexCount == 0)
 		return objPtr;
 
-	for (int i = 0; i < m_indexCount; i++)
+	for (Tcl_Size i = 0; i < m_indexCount; i++)
 	{
 		Tcl_Size listLen;
 

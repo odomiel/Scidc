@@ -845,7 +845,7 @@ Parser::parse()
 									{
 										processModes();
 
-										for (int j = 0; j < len; ++j)
+										for (Tcl_Size j = 0; j < len; ++j)
 										{
 											switch (str[j])
 											{
@@ -937,7 +937,7 @@ Parser::parse()
 
 
 static int
-cmdFitsRegion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFitsRegion(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(sys::utf8::Codec::fitsRegion(stringFromObj(objc, objv, 2),
 														unsignedFromObj(objc, objv, 1)));
@@ -946,7 +946,7 @@ cmdFitsRegion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIsAscii(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdIsAscii(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(mstl::string::is_7bit(stringFromObj(objc, objv, 1)));
 	return TCL_OK;
@@ -954,7 +954,7 @@ cmdIsAscii(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdToAscii(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdToAscii(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	mstl::string buffer;
 	setResult(sys::utf8::Codec::convertToNonDiacritics(unsignedFromObj(objc, objv, 1),
@@ -965,7 +965,7 @@ cmdToAscii(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdXmlToList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdXmlToList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	// cannot use ::db::i18n::None due to a g++ bug
 	::db::Comment comment(stringFromObj(objc, objv, 1), 0);
@@ -1004,7 +1004,7 @@ cmdXmlToList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdXmlFromList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdXmlFromList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	mstl::string space;
 
@@ -1029,7 +1029,7 @@ cmdXmlFromList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdXmlTokenize(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdXmlTokenize(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* str = stringFromObj(objc, objv, 1);
 
@@ -1062,7 +1062,7 @@ cmdXmlTokenize(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdXml(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdXml(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* command = stringFromObj(objc, objv, 1);
 
@@ -1080,7 +1080,7 @@ cmdXml(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCrc32(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* s = stringFromObj(objc, objv, 1);
 	setResult(int64_t(crc::compute(0, s, ::strlen(s))));
@@ -1089,7 +1089,7 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVersion(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult("26.07.19 b4 Beta");
 	return TCL_OK;
@@ -1097,7 +1097,7 @@ cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdRevision(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdRevision(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(SCIDB_REVISION);
 	return TCL_OK;
@@ -1105,7 +1105,7 @@ cmdRevision(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDebug(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdDebug(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(int(mstl::backtrace::is_debug_mode()));
 	return TCL_OK;
@@ -1113,7 +1113,7 @@ cmdDebug(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDirEmpty(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdDirEmpty(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::sys::file::dirIsEmpty(stringFromObj(objc, objv, 1)));
 	return TCL_OK;
@@ -1121,7 +1121,7 @@ cmdDirEmpty(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLookup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* which = stringFromObj(objc, objv, 1);
 
@@ -1170,7 +1170,7 @@ cmdLookup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSize(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSize(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(tcl::db::countNumGames(stringFromObj(objc, objv, 1)));
 	return TCL_OK;
@@ -1178,7 +1178,7 @@ cmdSize(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdAttributes(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdAttributes(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	mstl::string	description;
 	int				numGames;
@@ -1213,7 +1213,7 @@ cmdAttributes(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdZipContent(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdZipContent(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	ZStream::Strings result = ZStream::zipContent(stringFromObj(objc, objv, 1));
 
@@ -1231,7 +1231,7 @@ cmdZipContent(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSuffixes(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSuffixes(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	mstl::string filename(stringFromObj(objc, objv, 1));
 	mstl::string extension(::util::misc::file::suffix(filename));
@@ -1258,7 +1258,7 @@ cmdSuffixes(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMapExtension(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMapExtension(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* Extensions[] = { "sci", "si3", "si4", "si5", "cbh", "cbf", "CBF" };
 
@@ -1288,7 +1288,7 @@ cmdMapExtension(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdExtraTags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdExtraTags(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool (*isExtraTagFunc)(::db::tag::ID);
 
@@ -1314,7 +1314,7 @@ cmdExtraTags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdEncoding(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdEncoding(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* text = stringFromObj(objc, objv, 1);
 
@@ -1328,7 +1328,7 @@ cmdEncoding(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdHardLinked(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHardLinked(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::sys::file::isHardLinked(stringFromObj(objc, objv, 1), stringFromObj(objc, objv, 2)));
 	return TCL_OK;
@@ -1336,7 +1336,7 @@ cmdHardLinked(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdHtmlHyphenate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHtmlHyphenate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 	{
@@ -1360,7 +1360,7 @@ cmdHtmlHyphenate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdHtmlLigatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHtmlLigatures(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 2)
 	{
@@ -1380,7 +1380,7 @@ cmdHtmlLigatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdHtmlSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHtmlSearch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc < 3)
 	{
@@ -1396,7 +1396,7 @@ cmdHtmlSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	unsigned maxMatches = unsigned(-1);
 
-	for (int i = 1; i < objc - 2; ++i)
+	for (Tcl_Size i = 1; i < objc - 2; ++i)
 	{
 		char const* option = Tcl_GetString(objv[i]);
 
@@ -1457,7 +1457,7 @@ cmdHtmlSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdHtmlCache(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHtmlCache(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool flag = boolFromObj(objc, objv, 1);
 
@@ -1471,7 +1471,7 @@ cmdHtmlCache(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const obj
 
 
 static int
-cmdHtml(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdHtml(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* command = stringFromObj(objc, objv, 1);
 
@@ -1492,7 +1492,7 @@ cmdHtml(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUrlEscape(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUrlEscape(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	typedef sys::utf8::uchar uchar;
 	typedef sys::utf8::uchar byte;
@@ -1529,7 +1529,7 @@ cmdUrlEscape(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const obj
 
 
 static int
-cmdUrlUnescape(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUrlUnescape(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* p = stringFromObj(objc, objv, 1);
 	char const* e = p + ::strlen(p);
@@ -1560,7 +1560,7 @@ cmdUrlUnescape(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 
 
 static int
-cmdUrl(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUrl(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* command = stringFromObj(objc, objv, 1);
 
@@ -1577,7 +1577,7 @@ cmdUrl(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int savedStderr_g = -1;
 
 static int
-cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetLogFile(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 2)
 	{
@@ -1621,7 +1621,7 @@ cmdSetLogFile(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetModTime(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetModTime(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* filename = stringFromObj(objc, objv, 1);
 	long time = longFromObj(objc, objv, 2);
@@ -1632,7 +1632,7 @@ cmdSetModTime(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const ob
 
 
 static int
-cmdGeometryRequest(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGeometryRequest(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tk_Window tkwin = Tk_NameToWindow(ti, stringFromObj(objc, objv, 1), Tk_MainWindow(ti));
 
@@ -1646,7 +1646,7 @@ cmdGeometryRequest(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* con
 
 
 static int
-cmdMapWindow(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMapWindow(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tk_Window tkwin = Tk_NameToWindow(ti, stringFromObj(objc, objv, 1), Tk_MainWindow(ti));
 
@@ -1659,7 +1659,7 @@ cmdMapWindow(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const obj
 
 
 static int
-cmdPredPow2(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPredPow2(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned x = unsignedFromObj(objc, objv, 1);
 
@@ -1672,7 +1672,7 @@ cmdPredPow2(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv
 
 
 static int
-cmdSuccPow2(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSuccPow2(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned x = unsignedFromObj(objc, objv, 1);
 
@@ -1687,7 +1687,7 @@ cmdSuccPow2(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv
 
 
 static int
-cmdNumberOfProcessors(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdNumberOfProcessors(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::sys::info::numberOfProcessors());
 	return TCL_OK;
@@ -1695,7 +1695,7 @@ cmdNumberOfProcessors(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* 
 
 
 static int
-cmdMinYear(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMinYear(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::db::Date::MinYear);
 	return TCL_OK;
@@ -1703,7 +1703,7 @@ cmdMinYear(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 
 
 static int
-cmdMaxYear(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMaxYear(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::db::Date::MaxYear);
 	return TCL_OK;
@@ -1711,7 +1711,7 @@ cmdMaxYear(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 
 
 static int
-cmdMapCodeToNag(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMapCodeToNag(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(int(::db::nag::fromSymbol(stringFromObj(objc, objv, 1))));
 	return TCL_OK;
@@ -1719,7 +1719,7 @@ cmdMapCodeToNag(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const 
 
 
 static int
-cmdContainsUnicodeChar(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdContainsUnicodeChar(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* s = stringFromObj(objc, objv, 1);
 
@@ -1738,7 +1738,7 @@ cmdContainsUnicodeChar(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj*
 
 
 static int
-cmdMemAvail(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMemAvail(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Tcl_NewWideIntObj(::sys::info::memAvail()));
 	return TCL_OK;
@@ -1746,7 +1746,7 @@ cmdMemAvail(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv
 
 
 static int
-cmdMemFree(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMemFree(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Tcl_NewWideIntObj(::sys::info::memFree()));
 	return TCL_OK;
@@ -1754,7 +1754,7 @@ cmdMemFree(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 
 
 static int
-cmdMemTotal(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMemTotal(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Tcl_NewWideIntObj(::sys::info::memTotal()));
 	return TCL_OK;
@@ -1762,7 +1762,7 @@ cmdMemTotal(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv
 
 
 static int
-cmdEmoticons(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdEmoticons(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* Emoticons[] =
 	{
@@ -1816,7 +1816,7 @@ cmdEmoticons(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const obj
 
 
 static int
-cmdJulianDay(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdJulianDay(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	sys::time::Time tm;
 	sys::time::localtime(sys::time::time(), tm);

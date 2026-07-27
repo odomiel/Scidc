@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "jpeg_image.h"
 #include "jpeg_reader.h"
@@ -264,7 +265,7 @@ str_read_jpeg(	Tcl_Interp* ti,
 					int width, int height,
 					int src_x, int src_y)
 {
-	int length;
+	Tcl_Size length;
 	unsigned char* data = Tcl_GetByteArrayFromObj(dataObj, &length);
 
 	JPEG::Image::Magic magic;
@@ -302,7 +303,7 @@ str_read_jpeg(	Tcl_Interp* ti,
 static int
 str_match_jpeg(Tcl_Obj* dataObj, Tcl_Obj*, int* width, int* height, Tcl_Interp* ti)
 {
-	int length;
+	Tcl_Size length;
 	unsigned char* data = Tcl_GetByteArrayFromObj(dataObj, &length);
 
 	if (length < int(sizeof(JPEG::Image::Magic)))

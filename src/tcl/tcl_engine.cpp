@@ -634,7 +634,7 @@ write(void* cookie, char const* buf, size_t len)
 
 
 static int
-cmdLog(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLog(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static cookie_io_functions_t Cookie = { read, write, seek, close };
 
@@ -677,14 +677,14 @@ cmdLog(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdProbe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdProbe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj*		commands		= objectFromObj(objc, objv, 1);
 	char const*	directory	= stringFromObj(objc, objv, 2);
 	char const*	protocol		= stringFromObj(objc, objv, 3);
 	unsigned		timeout		= 2000;
 	Tcl_Obj**	objs;
-	int			size;
+	Tcl_Size	size;
 
 	if (objc >= 5)
 		timeout = unsignedFromObj(objc, objv, 4);
@@ -702,7 +702,7 @@ cmdProbe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return error(CmdProbe, 0, 0, "list expected");
 
 	::app::Engine::Command command;
-	for (int i = 0; i < size; ++i)
+	for (Tcl_Size i = 0; i < size; ++i)
 		command.push_back(Tcl_GetString(objs[i]));
 
 	ProbeEngine engine(prot, command, directory);
@@ -896,7 +896,7 @@ cmdProbe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdStart(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj*		commands		= objectFromObj(objc, objv, 1);
 	char const*	directory	= stringFromObj(objc, objv, 2);
@@ -906,7 +906,7 @@ cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	Tcl_Obj*		updateCmd	= objectFromObj(objc, objv, 6);
 	Tcl_Obj*		clientData	= objectFromObj(objc, objv, 7);
 	Tcl_Obj**	objs;
-	int			size;
+	Tcl_Size	size;
 
 	Engine::Protocol prot;
 
@@ -921,7 +921,7 @@ cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		return error(CmdStart, 0, 0, "list expected");
 
 	::app::Engine::Command command;
-	for (int i = 0; i < size; ++i)
+	for (Tcl_Size i = 0; i < size; ++i)
 		command.push_back(Tcl_GetString(objs[i]));
 
 	Engine* engine = new Engine(prot, command, directory, isReadyCmd, signalCmd, updateCmd, clientData);
@@ -935,7 +935,7 @@ cmdStart(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdActivate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdActivate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -947,7 +947,7 @@ cmdActivate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetFeatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetFeatures(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -984,7 +984,7 @@ cmdSetFeatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		if ((size % 2) == 1)
 			return error(CmdActivate, 0, 0, "feature list must have even size");
 
-		for (int i = 0; i < size; i += 2)
+		for (Tcl_Size i = 0; i < size; i += 2)
 		{
 			int index;
 
@@ -1045,7 +1045,7 @@ cmdSetFeatures(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetOptions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetOptions(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1073,7 +1073,7 @@ cmdSetOptions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 				if ((size % 2) == 1)
 					return error(CmdActivate, 0, 0, "options list must have even size");
 
-				for (int i = 0; i < size; i += 2)
+				for (Tcl_Size i = 0; i < size; i += 2)
 					engine->setOption(Tcl_GetString(objs[i]), Tcl_GetString(objs[i + 1]));
 
 				break;
@@ -1088,7 +1088,7 @@ cmdSetOptions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdStop(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1100,7 +1100,7 @@ cmdStop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdAnalyze(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdAnalyze(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*	cmd	= stringFromObj(objc, objv, 1);
 	unsigned		id		= unsignedFromObj(objc, objv, 2);
@@ -1130,7 +1130,7 @@ cmdAnalyze(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj* result = Tcl_NewListObj(0, 0);
 
@@ -1142,7 +1142,7 @@ cmdList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	::db::Player const* player = ::db::Player::findPlayer(stringFromObj(objc, objv, 1));
 
@@ -1189,7 +1189,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInvoke(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInvoke(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1201,7 +1201,7 @@ cmdInvoke(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdClearHash(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdClearHash(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1213,7 +1213,7 @@ cmdClearHash(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCountLines(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCountLines(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1227,7 +1227,7 @@ cmdCountLines(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdKill(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdKill(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1239,7 +1239,7 @@ cmdKill(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPause(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPause(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1251,7 +1251,7 @@ cmdPause(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdResume(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdResume(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1263,7 +1263,7 @@ cmdResume(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdOrdering(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdOrdering(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 	char const* ordering = stringFromObj(objc, objv, 2);
@@ -1287,7 +1287,7 @@ cmdOrdering(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMultiPV(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMultiPV(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 	unsigned value = unsignedFromObj(objc, objv, 2);
@@ -1300,7 +1300,7 @@ cmdMultiPV(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPriority(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPriority(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 	char const* priority = stringFromObj(objc, objv, 2);
@@ -1325,7 +1325,7 @@ cmdPriority(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdActive(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdActive(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1339,7 +1339,7 @@ cmdActive(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVariant(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1357,7 +1357,7 @@ cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdEmpty(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdEmpty(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned	id		= unsignedFromObj(objc, objv, 1);
 	unsigned line	= unsignedFromObj(objc, objv, 2);
@@ -1372,7 +1372,7 @@ cmdEmpty(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSnapshot(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSnapshot(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned			id = unsignedFromObj(objc, objv, 1);
 	mstl::string	rc;
@@ -1507,7 +1507,7 @@ cmdSnapshot(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdBind(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdBind(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 
@@ -1522,7 +1522,7 @@ cmdBind(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdBound(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdBound(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned id = unsignedFromObj(objc, objv, 1);
 

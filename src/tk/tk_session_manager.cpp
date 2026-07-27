@@ -18,6 +18,8 @@
 
 #include "tk_session_manager.h"
 
+#include "sys_compat_tcl9.h"
+
 #if !defined(__WIN32__) && !defined(__MacOSX__)
 
 #include <tk.h>
@@ -142,7 +144,7 @@ determineCommandAndArguments(Tcl_Interp* ti)
 		if ((m_argv = getVar(ti, "argv")) == 0)
 			return setError(ti, "couldn't get value of variable 'argv'");
 
-		int n;
+		Tcl_Size n;
 		if (Tcl_ListObjLength(ti, m_argv, &n) != TCL_OK)
 			return setError(ti, "'argv' is not a list object");
 
@@ -157,7 +159,7 @@ determineCommandAndArguments(Tcl_Interp* ti)
 				return setError(ti, "couldn't get value of variable 'argv0'");
 		}
 
-		int objc = 0;
+		Tcl_Size objc = 0;
 		Tcl_Obj** objv = 0;
 		Tcl_ListObjGetElements(ti, m_argv, &objc, &objv);
 
@@ -191,7 +193,7 @@ determineCommandAndArguments(Tcl_Interp* ti)
 			objs[objn++] = geometry;
 		}
 
-		for (int i = 0; i < objc; ++i)
+		for (Tcl_Size i = 0; i < objc; ++i)
 		{
 			if (strcmp(Tcl_GetString(objv[i]), SessionIdOption) != 0)
 				objs[objn++] = objv[i];
@@ -313,7 +315,7 @@ callbackSaveYourself(SmcConn smcConn,
 {
 	if (m_setProps)
 	{
-		int objc = 0;
+		Tcl_Size objc = 0;
 		Tcl_Obj** objv = 0;
 		Tcl_Interp* ti = (Tcl_Interp*)(clientData);
 
@@ -367,7 +369,7 @@ callbackSaveYourself(SmcConn smcConn,
 			prop[3].num_vals = 1;
 		}
 
-		for (int i = 0; i < objc; ++i)
+		for (Tcl_Size i = 0; i < objc; ++i)
 		{
 			vals.clone[i].value = Tcl_GetString(objv[i]);
 			vals.clone[i].length = strlen(Tcl_GetString(objv[i]));
@@ -537,7 +539,7 @@ sessionInit(Tcl_Interp* ti)
 
 
 static int
-cmdConfigure(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[], bool isConnect)
+cmdConfigure(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[], bool isConnect)
 {
 	for (int i = 2; i + 1 < objc; i+= 2)
 	{
@@ -593,7 +595,7 @@ cmdConfigure(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[], bool isConnect)
 
 
 static int
-cmdGet(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdGet(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		return setError(ti, "wrong # args; should be 'get argument'");
@@ -624,7 +626,7 @@ cmdGet(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdConnect(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdConnect(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (getenv("SESSION_MANAGER") == 0)
 	{
@@ -646,7 +648,7 @@ cmdConnect(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDisconnect(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdDisconnect(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	closeConnection();
 	return TCL_OK;
@@ -654,7 +656,7 @@ cmdDisconnect(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSaveYourself(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdSaveYourself(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (m_connection == 0)
 		return setError(ti, "not connected to session manager");
@@ -684,7 +686,7 @@ cmdSaveYourself(Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSessionManager(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdSessionManager(ClientData, Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc < 2)
 		return setError(ti, "wrong # args; should be 'subcommand ?argument ...?'");

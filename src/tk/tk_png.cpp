@@ -116,6 +116,8 @@
 #include <memory.h>
 #include <limits.h>
 
+#include "sys_compat_tcl9.h"
+
 #include <zlib.h>
 #include <math.h>
 #include "tcl.h"

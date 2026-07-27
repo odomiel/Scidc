@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_assert.h"
 #include "m_string.h"
@@ -510,7 +511,7 @@ selectionSend(	Tcl_Interp* ti,
 	{
 		case 8:
 			{
-				int	srcLen;
+				Tcl_Size	srcLen;
 				char*	src		= Tcl_GetStringFromObj(data, &srcLen);
 
 				Tcl_DString ds;
@@ -558,14 +559,14 @@ selectionSend(	Tcl_Interp* ti,
 
 		case 16:
 			{
-				int nfields;
+				Tcl_Size nfields;
 				Tcl_Obj** field;
 
 				if ((success = Tcl_ListObjGetElements(ti, data, &nfields, &field)))
 				{
 					uint16_t* props = reinterpret_cast<uint16_t*>(Tcl_Alloc(sizeof(uint16_t)*nfields));
 
-					for (int i = 0; i< nfields; ++i)
+					for (Tcl_Size i = 0; i< nfields; ++i)
 						props[i] = strtol(Tcl_GetString(field[i]), 0, 0);
 
 					XChangeProperty(
@@ -585,14 +586,14 @@ selectionSend(	Tcl_Interp* ti,
 
 		case 32:
 			{
-				int nfields;
+				Tcl_Size nfields;
 				Tcl_Obj** field;
 
 				if ((success = Tcl_ListObjGetElements(ti, data, &nfields, &field)))
 				{
 					uint32_t* props = reinterpret_cast<uint32_t*>(Tcl_Alloc(sizeof(uint32_t)*nfields));
 
-					for (int i = 0; i< nfields; ++i)
+					for (Tcl_Size i = 0; i< nfields; ++i)
 						props[i] = strtol(Tcl_GetString(field[i]), 0, 0);
 
 					XChangeProperty(

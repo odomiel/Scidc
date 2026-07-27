@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "tcl_base.h"
 
@@ -377,7 +378,7 @@ SendVirtualEvent(Tk_Window tkwin, const char* eventName)
 static int
 ObjectIsEmpty(Tcl_Obj* objPtr)	// Object to test, may be nullptr
 {
-	int length;
+	Tcl_Size length;
 
 	if (objPtr == nullptr)
 		return 1;
@@ -798,7 +799,7 @@ LayoutTabs(Notebook* nb)
 
 		if (!slave->hide)
 		{
-			int len;
+			Tcl_Size len;
 			char const* str = Tcl_GetStringFromObj(slave->textObj, &len);
 			int textWidth = Tk_TextWidth(nb->tkfont, str, len);
 
@@ -1006,7 +1007,7 @@ DrawTab(Slave* slave, Pixmap pixmap, int x, int y, int height, int selected)
 	Notebook*	nb				= slave->master;
 	Tk_Window	tkwin			= nb->tkwin;
 	Display*		display		= Tk_Display(tkwin);
-	int			len;
+	Tcl_Size			len;
 	char const*	str			= Tcl_GetStringFromObj(slave->textObj, &len);
 	int			underline	= -1;
 	int			width			= slave->tabWidth;

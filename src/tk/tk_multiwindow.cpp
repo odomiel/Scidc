@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 #include "tkInt.h"
 #include "tk_compat.h"
 
@@ -303,7 +304,7 @@ SendVirtualEvent(Tk_Window tkwin, const char* eventName)
 static int
 ObjectIsEmpty(Tcl_Obj* objPtr)	// Object to test, may be nullptr
 {
-	int length;
+	Tcl_Size length;
 
 	if (objPtr == nullptr)
 		return 1;

@@ -282,7 +282,7 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 
 	int n = mstl::div2(nentries);
 
-	for (int i = 0; i < n; i += 2)
+	for (Tcl_Size i = 0; i < n; i += 2)
 	{
 		sys::utf8::uchar index = sys::utf8::getChar(Tcl_GetString(entries[i]));
 
@@ -331,7 +331,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 		::memset(used, 0, sizeof(used));
 		::memset(m_sortOrderTable, 0, sizeof(m_sortOrderTable));
 
-		for (int i = 0; i < nentries; ++i)
+		for (Tcl_Size i = 0; i < nentries; ++i)
 		{
 			Tcl_Obj **subEntries;
 			Tcl_Size nsubEntries;
@@ -367,7 +367,7 @@ tcl::compare::setAlphabeticList(Tcl_Obj* table)
 
 				Tcl_ListObjGetElements(interp(), list, &nentries, &entries);
 
-				for (int k = 1; k < nentries; ++k)
+				for (Tcl_Size k = 1; k < nentries; ++k)
 				{
 					char const* s = Tcl_GetString(entries[k]);
 
