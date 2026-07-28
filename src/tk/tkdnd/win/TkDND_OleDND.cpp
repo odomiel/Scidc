@@ -378,29 +378,29 @@ int DLLEXPORT Tkdnd_Init(Tcl_Interp *interp) {
 
   if (
 #ifdef USE_TCL_STUBS 
-      Tcl_InitStubs(interp, "8.3", 0)
+      Tcl_InitStubs(interp, "8.6-", 0)
 #else
-      Tcl_PkgRequire(interp, "Tcl", "8.3", 0)
+      Tcl_PkgRequire(interp, "Tcl", "8.6-", 0)
 #endif /* USE_TCL_STUBS */
             == NULL) {
             return TCL_ERROR;
   }
   if (
 #ifdef USE_TK_STUBS
-       Tk_InitStubs(interp, "8.3", 0)
+       Tk_InitStubs(interp, "8.6-", 0)
 #else
-       Tcl_PkgRequire(interp, "Tk", "8.3", 0)
+       Tcl_PkgRequire(interp, "Tk", "8.6-", 0)
 #endif /* USE_TK_STUBS */
             == NULL) {
             return TCL_ERROR;
   }
 
   /*
-   * Get the version, because we really need 8.3.3+.
+   * Get the version, because we really need 8.6+.
    */
   Tcl_GetVersion(&major, &minor, &patchlevel, NULL);
-  if ((major == 8) && (minor == 3) && (patchlevel < 3)) {
-    Tcl_SetResult(interp, "tkdnd requires Tk 8.3.3 or greater", TCL_STATIC);
+  if ((major == 8) && (minor < 6)) {
+    Tcl_SetResult(interp, "tkdnd requires Tk 8.6 or greater", TCL_STATIC);
     return TCL_ERROR;
   }
 

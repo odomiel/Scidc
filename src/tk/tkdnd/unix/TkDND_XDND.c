@@ -2029,17 +2029,17 @@ Tkdnd_Init(Tcl_Interp* interp)
 	int major, minor, patchlevel;
 
 #ifdef USE_TCL_STUBS
-	if (!Tcl_InitStubs(interp, "8.3", 0))
+	if (!Tcl_InitStubs(interp, "8.6-", 0))
 		return TCL_ERROR;
 #else /* USE_TCL_STUBS */
-	if (!Tcl_PkgRequire(interp, "Tcl", "8.3", 0))
+	if (!Tcl_PkgRequire(interp, "Tcl", "8.6-", 0))
 		return TCL_ERROR;
 #endif /* USE_TCL_STUBS */
 #ifdef USE_TK_STUBS
-	if (!Tk_InitStubs(interp, "8.3", 0))
+	if (!Tk_InitStubs(interp, "8.6-", 0))
 		return TCL_ERROR;
 #else /* USE_TK_STUBS */
-	if (!Tcl_PkgRequire(interp, "Tk", "8.3", 0))
+	if (!Tcl_PkgRequire(interp, "Tk", "8.6-", 0))
 		return TCL_ERROR;
 #endif /* USE_TK_STUBS */
 

@@ -3242,17 +3242,17 @@ Tkhtml_Init(Tcl_Interp *interp)
 {
     int rc __attribute__((unused));
 
-    /* Require stubs libraries version 8.4 or greater. */
+    /* Require stubs libraries version 8.6 or greater. */
 #ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(interp, "8.4", 0) == 0) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == 0) {
         return TCL_ERROR;
     }
-    if (Tk_InitStubs(interp, "8.4", 0) == 0) {
+    if (Tk_InitStubs(interp, "8.6-", 0) == 0) {
         return TCL_ERROR;
     }
 #endif
 
-    if (0 == Tcl_PkgRequire(interp, "Tk", "8.4", 0)) {
+    if (0 == Tcl_PkgRequire(interp, "Tk", "8.6-", 0)) {
         return TCL_ERROR;
     }
     Tcl_PkgProvide(interp, "Tkhtml", HTML_PKGVERSION);

@@ -35,8 +35,8 @@ extern "C"
 static int
 tkText_Init(Tcl_Interp *interp)
 {
-    /* Requires stubs libraries version 8.5 or higher. */
-    if (0 == Tcl_PkgRequire(interp, "Tk", "8.5", 0)) {
+    /* Requires stubs libraries version 8.6 or higher. */
+    if (0 == Tcl_PkgRequire(interp, "Tk", "8.6-", 0)) {
         return TCL_ERROR;
     }
 

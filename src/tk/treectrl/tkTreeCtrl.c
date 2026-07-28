@@ -4464,7 +4464,7 @@ Treectrl_Init(
 	)
 {
 #ifdef USE_TCL_STUBS
-	static CONST char *tcl_version = "8.6";
+	static CONST char *tcl_version = "8.6-";
 #endif
 
 #ifdef USE_TCL_STUBS
