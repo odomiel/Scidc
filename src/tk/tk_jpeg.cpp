@@ -113,7 +113,7 @@ ChannelReader::read(unsigned char* buf, size_t len)
 	if (::Tcl_Eof(m_chan))
 		return 0;
 
-	int nbytes = ::Tcl_Read(m_chan, reinterpret_cast<char*>(buf), len);
+	int nbytes = ::Tcl_Read(m_chan, reinterpret_cast<char*>(buf), static_cast<Tcl_Size>(len));
 
 	if (__builtin_expect(nbytes < 0, 0))
 		throw JPEG::Exception("channel read failed");

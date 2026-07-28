@@ -21,6 +21,8 @@
 #include "sys_file.h"
 #include "sys_base.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "tcl_exception.h"
 #include "tcl_base.h"
 
@@ -472,7 +474,7 @@ Process::close()
 
 
 int
-Process::write(char const* msg, int size)
+Process::write(char const* msg, Tcl_Size size)
 {
 	int bytesWritten = Tcl_WriteChars(m_chan, msg, size);
 

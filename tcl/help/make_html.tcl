@@ -27,7 +27,7 @@ exec tclsh "$0" "$@"
 # (at your option) any later version.
 # ======================================================================
 
-package require Tcl 8.6
+package require Tcl 8.6-
 package require Tk 8.6--
 
 wm withdraw .

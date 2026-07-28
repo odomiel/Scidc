@@ -30,8 +30,8 @@
 #! The next line restarts using tkscidc: \
 exec "`dirname "$0"`"/tk`basename $0` "$0" ${1+"$@"}
 
-package require Tcl 8.6
-package require Tk  8.6
+package require Tcl 8.6-
+package require Tk 8.6-
 package require Ttk
 package require tkscidc
 

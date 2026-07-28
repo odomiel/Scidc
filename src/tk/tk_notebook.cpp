@@ -383,9 +383,6 @@ ObjectIsEmpty(Tcl_Obj* objPtr)	// Object to test, may be nullptr
 	if (objPtr == nullptr)
 		return 1;
 
-	if (objPtr->bytes != nullptr)
-		return (objPtr->length == 0);
-
 	Tcl_GetStringFromObj(objPtr, &length);
 	return length == 0;
 }
@@ -668,7 +665,7 @@ SetSticky(	ClientData clientData,
 	{
 		// Convert the sticky specifier into an integer value.
 
-		char* string = Tcl_GetString(*value);
+		char const* string = Tcl_GetString(*value);
 		char	c;
 
 		while ((c = toupper(*string++)) != '\0')
@@ -1501,7 +1498,7 @@ ConfigureSlaves(	Notebook* nb,				// Information about notebook
 
 	for (i = 2; i < objc; i++)
 	{
-		char* arg = Tcl_GetString(objv[i]);
+		char const* arg = Tcl_GetString(objv[i]);
 
 		if (arg[0] == '-')
 			break;

@@ -42,6 +42,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 
 using namespace db;

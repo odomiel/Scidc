@@ -3,7 +3,7 @@
 # \
 exec tclsh "$0" "$@"
 
-package require Tcl 8.6
+package require Tcl 8.6-
 
 set Encoding utf-8
 #set Encoding iso8859-1

@@ -24,13 +24,14 @@
 // (at your option) any later version.
 // ======================================================================
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 #include <zlib.h>
 #include <string.h>
 
 
 static int
-cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc < 2)
 	{
@@ -38,7 +39,7 @@ cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[
 		return TCL_ERROR;
 	}
 
-	int len;
+	Tcl_Size len;
 	char const* data = Tcl_GetStringFromObj(objv[1], &len);
 	unsigned crc = 0;
 

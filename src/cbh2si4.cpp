@@ -47,6 +47,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 
 #ifdef BROKEN_LINKER_HACK

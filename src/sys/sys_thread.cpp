@@ -20,6 +20,8 @@
 #include "sys_info.h"
 #include "sys_base.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "m_assert.h"
 #include "m_stdio.h"
 #include "m_exception.h"
@@ -531,8 +533,8 @@ struct Thread::Synchonize
 		Serialize serialize;
 		int signal;
 
-		Tcl_Read(sync->m_chan, serialize.str, sizeof(serialize));
-		Tcl_Read(sync->m_chan, reinterpret_cast<char*>(&signal), sizeof(int));
+		Tcl_Read(sync->m_chan, serialize.str, Tcl_Size(sizeof(serialize)));
+		Tcl_Read(sync->m_chan, reinterpret_cast<char*>(&signal), Tcl_Size(sizeof(int)));
 
 		sync->m_map[serialize.id]->sendSignal(signal);
 	}

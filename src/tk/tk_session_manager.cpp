@@ -502,7 +502,7 @@ sessionInit(Tcl_Interp* ti)
 	SmcCallbacks callbacks;
 
 	char	errorBuf[4096] = "";
-	char*	previousId = m_sessionId ? Tcl_GetString(m_sessionId) : 0;
+	char const*	previousId = m_sessionId ? Tcl_GetString(m_sessionId) : 0;
 	char*	clientId = 0;
 
 	m_connection = SmcOpenConnection(0,

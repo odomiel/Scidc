@@ -19,6 +19,7 @@
 #include "tk_init.h"
 #include "tk_session_manager.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 #include <tkInt.h>
 #include "tk_compat.h"

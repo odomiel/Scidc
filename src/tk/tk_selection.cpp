@@ -512,7 +512,7 @@ selectionSend(	Tcl_Interp* ti,
 		case 8:
 			{
 				Tcl_Size	srcLen;
-				char*	src		= Tcl_GetStringFromObj(data, &srcLen);
+				char const*	src		= Tcl_GetStringFromObj(data, &srcLen);
 
 				Tcl_DString ds;
 				Tcl_DStringInit(&ds);

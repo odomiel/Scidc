@@ -686,7 +686,7 @@ PNGRead(Tcl_Interp* interp, PNGImage* pPNG,
 	{
 		int blockSz = PNG_MIN(destSz, PNG_BLOCK_SZ);
 
-		blockSz = Tcl_Read(pPNG -> mChannel, (char *)pDest, blockSz);
+		blockSz = Tcl_Read(pPNG -> mChannel, (char *)pDest, static_cast<Tcl_Size>(blockSz));
 
 		/* Check for read failure */
 
