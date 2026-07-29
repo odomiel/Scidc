@@ -207,7 +207,7 @@ Progress::message(mstl::string const& msg)
 {
 	if (m_sendMessage)
 	{
-		Tcl_Obj* message = Tcl_NewStringObj(msg, msg.size());
+		Tcl_Obj* message = Tcl_NewStringObj(msg, Tcl_SizeFromSizeT(msg.size()));
 		Tcl_IncrRefCount(message);
 		invoke(__func__, m_cmd, ::m_message, m_arg, message, nullptr);
 		Tcl_DecrRefCount(message);

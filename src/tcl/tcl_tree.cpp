@@ -221,7 +221,7 @@ cmdList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 			case format::Scid5:
 			case format::Scidb:
 				mstl::string const& name = cursors[i]->database().name();
-				objs[objc++] = Tcl_NewStringObj(name, name.size());
+				objs[objc++] = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 				break;
 		}
 	}
@@ -433,13 +433,13 @@ cmdFetch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 			Tcl_Obj* objvBestPlayer[2] =
 			{
-				Tcl_NewStringObj(best, best.size()),
+				Tcl_NewStringObj(best, Tcl_SizeFromSizeT(best.size())),
 				Tcl_NewIntObj(info.bestPlayer().playerHighestRating(tree->ratingType())),
 			};
 
 			Tcl_Obj* objvMostFrequentPlayer[2] =
 			{
-				Tcl_NewStringObj(most, most.size()),
+				Tcl_NewStringObj(most, Tcl_SizeFromSizeT(most.size())),
 				Tcl_NewIntObj(info.mostFrequentPlayer().frequency()),
 			};
 
@@ -451,7 +451,7 @@ cmdFetch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				Tcl_NewIntObj(info.result(::db::result::Lost)),
 			};
 
-			v[attribute::tree::Move              ] = Tcl_NewStringObj(move, move.size());
+			v[attribute::tree::Move              ] = Tcl_NewStringObj(move, Tcl_SizeFromSizeT(move.size()));
 			v[attribute::tree::Eco               ] = Tcl_NewStringObj(info.eco().asString(), -1);
 			v[attribute::tree::Frequency         ] = Tcl_NewIntObj(info.frequency());
 			v[attribute::tree::Score             ] = Tcl_NewIntObj(info.score());

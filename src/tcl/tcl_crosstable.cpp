@@ -388,8 +388,8 @@ cmdEmit(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		log.set_size(log.size() - 1);
 
 	Tcl_Obj* args[2];
-	args[0] = Tcl_NewStringObj(htm, htm.size());
-	args[1] = Tcl_NewStringObj(log, log.size());
+	args[0] = Tcl_NewStringObj(htm, Tcl_SizeFromSizeT(htm.size()));
+	args[1] = Tcl_NewStringObj(log, Tcl_SizeFromSizeT(log.size()));
 
 	setResult(2, args);
 	return TCL_OK;

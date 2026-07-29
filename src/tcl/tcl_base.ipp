@@ -20,6 +20,8 @@
 #include "m_string.h"
 #include "m_assert.h"
 
+#include "sys_compat_tcl9.h"
+
 #include <string.h>
 
 namespace tcl { namespace bits { extern Tcl_Interp* interp; } }
@@ -81,7 +83,7 @@ Tcl_Obj*
 tcl::newObj(mstl::string const& s)
 {
 	M_REQUIRE(s);
-	return Tcl_NewStringObj(s.c_str(), s.size());
+	return Tcl_NewStringObj(s.c_str(), Tcl_SizeFromSizeT(s.size()));
 }
 
 

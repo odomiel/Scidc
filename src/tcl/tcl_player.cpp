@@ -292,14 +292,14 @@ getInfo(	NamebasePlayer const* player,
 	};
 
 	objv[attribute::player::Name      ] = Tcl_NewStringObj(*name, name->size());
-	objv[attribute::player::FideID    ] = Tcl_NewStringObj(fideID, fideID.size());
-	objv[attribute::player::Sex       ] = Tcl_NewStringObj(sex, sex.size());
+	objv[attribute::player::FideID    ] = Tcl_NewStringObj(fideID, Tcl_SizeFromSizeT(fideID.size()));
+	objv[attribute::player::Sex       ] = Tcl_NewStringObj(sex, Tcl_SizeFromSizeT(sex.size()));
 	objv[attribute::player::Rating1   ] = Tcl_NewListObj(3, ratingObj1);
 	objv[attribute::player::Rating2   ] = Tcl_NewListObj(3, ratingObj2);
-	objv[attribute::player::RatingType] = Tcl_NewStringObj(ratingType, ratingType.size());
+	objv[attribute::player::RatingType] = Tcl_NewStringObj(ratingType, Tcl_SizeFromSizeT(ratingType.size()));
 	objv[attribute::player::Country   ] = Tcl_NewStringObj(federationCode, -1);
-	objv[attribute::player::Title     ] = Tcl_NewStringObj(title, title.size());
-	objv[attribute::player::Type      ] = Tcl_NewStringObj(species, species.size());
+	objv[attribute::player::Title     ] = Tcl_NewStringObj(title, Tcl_SizeFromSizeT(title.size()));
+	objv[attribute::player::Type      ] = Tcl_NewStringObj(species, Tcl_SizeFromSizeT(species.size()));
 	objv[attribute::player::PlayerInfo] = Tcl_NewBooleanObj(haveInfo);
 	objv[attribute::player::Frequency ] = Tcl_NewIntObj(player ? player->frequency() : 0);
 
@@ -347,12 +347,12 @@ getInfo(	NamebasePlayer const* player,
 
 		objv[attribute::player::DateOfBirth  ] = Tcl_NewStringObj(dateOfBirth.asShortString(), -1);
 		objv[attribute::player::DateOfDeath  ] = Tcl_NewStringObj(dateOfDeath.asShortString(), -1);
-		objv[attribute::player::DsbID        ] = Tcl_NewStringObj(dsbID, dsbID.size());
-		objv[attribute::player::EcfID        ] = Tcl_NewStringObj(ecfID, ecfID.size());
+		objv[attribute::player::DsbID        ] = Tcl_NewStringObj(dsbID, Tcl_SizeFromSizeT(dsbID.size()));
+		objv[attribute::player::EcfID        ] = Tcl_NewStringObj(ecfID, Tcl_SizeFromSizeT(ecfID.size()));
 		objv[attribute::player::IccfID       ] = iccfID ? Tcl_NewIntObj(iccfID) : Tcl_NewStringObj(0, 0);
 		objv[attribute::player::ViafID       ] = viafID ? Tcl_NewIntObj(viafID) : Tcl_NewStringObj(0, 0);
-		objv[attribute::player::PndID        ] = Tcl_NewStringObj(pndID, pndID.size());
-		objv[attribute::player::ChessgComLink] = Tcl_NewStringObj(chessgamesID, chessgamesID.size());
+		objv[attribute::player::PndID        ] = Tcl_NewStringObj(pndID, Tcl_SizeFromSizeT(pndID.size()));
+		objv[attribute::player::ChessgComLink] = Tcl_NewStringObj(chessgamesID, Tcl_SizeFromSizeT(chessgamesID.size()));
 		objv[attribute::player::WikiLink     ] = wikiLinkList ? wikiLinkList : Tcl_NewListObj(0, 0);
 		objv[attribute::player::Aliases      ] = aliasList ? aliasList : Tcl_NewListObj(0, 0);
 
@@ -543,14 +543,14 @@ cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 #if 0
 		if (titleYear && player.titleYear()) s.format(":%u", unsigned(player.titleYear()));
 #endif
-		titles[numTitles++] = Tcl_NewStringObj(s, s.size());
+		titles[numTitles++] = Tcl_NewStringObj(s, Tcl_SizeFromSizeT(s.size()));
 	}
 #if 0
 	if (player.title2() != title::None)
 	{
 		mstl::string s(title::toString(player.title2()));
 		if (titleYear && player.title2Year()) s.format(":%u", unsigned(player.title2Year()));
-		titles[numTitles++] = Tcl_NewStringObj(s, s.size());
+		titles[numTitles++] = Tcl_NewStringObj(s, Tcl_SizeFromSizeT(s.size()));
 	}
 
 	mstl::string specialTitle;
@@ -581,7 +581,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 	}
 	else
 	{
-		specialTitles = Tcl_NewStringObj(specialTitle, specialTitle.size());
+		specialTitles = Tcl_NewStringObj(specialTitle, Tcl_SizeFromSizeT(specialTitle.size()));
 	}
 #endif
 

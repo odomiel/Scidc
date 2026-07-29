@@ -168,8 +168,8 @@ PgnReader::warning(	Warning code,
 	objv[4] = tree::variantToString(variant),
 	objv[5] = Tcl_NewStringObj(mstl::string::empty_string, 0);
 	objv[6] = Tcl_NewStringObj(msg, -1);
-	objv[7] = Tcl_NewStringObj(info, info.size());
-	objv[8] = Tcl_NewStringObj(item, item.size());
+	objv[7] = Tcl_NewStringObj(info, Tcl_SizeFromSizeT(info.size()));
+	objv[8] = Tcl_NewStringObj(item, Tcl_SizeFromSizeT(item.size()));
 
 	invoke(__func__, m_cmd, m_arg, nullptr, U_NUMBER_OF(objv), objv);
 }
@@ -228,10 +228,10 @@ PgnReader::error(	Error code,
 	objv[2] = Tcl_NewIntObj(column);
 	objv[3] = gameNo > 0 ? Tcl_NewIntObj(gameNo) : Tcl_NewStringObj("", 0);
 	objv[4] = tree::variantToString(variant),
-	objv[5] = Tcl_NewStringObj(message, message.size());
+	objv[5] = Tcl_NewStringObj(message, Tcl_SizeFromSizeT(message.size()));
 	objv[6] = Tcl_NewStringObj(msg, -1);
-	objv[7] = Tcl_NewStringObj(info, info.size());
-	objv[8] = Tcl_NewStringObj(item, item.size());
+	objv[7] = Tcl_NewStringObj(info, Tcl_SizeFromSizeT(info.size()));
+	objv[8] = Tcl_NewStringObj(item, Tcl_SizeFromSizeT(item.size()));
 
 	invoke(__func__, m_cmd, m_arg, nullptr, U_NUMBER_OF(objv), objv);
 }

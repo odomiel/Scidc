@@ -273,7 +273,7 @@ cmdNextMoves(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 			move.printForDisplay(san, style);
 
 			Tcl_Obj* objs[3];
-			objs[0] = Tcl_NewStringObj(san, san.size());
+			objs[0] = Tcl_NewStringObj(san, Tcl_SizeFromSizeT(san.size()));
 			objs[1] = Tcl_NewIntObj(move.from());
 			objs[2] = Tcl_NewIntObj(move.to());
 

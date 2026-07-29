@@ -44,7 +44,7 @@ namespace {
 struct Monitor : public FileAlterationMonitor
 {
 	Monitor(mstl::string const& proc)
-		:m_proc(Tcl_NewStringObj(proc, proc.size()))
+		:m_proc(Tcl_NewStringObj(proc, Tcl_SizeFromSizeT(proc.size())))
 		,m_ref(0)
 	{
 		Tcl_IncrRefCount(m_proc);
@@ -62,7 +62,7 @@ struct Monitor : public FileAlterationMonitor
 
 	void signal(unsigned id, Tcl_Obj* action, mstl::string const& path)
 	{
-		Tcl_Obj* pathObj	= Tcl_NewStringObj(path, path.size());
+		Tcl_Obj* pathObj	= Tcl_NewStringObj(path, Tcl_SizeFromSizeT(path.size()));
 		Tcl_Obj* idObj		= Tcl_NewIntObj(id);
 
 		Tcl_IncrRefCount(pathObj);

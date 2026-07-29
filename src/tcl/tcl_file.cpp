@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tcl_file.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_assert.h"
 

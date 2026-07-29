@@ -283,11 +283,11 @@ cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				EcoTable const& ecoTable = EcoTable::specimen(variant::Index_Normal);
 				EcoTable::Opening const& opening = ecoTable.getOpening(Eco(code));
 
-				objs[objc++] = Tcl_NewStringObj(opening.part[0], opening.part[0].size());
-				objs[objc++] = Tcl_NewStringObj(opening.part[1], opening.part[1].size());
+				objs[objc++] = Tcl_NewStringObj(opening.part[0], Tcl_SizeFromSizeT(opening.part[0].size()));
+				objs[objc++] = Tcl_NewStringObj(opening.part[1], Tcl_SizeFromSizeT(opening.part[1].size()));
 
 				for ( ; objc < EcoTable::Num_Name_Parts && opening.part[objc].size(); ++objc)
-					objs[objc] = Tcl_NewStringObj(opening.part[objc], opening.part[objc].size());
+					objs[objc] = Tcl_NewStringObj(opening.part[objc], Tcl_SizeFromSizeT(opening.part[objc].size()));
 
 				setResult(objc, objs);
 			}
@@ -300,12 +300,12 @@ cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				mstl::string const& name = player->name();
 
 				Tcl_Obj* list = Tcl_NewListObj(0, 0);
-				Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(name, name.size()));
+				Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size())));
 
 				for (unsigned i = 0; i < aliases.size(); ++i)
 				{
 					mstl::string const& s = aliases[i];
-					Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(s, s.size()));
+					Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(s, Tcl_SizeFromSizeT(s.size())));
 				}
 
 				setResult(list);
@@ -327,12 +327,12 @@ cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 					Tcl_Obj* list = Tcl_NewListObj(0, 0);
 
-					Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(name, name.size()));
+					Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size())));
 
 					for (unsigned i = 0; i < aliases.size(); ++i)
 					{
 						mstl::string const& s = aliases[i];
-						Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(s, s.size()));
+						Tcl_ListObjAppendElement(interp(), list, Tcl_NewStringObj(s, Tcl_SizeFromSizeT(s.size())));
 					}
 
 					setResult(list);
@@ -394,7 +394,7 @@ cmdGet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 			Tcl_Obj* objs[unsaved.size()];
 			for (unsigned i = 0; i < unsaved.size(); ++i)
-				objs[i] = Tcl_NewStringObj(unsaved[i]->name(), unsaved[i]->name().size());
+				objs[i] = Tcl_NewStringObj(unsaved[i]->name(), Tcl_SizeFromSizeT(Tcl_SizeFromSizeT(unsaved[i]->name().size())));
 
 			setResult(unsaved.size(), objs);
 			break;

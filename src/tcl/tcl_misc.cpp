@@ -177,7 +177,7 @@ xmlContent(void* clData, XML_Char const* s, int len)
 	{
 		Tcl_ListObjAppendElement(	nullptr,
 											data->resultList,
-											Tcl_NewStringObj(data->attribute, data->attribute.size()));
+											Tcl_NewStringObj(data->attribute, Tcl_SizeFromSizeT(data->attribute.size())));
 		Tcl_ListObjAppendElement(	nullptr,
 											data->resultList,
 											Tcl_NewStringObj(s, len));
@@ -392,7 +392,7 @@ ToList::resolveSpaces()
 		{
 			res.append(s, e);
 
-			Tcl_Obj* objs[1] = { Tcl_NewStringObj(res, res.size()) };
+			Tcl_Obj* objs[1] = { Tcl_NewStringObj(res, Tcl_SizeFromSizeT(res.size())) };
 			Tcl_ListObjReplace(0, m_first, 1, 1, 1, objs);
 		}
 
@@ -423,7 +423,7 @@ ToList::resolveSpaces()
 			while (t++ < e)
 			res.append(m_space);
 
-			Tcl_Obj* objs[1] = { Tcl_NewStringObj(res, res.size()) };
+			Tcl_Obj* objs[1] = { Tcl_NewStringObj(res, Tcl_SizeFromSizeT(res.size())) };
 			Tcl_ListObjReplace(0, m_last, 1, 1, 1, objs);
 		}
 
@@ -438,8 +438,8 @@ ToList::appendTag(mstl::string const& tag, mstl::string const& content)
 	M_ASSERT(!m_stack.empty());
 
 	Tcl_Obj* objv[2];
-	objv[0] = Tcl_NewStringObj(tag, tag.size());
-	objv[1] = Tcl_NewStringObj(content, content.size());
+	objv[0] = Tcl_NewStringObj(tag, Tcl_SizeFromSizeT(tag.size()));
+	objv[1] = Tcl_NewStringObj(content, Tcl_SizeFromSizeT(content.size()));
 
 	Tcl_Obj* list = Tcl_NewListObj(2, objv);
 
@@ -539,7 +539,7 @@ ToList::startLanguage(mstl::string const& lang)
 
 	Tcl_Obj* objv[2];
 
-	objv[0] = Tcl_NewStringObj(lang, lang.size());
+	objv[0] = Tcl_NewStringObj(lang, Tcl_SizeFromSizeT(lang.size()));
 	objv[1] = Tcl_NewListObj(0, 0);
 
 	Tcl_ListObjAppendElement(0, m_result, Tcl_NewListObj(2, objv));
@@ -1204,8 +1204,8 @@ cmdAttributes(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 	objs[0] = Tcl_NewIntObj(numGames);
 	objs[1] = Tcl_NewStringObj(tcl::db::lookupType(type), -1);
 	objs[2] = game::objFromVariant(variant);
-	objs[3] = Tcl_NewStringObj(created, created.size());
-	objs[4] = Tcl_NewStringObj(description, description.size());
+	objs[3] = Tcl_NewStringObj(created, Tcl_SizeFromSizeT(created.size()));
+	objs[4] = Tcl_NewStringObj(description, Tcl_SizeFromSizeT(description.size()));
 
 	setResult(U_NUMBER_OF(objs), objs);
 	return TCL_OK;
@@ -1222,7 +1222,7 @@ cmdZipContent(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 	for (unsigned i = 0; i < result.size(); ++i)
 	{
 		mstl::string const& file = result[i];
-		objs[i] = Tcl_NewStringObj(file, file.size());
+		objs[i] = Tcl_NewStringObj(file, Tcl_SizeFromSizeT(file.size()));
 	}
 
 	setResult(result.size(), objs);

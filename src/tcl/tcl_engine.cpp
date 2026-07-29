@@ -292,7 +292,7 @@ public:
 		objs[6] = Tcl_NewIntObj(nps());
 		objs[7] = Tcl_NewIntObj(tbhits());
 		objs[8] = Tcl_NewIntObj(ordering(line));
-		objs[9] = Tcl_NewStringObj(s, s.size());
+		objs[9] = Tcl_NewStringObj(s, Tcl_SizeFromSizeT(s.size()));
 
 		if (bestInfoHasChanged())
 		{
@@ -349,7 +349,7 @@ public:
 		currentMove().printSAN(move, protocol::Scidb, encoding::Utf8);
 		objs[0] = Tcl_NewIntObj(currentMoveNumber());
 		objs[1] = Tcl_NewIntObj(currentMoveCount());
-		objs[2] = Tcl_NewStringObj(move, move.size());
+		objs[2] = Tcl_NewStringObj(move, Tcl_SizeFromSizeT(move.size()));
 		sendInfo(m_move, Tcl_NewListObj(U_NUMBER_OF(objs), objs));
 	}
 
@@ -361,7 +361,7 @@ public:
 	{
 		mstl::string move;
 		bestMove().printSAN(move, protocol::Scidb, encoding::Utf8);
-		sendInfo(m_bestmove, Tcl_NewStringObj(move, move.size()));
+		sendInfo(m_bestmove, Tcl_NewStringObj(move, Tcl_SizeFromSizeT(move.size())));
 	}
 
 	void updateDepthInfo() override
@@ -873,12 +873,12 @@ cmdProbe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				{
 					Tcl_Obj* u[6];
 
-					u[0] = Tcl_NewStringObj(i->name, i->name.size());
-					u[1] = Tcl_NewStringObj(i->type, i->type.size());
-					u[2] = Tcl_NewStringObj(i->val,  i->val.size());
-					u[3] = Tcl_NewStringObj(i->dflt, i->dflt.size());
-					u[4] = Tcl_NewStringObj(i->var,  i->var.size());
-					u[5] = Tcl_NewStringObj(i->max,  i->max.size());
+					u[0] = Tcl_NewStringObj(i->name, Tcl_SizeFromSizeT(i->name.size()));
+					u[1] = Tcl_NewStringObj(i->type, Tcl_SizeFromSizeT(i->type.size()));
+					u[2] = Tcl_NewStringObj(i->val, Tcl_SizeFromSizeT(i->val.size()));
+					u[3] = Tcl_NewStringObj(i->dflt, Tcl_SizeFromSizeT(i->dflt.size()));
+					u[4] = Tcl_NewStringObj(i->var, Tcl_SizeFromSizeT(i->var.size()));
+					u[5] = Tcl_NewStringObj(i->max, Tcl_SizeFromSizeT(i->max.size()));
 
 					v[n++] = Tcl_NewListObj(U_NUMBER_OF(u), u);
 				}
@@ -1153,7 +1153,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		Tcl_Obj* v[aliases.size() + 1];
 		Tcl_Obj* f[8];
 
-		v[0] = Tcl_NewStringObj(player->name(), player->name().size());
+		v[0] = Tcl_NewStringObj(player->name(), Tcl_SizeFromSizeT(player->name().size()));
 
 		for (unsigned i = 0; i < aliases.size(); ++i)
 			v[i + 1] = Tcl_NewStringObj(aliases[i], aliases[i].size());

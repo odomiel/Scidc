@@ -835,7 +835,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		if (!log.empty() && log.back() == '\n')
 			log.set_size(log.size() - 1);
 
-		Tcl_SetVar2Ex(ti, trace, 0, Tcl_NewStringObj(log, log.size()), TCL_GLOBAL_ONLY);
+		Tcl_SetVar2Ex(ti, trace, 0, Tcl_NewStringObj(log, Tcl_SizeFromSizeT(log.size())), TCL_GLOBAL_ONLY);
 	}
 
 	return TCL_OK;
@@ -1032,7 +1032,7 @@ cmdEnumTags(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		{
 			Tcl_Obj* v[2];
 
-			v[0] = Tcl_NewStringObj(i->first, i->first.size());
+			v[0] = Tcl_NewStringObj(i->first, Tcl_SizeFromSizeT(i->first.size()));
 			v[1] = Tcl_NewIntObj(i->second);
 
 			M_ASSERT(n < tags.size());

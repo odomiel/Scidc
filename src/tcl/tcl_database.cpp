@@ -431,7 +431,7 @@ struct MySubscriber : public ::app::Subscriber
 
 	void closeDatabase(mstl::string const& name, variant::Type variant) override
 	{
-		Tcl_Obj* file = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* file = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 
 		Tcl_IncrRefCount(file);
@@ -449,7 +449,7 @@ struct MySubscriber : public ::app::Subscriber
 
 	void updateDatabaseInfo(mstl::string const& name, variant::Type variant) override
 	{
-		Tcl_Obj* f = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* f = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 
 		Tcl_IncrRefCount(f);
@@ -473,7 +473,7 @@ struct MySubscriber : public ::app::Subscriber
 							Type type)
 	{
 		Tcl_Obj* n = Tcl_NewIntObj(id);
-		Tcl_Obj* f = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* f = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 		Tcl_Obj* v = Tcl_NewIntObj(view);
 		Tcl_Obj* w = Tcl_NewIntObj(index);
@@ -559,7 +559,7 @@ struct MySubscriber : public ::app::Subscriber
 
 	void updateGameInfo(mstl::string const& name, variant::Type variant, unsigned index) override
 	{
-		Tcl_Obj* f = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* f = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 		Tcl_Obj* w = Tcl_NewIntObj(index);
 
@@ -616,7 +616,7 @@ struct MySubscriber : public ::app::Subscriber
 
 	void databaseSwitched(mstl::string const& name, variant::Type variant) override
 	{
-		Tcl_Obj* f = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* f = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 
 		Tcl_IncrRefCount(f);
@@ -642,7 +642,7 @@ struct MySubscriber : public ::app::Subscriber
 			tcl::tree::referenceBaseChanged();
 		}
 
-		Tcl_Obj* file = Tcl_NewStringObj(name, name.size());
+		Tcl_Obj* file = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
 		Tcl_Obj* t = tcl::tree::variantToString(variant);
 
 		Tcl_IncrRefCount(file);
@@ -1984,7 +1984,7 @@ getGameInfo(int index, int view, char const* database, variant::Type variant, un
 				else if (info.idn())
 					position = variant::ficsIdentifier(info.idn());
 
-				obj = Tcl_NewStringObj(position, position.size());
+				obj = Tcl_NewStringObj(position, Tcl_SizeFromSizeT(position.size()));
 			}
 			break;
 
@@ -2019,7 +2019,7 @@ getGameInfo(int index, int view, char const* database, variant::Type variant, un
 				Tcl_Obj* objv[3 + EcoTable::Num_Name_Parts];
 
 				objv[0] = Tcl_NewIntObj(info.idn());
-				objv[1] = Tcl_NewStringObj(position, position.size());
+				objv[1] = Tcl_NewStringObj(position, Tcl_SizeFromSizeT(position.size()));
 				objv[2] = Tcl_NewStringObj(eco.asShortString(), -1);
 
 				for (unsigned i = 0; i < EcoTable::Num_Name_Parts; ++i)
@@ -2049,7 +2049,7 @@ getGameInfo(int index, int view, char const* database, variant::Type variant, un
 				flagsToString(info.flags(), flags);
 				if (cursor.database().format() == format::Scid4)
 					::mapScid4Flags(flags);
-				obj = Tcl_NewStringObj(flags, flags.size());
+				obj = Tcl_NewStringObj(flags, Tcl_SizeFromSizeT(flags.size()));
 			}
 			break;
 
@@ -2178,20 +2178,20 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 #define SET(attr, value) objv[::attribute::game::attr] = value
 
 	SET(Number,               Tcl_NewIntObj(index + 1));
-	SET(WhitePlayer,          Tcl_NewStringObj(whitePlayer, whitePlayer.size()));
+	SET(WhitePlayer,          Tcl_NewStringObj(whitePlayer, Tcl_SizeFromSizeT(whitePlayer.size())));
 	SET(WhiteFideID,          whiteFideID ? Tcl_NewIntObj(whiteFideID) : Tcl_NewListObj(0, 0));
 	SET(WhiteRating1,         Tcl_NewIntObj(::findRating(info, color::White, ratings.first)));
 	SET(WhiteRating2,         Tcl_NewIntObj(::findRating(info, color::White, ratings.second)));
-	SET(WhiteRatingType,      Tcl_NewStringObj(whiteRatingType, whiteRatingType.size()));
+	SET(WhiteRatingType,      Tcl_NewStringObj(whiteRatingType, Tcl_SizeFromSizeT(whiteRatingType.size())));
 	SET(WhiteCountry,         Tcl_NewStringObj(country::toString(info.findFederation(color::White)), -1));
 	SET(WhiteTitle,           Tcl_NewStringObj(title::toString(info.findTitle(color::White)), -1));
 	SET(WhiteType,            Tcl_NewStringObj(species::toString(info.findPlayerType(color::White)), -1));
 	SET(WhiteSex,             Tcl_NewStringObj(sex::toString(info.findSex(color::White)), -1));
-	SET(BlackPlayer,          Tcl_NewStringObj(blackPlayer, blackPlayer.size()));
+	SET(BlackPlayer,          Tcl_NewStringObj(blackPlayer, Tcl_SizeFromSizeT(blackPlayer.size())));
 	SET(BlackFideID,          blackFideID ? Tcl_NewIntObj(blackFideID) : Tcl_NewListObj(0, 0));
 	SET(BlackRating1,         Tcl_NewIntObj(::findRating(info, color::Black, ratings.first)));
 	SET(BlackRating2,         Tcl_NewIntObj(::findRating(info, color::Black, ratings.second)));
-	SET(BlackRatingType,      Tcl_NewStringObj(blackRatingType, blackRatingType.size()));
+	SET(BlackRatingType,      Tcl_NewStringObj(blackRatingType, Tcl_SizeFromSizeT(blackRatingType.size())));
 	SET(BlackCountry,         Tcl_NewStringObj(country::toString(info.findFederation(color::Black)), -1));
 	SET(BlackTitle,           Tcl_NewStringObj(title::toString(info.findTitle(color::Black)), -1));
 	SET(BlackType,            Tcl_NewStringObj(species::toString(info.findPlayerType(color::Black)), -1));
@@ -2203,15 +2203,15 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 	SET(Site,                 Tcl_NewStringObj(info.site(), info.site().size()));
 	SET(EventCountry,         Tcl_NewStringObj(country::toString(info.findEventCountry()), -1));
 	SET(Date,                 Tcl_NewStringObj(info.date().asShortString(), -1));
-	SET(Round,                Tcl_NewStringObj(round, round.size()));
+	SET(Round,                Tcl_NewStringObj(round, Tcl_SizeFromSizeT(round.size())));
 	SET(Annotator,            Tcl_NewStringObj(info.annotator(), info.annotator().size()));
 	SET(Idn,                  Tcl_NewIntObj(idn));
 	SET(Position,             Tcl_NewStringObj(startPosition, -1));
 	SET(MoveList,             Tcl_NewStringObj(mstl::string::empty_string, 0)),
 	SET(Length,               Tcl_NewIntObj(mstl::div2(info.plyCount() + 1)));
 	SET(Eco,                  Tcl_NewStringObj(eco.asShortString(), -1));
-	SET(Flags,                Tcl_NewStringObj(flags, flags.size()));
-	SET(Material,             Tcl_NewStringObj(material, material.size()));
+	SET(Flags,                Tcl_NewStringObj(flags, Tcl_SizeFromSizeT(flags.size())));
+	SET(Material,             Tcl_NewStringObj(material, Tcl_SizeFromSizeT(material.size())));
 	SET(Deleted,              Tcl_NewBooleanObj(info.isDeleted()));
 	SET(Changed,              Tcl_NewIntObj(info.isChanged()));
 	SET(Added,                Tcl_NewIntObj(db.isAdded(index)));
@@ -2422,8 +2422,8 @@ getEventInfo(NamebaseEvent const& event, Database const* database = nullptr)
 #endif
 	siteName = event.site()->name();
 
-	objv[attribute::event::Country  ] = Tcl_NewStringObj(country, country.size());
-	objv[attribute::event::Site     ] = Tcl_NewStringObj(siteName, siteName.size());
+	objv[attribute::event::Country  ] = Tcl_NewStringObj(country, Tcl_SizeFromSizeT(country.size()));
+	objv[attribute::event::Site     ] = Tcl_NewStringObj(siteName, Tcl_SizeFromSizeT(siteName.size()));
 	objv[attribute::event::Title    ] = Tcl_NewStringObj(event.name(), -1);
 	objv[attribute::event::Type     ] = Tcl_NewStringObj(event::toString(event.type()), -1);
 	objv[attribute::event::Date     ] = Tcl_NewStringObj(event.date().asShortString(), -1);
@@ -2480,8 +2480,8 @@ getSiteInfo(int index, int view, char const* database, variant::Type variant)
 	mstl::string const& country	= country::toString(site.country());
 	mstl::string const& siteName	= site.name();
 
-	objv[attribute::site::Site     ] = Tcl_NewStringObj(siteName, siteName.size());
-	objv[attribute::site::Country  ] = Tcl_NewStringObj(country, country.size());
+	objv[attribute::site::Site     ] = Tcl_NewStringObj(siteName, Tcl_SizeFromSizeT(siteName.size()));
+	objv[attribute::site::Country  ] = Tcl_NewStringObj(country, Tcl_SizeFromSizeT(country.size()));
 	objv[attribute::site::Frequency] = Tcl_NewIntObj(site.frequency());
 
 	M_ASSERT(::checkNonZero(objv, attribute::site::LastColumn));
@@ -2613,8 +2613,8 @@ tcl::db::getTags(TagSet const& tags, bool userSuppliedOnly)
 			mstl::string const name		= tag::toName(tag);
 			mstl::string const value	= tags.value(tag);
 
-			objs[0] = Tcl_NewStringObj(name, name.size());
-			objs[1] = Tcl_NewStringObj(value, value.size());
+			objs[0] = Tcl_NewStringObj(name, Tcl_SizeFromSizeT(name.size()));
+			objs[1] = Tcl_NewStringObj(value, Tcl_SizeFromSizeT(value.size()));
 
 			Tcl_ListObjAppendElement(0, result, Tcl_NewListObj(2, objs));
 		}
@@ -2682,7 +2682,7 @@ getRatingTypes(int index, char const* database, variant::Type variant)
 	mstl::string const& wr = rating::toString(info.ratingType(color::White));
 	mstl::string const& br = rating::toString(info.ratingType(color::Black));
 
-	Tcl_Obj* objs[2] = { Tcl_NewStringObj(wr, wr.size()), Tcl_NewStringObj(br, br.size())};
+	Tcl_Obj* objs[2] = { Tcl_NewStringObj(wr, Tcl_SizeFromSizeT(wr.size())), Tcl_NewStringObj(br, Tcl_SizeFromSizeT(br.size()))};
 	setResult(2, objs);
 
 	return TCL_OK;
@@ -2771,8 +2771,8 @@ cmdPlayerCard(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		log.set_size(log.size() - 1);
 
 	Tcl_Obj* args[2];
-	args[0] = Tcl_NewStringObj(htm, htm.size());
-	args[1] = Tcl_NewStringObj(log, log.size());
+	args[0] = Tcl_NewStringObj(htm, Tcl_SizeFromSizeT(htm.size()));
+	args[1] = Tcl_NewStringObj(log, Tcl_SizeFromSizeT(log.size()));
 
 	setResult(2, args);
 
@@ -4132,7 +4132,7 @@ cmdMatch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				uint32_t fideID = player->fideID();
 
 				objs[n++] = Tcl_NewIntObj(0);
-				objs[n++] = Tcl_NewStringObj(player->name(), player->name().size());
+				objs[n++] = Tcl_NewStringObj(player->name(), Tcl_SizeFromSizeT(player->name().size()));
 				objs[n++] = Tcl_NewStringObj(ascii.empty() ? player->name() : ascii, -1);
 				objs[n++] = fideID ? Tcl_NewIntObj(player->fideID()) : Tcl_NewListObj(0, 0);
 				objs[n++] = Tcl_NewStringObj(species::toString(player->type()), -1);
@@ -4179,8 +4179,8 @@ cmdMatch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				mstl::string const& ascii = site->nonDiacriticName(country);
 
 				objs[n++] = Tcl_NewIntObj(0);
-				objs[n++] = Tcl_NewStringObj(site->name(), site->name().size());
-				objs[n++] = Tcl_NewStringObj(ascii, ascii.size());
+				objs[n++] = Tcl_NewStringObj(site->name(), Tcl_SizeFromSizeT(site->name().size()));
+				objs[n++] = Tcl_NewStringObj(ascii, Tcl_SizeFromSizeT(ascii.size()));
 				objs[n++] = Tcl_NewStringObj(country::toString(country), -1);;
 
 				result[matches.size() + i] = Tcl_NewListObj(n, objs);
@@ -4587,7 +4587,7 @@ tcl::db::getPlayerStats(Database const& database, NamebasePlayer const& player)
 		ecoTable.getLine(stats.ecoLine(color::White, i)).
 			print(line, variant::Normal, move::SAN, protocol::Scidb, encoding::Utf8);
 		argv[0] = Tcl_NewIntObj(stats.ecoCount(color::White, i));
-		argv[1] = Tcl_NewStringObj(line, line.size());
+		argv[1] = Tcl_NewStringObj(line, Tcl_SizeFromSizeT(line.size()));
 		Tcl_ListObjAppendElement(0, objs[0], Tcl_NewListObj(2, argv));
 	}
 	objs[1] = Tcl_NewListObj(0, 0);
@@ -4599,7 +4599,7 @@ tcl::db::getPlayerStats(Database const& database, NamebasePlayer const& player)
 		ecoTable.getLine(stats.ecoLine(color::Black, i)).
 			print(line, variant::Normal, move::SAN, protocol::Scidb, encoding::Utf8);
 		argv[0] = Tcl_NewIntObj(stats.ecoCount(color::Black, i));
-		argv[1] = Tcl_NewStringObj(line, line.size());
+		argv[1] = Tcl_NewStringObj(line, Tcl_SizeFromSizeT(line.size()));
 		Tcl_ListObjAppendElement(0, objs[1], Tcl_NewListObj(2, argv));
 	}
 	objv[6] = Tcl_NewListObj(2, objs);
