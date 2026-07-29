@@ -2210,7 +2210,7 @@ cmdLangSet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 	else if (*s)
 	{
 		Game::LanguageSet set;
-		int n = countElements(languages);
+		Tcl_Size n = countElements(languages);
 
 		for (Tcl_Size i = 0; i < n; ++i)
 		{

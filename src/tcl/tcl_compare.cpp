@@ -280,7 +280,7 @@ tcl::compare::setMappingTable(Tcl_Obj* table)
 
 	::memset(m_sortMappingTable, 0, sizeof(m_sortMappingTable));
 
-	int n = mstl::div2(nentries);
+	Tcl_Size n = mstl::div2(nentries);
 
 	for (Tcl_Size i = 0; i < n; i += 2)
 	{

@@ -760,7 +760,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 						case 'r':	// trophy
 						{
 							Tcl_Obj** objs;
-							int len;
+							Tcl_Size len;
 							if (Tcl_ListObjGetElements(ti, val, &len, &objs) != TCL_OK || len != 2)
 							{
 								return error(	CmdFilter,
@@ -771,7 +771,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 							unsigned flags = 0;
 							if (Tcl_ListObjGetElements(ti, objs[1], &len, &objs) != TCL_OK)
 								return error(CmdFilter, nullptr, nullptr, "list of flags expected");
-							for (int i = 0; i < len; ++i)
+							for (Tcl_Size i = 0; i < len; ++i)
 							{
 								char const* flag = Tcl_GetString(objs[i]);
 								switch (::tolower(*flag))
