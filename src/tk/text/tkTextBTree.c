@@ -25,6 +25,11 @@
 #include "tkAlloc.h"
 #include <assert.h>
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #ifndef MIN
 # define MIN(a,b) (((int) a) < ((int) b) ? a : b)
 #endif
@@ -3972,7 +3977,8 @@ TkBTreeLoad(
 	     */
 
 	    Tcl_Obj **objv;
-	    int objc, k;
+	    Tcl_Size objc;
+    int k;
 
 	    if (strcmp(type, "configure") != 0) {
 		return LoadError(interp, "invalid item identifier", i, 0, -1, &data);

@@ -269,7 +269,7 @@ Progress::finish() noexcept
 
 
 static int
-cmdInterrupt(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdInterrupt(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	bool		wait		= false;
 	Tcl_Obj*	inform	= 0;
@@ -303,7 +303,7 @@ cmdInterrupt(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInterruptable(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdInterruptable(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	setResult(m_currentProgress && m_currentProgress->interruptable());
 	return TCL_OK;

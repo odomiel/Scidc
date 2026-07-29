@@ -17,9 +17,11 @@ extern "C" {
 # define bool TkBool
 #endif
 
+/* Use standard _Bool type if available (C99 and later), otherwise use int */
+#if !defined(__cplusplus) && !defined(bool) && __STDC_VERSION__ >= 199901L
+#include <stdbool.h>
+#elif !defined(__cplusplus) && !defined(bool)
 typedef int bool;
-
-#ifndef __cplusplus
 enum { true = (int) 1, false = (int) 0 };
 #endif
 

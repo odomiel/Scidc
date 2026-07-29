@@ -41,6 +41,7 @@
 #include "html.h"
 #include <assert.h>
 #include <X11/Xutil.h>
+#include <X11/Xregion.h>
 
 #ifdef USE_DOUBLE_BUFFERING
 # include "tkInt.h"
@@ -2484,7 +2485,7 @@ shiftCoordinate(int y)
 }
 
 void
-UnionRectWithRegion(const HtmlRectangle *rect, TkRegion srcRegion, TkRegion destRegion)
+UnionRectWithRegion(const HtmlRectangle *rect, Region srcRegion, Region destRegion)
 {
     XRectangle xrect;
 
@@ -2497,7 +2498,7 @@ UnionRectWithRegion(const HtmlRectangle *rect, TkRegion srcRegion, TkRegion dest
 }
 
 int
-RectInRegion(TkRegion region, int x, int y, int width, int height)
+RectInRegion(Region region, int x, int y, int width, int height)
 {
     if (region == None)
         return RectangleOut;
@@ -4769,7 +4770,7 @@ HtmlWidgetSetViewport(
     Display *display = Tk_Display(win);
 
 #ifdef USE_DOUBLE_BUFFERING
-    TkRegion newRegion = None;
+    Region newRegion = None;
 
     // be sure it's the actual old position
     pTree->bufferScrollX = pTree->iScrollX;

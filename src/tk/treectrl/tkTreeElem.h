@@ -15,6 +15,11 @@
  * RCS: @(#) $Id: tkTreeElem.h,v 1.28 2008/01/22 01:03:02 treectrl Exp $
  */
 
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
 typedef struct TreeElementType TreeElementType;
 typedef struct TreeElement_ TreeElement_;
 typedef struct TreeElementArgs TreeElementArgs;

@@ -118,7 +118,10 @@ char const*
 tcl::asString(Tcl_Obj* obj, int& len)
 {
 	M_REQUIRE(obj);
-	return Tcl_GetStringFromObj(obj, &len);
+	Tcl_Size tcl9_len;
+	char const* result = Tcl_GetStringFromObj(obj, &tcl9_len);
+	len = static_cast<int>(tcl9_len);
+	return result;
 }
 
 
@@ -195,10 +198,10 @@ inline
 unsigned
 tcl::countElements(Tcl_Obj* obj)
 {
-	int count = 0;
+	Tcl_Size tcl9_count = 0;
 	if (obj)
-		Tcl_ListObjLength(nullptr, obj, &count);
-	return count;
+		Tcl_ListObjLength(nullptr, obj, &tcl9_count);
+	return static_cast<unsigned>(tcl9_count);
 }
 
 

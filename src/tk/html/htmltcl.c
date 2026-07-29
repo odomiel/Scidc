@@ -51,6 +51,11 @@
 #include "restrack.h"
 #include "swproc.h"
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #include <time.h>
 
 #ifdef USE_DOUBLE_BUFFERING

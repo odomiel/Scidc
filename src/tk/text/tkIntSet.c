@@ -24,6 +24,11 @@
 #include <string.h>
 #include <assert.h>
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #ifndef MIN
 # define MIN(a,b) (((int) a) < ((int) b) ? a : b)
 #endif

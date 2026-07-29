@@ -60,6 +60,11 @@
 #include "html.h"
 #include "htmlprop.h"
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 /*
  *---------------------------------------------------------------------------
  *
@@ -78,7 +83,7 @@
  */
 static int
 compareCaseInsensitiveKey(
-    VOID *keyPtr,               /* New key to compare. */
+    void *keyPtr,               /* New key to compare. */
     Tcl_HashEntry *hPtr)        /* Existing key to compare. */
 {
     CONST char *p1 = (CONST char *) keyPtr;
@@ -103,13 +108,13 @@ compareCaseInsensitiveKey(
  *
  *---------------------------------------------------------------------------
  */
-static unsigned int
+static size_t
 hashCaseInsensitiveKey(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key from which to compute hash value. */
+    void *keyPtr)               /* Key from which to compute hash value. */
 {
     CONST char *string = (CONST char *) keyPtr;
-    unsigned int result;
+    size_t result;
     int c;
 
     result = 0;
@@ -138,7 +143,7 @@ hashCaseInsensitiveKey(
 static Tcl_HashEntry *
 allocCaseInsensitiveEntry(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key to store in the hash table entry. */
+    void *keyPtr)               /* Key to store in the hash table entry. */
 {
     CONST char *string = (CONST char *) keyPtr;
     Tcl_HashEntry *hPtr;
@@ -214,14 +219,14 @@ HtmlCaseInsenstiveHashType()
  *
  *---------------------------------------------------------------------------
  */
-static unsigned int
+static size_t
 hashFontKey(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key from which to compute hash value. */
+    void *keyPtr)               /* Key from which to compute hash value. */
 {
     HtmlFontKey *pKey = (HtmlFontKey *) keyPtr;
     CONST char *zFontFamily = pKey->zFontFamily;
-    unsigned int result = 0;
+    size_t result = 0;
     int c;
 
     for (c=*zFontFamily++ ; c ; c=*zFontFamily++) {
@@ -252,7 +257,7 @@ hashFontKey(
  */
 static int
 compareFontKey(
-    VOID *keyPtr,               /* New key to compare. */
+    void *keyPtr,               /* New key to compare. */
     Tcl_HashEntry *hPtr)        /* Existing key to compare. */
 {
     HtmlFontKey *p1 = (HtmlFontKey *) keyPtr;
@@ -285,7 +290,7 @@ compareFontKey(
 static Tcl_HashEntry *
 allocFontEntry(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key to store in the hash table entry. */
+    void *keyPtr)               /* Key to store in the hash table entry. */
 {
     HtmlFontKey *pKey = (HtmlFontKey *)keyPtr;
     unsigned int size;
@@ -367,13 +372,13 @@ HtmlFontKeyHashType()
  *
  *---------------------------------------------------------------------------
  */
-static unsigned int
+static size_t
 hashValuesKey(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key from which to compute hash value. */
+    void *keyPtr)               /* Key from which to compute hash value. */
 {
     HtmlComputedValues *p= (HtmlComputedValues *)keyPtr;
-    unsigned int result = 0;
+    size_t result = 0;
 
     /* Do not include the first two fields - nRef and imZoomedBackgroundImage */
     unsigned char *pInt = (unsigned char *)(&p->mask);
@@ -405,7 +410,7 @@ hashValuesKey(
  */
 static int
 compareValuesKey(
-    VOID *keyPtr,               /* New key to compare. */
+    void *keyPtr,               /* New key to compare. */
     Tcl_HashEntry *hPtr)        /* Existing key to compare. */
 {
     unsigned char *p1 = (unsigned char *) keyPtr;
@@ -449,7 +454,7 @@ freeValuesEntry(hPtr)
 static Tcl_HashEntry *
 allocValuesEntry(
     Tcl_HashTable *tablePtr,    /* Hash table. */
-    VOID *keyPtr)               /* Key to store in the hash table entry. */
+    void *keyPtr)               /* Key to store in the hash table entry. */
 {
     HtmlComputedValues *pKey = (HtmlComputedValues *)keyPtr;
     HtmlComputedValues *pStoredKey;

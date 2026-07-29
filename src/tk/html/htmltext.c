@@ -43,6 +43,11 @@
 #include <stdlib.h>
 #include "html.h"
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #define ISNEWLINE(x) ((x) == '\n' || (x) == '\r')
 #define ISTAB(x) ((x) == '\t')
 #define ISSPACE(x) isspace((unsigned char)(x))

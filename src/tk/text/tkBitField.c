@@ -20,6 +20,11 @@
 # include "tkBitFieldPriv.h"
 #endif
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #ifndef MAX
 # define MAX(a,b) (((int) a) < ((int) b) ? b : a)
 #endif

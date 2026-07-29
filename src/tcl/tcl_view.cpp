@@ -361,7 +361,7 @@ tcl::view::makeLangList(Tcl_Interp* ti,
 
 
 static int
-cmdNew(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdNew(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const*		base		= stringFromObj(objc, objv, 1);
 	variant::Type	variant	= variant::Undetermined;
@@ -392,7 +392,7 @@ cmdNew(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdClose(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdClose(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 	{
@@ -409,7 +409,7 @@ cmdClose(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdOpen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdOpen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "games", "players", "annotators", "events", "sites", 0 };
 	static char const* args[] = { "<database> <variant> <view>" };
@@ -452,7 +452,7 @@ cmdOpen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{
@@ -489,7 +489,7 @@ cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFind(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdFind(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "player", "event", "site", "annotator", 0 };
 	static char const* args[] = { "<database> <variant> <view>" };
@@ -542,7 +542,7 @@ cmdFind(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSearch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc < 5 || 7 < objc)
 	{
@@ -616,7 +616,7 @@ cmdSearch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCopy(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdCopy(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc != 10)
 	{
@@ -667,7 +667,7 @@ cmdCopy(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdExport(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdExport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc != 15)
 	{
@@ -736,7 +736,7 @@ cmdExport(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPrint(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	struct Log : public TeXt::Controller::Log
 	{
@@ -843,7 +843,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMap(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdMap(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const*		attr		= stringFromObj(objc, objv, 1);
 	char const*		database	= stringFromObj(objc, objv, 2);
@@ -870,7 +870,7 @@ cmdMap(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj*			proc		= objectFromObj(objc, objv, 1);
 	Tcl_Obj*			base		= objectFromObj(objc, objv, 2);
@@ -895,7 +895,7 @@ cmdSubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUnsubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdUnsubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj*			proc		= objectFromObj(objc, objv, 1);
 	Tcl_Obj*			base		= objectFromObj(objc, objv, 2);
@@ -918,7 +918,7 @@ cmdUnsubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStrip(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc != 8)
 	{
@@ -998,7 +998,7 @@ cmdStrip(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdEnumTags(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdEnumTags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	typedef View::TagMap TagMap;
 

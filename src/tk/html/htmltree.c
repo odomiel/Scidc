@@ -1885,7 +1885,7 @@ nodeRemoveCmd(HtmlNode *pNode, int objc, Tcl_Obj *CONST objv[])
 
     for (ii = 2; ii < objc; ii++) {
         Tcl_Obj **apNode;
-        int nNode;
+        Tcl_Size nNode;
         int jj;
         int rc;
 
@@ -2011,7 +2011,7 @@ nodeInsertCmd(HtmlNode *pNode, int objc, Tcl_Obj *CONST objv[])
 
     for (ii = (pBefore ? 4 : 2); ii < objc; ii++) {
         Tcl_Obj **apNode;
-        int nNode;
+        Tcl_Size nNode;
         int jj;
         int rc;
 
@@ -2131,7 +2131,7 @@ nodeTextCommand(Tcl_Interp *interp, HtmlNode *pNode, int objc, Tcl_Obj *CONST ob
          */
         const char *zCommand;
         const char *zNew;
-        int nNew;
+        Tcl_Size nNew;
         HtmlTextNode *pNew;
         HtmlTextNode *pOrig;
         Tcl_CmdInfo info;
@@ -2143,7 +2143,7 @@ nodeTextCommand(Tcl_Interp *interp, HtmlNode *pNode, int objc, Tcl_Obj *CONST ob
         HtmlCallbackLayout(pTree, pNode);
 
         zNew = Tcl_GetStringFromObj(objv[3], &nNew);
-        pNew = HtmlTextNew(pTree, nNew, zNew, 0, 0);
+        pNew = HtmlTextNew(pTree, (int)nNew, zNew, 0, 0);
 
         /* Copy the base class attributes to the new HtmlTextNode */
         memcpy(pNew, pNode, sizeof(HtmlNode));

@@ -50,6 +50,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #ifdef __WIN32__
 # include <windows.h>
 #endif
@@ -2838,7 +2843,7 @@ HtmlComputedValuesSetupTables(HtmlTree *pTree)
     int n;
 
     Tcl_Obj **apFamily;
-    int nFamily;
+    Tcl_Size nFamily;
     int dummy;
 
     pType = HtmlCaseInsenstiveHashType();
@@ -3136,9 +3141,9 @@ HtmlNodeGetProperty(
     Tcl_Obj *pProp,                     /* Property name */
     HtmlComputedValues *pValues)        /* Read value from here */
 {
-    int nProp;
+    Tcl_Size nProp;
     const char *zProp = Tcl_GetStringFromObj(pProp, &nProp);
-    int eProp = HtmlCssPropertyLookup(nProp, zProp);
+    int eProp = HtmlCssPropertyLookup((int)nProp, zProp);
 
     /* Special case - the "font" property returns the Tk font. This
     ** is so that code implementing replaced objects can do this:

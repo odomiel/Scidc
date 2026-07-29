@@ -8,6 +8,11 @@
 #ifndef __SWPROC_H__
 #define __SWPROC_H__
 
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
 #define SWPROC_END     0
 #define SWPROC_ARG     1
 #define SWPROC_OPT     2

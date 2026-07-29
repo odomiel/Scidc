@@ -78,6 +78,11 @@ typedef struct CssPropertySet CssPropertySet;
  */
 #include "html.h"
 
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
 #define CSS_TYPE_EM           1            /* Value in 'rVal' */
 #define CSS_TYPE_PX           2            /* Value in 'rVal' */
 #define CSS_TYPE_PT           3            /* Value in 'rVal' */

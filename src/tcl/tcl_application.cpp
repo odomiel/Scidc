@@ -105,7 +105,7 @@ static MoveListMap m_moveListMap;
 
 
 static int
-cmdLoad(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdLoad(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const* type = stringFromObj(objc, objv, 1);
 
@@ -223,7 +223,7 @@ cmdLoad(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "games", "bases", 0 };
 	static char const* args[] = { "", "" };
@@ -253,7 +253,7 @@ cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdLookup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "countryCode", "ecoCode", "playerAlias", "siteAlias", 0 };
 	static char const* args[] = { "<country-code>", "<eco-code>", "<player-name>", "<site-name>", 0 };
@@ -349,7 +349,7 @@ cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdGet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "countryCodes", "unsavedFiles", 0 };
 	static char const* args[] = { "", 0 };
@@ -409,7 +409,7 @@ cmdGet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdClose(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdClose(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	scidb->close();
 	return TCL_OK;
@@ -417,7 +417,7 @@ cmdClose(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFinalize(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdFinalize(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	scidb->finalize();
 	return TCL_OK;
@@ -425,14 +425,14 @@ cmdFinalize(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInitialized(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdInitialized(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	return db::tag::initializeIsOk() ? TCL_OK : TCL_ERROR;
 }
 
 
 static int
-cmdVariant(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	setResult(tcl::tree::variantToString(Scidb->currentVariant()));
 	return TCL_OK;
@@ -440,7 +440,7 @@ cmdVariant(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdActiveVariants(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdActiveVariants(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Application::Variants variants = Scidb->getAllVariants();
 
@@ -461,7 +461,7 @@ cmdActiveVariants(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv
 
 
 static int
-cmdWriting(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdWriting(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	bool background __attribute__((unused)) = false;
 
@@ -482,7 +482,7 @@ cmdWriting(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMoveList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdMoveList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "open", "close", "open?", "retrieve", "fetch", "clear", 0 };
 	static char const* args[] =

@@ -474,9 +474,9 @@ Process::close()
 
 
 int
-Process::write(char const* msg, Tcl_Size size)
+Process::write(char const* msg, int size)
 {
-	int bytesWritten = Tcl_WriteChars(m_chan, msg, size);
+	int bytesWritten = Tcl_WriteChars(m_chan, msg, static_cast<Tcl_Size>(size));
 
 	if (bytesWritten == -1)
 	{

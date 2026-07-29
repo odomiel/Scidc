@@ -4530,7 +4530,7 @@ HtmlCssInlineQuery(Tcl_Interp *interp, CssPropertySet *pPropertySet, Tcl_Obj *pA
 
         if (pArg) {
             char *zArg;
-            int nArg;
+            Tcl_Size nArg;
             int eProp;
 
             zArg = Tcl_GetStringFromObj(pArg, &nArg);

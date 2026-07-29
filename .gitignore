@@ -22,7 +22,6 @@ deps/tcltk/
 # deps/tcl/
 # deps/tk/
 
-Makefile.in
 CLAUDE.md
 
 # Engine binaries (too large for git, build separately)
@@ -34,6 +33,5 @@ debug.txt
 &1
 lizenzübersicht.txt
 fehler/
-Makefile.in.bak
 migration.txt
 

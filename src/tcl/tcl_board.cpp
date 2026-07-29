@@ -197,7 +197,7 @@ getFormat(int objc, Tcl_Obj* const* objv, int index)
 
 
 static int
-cmdAnalyseFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdAnalyseFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const* error		= 0;
 	Warnings		warnings;
@@ -347,7 +347,7 @@ cmdAnalyseFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMakeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdMakeFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const* board			= stringFromObj(objc, objv, 1);
 	char const* stm			= stringFromObj(objc, objv, 2);
@@ -409,7 +409,7 @@ cmdMakeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIsValidFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdIsValidFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	// TODO: we need some flags: allowHandicap, allowIllegalPosition (king in check)
 	setResult(Board::isValidFen(stringFromObj(objc, objv, 1), Scidb->game().variant()));
@@ -418,7 +418,7 @@ cmdIsValidFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPositionNumber(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdPositionNumber(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	setResult(shuffle::lookup(stringFromObj(objc, objv, 1)));
 	return TCL_OK;
@@ -426,7 +426,7 @@ cmdPositionNumber(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv
 
 
 static int
-cmdFenToBoard(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdFenToBoard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Board board;
 	board.setup(stringFromObj(objc, objv, 1), Scidb->game().variant());
@@ -436,7 +436,7 @@ cmdFenToBoard(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIdnToFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdIdnToFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	unsigned			idn(unsignedFromObj(objc, objv, 1));
 	variant::Type	variant(Scidb->game().variant());
@@ -456,7 +456,7 @@ cmdIdnToFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTransposeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdTransposeFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Board board;
 	variant::Type variant = Scidb->game().variant();
@@ -469,7 +469,7 @@ cmdTransposeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[]
 
 
 static int
-cmdNormalizeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdNormalizeFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	Board board;
 	variant::Type variant = Scidb->game().variant();
@@ -491,7 +491,7 @@ cmdNormalizeFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[]
 
 
 static int
-cmdNearest(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdNearest(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	char const* board = stringFromObj(objc, objv, 1);
 	char const* piece = stringFromObj(objc, objv, 2);

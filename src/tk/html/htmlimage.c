@@ -216,7 +216,7 @@ photoputblock(
     int height,
     int compRule)
 {
-    Tk_PhotoPutBlock(handle, blockPtr, x, y, width, height);
+    Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule);
 }
 
 static void
@@ -351,7 +351,7 @@ HtmlImageServerGet(HtmlImageServer *p, const char *zUrl)
             Tcl_Obj *pEval;
             Tcl_Obj *pResult;
             int rc;
-            int nObj;
+            Tcl_Size nObj;
             Tcl_Obj **apObj = 0;
             Tk_Image img = 0;
 

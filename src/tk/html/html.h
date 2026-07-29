@@ -73,12 +73,20 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
+// Tk_Offset compatibility macro for Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 #include "htmltokens.h"
 #include "htmlmacros.h"
 
-#ifdef USE_DOUBLE_BUFFERING
-struct TkRegion_;
-#endif
+#include <X11/Xutil.h>
 
 #if defined(USE_LATIN_LIGATURES) && defined(HAVE_XFT)
 struct _FcConfig;
@@ -561,11 +569,11 @@ SubtractRect(
 extern void
 UnionRectWithRegion(
     const HtmlRectangle *rect,
-    struct TkRegion_ *srcRegion,
-    struct TkRegion_ *destRegion);
+    Region srcRegion,
+    Region destRegion);
 extern int
 RectInRegion(
-    struct TkRegion_ *region,
+    Region region,
     int x, int y, int width, int height);
 
 #endif
@@ -723,7 +731,7 @@ struct HtmlTree {
     HtmlRectangle bufferRect;
     int bufferScrollX;
     int bufferScrollY;
-    struct TkRegion_ *bufferRegion;
+    Region bufferRegion;
 #endif
 
 #if defined(USE_LATIN_LIGATURES) && defined(HAVE_XFT)

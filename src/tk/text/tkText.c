@@ -28,6 +28,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
+// Compatibility macros for Tk 9
+#ifndef CONST
+#define CONST const
+#endif
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((ptrdiff_t) &((type *) NULL)->field)
+#endif
+
 /* needed for strncasecmp */
 #if defined(_WIN32) && !defined(__GNUC__)
 # define strncasecmp _strnicmp

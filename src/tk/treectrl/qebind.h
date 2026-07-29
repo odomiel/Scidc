@@ -31,6 +31,18 @@
 #   endif
 #endif
 
+#ifndef CONST
+#define CONST const
+#endif
+
+// Compatibility for Tcl 9 - Tcl_SaveResult API was removed
+// In Tcl 9, the result is always a Tcl_Obj, so we provide compatibility macros
+#ifndef Tcl_SavedResult
+#define Tcl_SavedResult Tcl_Obj*
+#define Tcl_SaveResult(interp, statePtr) (*(statePtr) = Tcl_GetObjResult(interp), Tcl_IncrRefCount(*(statePtr)))
+#define Tcl_RestoreResult(interp, statePtr) do { Tcl_SetObjResult(interp, *(statePtr)); Tcl_DecrRefCount(*(statePtr)); } while(0)
+#endif
+
 typedef struct QE_BindingTable_ *QE_BindingTable;
 
 /* Pass to QE_BindEvent */

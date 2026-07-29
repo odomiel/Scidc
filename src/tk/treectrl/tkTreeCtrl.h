@@ -27,6 +27,31 @@ struct mmsghdr; // this hacks is suppressing a gcc warning
 #include "tkInt.h"
 #include "qebind.h"
 
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
+// Compatibility: Tk_Offset was removed in Tk 9
+#ifndef Tk_Offset
+#define Tk_Offset(type, field) ((size_t) &((type *) 0)->field)
+#endif
+
+// Compatibility: TCL_INTERP_DESTROYED was removed in Tcl 9
+#ifndef TCL_INTERP_DESTROYED
+#define TCL_INTERP_DESTROYED 0x10000000  // Use a bit that is unlikely to conflict
+#endif
+
+// Compatibility: VOID macro was removed in Tcl 9
+#ifndef VOID
+#define VOID void
+#endif
+
+// Compatibility: _ANSI_ARGS_ was removed in modern Tcl/Tk
+#ifndef _ANSI_ARGS_
+#define _ANSI_ARGS_(x) x
+#endif
+
 /*
  * Used to tag functions that are only to be visible within the module being
  * built and not outside it (where this is supported by the linker).
