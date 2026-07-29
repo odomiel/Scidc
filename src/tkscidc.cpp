@@ -33,6 +33,7 @@
 
 #include "u_zstream.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 #include <tk.h>
 #include <stdlib.h>

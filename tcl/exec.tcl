@@ -30,15 +30,15 @@
 #! The next line restarts using tkscidc: \
 exec "`dirname "$0"`"/tk`basename $0` "$0" ${1+"$@"}
 
-package require Tcl 8.6
-package require Tk  8.6
+package require Tcl 8.6-
+package require Tk 8.6-
 package require Ttk
 package require tkscidc
 
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.23 b1 Beta"
+	set version "26.07.27 b1 Beta"
 }
 
 

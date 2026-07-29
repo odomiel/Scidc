@@ -26,6 +26,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "tcl_base.h"
 

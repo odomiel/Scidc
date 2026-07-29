@@ -7988,7 +7988,7 @@ cmdExists(int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdReady(Base& base, int objc, Tcl_Obj* const objv[])
+cmdReady(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		M_THROW(tcl::Exception(2, objv, ""));
@@ -8018,7 +8018,7 @@ cmdRelease(int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdInit(Base& base, int objc, Tcl_Obj* const objv[])
+cmdInit(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4 && (objc != 6 || !tcl::equal(objv[3], "-aligntimeout") || !tcl::isUnsigned(objv[4])))
 		M_THROW(tcl::Exception(3, objv, "?-aligntimeout ms? list"));
@@ -8031,7 +8031,7 @@ cmdInit(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdLoad(Base& base, int objc, Tcl_Obj* const objv[])
+cmdLoad(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj* preserved = nullptr;
 	int index = 2;
@@ -8074,7 +8074,7 @@ cmdLoad(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdClone(Base& base, int objc, Tcl_Obj* const objv[])
+cmdClone(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 5)
 		M_THROW(tcl::Exception(3, objv, "template uid"));
@@ -8090,7 +8090,7 @@ cmdClone(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdNew(Base& base, int objc, Tcl_Obj* const objv[])
+cmdNew(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 6)
 		M_THROW(tcl::Exception(3, objv, "type uid options"));
@@ -8100,7 +8100,7 @@ cmdNew(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdClose(Base& base, int objc, Tcl_Obj* const objv[])
+cmdClose(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		M_THROW(tcl::Exception(3, objv));
@@ -8110,7 +8110,7 @@ cmdClose(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdAmalgamatable(Base& base, int objc, Tcl_Obj* const objv[])
+cmdAmalgamatable(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8126,7 +8126,7 @@ cmdAmalgamatable(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdAmalgamated(Base& base, int objc, Tcl_Obj* const objv[])
+cmdAmalgamated(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8143,7 +8143,7 @@ cmdAmalgamated(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdIsContainer(Base& base, int objc, Tcl_Obj* const objv[])
+cmdIsContainer(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8159,7 +8159,7 @@ cmdIsContainer(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdIsMetaChild(Base& base, int objc, Tcl_Obj* const objv[])
+cmdIsMetaChild(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8176,7 +8176,7 @@ cmdIsMetaChild(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdIsPane(Base& base, int objc, Tcl_Obj* const objv[])
+cmdIsPane(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8192,7 +8192,7 @@ cmdIsPane(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdIsDocked(Base& base, int objc, Tcl_Obj* const objv[])
+cmdIsDocked(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "uid"));
@@ -8205,7 +8205,7 @@ cmdIsDocked(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdChangeUid(Base& base, int objc, Tcl_Obj* const objv[])
+cmdChangeUid(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 5)
 		M_THROW(tcl::Exception(3, objv, "oldUid newUid"));
@@ -8220,7 +8220,7 @@ cmdChangeUid(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdContainer(Base& base, int objc, Tcl_Obj* const objv[])
+cmdContainer(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8240,7 +8240,7 @@ cmdContainer(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdFloats(Base& base, int objc, Tcl_Obj* const objv[])
+cmdFloats(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		M_THROW(tcl::Exception(2, objv));
@@ -8250,7 +8250,7 @@ cmdFloats(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdDimension(Base& base, int objc, Tcl_Obj* const objv[])
+cmdDimension(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "?window?"));
@@ -8278,7 +8278,7 @@ cmdDimension(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdEqP(Base& base, int objc, Tcl_Obj* const objv[])
+cmdEqP(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* Usage = "horz|vert percentage percentage";
 
@@ -8306,7 +8306,7 @@ cmdEqP(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdSee(Base& base, int objc, Tcl_Obj* const objv[])
+cmdSee(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8323,7 +8323,7 @@ cmdSee(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdSelected(Base& base, int objc, Tcl_Obj* const objv[])
+cmdSelected(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8341,7 +8341,7 @@ cmdSelected(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdParent(Base& base, int objc, Tcl_Obj* const objv[])
+cmdParent(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8370,7 +8370,7 @@ cmdParent(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdToplevel(Base& base, int objc, Tcl_Obj* const objv[])
+cmdToplevel(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8391,7 +8391,7 @@ cmdToplevel(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdToplevels(Base& base, int objc, Tcl_Obj* const objv[])
+cmdToplevels(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		M_THROW(tcl::Exception(2, objv));
@@ -8401,7 +8401,7 @@ cmdToplevels(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdNeighbors(Base& base, int objc, Tcl_Obj* const objv[])
+cmdNeighbors(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8435,7 +8435,7 @@ cmdNeighbors(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdOrientation(Base& base, int objc, Tcl_Obj* const objv[])
+cmdOrientation(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8454,7 +8454,7 @@ cmdOrientation(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdFind(Base& base, int objc, Tcl_Obj* const objv[])
+cmdFind(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 5)
 		M_THROW(tcl::Exception(3, objv, "attribute value"));
@@ -8464,7 +8464,7 @@ cmdFind(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdFrames(Base& base, int objc, Tcl_Obj* const objv[])
+cmdFrames(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8480,7 +8480,7 @@ cmdFrames(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdLeaves(Base& base, int objc, Tcl_Obj* const objv[])
+cmdLeaves(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "?window?"));
@@ -8500,7 +8500,7 @@ cmdLeaves(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdPanes(Base& base, int objc, Tcl_Obj* const objv[])
+cmdPanes(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "?window?"));
@@ -8523,7 +8523,7 @@ cmdPanes(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdVisible(Base& base, int objc, Tcl_Obj* const objv[])
+cmdVisible(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "?window?"));
@@ -8538,14 +8538,14 @@ cmdVisible(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdHeaderFrames(Base& base, int objc, Tcl_Obj* const objv[])
+cmdHeaderFrames(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	tcl::setResult(base.root->collectHeaderFramesRecursively());
 }
 
 
 static void
-cmdHidden(Base& base, int objc, Tcl_Obj* const objv[])
+cmdHidden(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8561,7 +8561,7 @@ cmdHidden(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdLeader(Base& base, int objc, Tcl_Obj* const objv[])
+cmdLeader(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8578,7 +8578,7 @@ cmdLeader(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdLeaf(Base& base, int objc, Tcl_Obj* const objv[])
+cmdLeaf(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "uid"));
@@ -8594,7 +8594,7 @@ cmdLeaf(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdUid(Base& base, int objc, Tcl_Obj* const objv[])
+cmdUid(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8611,7 +8611,7 @@ cmdUid(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdId(Base& base, int objc, Tcl_Obj* const objv[])
+cmdId(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8632,7 +8632,7 @@ cmdId(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdInspect(Base& base, int objc, Tcl_Obj* const objv[])
+cmdInspect(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Node::AttrSet attrSet;
 
@@ -8644,7 +8644,7 @@ cmdInspect(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdDock(Base& base, int objc, Tcl_Obj* const objv[])
+cmdDock(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4 && objc != 6)
 		M_THROW(tcl::Exception(3, objv, "window ?receiver position?"));
@@ -8682,7 +8682,7 @@ cmdDock(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdUndock(Base& base, int objc, Tcl_Obj* const objv[])
+cmdUndock(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4 && objc != 5)
 		M_THROW(tcl::Exception(3, objv, "?-temporary? window"));
@@ -8717,7 +8717,7 @@ cmdUndock(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdDump(Base& base, int objc, Tcl_Obj* const objv[])
+cmdDump(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3 && objc != 4)
 		M_THROW(tcl::Exception(3, objv, "?window?"));
@@ -8740,7 +8740,7 @@ cmdDump(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdShow(Base& base, int objc, Tcl_Obj* const objv[])
+cmdShow(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "toplevel"));
@@ -8759,7 +8759,7 @@ cmdShow(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdToggle(Base& base, int objc, Tcl_Obj* const objv[])
+cmdToggle(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 4)
 		M_THROW(tcl::Exception(3, objv, "window"));
@@ -8778,7 +8778,7 @@ cmdToggle(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdRefresh(Base& base, int objc, Tcl_Obj* const objv[])
+cmdRefresh(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 3)
 		M_THROW(tcl::Exception(3, objv));
@@ -8788,7 +8788,7 @@ cmdRefresh(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdResize(Base& base, int objc, Tcl_Obj* const objv[])
+cmdResize(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 6 && objc != 10)
 		M_THROW(tcl::Exception(3, objv, "window width height ?minwidth minheight maxwidth maxheight?"));
@@ -8808,7 +8808,7 @@ cmdResize(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdSet(Base& base, int objc, Tcl_Obj* const objv[])
+cmdSet(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc < 4)
 		M_THROW(tcl::Exception(3, objv, "window ?attribute value...?"));
@@ -8836,7 +8836,7 @@ cmdSet(Base& base, int objc, Tcl_Obj* const objv[])
 
 
 static void
-cmdGet(Base& base, int objc, Tcl_Obj* const objv[])
+cmdGet(Base& base, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 5 && objc != 6)
 		M_THROW(tcl::Exception(3, objv, "window attribute ?default?"));
@@ -8888,7 +8888,7 @@ initBase(Tcl_Obj* path)
 }
 
 
-typedef void (*PerformFunc)(Base& base, int objc, Tcl_Obj* const objv[]);
+typedef void (*PerformFunc)(Base& base, Tcl_Size objc, Tcl_Obj* const objv[]);
 
 static Base&
 lookupBase(bool forLoad, Tcl_Obj* path)
@@ -8912,7 +8912,7 @@ lookupBase(bool forLoad, Tcl_Obj* path)
 
 
 static void
-execute(PerformFunc func, bool forLoad, int objc, Tcl_Obj* const objv[])
+execute(PerformFunc func, bool forLoad, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	M_ASSERT(objc > 2);
 	func(lookupBase(forLoad, objv[2]), objc, objv);
@@ -8920,7 +8920,7 @@ execute(PerformFunc func, bool forLoad, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTwm(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdTwm(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{

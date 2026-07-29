@@ -23,6 +23,7 @@
 #include "m_vector.h"
 #include "m_exception.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 
 #ifdef __linux__

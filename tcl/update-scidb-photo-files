@@ -39,7 +39,7 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 #! The next line restarts using tclscidc: \
 exec `dirname $0`/tclscidc-beta "$0" ${1+"$@"}
 
-package require Tcl 8.5
+package require Tcl 8.6-
 package require tclscidc
 
 catch { wm withdraw . }

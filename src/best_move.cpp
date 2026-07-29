@@ -37,6 +37,7 @@
 #include "m_string.h"
 #include "m_ifstream.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 #include <tk.h>
 

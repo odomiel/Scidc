@@ -2685,7 +2685,7 @@ Codec::getEncodingList(EncodingList& result)
 
 	Tcl_Obj*		list = Tcl_GetObjResult(::sys::tcl::interp());
 	Tcl_Obj**	objv;
-	Tcl_Size	objc;
+	Tcl_Size			objc;
 
 	Tcl_ListObjGetElements(::sys::tcl::interp(), list, &objc, &objv);
 	::qsort(objv, objc, sizeof(Tcl_Obj*), ::compareEncodings);

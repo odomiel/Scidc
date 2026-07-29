@@ -19,6 +19,7 @@
 #include "tk_init.h"
 
 #include "tcl_base.h"
+#include "sys_compat_tcl9.h"
 
 #include "m_utility.h"
 #include "m_backtrace.h"
@@ -54,7 +55,7 @@ static int x11_ignore_badmatch_handler(Display* /*dpy*/, XErrorEvent* err) {
 
 
 static int
-getRegion(char const* subcmd, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+getRegion(char const* subcmd, Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	// TODO: see gdk_x11_device_core_surface_at_position() in gdkdevice-core-x11.c
 
@@ -177,7 +178,7 @@ getRegion(char const* subcmd, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdX11(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
+cmdX11(ClientData, Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "region", 0 };
 	struct { char const* usage; int min_args; } const definitions[] = { { "region <x> <y> <photo>", 4 } };

@@ -19,6 +19,7 @@
 #include "tcl_exception.h"
 #include "tcl_base.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 
 #include <stdarg.h>

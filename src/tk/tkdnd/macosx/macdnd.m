@@ -750,11 +750,11 @@ int TkDND_UnregisterDragWidgetObjCmd(ClientData clientData, Tcl_Interp *ip,
  */
 int Tkdnd_Init (Tcl_Interp *interp) {
 
-  if (Tcl_InitStubs(interp, "8.5", 0) == NULL) {
+  if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
     return TCL_ERROR;
   }
 
-  if (Tk_InitStubs(interp, "8.5", 0) == NULL) {
+  if (Tk_InitStubs(interp, "8.6-", 0) == NULL) {
     return TCL_ERROR;
   }
 

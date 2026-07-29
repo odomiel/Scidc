@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "svg_path_renderer.h"
 #include "svg_parser.h"
@@ -1726,7 +1727,7 @@ tk_make_border(char const* subcmd,
 	char const*	composite		= "set";
 	agg::rgba8	borderColor(0, 0, 0);
 
-	for (int i = 0; i < objc; i++)
+	for (Tcl_Size i = 0; i < objc; i++)
 	{
 		switch (::tcl::uniqueMatchObj(objv[i], options))
 		{
@@ -2159,7 +2160,7 @@ tk_copy_image(	char const* subcmd,
 	int y2 = -1;
 	bool blend = false;
 
-	for (int i = 0; i < objc; i++)
+	for (Tcl_Size i = 0; i < objc; i++)
 	{
 		char const* option = Tcl_GetString(objv[i]);
 
@@ -2335,7 +2336,7 @@ tk_create_image(	char const* subcmd,
 	svg::gradient	gradient;
 	bool				useGradient(false);
 
-	for (int i = 0; i < objc; i++)
+	for (Tcl_Size i = 0; i < objc; i++)
 	{
 		switch (::tcl::uniqueMatchObj(objv[i], options))
 		{
@@ -2452,7 +2453,7 @@ tk_create_image(	char const* subcmd,
 						return tcl_usage(subcmd, options, args);
 
 					Tcl_Obj** objs;
-					int len;
+					Tcl_Size len;
 
 					if (Tcl_ListObjGetElements(ti, objv[++i], &len, &objs) == TCL_ERROR)
 						return TCL_ERROR;
@@ -2925,7 +2926,7 @@ tk_image(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 										Tcl_GetString(objv[0]));
 			}
 
-			int svg_len;
+			Tcl_Size svg_len;
 			char const* svg_data = Tcl_GetStringFromObj(svg_obj, &svg_len);
 			char const* str1 = Tcl_GetString(objv[1]);
 			return tk_create_image(Subcommands[index], ti, svg_data, svg_len, str1, objc - 2, objv + 2);

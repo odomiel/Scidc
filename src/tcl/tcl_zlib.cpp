@@ -86,7 +86,7 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 		char inBuf[ChunkSize];
 		char outBuf[ChunkSize];
 
-		int avail = Tcl_Read(srcChan, inBuf, mstl::min(remaining, int(ChunkSize)));
+		int avail = Tcl_Read(srcChan, inBuf, static_cast<Tcl_Size>(mstl::min(remaining, int(ChunkSize))));
 		if (avail < 0)
 		{
 			deflateEnd(&strm);
@@ -127,7 +127,7 @@ cmdZlibInflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 			int have = ChunkSize - strm.avail_out;
 			total += have;
 
-			if (Tcl_Write(dstChan, outBuf, have) != have)
+			if (Tcl_Write(dstChan, outBuf, static_cast<Tcl_Size>(have)) != have)
 			{
 				inflateEnd(&strm);
 				Tcl_SetObjResult(ti, Tcl_NewStringObj("write failed", -1));
@@ -213,7 +213,7 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 		char inBuf[ChunkSize];
 		char outBuf[ChunkSize];
 
-		int avail = Tcl_Read(srcChan, inBuf, ChunkSize);
+		int avail = Tcl_Read(srcChan, inBuf, Tcl_Size(ChunkSize));
 		if (avail < 0)
 		{
 			deflateEnd(&strm);
@@ -235,7 +235,7 @@ cmdZlibDeflate(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const o
 
 			int have = ChunkSize - strm.avail_out;
 
-			if (Tcl_Write(dstChan, outBuf, have) != have)
+			if (Tcl_Write(dstChan, outBuf, static_cast<Tcl_Size>(have)) != have)
 			{
 				deflateEnd(&strm);
 				Tcl_SetObjResult(ti, Tcl_NewStringObj("write failed", -1));

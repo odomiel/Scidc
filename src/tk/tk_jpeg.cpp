@@ -17,6 +17,7 @@
 // ======================================================================
 
 #include "tk_init.h"
+#include "sys_compat_tcl9.h"
 
 #include "jpeg_image.h"
 #include "jpeg_reader.h"
@@ -112,7 +113,7 @@ ChannelReader::read(unsigned char* buf, size_t len)
 	if (::Tcl_Eof(m_chan))
 		return 0;
 
-	int nbytes = ::Tcl_Read(m_chan, reinterpret_cast<char*>(buf), len);
+	int nbytes = ::Tcl_Read(m_chan, reinterpret_cast<char*>(buf), static_cast<Tcl_Size>(len));
 
 	if (__builtin_expect(nbytes < 0, 0))
 		throw JPEG::Exception("channel read failed");
@@ -264,7 +265,7 @@ str_read_jpeg(	Tcl_Interp* ti,
 					int width, int height,
 					int src_x, int src_y)
 {
-	int length;
+	Tcl_Size length;
 	unsigned char* data = Tcl_GetByteArrayFromObj(dataObj, &length);
 
 	JPEG::Image::Magic magic;
@@ -302,7 +303,7 @@ str_read_jpeg(	Tcl_Interp* ti,
 static int
 str_match_jpeg(Tcl_Obj* dataObj, Tcl_Obj*, int* width, int* height, Tcl_Interp* ti)
 {
-	int length;
+	Tcl_Size length;
 	unsigned char* data = Tcl_GetByteArrayFromObj(dataObj, &length);
 
 	if (length < int(sizeof(JPEG::Image::Magic)))

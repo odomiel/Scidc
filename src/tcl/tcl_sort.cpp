@@ -182,7 +182,7 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 	bool useMapping	= false;
 	bool indices		= false;
 
-	for (int i = 1; i < objc - 1; i++)
+	for (Tcl_Size i = 1; i < objc - 1; i++)
 	{
 		int index;
 

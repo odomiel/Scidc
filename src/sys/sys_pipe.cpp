@@ -18,6 +18,8 @@
 
 #include "sys_pipe.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "m_assert.h"
 
 #include <tcl.h>
@@ -32,7 +34,7 @@ action(ClientData data, int mask)
 
 	char c;
 
-	if (Tcl_Read(reinterpret_cast<Pipe*>(data)->channel(), &c, 1) != -1)
+	if (Tcl_Read(reinterpret_cast<Pipe*>(data)->channel(), &c, Tcl_Size(1)) != -1)
 		reinterpret_cast<Pipe*>(data)->available(c);
 }
 

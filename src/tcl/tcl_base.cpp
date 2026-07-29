@@ -692,8 +692,6 @@ vinvoke(char const* callee, Tcl_Obj* cmd, va_list args)
 
 		for ( ; arg; ++objc, arg = va_arg(args, Tcl_Obj*))
 		{
-			// simple check whether this is a Tcl object.
-			M_ASSERT(0 <= arg->refCount && arg->refCount <= 10000);
 			M_ASSERT(objc < MaxArgs);
 			objv[objc] = tcl::incrRef(arg);
 		}
@@ -714,9 +712,6 @@ vinvoke(char const* callee, Tcl_Obj* cmd, va_list args)
 		for ( ; arg; ++argc, arg = va_arg(args, Tcl_Obj*))
 		{
 			// simple check whether this is a Tcl object.
-			M_ASSERT(0 <= arg->refCount && arg->refCount <= 10000);
-			M_ASSERT(argc < MaxArgs);
-
 			objv[argc] = tcl::incrRef(arg);
 			argv[argc] = Tcl_GetString(arg);
 		}

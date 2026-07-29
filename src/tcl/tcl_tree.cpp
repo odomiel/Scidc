@@ -29,6 +29,8 @@
 #include "tcl_application.h"
 #include "tcl_player.h"
 
+#include "sys_compat_tcl9.h"
+
 #include "app_application.h"
 #include "app_cursor.h"
 
@@ -74,7 +76,7 @@ static char const* CmdView			= "::scidc::tree::view";
 
 
 static int
-parseArguments(int objc, Tcl_Obj* const objv[],
+parseArguments(Tcl_Size objc, Tcl_Obj* const objv[],
 					rating::Type& ratingType,
 					::db::tree::Method& method,
 					::db::tree::Mode& mode)
@@ -185,7 +187,7 @@ tcl::tree::variantToString(variant::Type variant)
 
 
 static int
-cmdInit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInit(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (m_progress == 0)
 	{
@@ -199,7 +201,7 @@ cmdInit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdList(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj* list = Tcl_NewListObj(0, 0);
 	setResult(list);
@@ -230,7 +232,7 @@ cmdList(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (Scidb->haveReferenceBase())
 		setResult(Scidb->referenceBase().database().name());
@@ -242,7 +244,7 @@ cmdGet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVariant(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (Scidb->haveReferenceBase())
 		setResult(tcl::tree::variantToString(Scidb->referenceBase().database().variant()));
@@ -254,7 +256,7 @@ cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* base = stringFromObj(objc, objv, 1);
 
@@ -268,7 +270,7 @@ cmdSet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSwitch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSwitch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->setSwitchReferenceBase(boolFromObj(objc, objv, 1));
 	return TCL_OK;
@@ -276,7 +278,7 @@ cmdSwitch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUpdate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUpdate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	M_ASSERT(m_progress);
 
@@ -300,7 +302,7 @@ cmdUpdate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdStop(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->stopUpdateTree();
 	return TCL_OK;
@@ -308,7 +310,7 @@ cmdStop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFinish(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFinish(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	attribute::tree::ID sortColumn = attribute::tree::LastColumn;
 
@@ -385,7 +387,7 @@ cmdFinish(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGameIndex(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGameIndex(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tree const* tree = Scidb->currentTree();
 	unsigned n = unsignedFromObj(objc, objv, 1);
@@ -406,7 +408,7 @@ cmdGameIndex(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFetch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFetch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tree const* tree = Scidb->currentTree();
 
@@ -479,7 +481,7 @@ cmdFetch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFreeze(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFreeze(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->freezeTree(boolFromObj(objc, objv, 1));
 	return TCL_OK;
@@ -487,7 +489,7 @@ cmdFreeze(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMove(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMove(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (Tree const* tree = Scidb->currentTree())
 	{
@@ -517,7 +519,7 @@ cmdMove(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPlayer(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPlayer(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (Tree const* tree = Scidb->currentTree())
 	{
@@ -560,7 +562,7 @@ cmdPlayer(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdView(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdView(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult((Scidb->haveReferenceBase()) ? int(Scidb->referenceBase().treeViewIdentifier()) : -1);
 	return TCL_OK;
@@ -568,7 +570,7 @@ cmdView(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPosition(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPosition(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (Tree const* tree = Scidb->currentTree())
 	{
@@ -596,7 +598,7 @@ cmdPosition(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIsRefBase(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdIsRefBase(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* base = stringFromObj(objc, objv, 1);
 
@@ -612,7 +614,7 @@ cmdIsRefBase(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIsUpToDate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdIsUpToDate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->treeIsUpToDate(m_key));
 	return TCL_OK;
@@ -620,7 +622,7 @@ cmdIsUpToDate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInvalidate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInvalidate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	tcl::tree::invalidateCache();
 	return TCL_OK;

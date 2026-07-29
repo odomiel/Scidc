@@ -1490,7 +1490,7 @@ squareFromObj(int objc, Tcl_Obj* const objv[], unsigned index)
 
 
 static int
-cmdEcoTable(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdEcoTable(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	move::Notation	notation	= move::SAN;
 	EcoTable::Mode mode = EcoTable::SinglePly;
@@ -1568,7 +1568,7 @@ cmdEcoTable(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDump(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdDump(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*		database	= stringFromObj(objc, objv, 1);
 	variant::Type	variant	= ::tcl::game::variantFromObj(objc, objv, 2);
@@ -1620,7 +1620,7 @@ cmdDump(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLoad(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLoad(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	int view = -1;
 
@@ -1664,7 +1664,7 @@ cmdLoad(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdReload(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdReload(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = objc == 1 ? Application::InvalidPosition : intFromObj(objc, objv, 1);
 	setResult(::stateToInt(scidb->loadGame(position)));
@@ -1673,7 +1673,7 @@ cmdReload(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdModified(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdModified(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool flag = true;
 	bool irreversible = false;
@@ -1705,7 +1705,7 @@ cmdModified(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMove(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMove(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->game().addMove(stringFromObj(objc, objv, 1));
 	return TCL_OK;
@@ -1713,7 +1713,7 @@ cmdMove(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdValid(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdValid(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Game const& game = Scidb->game();
 	mstl::string san(stringFromObj(objc, objv, 1));
@@ -1723,7 +1723,7 @@ cmdValid(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVariant(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(::tcl::tree::variantToString(Scidb->game().variant()));
 	return TCL_OK;
@@ -1731,7 +1731,7 @@ cmdVariant(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdNew(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdNew(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned view = unsignedFromObj(objc, objv, 1);
 	::db::variant::Type type = ::db::variant::Normal;
@@ -1748,7 +1748,7 @@ cmdNew(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSwitch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSwitch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = intFromObj(objc, objv, 1);
 
@@ -1766,7 +1766,7 @@ cmdSwitch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdRelease(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdRelease(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position	= unsignedFromObj(objc, objv, 1);
 	scidb->releaseGame(position);
@@ -1775,7 +1775,7 @@ cmdRelease(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSwap(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSwap(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->swapGames(unsignedFromObj(objc, objv, 1), unsignedFromObj(objc, objv, 2));
 	return TCL_OK;
@@ -1783,7 +1783,7 @@ cmdSwap(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSwapPositions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSwapPositions(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->swapGamePositions(unsignedFromObj(objc, objv, 1), unsignedFromObj(objc, objv, 2));
 	return TCL_OK;
@@ -1791,7 +1791,7 @@ cmdSwapPositions(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = intFromObj(objc, objv, 1);
 
@@ -1803,7 +1803,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLayout(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLayout(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned	position	= unsignedFromObj(objc, objv, 1);
 	Game&		game		= scidb->game(position);
@@ -1818,7 +1818,7 @@ cmdLayout(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*		what				= stringFromObj(objc, objv, 1);
 	unsigned			position			= unsignedFromObj(objc, objv, 2);
@@ -1851,7 +1851,7 @@ cmdSubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUnsubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUnsubscribe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned	position = unsignedFromObj(objc, objv, 2);
 
@@ -1890,7 +1890,7 @@ cmdUnsubscribe(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdRefresh(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdRefresh(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = objc > 1 ? unsignedFromObj(objc, objv, 1) : Application::InvalidPosition;
 
@@ -1917,7 +1917,7 @@ cmdRefresh(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTranspose(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdTranspose(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	bool	force	= boolFromObj(objc, objv, 1);
 	Game&	game	= scidb->game();
@@ -1930,7 +1930,7 @@ cmdTranspose(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned		index		= 1;
 	char const*	firstArg	= stringFromObj(objc, objv, index);
@@ -2040,7 +2040,7 @@ cmdGo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMoveto(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMoveto(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned		position	= objc <= 2 ? Application::InvalidPosition : intFromObj(objc, objv, 1);
 	char const*	key		= stringFromObj(objc, objv, objc <= 2 ? 1 : 2);
@@ -2051,7 +2051,7 @@ cmdMoveto(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPosition(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPosition(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{
@@ -2109,7 +2109,7 @@ cmdPosition(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdNext(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdNext(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "keys", "moves", "move", 0 };
 	static char const* args[] = { "?<position>?", "?<position>?", "",  };
@@ -2188,7 +2188,7 @@ cmdNext(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLevel(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLevel(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->game().variationLevel());
 	return TCL_OK;
@@ -2196,7 +2196,7 @@ cmdLevel(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLangSet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLangSet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	int position = objc < 2 ? -1 : intFromObj(objc, objv, 1);
 	Tcl_Obj* languages = objectFromObj(objc, objv, objc < 2 ? 1 : 2);
@@ -2231,7 +2231,7 @@ cmdLangSet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVariation(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVariation(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{
@@ -2370,7 +2370,7 @@ cmdVariation(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCurrent(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCurrent(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(int(Scidb->currentPosition()));
 	return TCL_OK;
@@ -2378,7 +2378,7 @@ cmdCurrent(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPly(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPly(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	// NOTE: this call may come too early (before scratch game is created)
 	if (scidb->haveCurrentGame())
@@ -2391,7 +2391,7 @@ cmdPly(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSave(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSave(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (objc != 8 && objc != 10)
 	{
@@ -2442,7 +2442,7 @@ cmdSave(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdStrip(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{
@@ -2501,7 +2501,7 @@ cmdStrip(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdReplace(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdReplace(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->game().replaceVariation(stringFromObj(objc, objv, 1));
 	return TCL_OK;
@@ -2509,7 +2509,7 @@ cmdReplace(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTrial(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdTrial(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Game& game = scidb->game();
 
@@ -2521,7 +2521,7 @@ cmdTrial(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdExchange(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdExchange(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*	san	= stringFromObj(objc, objv, 1);
 	bool			force	= false;
@@ -2549,7 +2549,7 @@ cmdExchange(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLink(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLink(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = objc == 1 ? Application::InvalidPosition : intFromObj(objc, objv, 1);
 	Tcl_Obj* objs[5];
@@ -2566,7 +2566,7 @@ cmdLink(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSink(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSink(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	typedef ::util::crc::checksum_t checksum_t;
 
@@ -2585,7 +2585,7 @@ cmdSink(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSink_(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSink_(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = objc == 1 ? Application::InvalidPosition : intFromObj(objc, objv, 1);
 	Tcl_Obj* objs[3];
@@ -2600,7 +2600,7 @@ cmdSink_(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdQuery(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdQuery(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* fst = stringFromObj(objc, objv, 1);
 	char const* cmd;
@@ -2929,7 +2929,7 @@ cmdQuery(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	int pos = objc == 3 ? intFromObj(objc, objv, 1) : Application::InvalidPosition;
 
@@ -2955,7 +2955,7 @@ cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdClear(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdClear(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	variant::Type	variant	= Scidb->game().variant();
 	int				idn		= 0;
@@ -2984,7 +2984,7 @@ cmdClear(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdExecute(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdExecute(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*	cmd		= stringFromObj(objc, objv, 1);
 	int			position	= objc < 3 ? -1 : intFromObj(objc, objv, 2);
@@ -3001,7 +3001,7 @@ cmdExecute(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdBoard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdBoard(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Board board;
 
@@ -3019,7 +3019,7 @@ cmdBoard(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	int pos = objc == 1 ? Application::InvalidPosition : intFromObj(objc, objv, 1);
 	setResult(Scidb->game(pos).currentBoard().toFen(Scidb->game().variant()));
@@ -3028,7 +3028,7 @@ cmdFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPromoted(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPromoted(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Board board;
 
@@ -3045,7 +3045,7 @@ cmdPromoted(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMaterial(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMaterial(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Game const& game = Scidb->game();
 
@@ -3068,7 +3068,7 @@ cmdMaterial(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUndoSetup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUndoSetup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned undoLevel = unsignedFromObj(objc, objv, 1);
 	unsigned combinePredecessingMoves = unsignedFromObj(objc, objv, 2);
@@ -3079,7 +3079,7 @@ cmdUndoSetup(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetupStyle(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetupStyle(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned position = unsignedFromObj(objc, objv, 1);
 
@@ -3130,7 +3130,7 @@ cmdSetupStyle(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSetupNags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSetupNags(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Array elems = getElements(objectFromObj(objc, objv, 1));
 
@@ -3154,7 +3154,7 @@ cmdSetupNags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdTags(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	int	position				= -1;
 	bool	userSuppliedOnly	= false;
@@ -3191,7 +3191,7 @@ cmdTags(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdNumber(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdNumber(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->gameNumber(objc > 1 ? intFromObj(objc, objv, 1) : -1));
 	return TCL_OK;
@@ -3199,7 +3199,7 @@ cmdNumber(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdIndex(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdIndex(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Scidb->gameIndex(objc > 1 ? intFromObj(objc, objv, 1) : -1));
 	return TCL_OK;
@@ -3207,7 +3207,7 @@ cmdIndex(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPush(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPush(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->startTrialMode();
 	return TCL_OK;
@@ -3215,7 +3215,7 @@ cmdPush(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPop(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	scidb->endTrialMode();
 	scidb->refreshGame(Application::InvalidPosition, true);
@@ -3224,7 +3224,7 @@ cmdPop(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdUpdate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdUpdate(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{
@@ -3372,7 +3372,7 @@ cmdUpdate(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdImport(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* figurine = nullptr;
 	char const* encoding = sys::utf8::Codec::utf8();
@@ -3648,7 +3648,7 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdExport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdExport(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*					option;
 	char const*					comment("");
@@ -3723,7 +3723,7 @@ cmdExport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdToPGN(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdToPGN(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const*	option;
 	unsigned		flags(PgnWriter::Default_Flags);
@@ -3761,7 +3761,7 @@ cmdToPGN(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPrint(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	struct Log : public TeXt::Controller::Log
 	{
@@ -3813,7 +3813,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 			for (Tcl_Size i = 0; i < nagObjc; ++i)
 			{
 				Tcl_Obj** pair;
-				int nelems;
+				Tcl_Size nelems;
 
 				if (Tcl_ListObjGetElements(ti, nagObjs[i], &nelems, &pair) != TCL_OK || nelems != 2)
 					error(CmdPrint, 0, 0, "invalid nag map");
@@ -3882,7 +3882,7 @@ cmdPrint(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCopy(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCopy(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* cmd = stringFromObj(objc, objv, 1);
 
@@ -3930,7 +3930,7 @@ cmdCopy(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdView(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdView(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = { "id", "next", "prev", "first", "last", "random", 0 };
 	enum { Cmd_Id, Cmd_Next, Cmd_Prev, Cmd_First, Cmd_Last, Cmd_Random };
@@ -3963,7 +3963,7 @@ cmdView(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdPaste(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdPaste(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* arg = stringFromObj(objc, objv, 1);
 
@@ -3984,7 +3984,7 @@ cmdPaste(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdMerge(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMerge(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Tcl_Obj*		args	= objectFromObj(objc, objv, 2);
 	char const*	pos	= stringFromObj(objc, objv, 3);
@@ -4054,7 +4054,7 @@ cmdMerge(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdVerify(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdVerify(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(scidb->verifyGame(unsignedFromObj(objc, objv, 1)));
 	return TCL_OK;
@@ -4062,7 +4062,7 @@ cmdVerify(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLines(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLines(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	Game const& game = Scidb->game();
 
@@ -4088,7 +4088,7 @@ cmdLines(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdCodeToFen(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCodeToFen(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned code(unsignedFromObj(objc, objv, 1));
 	::db::variant::Type variant(Scidb->game().variant());

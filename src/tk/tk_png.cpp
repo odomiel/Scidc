@@ -116,6 +116,8 @@
 #include <memory.h>
 #include <limits.h>
 
+#include "sys_compat_tcl9.h"
+
 #include <zlib.h>
 #include <math.h>
 #include "tcl.h"
@@ -684,7 +686,7 @@ PNGRead(Tcl_Interp* interp, PNGImage* pPNG,
 	{
 		int blockSz = PNG_MIN(destSz, PNG_BLOCK_SZ);
 
-		blockSz = Tcl_Read(pPNG -> mChannel, (char *)pDest, blockSz);
+		blockSz = Tcl_Read(pPNG -> mChannel, (char *)pDest, static_cast<Tcl_Size>(blockSz));
 
 		/* Check for read failure */
 
@@ -2725,7 +2727,7 @@ StringReadPNG(Tcl_Interp *interp, Tcl_Obj *pObjData, Tcl_Obj *pObjFmt,
 extern Tk_PhotoImageFormat tkImgFmtPNG;
 
 #ifndef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#define	TKPNG_REQUIRE "8.6"
+#define	TKPNG_REQUIRE "8.6-"
 #endif /* !USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 /*

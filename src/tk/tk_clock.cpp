@@ -34,6 +34,7 @@
 #include "agg_scanline_u.h"
 #include "agg_renderer_scanline.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 #include <tk.h>
 #include <time.h>

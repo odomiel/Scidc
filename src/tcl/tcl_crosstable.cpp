@@ -113,7 +113,7 @@ getTable(char const* cmd, unsigned dbId, unsigned view)
 
 
 static int
-cmdMake(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdMake(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* database = stringFromObj(objc, objv, 1);
 	variant::Type variant(tcl::game::variantFromObj(objc, objv, 2));
@@ -131,7 +131,7 @@ cmdMake(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdGet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdGet(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] = {
 		"bestMode", "playerName", "playerId", "playerInfo", "playerCount", 0
@@ -218,7 +218,7 @@ cmdGet(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdRelease(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdRelease(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	unsigned databaseId(unsignedFromObj(objc, objv, 1));
 	unsigned view(unsignedFromObj(objc, objv, 2));
@@ -235,7 +235,7 @@ cmdRelease(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdEmit(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdEmit(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	struct Log : public TeXt::Controller::Log
 	{

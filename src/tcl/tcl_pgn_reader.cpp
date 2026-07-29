@@ -37,6 +37,7 @@
 #include "m_string.h"
 #include "m_assert.h"
 
+#include "sys_compat_tcl9.h"
 #include <tcl.h>
 
 

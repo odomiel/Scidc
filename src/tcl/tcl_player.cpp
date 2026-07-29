@@ -380,7 +380,7 @@ tcl::player::getInfo(NamebasePlayer const& player,
 
 
 static int
-cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdCount(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	setResult(Tcl_NewIntObj(m_dictionary ? m_dictionary->count() : 0));
 	return TCL_OK;
@@ -388,7 +388,7 @@ cmdCount(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdDict(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdDict(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	char const* cmd = stringFromObj(objc, objv, 1);
 
@@ -434,7 +434,7 @@ cmdDict(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (!m_dictionary)
 		return error(CmdInfo, nullptr, nullptr, "player dictionary is closed");
@@ -612,7 +612,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdLetter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdLetter(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (!m_dictionary)
 		return error(CmdInfo, nullptr, nullptr, "player dictionary is closed");
@@ -624,7 +624,7 @@ cmdLetter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdFilter(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (!m_dictionary)
 		return error(CmdInfo, nullptr, nullptr, "player dictionary is closed");
@@ -827,7 +827,7 @@ cmdFilter(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSearch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (!m_dictionary)
 		return error(CmdInfo, nullptr, nullptr, "player dictionary is closed");
@@ -841,7 +841,7 @@ cmdSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSort(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
+cmdSort(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 {
 	if (!m_dictionary)
 		return error(CmdInfo, nullptr, nullptr, "player dictionary is closed");
