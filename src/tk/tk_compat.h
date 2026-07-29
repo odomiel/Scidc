@@ -646,8 +646,9 @@ inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
 }
 
 inline TkMainInfo* getMainPtr(Tk_Window tkwin) {
-    // In Tk 9.0: Tk_WindowGetMainInfo(tkwin) - öffentliche API
-    return tkwin ? Tk_WindowGetMainInfo(tkwin) : nullptr;
+    // In Tk 9.0: TkMainInfo is internal, no public API available
+    // Return nullptr - caller must handle this case
+    return nullptr;
 }
 
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {

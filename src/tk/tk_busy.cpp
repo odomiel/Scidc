@@ -444,7 +444,7 @@ NewWindowObj(Tk_Window tkwin)
     winPtr = (WindowRep*)(objPtr->internalRep.otherValuePtr);
     winPtr->tkwin = tkwin;
     winPtr->mainPtr = mainPtr;
-    winPtr->epoch = mainPtr->deletionEpoch;
+    winPtr->epoch = mainPtr ? mainPtr->deletionEpoch : 0;
     return objPtr;
 }
 
