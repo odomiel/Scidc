@@ -190,6 +190,10 @@ inline int getScreenNum(TkWindow* winPtr);
 // In Tk 8.6: winPtr->dispPtr
 inline struct TkDisplay* getDispPtr(TkWindow* winPtr);
 
+// Gibt den TkMainInfo-Pointer zurück
+// In Tk 8.6: ((TkWindow*)tkwin)->mainPtr
+inline TkMainInfo* getMainPtr(Tk_Window tkwin);
+
 // Gibt den X Display-Pointer von einem TkDisplay zurück
 // In Tk 8.6: dispPtr->display
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr);
@@ -354,6 +358,10 @@ inline int getScreenNum(TkWindow* winPtr) {
 
 inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
     return winPtr ? winPtr->dispPtr : nullptr;
+}
+
+inline TkMainInfo* getMainPtr(Tk_Window tkwin) {
+    return tkwin ? ((TkWindow*)tkwin)->mainPtr : nullptr;
 }
 
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {
@@ -635,6 +643,11 @@ inline int getScreenNum(TkWindow* winPtr) {
 inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
     // In Tk 9.0: Tk_WindowGetDisplayPtr(winPtr) - öffentliche API
     return winPtr ? Tk_WindowGetDisplayPtr(winPtr) : nullptr;
+}
+
+inline TkMainInfo* getMainPtr(Tk_Window tkwin) {
+    // In Tk 9.0: Tk_WindowGetMainInfo(tkwin) - öffentliche API
+    return tkwin ? Tk_WindowGetMainInfo(tkwin) : nullptr;
 }
 
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {

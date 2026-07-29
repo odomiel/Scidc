@@ -549,7 +549,7 @@ selectionSend(	Tcl_Interp* ti,
 					type,
 					format,
 					PropModeReplace,
-					reinterpret_cast<unsigned char*>(src),
+						(const unsigned char*)(src),
 					srcLen);
 
 				Tcl_DStringFree(&ds);
