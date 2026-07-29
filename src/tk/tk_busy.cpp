@@ -436,7 +436,7 @@ static Tcl_Obj *
 NewWindowObj(Tk_Window tkwin)
 {
     Tcl_Obj *objPtr = Tcl_NewStringObj(Tk_PathName(tkwin), -1);
-    TkMainInfo *mainPtr = ((TkWindow*)(tkwin))->mainPtr;
+    TkMainInfo *mainPtr = tkCompat::getMainPtr(tkwin);
     WindowRep *winPtr;
 
     SetWindowFromAny(nullptr, objPtr);
