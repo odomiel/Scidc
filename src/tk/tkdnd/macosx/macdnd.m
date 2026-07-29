@@ -18,6 +18,7 @@
 #import <tkInt.h>
 #import <tkMacOSXInt.h>
 #import <Cocoa/Cocoa.h>
+#include "tk_compat.h"
 
 #define TKDND_OSX_KEVIN_WORKARROUND
 
@@ -40,15 +41,10 @@
 
 #ifndef Tk_Interp
 /*
- * Tk 8.5 has a new function to return the interpreter that is associated with a
- * window. Under 8.4 and earlier versions, simulate this function.
+ * Tk 9.0 has Tk_Interp function. For earlier versions, use tkCompat.
  */
-#import "tkInt.h"
 Tcl_Interp * TkDND_Interp(Tk_Window tkwin) {
-  if (tkwin != NULL && ((TkWindow *)tkwin)->mainPtr != NULL) {
-    return ((TkWindow *)tkwin)->mainPtr->interp;
-  }
-  return NULL;
+  return tkCompat::getInterp(tkwin);
 }; /* Tk_Interp */
 #define Tk_Interp TkDND_Interp
 #endif /* Tk_Interp */

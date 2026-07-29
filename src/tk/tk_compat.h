@@ -194,6 +194,11 @@ inline struct TkDisplay* getDispPtr(TkWindow* winPtr);
 // In Tk 8.6: ((TkWindow*)tkwin)->mainPtr
 inline TkMainInfo* getMainPtr(Tk_Window tkwin);
 
+// Gibt den Tcl_Interp von einem Tk_Window zurück
+// In Tk 8.6: getMainPtr(tkwin)->interp
+// In Tk 9.0: Tk_Interp(tkwin) (öffentliche API)
+inline Tcl_Interp* getInterp(Tk_Window tkwin);
+
 // Gibt den X Display-Pointer von einem TkDisplay zurück
 // In Tk 8.6: dispPtr->display
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr);
@@ -362,6 +367,11 @@ inline struct TkDisplay* getDispPtr(TkWindow* winPtr) {
 
 inline TkMainInfo* getMainPtr(Tk_Window tkwin) {
     return tkwin ? ((TkWindow*)tkwin)->mainPtr : nullptr;
+}
+
+inline Tcl_Interp* getInterp(Tk_Window tkwin) {
+    TkMainInfo* mainPtr = getMainPtr(tkwin);
+    return mainPtr ? mainPtr->interp : nullptr;
 }
 
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {
@@ -649,6 +659,11 @@ inline TkMainInfo* getMainPtr(Tk_Window tkwin) {
     // In Tk 9.0: TkMainInfo is internal, no public API available
     // Return nullptr - caller must handle this case
     return nullptr;
+}
+
+inline Tcl_Interp* getInterp(Tk_Window tkwin) {
+    // In Tk 9.0: Tk_Interp(tkwin) - öffentliche API
+    return tkwin ? Tk_Interp(tkwin) : nullptr;
 }
 
 inline Display* getDisplayFromDisp(struct TkDisplay* dispPtr) {
