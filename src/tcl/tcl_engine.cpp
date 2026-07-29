@@ -495,7 +495,7 @@ namespace {
 		void entry(unsigned index, ::db::Player const& player) override
 		{
 			if (player.isEngine() && (player.supportsUciProtocol() || player.supportsWinboardProtocol()))
-				Tcl_ListObjAppendElement(0, m_list, Tcl_NewStringObj(player.name(), player.name().size()));
+				Tcl_ListObjAppendElement(0, m_list, Tcl_NewStringObj(player.name(), Tcl_SizeFromSizeT(player.name().size())));
 		}
 	};
 }
@@ -741,27 +741,27 @@ cmdProbe(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 				if (!engine.identifier().empty())
 				{
 					v[n++] = Tcl_NewStringObj("Identifier", -1);
-					v[n++] = Tcl_NewStringObj(engine.identifier(), engine.identifier().size());
+					v[n++] = Tcl_NewStringObj(engine.identifier(), Tcl_SizeFromSizeT(engine.identifier().size()));
 				}
 				if (!engine.author().empty())
 				{
 					v[n++] = Tcl_NewStringObj("Author", -1);
-					v[n++] = Tcl_NewStringObj(engine.author(), engine.author().size());
+					v[n++] = Tcl_NewStringObj(engine.author(), Tcl_SizeFromSizeT(engine.author().size()));
 				}
 				if (!engine.email().empty())
 				{
 					v[n++] = Tcl_NewStringObj("Email", -1);
-					v[n++] = Tcl_NewStringObj(engine.email(), engine.email().size());
+					v[n++] = Tcl_NewStringObj(engine.email(), Tcl_SizeFromSizeT(engine.email().size()));
 				}
 				if (!engine.url().empty())
 				{
 					v[n++] = Tcl_NewStringObj("Url", -1);
-					v[n++] = Tcl_NewStringObj(engine.url(), engine.url().size());
+					v[n++] = Tcl_NewStringObj(engine.url(), Tcl_SizeFromSizeT(engine.url().size()));
 				}
 				if (!engine.shortName().empty())
 				{
 					v[n++] = Tcl_NewStringObj("Name", -1);
-					v[n++] = Tcl_NewStringObj(engine.shortName(), engine.shortName().size());
+					v[n++] = Tcl_NewStringObj(engine.shortName(), Tcl_SizeFromSizeT(engine.shortName().size()));
 				}
 				if (engine.elo())
 				{
@@ -1156,7 +1156,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		v[0] = Tcl_NewStringObj(player->name(), Tcl_SizeFromSizeT(player->name().size()));
 
 		for (unsigned i = 0; i < aliases.size(); ++i)
-			v[i + 1] = Tcl_NewStringObj(aliases[i], aliases[i].size());
+			v[i + 1] = Tcl_NewStringObj(aliases[i], Tcl_SizeFromSizeT(aliases[i].size()));
 
 		f[0] = Tcl_NewBooleanObj(player->supportsChess960());
 		f[1] = Tcl_NewBooleanObj(player->supportsShuffleChess());

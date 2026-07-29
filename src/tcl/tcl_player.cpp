@@ -339,7 +339,7 @@ getInfo(	NamebasePlayer const* player,
 				Tcl_Obj* objs[aliases.size()];
 
 				for (unsigned i = 0; i < aliases.size(); ++i)
-					objs[i] = Tcl_NewStringObj(aliases[i], aliases[i].size());
+					objs[i] = Tcl_NewStringObj(aliases[i], Tcl_SizeFromSizeT(aliases[i].size()));
 
 				aliasList = Tcl_NewListObj(aliases.size(), objs);
 			}
@@ -586,7 +586,7 @@ cmdInfo(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 #endif
 
 	objs[ 0] = Tcl_NewStringObj(country::toString(player.nativeCountry()), -1);
-	objs[ 1] = Tcl_NewStringObj(player.name(), player.name().size());
+	objs[ 1] = Tcl_NewStringObj(player.name(), Tcl_SizeFromSizeT(player.name().size()));
 	objs[ 2] = Tcl_NewStringObj(player.organization(organization), -1);
 	objs[ 3] = Tcl_NewStringObj(country::toString(player.federation()), -1);
 	objs[ 4] = Tcl_NewStringObj(&sex, 1);

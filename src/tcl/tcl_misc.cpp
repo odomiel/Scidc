@@ -1157,11 +1157,11 @@ cmdLookup(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 		Tcl_Obj* objs[::db::EcoTable::Num_Name_Parts];
 		unsigned objc = 0;
 
-		objs[objc++] = Tcl_NewStringObj(opening.part[0], opening.part[0].size());
-		objs[objc++] = Tcl_NewStringObj(opening.part[1], opening.part[1].size());
+		objs[objc++] = Tcl_NewStringObj(opening.part[0], Tcl_SizeFromSizeT(opening.part[0].size()));
+		objs[objc++] = Tcl_NewStringObj(opening.part[1], Tcl_SizeFromSizeT(opening.part[1].size()));
 
 		for ( ; objc < ::db::EcoTable::Num_Name_Parts; ++objc)
-			objs[objc] = Tcl_NewStringObj(opening.part[objc], opening.part[objc].size());
+			objs[objc] = Tcl_NewStringObj(opening.part[objc], Tcl_SizeFromSizeT(opening.part[objc].size()));
 		setResult(objc, objs);
 	}
 
@@ -1447,7 +1447,7 @@ cmdHtmlSearch(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
 	{
 		Tcl_NewBooleanObj(rc),
 		Tcl_NewBooleanObj(search.tooManyMatches()),
-		Tcl_NewStringObj(search.title(), search.title().size()),
+		Tcl_NewStringObj(search.title(), Tcl_SizeFromSizeT(search.title().size())),
 		result,
 	};
 	setResult(U_NUMBER_OF(objs), objs);

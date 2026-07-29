@@ -322,7 +322,7 @@ PgnReader::setResult(int n,
 		for (unsigned i = 0; i < unsupported->size(); ++i)
 		{
 			::tcl::PgnReader::Variants::value_type item = unsupported->container()[i];
-			uns[mstl::mul2(i)] = Tcl_NewStringObj(item.first, item.first.size());
+			uns[mstl::mul2(i)] = Tcl_NewStringObj(item.first, Tcl_SizeFromSizeT(item.first.size()));
 			uns[mstl::mul2(i) + 1] = Tcl_NewIntObj(item.second);
 		}
 

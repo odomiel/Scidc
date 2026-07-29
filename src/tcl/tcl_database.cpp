@@ -1879,7 +1879,7 @@ getPlayerKey(NamebasePlayer const& player)
 {
 	Tcl_Obj* objv[PlayerKey_LAST];
 
-	objv[PlayerKey_Name]		= Tcl_NewStringObj(player.name(), player.name().size());
+	objv[PlayerKey_Name]		= Tcl_NewStringObj(player.name(), Tcl_SizeFromSizeT(player.name().size()));
 	objv[PlayerKey_FideID]	= player.haveFideId() ? Tcl_NewIntObj(player.fideID()) : Tcl_NewListObj(0, 0);
 	objv[PlayerKey_Sex]		= Tcl_NewStringObj(sex::toString(player.sex()), -1);
 	objv[PlayerKey_Country]	= Tcl_NewStringObj(country::toString(player.federation()), -1);
@@ -1896,12 +1896,12 @@ getEventKey(NamebaseEvent const& event)
 {
 	Tcl_Obj* objv[EventKey_LAST];
 
-	objv[EventKey_Name]			= Tcl_NewStringObj(event.name(), event.name().size());
+	objv[EventKey_Name]			= Tcl_NewStringObj(event.name(), Tcl_SizeFromSizeT(event.name().size()));
 	objv[EventKey_Type]			= Tcl_NewStringObj(event::toString(event.type()), -1);
 	objv[EventKey_Date]			= Tcl_NewStringObj(event.date().asString(), -1);
 	objv[EventKey_TimeMode]		= Tcl_NewStringObj(::db::time::toString(event.timeMode()), -1);
 	objv[EventKey_EventMode]	= Tcl_NewStringObj(event::toString(event.eventMode()), -1);
-	objv[EventKey_Site]			= Tcl_NewStringObj(event.site()->name(), event.site()->name().size());
+	objv[EventKey_Site]			= Tcl_NewStringObj(event.site()->name(), Tcl_SizeFromSizeT(event.site()->name().size()));
 	objv[EventKey_SiteCountry]	= Tcl_NewStringObj(country::toString(event.site()->country()), -1);
 
 	setResult(U_NUMBER_OF(objv), objv);
@@ -1914,7 +1914,7 @@ getSiteKey(NamebaseSite const& site)
 {
 	Tcl_Obj* objv[SiteKey_LAST];
 
-	objv[SiteKey_Site]		= Tcl_NewStringObj(site.name(), site.name().size());
+	objv[SiteKey_Site]		= Tcl_NewStringObj(site.name(), Tcl_SizeFromSizeT(site.name().size()));
 	objv[SiteKey_Country]	= Tcl_NewStringObj(country::toString(site.country()), -1);
 
 	setResult(U_NUMBER_OF(objv), objv);
@@ -2023,7 +2023,7 @@ getGameInfo(int index, int view, char const* database, variant::Type variant, un
 				objv[2] = Tcl_NewStringObj(eco.asShortString(), -1);
 
 				for (unsigned i = 0; i < EcoTable::Num_Name_Parts; ++i)
-					objv[i + 3] = Tcl_NewStringObj(opening->part[i], opening->part[i].size());
+					objv[i + 3] = Tcl_NewStringObj(opening->part[i], Tcl_SizeFromSizeT(opening->part[i].size()));
 
 				obj = Tcl_NewListObj(U_NUMBER_OF(objv), objv);
 			}
@@ -2155,10 +2155,10 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 
 	Tcl_Obj* openingVar[4] =
 	{
-		Tcl_NewStringObj(opening->part[0], opening->part[0].size()),
-		Tcl_NewStringObj(opening->part[1], opening->part[1].size()),
-		Tcl_NewStringObj(opening->part[2], opening->part[2].size()),
-		Tcl_NewStringObj(opening->part[3], opening->part[3].size())
+		Tcl_NewStringObj(opening->part[0], Tcl_SizeFromSizeT(opening->part[0].size())),
+		Tcl_NewStringObj(opening->part[1], Tcl_SizeFromSizeT(opening->part[1].size())),
+		Tcl_NewStringObj(opening->part[2], Tcl_SizeFromSizeT(opening->part[2].size())),
+		Tcl_NewStringObj(opening->part[3], Tcl_SizeFromSizeT(opening->part[3].size()))
 	};
 
 	mstl::string material;
@@ -2196,15 +2196,15 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 	SET(BlackTitle,           Tcl_NewStringObj(title::toString(info.findTitle(color::Black)), -1));
 	SET(BlackType,            Tcl_NewStringObj(species::toString(info.findPlayerType(color::Black)), -1));
 	SET(BlackSex,             Tcl_NewStringObj(sex::toString(info.findSex(color::Black)), -1));
-	SET(Event,                Tcl_NewStringObj(info.event(), info.event().size()));
+	SET(Event,                Tcl_NewStringObj(info.event(), Tcl_SizeFromSizeT(info.event().size())));
 	SET(EventType,            Tcl_NewStringObj(event::toString(info.eventType()), -1));
 	SET(EventDate,            Tcl_NewStringObj(info.eventDate().asShortString(), -1));
 	SET(Result,               Tcl_NewStringObj(result::toString(info.result()), -1));
-	SET(Site,                 Tcl_NewStringObj(info.site(), info.site().size()));
+	SET(Site,                 Tcl_NewStringObj(info.site(), Tcl_SizeFromSizeT(info.site().size())));
 	SET(EventCountry,         Tcl_NewStringObj(country::toString(info.findEventCountry()), -1));
 	SET(Date,                 Tcl_NewStringObj(info.date().asShortString(), -1));
 	SET(Round,                Tcl_NewStringObj(round, Tcl_SizeFromSizeT(round.size())));
-	SET(Annotator,            Tcl_NewStringObj(info.annotator(), info.annotator().size()));
+	SET(Annotator,            Tcl_NewStringObj(info.annotator(), Tcl_SizeFromSizeT(info.annotator().size())));
 	SET(Idn,                  Tcl_NewIntObj(idn));
 	SET(Position,             Tcl_NewStringObj(startPosition, -1));
 	SET(MoveList,             Tcl_NewStringObj(mstl::string::empty_string, 0)),
@@ -2226,8 +2226,8 @@ tcl::db::getGameInfo(Database const& db, unsigned index, Ratings const& ratings,
 	SET(Mode,                 Tcl_NewStringObj(event::toString(info.eventMode()), -1));
 	SET(TimeMode,             Tcl_NewStringObj(::db::time::toString(info.timeMode()), -1));
 	SET(Opening,              Tcl_NewListObj(U_NUMBER_OF(openingVar), openingVar));
-	SET(Variation,            Tcl_NewStringObj(opening->part[2], opening->part[2].size()));
-	SET(SubVariation,         Tcl_NewStringObj(opening->part[3], opening->part[3].size()));
+	SET(Variation,            Tcl_NewStringObj(opening->part[2], Tcl_SizeFromSizeT(opening->part[2].size())));
+	SET(SubVariation,         Tcl_NewStringObj(opening->part[3], Tcl_SizeFromSizeT(opening->part[3].size())));
 	SET(InternalEco,          Tcl_NewStringObj(eop.asString(), -1));
 
 #undef SET
@@ -2505,7 +2505,7 @@ getAnnotator(int index, int view)
 
 	NamebaseEntry const& annotator = cursor.database().annotator(index);
 
-	objv[::attribute::annotator::Name] = Tcl_NewStringObj(annotator.name(), annotator.name().size());
+	objv[::attribute::annotator::Name] = Tcl_NewStringObj(annotator.name(), Tcl_SizeFromSizeT(annotator.name().size()));
 	objv[::attribute::annotator::Frequency] = Tcl_NewIntObj(annotator.frequency());
 
 	M_ASSERT(::checkNonZero(objv, U_NUMBER_OF(objv)));
@@ -2625,8 +2625,8 @@ tcl::db::getTags(TagSet const& tags, bool userSuppliedOnly)
 		Tcl_Obj* objs[2];
 
 		TagSet::Tag const& pair = tags.extra(i);
-		objs[0] = Tcl_NewStringObj(pair.name, pair.name.size());
-		objs[1] = Tcl_NewStringObj(pair.value, pair.value.size());
+		objs[0] = Tcl_NewStringObj(pair.name, Tcl_SizeFromSizeT(pair.name.size()));
+		objs[1] = Tcl_NewStringObj(pair.value, Tcl_SizeFromSizeT(pair.value.size()));
 
 		Tcl_ListObjAppendElement(0, result, Tcl_NewListObj(2, objs));
 	}
