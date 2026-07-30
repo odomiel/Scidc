@@ -50,6 +50,14 @@
 
 #include "tcl.h"
 #include "tk.h"
+#include "../../tk_compat.h"
+// Compatibility: CONST macro for Tcl 9
+#ifndef CONST
+#define CONST const
+#endif
+
+/* Forward declarations for static functions */
+static int TkDND_FetchActionListObjCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
 
 /* Tk 8.6 / Tk 9.0 Compatibility Layer - lokale Makros für C-Code */
 /* Diese Makros abstrahieren direkte TkWindow-Strukturzugriffe */

@@ -70,7 +70,7 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"26.07.23 b1 Beta"
+# define SCIDB_VERSION	"26.07.30 b1 Beta"
 # define SCIDB_REVISION	"1532"
 #endif
 
@@ -1091,7 +1091,23 @@ cmdCrc32(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 static int
 cmdVersion(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
-	setResult("26.07.19 b4 Beta");
+	// SCIDB_VERSION ist im Makefile mit Bindestrichen definiert (keine Leerzeichen
+	// im -D-Argument moeglich); exec.tcl vergleicht gegen die Schreibweise mit
+	// Leerzeichen. Deshalb hier zurueckwandeln statt die Version zu duplizieren.
+	static mstl::string version;
+
+	if (version.empty())
+	{
+		version = SCIDB_VERSION;
+
+		for (unsigned i = 0; i < version.size(); ++i)
+		{
+			if (version[i] == '-')
+				version[i] = ' ';
+		}
+	}
+
+	setResult(version);
 	return TCL_OK;
 }
 

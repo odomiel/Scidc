@@ -686,7 +686,7 @@ cmdSaveYourself(Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdSessionManager(ClientData, Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdSessionManager(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc < 2)
 		return setError(ti, "wrong # args; should be 'subcommand ?argument ...?'");

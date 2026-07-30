@@ -25,6 +25,7 @@ struct mmsghdr; // this hacks is suppressing a gcc warning
 #include "default.h"
 #include "tclInt.h"
 #include "tkInt.h"
+#include "../tk_compat.h"
 #include "qebind.h"
 
 // Compatibility: CONST macro for Tcl 9

@@ -8920,7 +8920,7 @@ execute(PerformFunc func, bool forLoad, Tcl_Size objc, Tcl_Obj* const objv[])
 
 
 static int
-cmdTwm(ClientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdTwm(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	static char const* subcommands[] =
 	{

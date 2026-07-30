@@ -17,6 +17,7 @@
 
 #include "default.h"
 #include "tkInt.h"
+#include "../tk_compat.h"
 #include "tkText.h"
 #include "tkTextUndo.h"
 #include "tkTextTagSet.h"
@@ -77,6 +78,11 @@
 # else /* X11 */
 #  define DEF_TEXT_INACTIVE_SELECT_FG_COLOR BLACK
 # endif
+#endif
+#ifndef DEF_TEXT_INACTIVE_SELECT_COLOR
+# define DEF_TEXT_INACTIVE_SELECT_COLOR DEF_TEXT_INACTIVE_SELECT_FG_COLOR
+#endif
+#ifndef DEF_TEXT_INACTIVE_SELECT_BG_COLOR
 # define DEF_TEXT_INACTIVE_SELECT_BG_COLOR DEF_TEXT_INACTIVE_SELECT_COLOR
 #endif
 
@@ -1652,9 +1658,10 @@ TextWidgetObjCmd(
 	    result = TCL_ERROR;
 	    goto done;
 	} else {
+	    Tcl_Obj *objPtr;
 #if SUPPORT_DEPRECATED_STARTLINE_ENDLINE
 
-	    Tcl_Obj *objPtr, *optionObj = NULL;
+	    Tcl_Obj *optionObj = NULL;
 	    const char *opt = Tcl_GetString(objv[2]);
 
 	    if (strcmp(opt, "-start") == 0) {
@@ -3358,8 +3365,10 @@ ClearText(
 	tPtr->abortSelections = true;
 	textPtr->lastLineY = TK_TEXT_NEARBY_IS_UNDETERMINED;
 	tPtr->refCount -= 1;
+#if SUPPORT_DEPRECATED_STARTLINE_ENDLINE
 	tPtr->startLine = NULL;
 	tPtr->endLine = NULL;
+#endif
 
 	if (tPtr->startMarker->refCount == 1) {
 	    assert(textPtr->startMarker != textPtr->sharedTextPtr->startMarker);
@@ -10327,7 +10336,7 @@ TkTextGenerateWidgetViewSyncEvent(
  * and cannot be inlined.
  */
 
-int
+Tcl_Size
 TkTextPrintIndex(
     const TkText *textPtr,
     const TkTextIndex *indexPtr,/* Pointer to index. */
@@ -11773,7 +11782,7 @@ int
 TkpTesttextCmd(
     ClientData clientData,	/* Main window for application. */
     Tcl_Interp *interp,		/* Current interpreter. */
-    int objc,			/* Number of arguments. */
+    Tcl_Size objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument strings. */
 {
     TkText *textPtr;

@@ -300,10 +300,10 @@ static void		DestroyOptionTables(ClientData clientData,
 			    Tcl_Interp *interp);
 static int		SetSticky(ClientData clientData, Tcl_Interp *interp,
 			    Tk_Window tkwin, Tcl_Obj **value, char *recordPtr,
-			    int internalOffset, char *oldInternalPtr,
+			    Tcl_Size internalOffset, char *oldInternalPtr,
 			    int flags);
 static Tcl_Obj *	GetSticky(ClientData clientData, Tk_Window tkwin,
-			    char *recordPtr, int internalOffset);
+			    char *recordPtr, Tcl_Size internalOffset);
 static void		RestoreSticky(ClientData clientData, Tk_Window tkwin,
 			    char *internalPtr, char *oldInternalPtr);
 static void		AdjustForSticky(int sticky, int cavityWidth,
@@ -581,7 +581,7 @@ Tk_PanedWindowObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetObjResult(interp, TkNewWindowObj(pwPtr->tkwin));
+    Tcl_SetObjResult(interp, Tk_NewWindowObj(pwPtr->tkwin));
     return TCL_OK;
 }
 
@@ -804,7 +804,7 @@ PanedWindowWidgetObjCmd(
 	resultObj = Tcl_NewObj();
 	for (i = 0; i < pwPtr->numSlaves; i++) {
 	    Tcl_ListObjAppendElement(NULL, resultObj,
-		    TkNewWindowObj(pwPtr->slaves[i]->tkwin));
+		    Tk_NewWindowObj(pwPtr->slaves[i]->tkwin));
 	}
 	Tcl_SetObjResult(interp, resultObj);
 	break;
@@ -2472,7 +2472,7 @@ GetSticky(
     ClientData clientData,
     Tk_Window tkwin,
     char *recordPtr,		/* Pointer to widget record. */
-    int internalOffset)		/* Offset within *recordPtr containing the
+    Tcl_Size internalOffset)		/* Offset within *recordPtr containing the
 				 * sticky value. */
 {
     int sticky = *(int *)(recordPtr + internalOffset);
@@ -2524,7 +2524,7 @@ SetSticky(
 				 * We use a pointer to the pointer because we
 				 * may need to return a value (NULL). */
     char *recordPtr,		/* Pointer to storage for the widget record. */
-    int internalOffset,		/* Offset within *recordPtr at which the
+    Tcl_Size internalOffset,		/* Offset within *recordPtr at which the
 				 * internal value is to be stored. */
     char *oldInternalPtr,	/* Pointer to storage for the old value. */
     int flags)			/* Flags for the option, set Tk_SetOptions. */

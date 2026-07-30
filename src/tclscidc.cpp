@@ -31,7 +31,7 @@
 
 
 static int
-cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdZlibCrc(ClientData clientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 {
 	if (objc < 2)
 	{

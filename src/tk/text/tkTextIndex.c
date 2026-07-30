@@ -1663,7 +1663,7 @@ TkTextMakeByteIndex(
     TkTextBTree tree,		/* Tree that lineIndex and byteIndex refer TkTextBTree tree, to. */
     const TkText *textPtr,	/* Client that lineIndex and byteIndex refer to, can be NULL. */
     int lineIndex,		/* Index of desired line (0 means first line of text). */
-    int byteIndex,		/* Byte index of desired character. */
+    Tcl_Size byteIndex,		/* Byte index of desired character. */
     TkTextIndex *indexPtr)	/* Structure to fill in. */
 {
     TkTextSegment *segPtr;
@@ -2960,7 +2960,7 @@ int
 TkTextIndexForwBytes(
     const TkText *textPtr,	/* Overall information about text widget, can be NULL. */
     const TkTextIndex *srcPtr,	/* Source index. */
-    int byteCount,		/* How many bytes forward to move. May be negative. */
+    Tcl_Size byteCount,		/* How many bytes forward to move. May be negative. */
     TkTextIndex *dstPtr)	/* Destination index: gets modified. */
 {
     TkTextLine *linePtr;
@@ -3529,7 +3529,7 @@ int
 TkTextIndexBackBytes(
     const TkText *textPtr,	/* Overall information about text widget, can be NULL. */
     const TkTextIndex *srcPtr,	/* Source index. */
-    int byteCount,		/* How many bytes backward to move. May be negative. */
+    Tcl_Size byteCount,		/* How many bytes backward to move. May be negative. */
     TkTextIndex *dstPtr)	/* Destination index: gets modified. */
 {
     TkTextLine *linePtr;

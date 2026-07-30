@@ -692,7 +692,7 @@ setResult(Tcl_Interp* ti, Rect& rect)
 
 
 static int
-cmdWM(ClientData, Tcl_Interp *ti, Tcl_Size objc, Tcl_Obj* const objv[])
+cmdWM(ClientData, Tcl_Interp *ti, int objc, Tcl_Obj* const objv[])
 {
 	char const* Usage =	"Usage: ::scidc::tk::wm (frameless | splash | toolbar | menu | grid "
 								"| setLeader | map | raise | sync | desktop | ondesktop) <window> ...";

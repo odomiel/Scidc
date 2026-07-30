@@ -136,8 +136,8 @@ MultiWindow;
 // declarations
 static void MultiWindowReqProc(ClientData, Tk_Window);
 static void MultiWindowLostSlaveProc(ClientData, Tk_Window);
-static int SetSticky(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, int, char*, int);
-static Tcl_Obj* GetSticky(ClientData, Tk_Window, char*, int);
+static int SetSticky(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, Tcl_Size, char*, int);
+static Tcl_Obj* GetSticky(ClientData, Tk_Window, char*, Tcl_Size);
 static void RestoreSticky(ClientData, Tk_Window, char*, char*);
 
 
@@ -386,7 +386,7 @@ static Tcl_Obj*
 GetSticky(	ClientData clientData,
 				Tk_Window tkwin,
 				char* recordPtr,			// Pointer to widget record
-				int internalOffset)		// Offset within *recordPtr containing the sticky value
+				Tcl_Size internalOffset)		// Offset within *recordPtr containing the sticky value
 {
 	char	buffer[5];
 	int	sticky		= *(int*)(recordPtr + internalOffset);
@@ -430,7 +430,7 @@ SetSticky(	ClientData clientData,
 												// We use a pointer to the pointer because we
 												// may need to return a value (nullptr)
 				char* recordPtr,			// Pointer to storage for the widget record
-				int internalOffset,		// Offset within *recordPtr at which the
+				Tcl_Size internalOffset,		// Offset within *recordPtr at which the
 												// internal value is to be stored
 				char* oldInternalPtr,	// Pointer to storage for the old value
 				int flags)					// Flags for the option, set Tk_SetOptions
@@ -870,7 +870,7 @@ ComputeGeometry(MultiWindow* mw)		// Pointer to the Multi Window structure
 	if (reqHeight > 0)
 		clientHeight = reqHeight;
 
-	internalBw = Tk_InternalBorderWidth(mw->tkwin);
+	internalBw = Tk_InternalBorderLeft(mw->tkwin) + Tk_InternalBorderRight(mw->tkwin);
 
 	clientWidth += internalBw;
 	clientHeight += internalBw;

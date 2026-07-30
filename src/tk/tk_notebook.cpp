@@ -169,11 +169,11 @@ Notebook;
 // declarations
 static void NotebookReqProc(ClientData, Tk_Window);
 static void NotebookLostSlaveProc(ClientData, Tk_Window);
-static int SetSticky(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, int, char*, int);
-static Tcl_Obj* GetSticky(ClientData, Tk_Window, char*, int);
+static int SetSticky(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, Tcl_Size, char*, int);
+static Tcl_Obj* GetSticky(ClientData, Tk_Window, char*, Tcl_Size);
 static void RestoreSticky(ClientData, Tk_Window, char*, char*);
-static int SetPadding(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, int, char*, int);
-static Tcl_Obj* GetPadding(ClientData, Tk_Window, char*, int);
+static int SetPadding(ClientData, Tcl_Interp*, Tk_Window, Tcl_Obj**, char*, Tcl_Size, char*, int);
+static Tcl_Obj* GetPadding(ClientData, Tk_Window, char*, Tcl_Size);
 static void RestorePadding(ClientData, Tk_Window, char*, char*);
 
 
@@ -460,7 +460,7 @@ static Tcl_Obj*
 GetPadding(	ClientData clientData,
 				Tk_Window tkwin,
 				char* recordPtr,			// Pointer to widget record
-				int internalOffset)		// Offset within *recordPtr containing the padding value
+				Tcl_Size internalOffset)		// Offset within *recordPtr containing the padding value
 {
 	Padding*	pad = (Padding*)(recordPtr + internalOffset);
 	Tcl_Obj*	values[4];
@@ -498,7 +498,7 @@ SetPadding(	ClientData clientData,
 												// We use a pointer to the pointer because we
 												// may need to return a value (nullptr)
 				char* recordPtr,			// Pointer to storage for the widget record
-				int internalOffset,		// Offset within *recordPtr at which the
+				Tcl_Size internalOffset,		// Offset within *recordPtr at which the
 												// internal value is to be stored
 				char* oldInternalPtr,	// Pointer to storage for the old value
 				int flags)					// Flags for the option, set Tk_SetOptions
@@ -514,7 +514,7 @@ SetPadding(	ClientData clientData,
 	}
 	else
 	{
-		int padc;
+		Tcl_Size padc;
 		int i;
 		int pixels[4];
 		Tcl_Obj **padv;
@@ -605,7 +605,7 @@ static Tcl_Obj*
 GetSticky(	ClientData clientData,
 				Tk_Window tkwin,
 				char* recordPtr,			// Pointer to widget record
-				int internalOffset)		// Offset within *recordPtr containing the sticky value
+				Tcl_Size internalOffset)		// Offset within *recordPtr containing the sticky value
 {
 	char	buffer[5];
 	int	sticky		= *(int*)(recordPtr + internalOffset);
@@ -649,7 +649,7 @@ SetSticky(	ClientData clientData,
 												// We use a pointer to the pointer because we
 												// may need to return a value (nullptr)
 				char* recordPtr,			// Pointer to storage for the widget record
-				int internalOffset,		// Offset within *recordPtr at which the
+				Tcl_Size internalOffset,		// Offset within *recordPtr at which the
 												// internal value is to be stored
 				char* oldInternalPtr,	// Pointer to storage for the old value
 				int flags)					// Flags for the option, set Tk_SetOptions
@@ -1331,7 +1331,7 @@ ComputeGeometry(Notebook* nb)		// Pointer to the Notebook structure
 	if (reqHeight > 0)
 		clientHeight = reqHeight;
 
-	internalBw = Tk_InternalBorderWidth(nb->tkwin);
+	internalBw = Tk_InternalBorderLeft(nb->tkwin) + Tk_InternalBorderRight(nb->tkwin);
 
 	clientWidth = MAX(clientWidth, minWidth);
 	clientHeight = MAX(clientHeight, minHeight);

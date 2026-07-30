@@ -214,7 +214,7 @@ typedef struct
 	Tcl_Channel		mChannel;		/* Channel for from-file reads */
 	Tcl_Obj*		mpObjData;
 	Byte*			mpStrData;		/* Raw source data for from-string reads */
-	int				mStrDataSz;		/* Length of source data */
+	Tcl_Size		mStrDataSz;		/* Length of source data */
 	Byte*			mpBase64Data;	/* base64 encoded string data */
 	Byte			mBase64Bits;	/* Remaining bits from last base64 read */
 	Byte			mBase64State;	/* Current state of base64 decoder */
@@ -263,20 +263,20 @@ typedef struct
  * The format record for the PNG file format:
  */
 
-static int  FileMatchPNG _ANSI_ARGS_((Tcl_Channel chan, CONST char *fileName,
+static int  FileMatchPNG(Tcl_Channel chan, CONST char *fileName,
             Tcl_Obj *pObjFmt, int *widthPtr, int *heightPtr,
-            Tcl_Interp *interp));
-static int  FileReadPNG  _ANSI_ARGS_((Tcl_Interp *interp,
+            Tcl_Interp *interp);
+static int  FileReadPNG(Tcl_Interp *interp,
             Tcl_Channel chan, CONST char *fileName, Tcl_Obj *pObjFmt,
             Tk_PhotoHandle imageHandle, int destX, int destY,
-            int width, int height, int srcX, int srcY));
-static int  StringMatchPNG _ANSI_ARGS_(( Tcl_Obj *pObjData,
+            int width, int height, int srcX, int srcY);
+static int  StringMatchPNG(Tcl_Obj *pObjData,
             Tcl_Obj *pObjFmt, int *widthPtr, int *heightPtr,
-            Tcl_Interp *interp));
-static int  StringReadPNG _ANSI_ARGS_((Tcl_Interp *interp, Tcl_Obj *pObjData,
+            Tcl_Interp *interp);
+static int  StringReadPNG(Tcl_Interp *interp, Tcl_Obj *pObjData,
             Tcl_Obj *pObjFmt, Tk_PhotoHandle imageHandle,
             int destX, int destY, int width, int height,
-            int srcX, int srcY));
+            int srcX, int srcY);
 
 static Tk_PhotoImageFormat tkImgFmtPNG = {
 	(char*)"png",			/* name */
@@ -2236,7 +2236,7 @@ static int
 ParseFormat(Tcl_Interp* interp, Tcl_Obj* pObjFmt, PNGImage* pPNG)
 {
 	Tcl_Obj**	objv		= NULL;
-	int			objc		= 0;
+	Tcl_Size		objc		= 0;
 
 	static const char* fmtOptions[] = {
 		"png", "-alpha", (char *)NULL

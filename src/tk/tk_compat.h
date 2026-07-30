@@ -29,6 +29,47 @@
 #include <tk.h>
 
 // ======================================================================
+// Umbenannte bzw. entfallene Tcl/Tk-API (Tcl/Tk 9)
+// ======================================================================
+// Diese Makros gelten für C und C++ gleichermassen.
+
+#if TK_MAJOR_VERSION > 8
+
+// Tk 9 hat diese vormals internen Funktionen in die öffentliche API übernommen
+# define TkpDrawHighlightBorder	Tk_DrawHighlightBorder
+# define TkpGetSystemDefault	Tk_GetSystemDefault
+
+// Tk_BackgroundError wurde in Tk 9 entfernt
+# define Tk_BackgroundError(interp)	Tcl_BackgroundException((interp), TCL_ERROR)
+
+#endif // TK_MAJOR_VERSION > 8
+
+#if TCL_MAJOR_VERSION > 8
+
+// 'panic' (Makro auf Tcl_Panic) wurde in Tcl 9 entfernt
+# ifndef panic
+#  define panic	Tcl_Panic
+# endif
+
+// TclGetIntForIndex (intern, Tcl 8.6) wurde zu Tcl_GetIntForIndex (öffentlich).
+// Der Ausgabeparameter wechselte dabei von int* auf Tcl_Size*, deshalb ein
+// Wrapper statt eines reinen Umbenennungs-Makros.
+static inline int
+TkCompat_GetIntForIndex(Tcl_Interp* interp, Tcl_Obj* objPtr, int endValue, int* indexPtr)
+{
+	Tcl_Size index;
+
+	if (Tcl_GetIntForIndex(interp, objPtr, (Tcl_Size)endValue, &index) != TCL_OK)
+		return TCL_ERROR;
+
+	*indexPtr = (int)index;
+	return TCL_OK;
+}
+# define TclGetIntForIndex	TkCompat_GetIntForIndex
+
+#endif // TCL_MAJOR_VERSION > 8
+
+// ======================================================================
 // C Makros für direkte TkWindow-Zugriffe (für C-Code)
 // ======================================================================
 

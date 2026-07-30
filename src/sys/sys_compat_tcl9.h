@@ -63,14 +63,17 @@ Tcl_SizeFromSizeT(size_t size)
 #endif
 
 // For compatibility with code using the old Tcl_SaveResult API
+// In Tcl 8.6: Tcl_SaveResult(Tcl_Interp *, Tcl_SavedResult *) - macro
+// In Tcl 9: Tcl_SaveInterpState(Tcl_Interp *, int) - returns Tcl_InterpState
+// We need to provide macros that work with both
 #ifndef Tcl_SavedResult
-#define Tcl_SavedResult Tcl_SavedInterpState
+#define Tcl_SavedResult Tcl_InterpState
 #endif
 #ifndef Tcl_SaveResult
-#define Tcl_SaveResult Tcl_SaveInterpState
+#define Tcl_SaveResult(interp, statePtr) (*(statePtr) = Tcl_SaveInterpState((interp), 0))
 #endif
 #ifndef Tcl_RestoreResult
-#define Tcl_RestoreResult Tcl_RestoreInterpState
+#define Tcl_RestoreResult(interp, statePtr) Tcl_RestoreInterpState((interp), *(statePtr))
 #endif
 
 // Tk_Offset was removed in Tk 9 - it was a macro to calculate field offset in structs
