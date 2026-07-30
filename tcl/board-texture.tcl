@@ -440,7 +440,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 		set col 3
 		foreach deg {0 90 180 270} {
 			set Browser($deg,$which) [ttk::checkbutton $rot.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::${canv}::Browser(rotation) \
 				-onvalue $deg \
 				-command [namespace code [list SendSelected $top.container]] \

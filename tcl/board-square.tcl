@@ -586,7 +586,7 @@ proc MakeSquareFrame {f which} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton \
 				$rot.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \

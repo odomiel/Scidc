@@ -8,6 +8,7 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.07.30
 
+- **b2** – Fix: Tcl 9 brach den Start mit „invalid or incomplete multibyte or wide character" ab – `board-square.tcl`, `board-piece.tcl` und `board-texture.tcl` enthielten je ein rohes Latin-1-`°` (0xB0) in `-text "$deg°"`, das kein gültiges UTF-8 ist. Ersetzt durch die ASCII-Escape `\u00b0`; das Bundle `tcl/scidc-beta` ist damit erstmals durchgehend gültiges UTF-8 (die Mixed-Encoding-Falle ist an dieser Stelle beseitigt)
 - **b1** – Modernisierung: Phase 8 Teil 13 – **erster erfolgreicher Link gegen Tcl/Tk 9.0**. Korrupte Forward-Deklarationen in `tk_png.cpp` repariert (fehlgeschlagene `_ANSI_ARGS_`-Ersetzung); `tk_compat.h` um die in Tcl/Tk 9 umbenannte bzw. entfallene API erweitert (`TkpDrawHighlightBorder`→`Tk_DrawHighlightBorder`, `TkpGetSystemDefault`→`Tk_GetSystemDefault`, `Tk_BackgroundError`→`Tcl_BackgroundException`, `panic`→`Tcl_Panic`, `TclGetIntForIndex`→`Tcl_GetIntForIndex`-Wrapper); `stdarg.h` in `htmltcl.c` ergänzt; `Tk_CustomOptionSetProc`-Signatur in `tk_notebook.cpp` korrigiert (`flags` bleibt `int`); Versions-Makro in `src/Makefile` aus `Makefile.version` statt hartkodiert, `cmdVersion` leitet die Version aus `SCIDB_VERSION` ab
 
 ## 26.07.27

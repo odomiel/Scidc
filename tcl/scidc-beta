@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.30 b1 Beta"
+	set version "26.07.30 b2 Beta"
 }
 
 
@@ -85377,7 +85377,7 @@ proc openBrowser {parent which currentTexture {otherTexture {}} {rotation {}} {p
 		set col 3
 		foreach deg {0 90 180 270} {
 			set Browser($deg,$which) [ttk::checkbutton $rot.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::${canv}::Browser(rotation) \
 				-onvalue $deg \
 				-command [namespace code [list SendSelected $top.container]] \
@@ -86759,7 +86759,7 @@ proc SelectTexture {parent which} {
 	foreach deg {0 90 180 270} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton $lt.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \
@@ -88473,7 +88473,7 @@ proc MakeSquareFrame {f which} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton \
 				$rot.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \

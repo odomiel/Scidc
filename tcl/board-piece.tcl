@@ -606,7 +606,7 @@ proc SelectTexture {parent which} {
 	foreach deg {0 90 180 270} {
 		set Widget($deg,$which) [ \
 			ttk::checkbutton $lt.b$deg \
-				-text "$deg°" \
+				-text "$deg\u00b0" \
 				-variable [namespace current]::Vars(rotation,$which) \
 				-onvalue $deg \
 				-state $state \
