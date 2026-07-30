@@ -125,7 +125,9 @@ proc build {path columns args} {
 			;
 		::bind $sc <ButtonRelease-1> [list ::table::focus $tb]
 		::bind $sc <ButtonPress-1> [namespace code [list StopMouseWheel $tb]]
-		set (slider) [$sc cget -sliderlength]
+		# Tk 9 liefert Dimensionsoptionen als skalierbare Bildschirmdistanz
+		# ("22.5p"); mit dem Rohwert kann nicht gerechnet werden.
+		set (slider) [winfo pixels $sc [$sc cget -sliderlength]]
 	}
 	
 	ttk::scrollbar $sb  \

@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.30 b4 Beta"
+	set version "26.07.30 b5 Beta"
 }
 
 
@@ -681,7 +681,9 @@ if {[info exists ::env(SCIDB_SHAREDIR)]} {
 	}
 }
 
-set home		[file nativename "~"]
+if {[catch { set home [file tildeexpand "~"] }]} {
+	set home [file nativename "~"]
+}
 set exec		[file dirname $::nameofexecutable]
 set user		[file join $home .[string range [file tail $::nameofexecutable] 2 end]]
 
@@ -18688,6 +18690,7 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {
@@ -18704,6 +18707,7 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {
@@ -18725,6 +18729,7 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {
@@ -57459,7 +57464,7 @@ proc build {path columns args} {
 			;
 		::bind $sc <ButtonRelease-1> [list ::table::focus $tb]
 		::bind $sc <ButtonPress-1> [namespace code [list StopMouseWheel $tb]]
-		set (slider) [$sc cget -sliderlength]
+		set (slider) [winfo pixels $sc [$sc cget -sliderlength]]
 	}
 	
 	ttk::scrollbar $sb  \
@@ -150514,7 +150519,7 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 			catch { exec yes | {*}$xdgcmd }
 			set update_mime_database [auto_execok update-mime-database]
 			if {[string length $update_mime_database]} {
-				set xdg_data_home ~/.local/share
+				set xdg_data_home [file join $::scidc::dir::home .local share]
 				if {[info exists ::env(XDG_DATA_HOME)]} {
 					foreach p [split $::env(XDG_DATA_HOME) :] {
 						if {[file isdirectory $p/mime]} {

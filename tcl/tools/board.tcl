@@ -12,7 +12,9 @@ namespace eval tooltip { proc tooltip {args} {} }
 
 namespace eval scidc {
 	namespace eval dir {
-		set home  [file nativename "~"]
+		if {[catch { set home [file tildeexpand "~"] }]} {
+			set home [file nativename "~"]
+		}
 		set user  [file nativename "."]
 		set share /tmp
 	}

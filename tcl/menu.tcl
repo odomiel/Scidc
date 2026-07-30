@@ -904,7 +904,8 @@ if {[tk windowingsystem] eq "x11" && [string length [auto_execok xdg-mime]]} {
 			catch { exec yes | {*}$xdgcmd }
 			set update_mime_database [auto_execok update-mime-database]
 			if {[string length $update_mime_database]} {
-				set xdg_data_home ~/.local/share
+				# Tcl 9 expandiert '~' nicht mehr (TIP 602)
+				set xdg_data_home [file join $::scidc::dir::home .local share]
 				if {[info exists ::env(XDG_DATA_HOME)]} {
 					foreach p [split $::env(XDG_DATA_HOME) :] {
 						if {[file isdirectory $p/mime]} {

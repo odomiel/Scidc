@@ -450,6 +450,9 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		# Tcl 9 liest mit dem Profil "strict": ein einzelnes falsch kodiertes
+		# Byte wuerde sonst die komplette Uebersetzung scheitern lassen.
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {
@@ -466,6 +469,9 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		# Tcl 9 liest mit dem Profil "strict": ein einzelnes falsch kodiertes
+		# Byte wuerde sonst die komplette Uebersetzung scheitern lassen.
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {
@@ -488,6 +494,9 @@ proc selectLang {{lang {}}} {
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
+		# Tcl 9 liest mit dem Profil "strict": ein einzelnes falsch kodiertes
+		# Byte wuerde sonst die komplette Uebersetzung scheitern lassen.
+		catch { chan configure $f -profile replace }
 
 		while {[gets $f line] >= 0} {
 			if {[string length $line] > 0 && [string index $line 0] ne "#"} {

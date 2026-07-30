@@ -51,7 +51,13 @@ if {[info exists ::env(SCIDB_SHAREDIR)]} {
 	}
 }
 
-set home		[file nativename "~"]
+# Tcl 9 expandiert '~' in Dateinamen nicht mehr (TIP 602): [file nativename ~]
+# liefert dort den Literal "~", wodurch saemtliche Benutzerdaten unter
+# <cwd>/~/... statt im Home-Verzeichnis landen wuerden. [file tildeexpand]
+# gibt es erst ab Tcl 9, deshalb der Fallback fuer 8.6.
+if {[catch { set home [file tildeexpand "~"] }]} {
+	set home [file nativename "~"]
+}
 set exec		[file dirname $::nameofexecutable]
 set user		[file join $home .[string range [file tail $::nameofexecutable] 2 end]]
 

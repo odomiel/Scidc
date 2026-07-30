@@ -269,7 +269,7 @@
 ::menu::mc::DefaultStyleMenu				"Default Style Menu" ;# NEW
 ::menu::mc::OrdinaryMonitor				"Ordinary Monitor" ;# NEW
 ::menu::mc::HighQualityMonitor			"High Quality Monitor" ;# NEW
-::menu::mc::NightMode					"Nattläge (mörkt)"
+::menu::mc::NightMode					"NattlÃ¤ge (mÃ¶rkt)"
 ::menu::mc::RestartRequired				"A restart of the application is required before this change can be applied everyplace." ;# NEW
 
 ::menu::mc::AllScidbFiles					"Alla Scidc filer"
