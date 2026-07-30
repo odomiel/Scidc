@@ -28,6 +28,9 @@ CLAUDE.md
 engines/stockfish/stockfish-scidc
 engines/fairy-stockfish/fairy-stockfish-scidc
 
+# Von ./configure erzeugt, enthaelt maschinenspezifische Pfade
+Makefile.in
+
 # Temporary / local files
 debug.txt
 &1

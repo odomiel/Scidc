@@ -3,15 +3,21 @@
 # build-tcltk.sh - Baut Tcl/Tk lokal in deps/tcltk/
 #
 # Einmalig ausführen bevor build-appimage.sh:
-#     bash build-tcltk.sh [version]
+#     bash build-tcltk.sh [version] [prefix]
 #
 # unterstützte Versionen:
 #     8.6.18 (Standard, stabil)
 #     9.0.4 (experimentell, für Tk 9.0 Portierung)
 #
 # Beispiele:
-#     bash build-tcltk.sh               # baut Tcl/Tk 8.6.18
-#     bash build-tcltk.sh 9.0.4         # baut Tcl/Tk 9.0.4
+#     bash build-tcltk.sh               # baut Tcl/Tk 8.6.18 nach deps/tcltk
+#     bash build-tcltk.sh 9.0.4         # baut Tcl/Tk 9.0.4 nach deps/tcltk
+#     bash build-tcltk.sh 9.0.4 ~/tcl9  # baut nach ~/tcl9 (Entwickler-Installation)
+#
+# Ohne <prefix> wird nach deps/tcltk gebaut (Quelle für die AppImage, deshalb
+# ohne rpath — AppRun setzt die Pfade selbst). Mit <prefix> entsteht eine
+# eigenständige Entwickler-Installation MIT rpath, deren tclsh/wish und deren
+# gelinkte Programme die Bibliotheken ohne LD_LIBRARY_PATH finden.
 #
 # Voraussetzungen:
 #     sudo apt install libx11-dev libxft-dev libxss-dev libxext-dev wget
@@ -57,12 +63,49 @@ TK_URL="${TK_URLS[$VERSION]}"
 TCL_SHORT="${TCL_SHORT_VERSION[$VERSION]}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PREFIX="${SCRIPT_DIR}/deps/tcltk"
+
+if [ -n "${2:-}" ]; then
+    # Entwickler-Installation in ein eigenes Präfix: rpath einbauen, damit
+    # tclsh/wish und die damit gelinkten Programme ohne LD_LIBRARY_PATH laufen.
+    PREFIX="$(mkdir -p "$2" && cd "$2" && pwd)"
+    RPATH_OPTS=()
+else
+    # Standard: Quelle für die AppImage — dort setzt AppRun die Pfade.
+    PREFIX="${SCRIPT_DIR}/deps/tcltk"
+    RPATH_OPTS=(--disable-rpath)
+fi
+
 BUILDDIR="/tmp/scidb-tcltk-${VERSION}-build"
 
-# Für Tk 9.0: andere Bibliothek names (libtcl9.0.so, libtk9.0.so)
+# --enable-threads gibt es ab Tcl 9 nicht mehr (Threads sind immer an).
+case "${VERSION}" in
+    8.*) THREAD_OPTS=(--enable-threads) ;;
+    *)   THREAD_OPTS=() ;;
+esac
+
+# Bibliotheksnamen: Tcl 8.6 -> libtcl8.6.so / libtk8.6.so
+#                   Tcl 9.0 -> libtcl9.0.so / libtcl9tk9.0.so (Tk trägt ab 9
+#                              die Tcl-Hauptversion im Namen)
+TCL_MAJOR="${TCL_SHORT%%.*}"
 TCL_LIB_NAME="libtcl${TCL_SHORT}.so"
-TK_LIB_NAME="libtk${TCL_SHORT}.so"
+if [ "${TCL_MAJOR}" -ge 9 ]; then
+    TK_LIB_NAME="libtcl${TCL_MAJOR}tk${TCL_SHORT}.so"
+else
+    TK_LIB_NAME="libtk${TCL_SHORT}.so"
+fi
+
+# Weder "install-headers" noch "install-private-headers" installieren alle
+# internen Header. Scidc braucht aber u.a. tk3d.h, tkFont.h und default.h, die
+# in keiner der beiden Listen stehen. Deshalb die restlichen Header aus dem
+# Quellbaum nachziehen (ohne die regulaer installierten zu ueberschreiben).
+install_remaining_headers() {
+    local srcroot="$1"
+    local dir
+    for dir in generic unix; do
+        [ -d "${srcroot}/${dir}" ] || continue
+        cp -n "${srcroot}/${dir}"/*.h "${PREFIX}/include/" 2>/dev/null || true
+    done
+}
 
 echo "=== Baue Tcl/Tk ${VERSION} nach ${PREFIX} ==="
 
@@ -111,13 +154,23 @@ echo "--- Konfiguriere und baue Tcl ---"
 ./configure \
     --prefix="${PREFIX}" \
     --enable-shared \
-    --enable-threads \
-    --disable-rpath \
+    "${THREAD_OPTS[@]}" \
+    "${RPATH_OPTS[@]}" \
     --mandir="${PREFIX}/man"
+
+# Tcl 9 baut seine mitgelieferten Pakete (sqlite, tdbc, itcl, thread) mit dem
+# gerade erst erzeugten tclsh. Das findet libtcl9.0.so nur, wenn das
+# Build-Verzeichnis im Library-Pfad liegt -- sonst bricht "configure-packages"
+# mit "cannot find a usable native Tcl 9 tclsh" ab.
+export LD_LIBRARY_PATH="$(pwd)${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
 make -j"$(nproc)"
 make install
 make install-headers
+# Scidc kompiliert src/tk/ gegen Tcl/Tk-INTERNE Header (tclInt.h, tkInt.h,
+# tk3d.h, tkFont.h, tkPort.h ...). Ohne diesen Schritt fehlen sie.
+make install-private-headers
+install_remaining_headers ..
 
 # --- Tk ------------------------------------------------------------------------
 echo ""
@@ -148,13 +201,17 @@ echo "--- Konfiguriere und baue Tk ---"
     --prefix="${PREFIX}" \
     --with-tcl="${PREFIX}/lib" \
     --enable-shared \
-    --enable-threads \
-    --disable-rpath \
+    "${THREAD_OPTS[@]}" \
+    "${RPATH_OPTS[@]}" \
     --mandir="${PREFIX}/man"
+
+export LD_LIBRARY_PATH="$(pwd):${PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
 make -j"$(nproc)"
 make install
 make install-headers
+make install-private-headers
+install_remaining_headers ..
 
 # --- Aufräumen -----------------------------------------------------------------
 rm -rf "${BUILDDIR}"
