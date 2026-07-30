@@ -22,6 +22,14 @@ typedef struct PixelRep {
 } PixelRep;
 
 
+/*
+ * Tk 9 stellt TkSendVirtualEvent/TkNewWindowObj/TkpAlwaysShowSelection als
+ * oeffentliche API bereit (Tk_SendVirtualEvent, Tk_NewWindowObj,
+ * Tk_AlwaysShowSelection; siehe die Umbenennungen in ../tk_compat.h).
+ * Die Ersatzimplementierungen werden dort nicht mehr gebraucht.
+ */
+#if TK_MAJOR_VERSION < 9
+
 #if TK_MAJOR_VERSION > 8 \
 	|| (TK_MAJOR_VERSION == 8 \
 	    && (TK_MINOR_VERSION > 6 || (TK_MINOR_VERSION == 6 && TK_RELEASE_SERIAL >= 6)))
@@ -83,6 +91,8 @@ TkpAlwaysShowSelection(
 {
     return TkWinGetMainPtr(tkwin)->alwaysShowSelection;
 }
+
+#endif /* TK_MAJOR_VERSION < 9 */
 
 
 static int

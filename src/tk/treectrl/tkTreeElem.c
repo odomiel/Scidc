@@ -207,7 +207,7 @@ static int BooleanSet(
 	Tk_Window tkwin,
 	Tcl_Obj **value,
 	char *recordPtr,
-	int internalOffset,
+	Tcl_Size internalOffset,
 	char *saveInternalPtr,
 	int flags)
 {
@@ -241,7 +241,7 @@ static Tcl_Obj *BooleanGet(
 	ClientData clientData,
 	Tk_Window tkwin,
 	char *recordPtr,
-	int internalOffset)
+	Tcl_Size internalOffset)
 {
 	int value = *(int *) (recordPtr + internalOffset);
 	if (value == -1)
@@ -296,7 +296,7 @@ static int IntegerSet(
 	Tk_Window tkwin,
 	Tcl_Obj **value,
 	char *recordPtr,
-	int internalOffset,
+	Tcl_Size internalOffset,
 	char *saveInternalPtr,
 	int flags)
 {
@@ -343,7 +343,7 @@ static Tcl_Obj *IntegerGet(
 	ClientData clientData,
 	Tk_Window tkwin,
 	char *recordPtr,
-	int internalOffset)
+	Tcl_Size internalOffset)
 {
 	IntegerClientData *cd = clientData;
 	int value = *(int *) (recordPtr + internalOffset);
@@ -382,7 +382,7 @@ static int StringTableSet(
 	Tk_Window tkwin,
 	Tcl_Obj **value,
 	char *recordPtr,
-	int internalOffset,
+	Tcl_Size internalOffset,
 	char *saveInternalPtr,
 	int flags)
 {
@@ -418,7 +418,7 @@ static Tcl_Obj *StringTableGet(
 	ClientData clientData,
 	Tk_Window tkwin,
 	char *recordPtr,
-	int internalOffset)
+	Tcl_Size internalOffset)
 {
 	StringTableClientData *cd = clientData;
 	int index = *(int *) (recordPtr + internalOffset);
@@ -2377,7 +2377,7 @@ struct ElementText
 								 * will be a dynamically allocated string
 								 * from any -data or -textvariable. */
 #define STRINGREP_INVALID -1
-	int textLen;				/* Number of bytes (not characters) in the
+	Tcl_Size textLen;			/* Number of bytes (not characters) in the
 								 * UTF-8 string. If -1, it means the string
 								 * representation is invalid. */
 };
@@ -4317,7 +4317,7 @@ int TreeElement_TypeFromObj(TreeCtrl *tree, Tcl_Obj *objPtr, TreeElementType **t
 	Tcl_Interp *interp = tree->interp;
 	ElementAssocData *assocData;
 	char *typeStr;
-	int length;
+	Tcl_Size length;
 	TreeElementType *typeList;
 	TreeElementType *typePtr, *matchPtr = NULL;
 

@@ -1175,7 +1175,7 @@ typedef struct TagExpr {
 
 	char *string;				/* tag expression string */
 	int stringIndex;			/* current position in string scan */
-	int stringLength;			/* length of tag expression string */
+	Tcl_Size stringLength;		/* length of tag expression string */
 
 	char *rewritebuffer;		/* tag string (after removing escapes) */
 	char staticRWB[100];
@@ -1215,7 +1215,7 @@ MODULE_SCOPE void DynamicOption_Free(TreeCtrl *tree, DynamicOption *first,
 MODULE_SCOPE void DynamicOption_Free1(TreeCtrl *tree, DynamicOption **firstPtr,
 	int id, int size);
 MODULE_SCOPE int DynamicCO_Init(Tk_OptionSpec *optionTable, CONST char *optionName,
-	int id, int size, int objOffset, int internalOffset,
+	int id, int size, int objOffset, Tcl_Size internalOffset,
 	Tk_ObjCustomOption *custom, DynamicOptionInitProc *init);
 
 MODULE_SCOPE int BooleanFlagCO_Init(Tk_OptionSpec *optionTable, CONST char *optionName,

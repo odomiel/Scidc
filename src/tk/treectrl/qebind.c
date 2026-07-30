@@ -1679,7 +1679,7 @@ QE_GenerateCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 	GenerateData genData;
 	GenerateField *fieldPtr;
 	char *p, *t;
-	int listObjc;
+	Tcl_Size listObjc;
 	int i;
 	Tcl_Obj **listObjv;
 	Pattern pats;
@@ -1729,7 +1729,7 @@ QE_GenerateCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 
 		while (listObjc > 1)
 		{
-			int length;
+			Tcl_Size length;
 
 			t = Tcl_GetStringFromObj(listObjv[0], &length);
 			if (length != 1)
@@ -1973,7 +1973,8 @@ QE_InstallCmd_New(QE_BindingTable bindingTable, int objOffset, int objc,
 	BindingTable *bindPtr = (BindingTable *) bindingTable;
 	char *pattern, *command = NULL;
 	char eventName[FIELD_SIZE], detailName[FIELD_SIZE];
-	int id, length;
+	int id;
+	Tcl_Size length;
 	EventInfo *eiPtr;
 	Detail *dPtr = NULL;
 	Tcl_HashEntry *hPtr;
@@ -2121,7 +2122,8 @@ QE_InstallCmd_Old(QE_BindingTable bindingTable, int objOffset, int objc,
 		case 0: /* detail */
 		{
 			char *eventName, *detailName, *command;
-			int id, length;
+			int id;
+			Tcl_Size length;
 			Detail *dPtr;
 			EventInfo *eiPtr;
 			Tcl_HashEntry *hPtr;
@@ -2174,7 +2176,8 @@ QE_InstallCmd_Old(QE_BindingTable bindingTable, int objOffset, int objc,
 		case 1: /* event */
 		{
 			char *eventName, *command;
-			int id, length;
+			int id;
+			Tcl_Size length;
 			EventInfo *eiPtr;
 			Tcl_HashEntry *hPtr;
 
@@ -2225,7 +2228,7 @@ QE_InstallCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 	Tcl_Obj *CONST *objV = objv + objOffset;
 	BindingTable *bindPtr = (BindingTable *) bindingTable;
 	char *s;
-	int length;
+	Tcl_Size length;
 
 	if (objC < 2)
 	{
@@ -2404,7 +2407,7 @@ int QE_UninstallCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 	Tcl_Obj *CONST *objV = objv + objOffset;
 	BindingTable *bindPtr = (BindingTable *) bindingTable;
 	char *s;
-	int length;
+	Tcl_Size length;
 
 	if (objC < 2)
 	{
@@ -2519,7 +2522,7 @@ int QE_LinkageCmd(QE_BindingTable bindingTable, int objOffset, int objc,
 	Tcl_Obj *CONST *objV = objv + objOffset;
 	BindingTable *bindPtr = (BindingTable *) bindingTable;
 	char *s;
-	int length;
+	Tcl_Size length;
 
 	if (objC < 2)
 	{

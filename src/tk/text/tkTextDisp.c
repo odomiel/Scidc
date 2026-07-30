@@ -11133,7 +11133,7 @@ TkTextYviewCmd(
     TextDInfo *dInfoPtr = textPtr->dInfoPtr;
     int pickPlace;
     int pixels, count;
-    int switchLength;
+    Tcl_Size switchLength;
     double fraction;
     TkTextIndex index;
 

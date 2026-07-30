@@ -1524,7 +1524,8 @@ TkTextReplaceTags(
     bool altered = false;
     bool anyChanges = false;
     Tcl_Obj **objs;
-    int objn = 0, k;
+    int k;
+    Tcl_Size objn = 0;
     unsigned j;
 
     assert(textPtr);

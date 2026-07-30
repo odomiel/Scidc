@@ -150,7 +150,7 @@ HtmlDecode(
     int jj;
 
     Tcl_Obj *pData;
-    int nData;
+    Tcl_Size nData;
     unsigned char *zData;
     int is64 = 0;
 
@@ -225,7 +225,7 @@ HtmlEscapeUriComponent(
 
     unsigned char *zCsr;
     unsigned char *zEnd;
-    int nIn;
+    Tcl_Size nIn;
 
     Tcl_Obj *pData;
     int isQuery;
@@ -311,7 +311,7 @@ struct Uri {
 static Uri *
 objToUri(Tcl_Obj *pObj)
 {
-    int nInput;
+    Tcl_Size nInput;
     char *zInput;
     char *zOut;
     Uri *p;

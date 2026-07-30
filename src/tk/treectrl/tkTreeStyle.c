@@ -915,6 +915,9 @@ Style_DoLayoutH(
 				continue;
 
 			switch (drawArgs->justify) {
+#if TK_MAJOR_VERSION > 8
+				case TK_JUSTIFY_NULL:	/* Tk 9: -justify nicht gesetzt -> wie links */
+#endif
 				case TK_JUSTIFY_LEFT:
 					break;
 				case TK_JUSTIFY_RIGHT:
@@ -4953,7 +4956,7 @@ TreeElementCmd(
 
 		case COMMAND_CREATE: {
 			char *name;
-			int length;
+			Tcl_Size length;
 			int isNew;
 			TreeElement elem;
 			TreeElementType *typePtr;
@@ -5458,7 +5461,8 @@ StyleLayoutCmd(
 			}
 			case OPTION_EXPAND: {
 				char *expand;
-				int len, k;
+				int k;
+				Tcl_Size len;
 				expand = Tcl_GetStringFromObj(objv[i + 1], &len);
 				eLink->flags &= ~ELF_eEXPAND;
 				for (k = 0; k < len; k++) {
@@ -5481,7 +5485,8 @@ StyleLayoutCmd(
 			}
 			case OPTION_iEXPAND: {
 				char *expand;
-				int len, k;
+				int k;
+				Tcl_Size len;
 				expand = Tcl_GetStringFromObj(objv[i + 1], &len);
 				eLink->flags &= ~(ELF_iEXPAND | ELF_iEXPAND_X | ELF_iEXPAND_Y);
 				for (k = 0; k < len; k++) {
@@ -5516,7 +5521,8 @@ StyleLayoutCmd(
 			}
 			case OPTION_SQUEEZE: {
 				char *string;
-				int len, k;
+				int k;
+				Tcl_Size len;
 				string = Tcl_GetStringFromObj(objv[i + 1], &len);
 				eLink->flags &= ~(ELF_SQUEEZE_X | ELF_SQUEEZE_Y);
 				for (k = 0; k < len; k++) {
@@ -5536,7 +5542,7 @@ StyleLayoutCmd(
 				break;
 			}
 			case OPTION_UNION: {
-				int objc1;
+				Tcl_Size objc1;
 				Tcl_Obj **objv1;
 				int j, k, n, *onion, count = 0;
 
@@ -5691,7 +5697,8 @@ StyleLayoutCmd(
 			}
 			case OPTION_STICKY: {
 				char *sticky;
-				int len, k;
+				int k;
+				Tcl_Size len;
 				sticky = Tcl_GetStringFromObj(objv[i + 1], &len);
 				eLink->flags &= ~ELF_STICKY;
 				for (k = 0; k < len; k++) {
@@ -5872,7 +5879,7 @@ TreeStyleCmd(
 
 		case COMMAND_CREATE: {
 			char *name;
-			int len;
+			Tcl_Size len;
 			Tcl_HashEntry *hPtr;
 			int isNew;
 
@@ -5920,7 +5927,7 @@ TreeStyleCmd(
 			TreeElement elem, *elemList = NULL;
 			int i, j, count = 0;
 			int staticMap[STATIC_SIZE], *map = staticMap;
-			int listObjc;
+			Tcl_Size listObjc;
 			Tcl_Obj **listObjv;
 
 			if (objc < 4 || objc > 5) {

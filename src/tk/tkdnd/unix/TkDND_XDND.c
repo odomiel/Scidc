@@ -1348,7 +1348,8 @@ TkDND_AnnounceTypeListObjCmd(
 {
 	Tk_Window path;
 	Tcl_Obj** type;
-	int status, i, numTypes;
+	int status, i;
+	Tcl_Size numTypes;
 	Atom typeListBuf[10];
 	Atom* typeList = typeListBuf;
 
@@ -1399,7 +1400,8 @@ TkDND_AnnounceActionListObjCmd(
 	Tk_Window path;
 	Tcl_Obj **action;
 	Tcl_Obj **description;
-	int status, i, actions, descriptions;
+	int status, i;
+	Tcl_Size actions, descriptions;
 	Atom actionlist[10];
 	Atom descriptionlist[10];
 
@@ -1664,7 +1666,8 @@ TkDND_SendXdndEnterObjCmd(
 	Tk_Window source;
 	Window target, proxy;
 	Display *display;
-	int types, r, f, flags, status, i;
+	int r, f, flags, status, i;
+	Tcl_Size types;
 	int target_version = XDND_VERSION;
 	int* tv;
 	Atom t = None;
@@ -1851,7 +1854,8 @@ TkDND_XChangePropertyObjCmd(ClientData clientData, Tcl_Interp* interp, int objc,
 	Window target;
 	Atom property = None;
 	Atom type = None;
-	int format, numItems, numFields, i;
+	int format, numItems, i;
+	Tcl_Size numFields;
 	Display* display;
 	Tk_Window source;
 	Time time;

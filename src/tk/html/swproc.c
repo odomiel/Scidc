@@ -205,7 +205,7 @@ swproc_rtCmd(
     rc = SwprocRt(interp, objc - 1, &objv[1], aConf, apObj);
     if (rc == TCL_OK) {
         Tcl_Obj **apConf;
-        int nConf;
+        Tcl_Size nConf;
 
         rc = Tcl_ListObjGetElements(interp, apObj[0], &nConf, &apConf);
         if (rc == TCL_OK) {
@@ -220,7 +220,7 @@ swproc_rtCmd(
             for (ii = 0; ii < nConf && rc == TCL_OK; ii++) {
                 SwprocConf *pConf = &aScriptConf[ii];
                 Tcl_Obj **apParams;
-                int nP;
+                Tcl_Size nP;
 
                 rc = Tcl_ListObjGetElements(interp, apConf[ii], &nP, &apParams);
                 if (rc == TCL_OK) {
@@ -250,7 +250,7 @@ swproc_rtCmd(
 
             if (rc == TCL_OK) {
                 Tcl_Obj **apArgs;
-                int nArgs;
+                Tcl_Size nArgs;
                 rc = Tcl_ListObjGetElements(interp, apObj[1], &nArgs, &apArgs);
                 if (rc == TCL_OK) {
                     rc = SwprocRt(interp, nArgs, apArgs, aScriptConf, apVars);

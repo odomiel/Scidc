@@ -1612,7 +1612,7 @@ configureCmd(
         }
 
         if (init || mask & FT_MASK) {
-            int nSize;
+            Tcl_Size nSize;
             Tcl_Obj **apSize;
             int aFontSize[7];
             Tcl_Obj *pFT = pTree->options.fonttable;
@@ -1903,7 +1903,7 @@ parseCmd(
 
     int isFinal;
     char *zHtml;
-    int nHtml;
+    Tcl_Size nHtml;
     int eWriteState;
 
     Tcl_Obj *aObj[2];
@@ -2420,7 +2420,7 @@ styleCmd(
     };
     Tcl_Obj *apObj[4];
     int rc = TCL_OK;
-    int n;
+    Tcl_Size n;
     HtmlTree *pTree = (HtmlTree *)clientData;
 
     /* First assert() that the sizes of the aConf and apObj array match. Then

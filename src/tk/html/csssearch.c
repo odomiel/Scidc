@@ -154,7 +154,7 @@ HtmlCssSearch(
 {
     HtmlTree *pTree = (HtmlTree *)clientData;
     char *zOrig;
-    int n;
+    Tcl_Size n;
     CssStyleSheet *pStyle = 0;
 
     /* Search only descendants of this node (NULL means search whole tree) */

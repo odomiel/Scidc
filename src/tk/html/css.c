@@ -2551,7 +2551,7 @@ HtmlStyleParse(
     Tcl_Obj *pStyleId = 0;
     CONST char *zId;
     CONST char *zStyleText;
-    int nStyleText;
+    Tcl_Size nStyleText;
 
     /* Parse up the stylesheet id. It must begin with one of the strings
      * "agent", "user" or "author". After that it may contain any text.
@@ -3627,7 +3627,7 @@ static void
 overrideToPropertyValues(HtmlComputedValuesCreator *p, int *aPropDone, Tcl_Obj *pOverride)
 {
     Tcl_Obj **apObj = 0;
-    int nObj = 0;
+    Tcl_Size nObj = 0;
     int ii;
 
     if (!pOverride) return;
@@ -3636,7 +3636,7 @@ overrideToPropertyValues(HtmlComputedValuesCreator *p, int *aPropDone, Tcl_Obj *
     for (ii = 0; ii < (nObj - 1); ii += 2) {
         int eProp;
         const char *zProp;
-        int nProp;
+        Tcl_Size nProp;
 
         zProp = Tcl_GetStringFromObj(apObj[ii], &nProp);
         eProp = HtmlCssPropertyLookup(nProp, zProp);

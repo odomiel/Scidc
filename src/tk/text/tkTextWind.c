@@ -480,7 +480,8 @@ TkTextWindowCmd(
 	    TkTextEmbWindowClient *client;
 	    Tcl_Obj *objPtr;
 	    Tcl_Obj **objs;
-	    int objn = 0, i;
+	    int i;
+	    Tcl_Size objn = 0;
 
 	    /*
 	     * Copy over client specific value before querying.
@@ -504,7 +505,7 @@ TkTextWindowCmd(
 	    Tcl_ListObjGetElements(NULL, objPtr, &objn, &objs);
 	    for (i = 0; i < objn; ++i) {
 		Tcl_Obj **objv;
-		int objc = 0;
+		Tcl_Size objc = 0;
 
 		Tcl_ListObjGetElements(NULL, objs[i], &objc, &objv);
 		if (objc == 5 && strcmp(Tcl_GetString(objv[0]), "-tags") == 0) {
@@ -688,7 +689,8 @@ TkTextMakeWindow(
     TkTextSegment *ewPtr;
     Tcl_Obj **objv;
     Tcl_Obj **argv;
-    int objc, i;
+    int i;
+    Tcl_Size objc;
 
     assert(options);
 

@@ -623,7 +623,7 @@ struct HtmlTree {
     int nParsed;                    /* Bytes of pDocument tokenized */
     int nCharParsed;                /* TODO: Characters parsed */
 
-    int iWriteInsert;               /* Byte offset in pDocument for [write] */
+    Tcl_Size iWriteInsert;          /* Byte offset in pDocument for [write] */
     int eWriteState;                /* One of the HTML_WRITE_XXX values */
 
     int isIgnoreNewline;            /* True after an opening tag */

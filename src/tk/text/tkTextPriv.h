@@ -874,7 +874,7 @@ TkTextGetIndexFromObj(
     Tcl_Obj *objPtr,		/* Object containing description of position. */
     TkTextIndex *indexPtr)	/* Store the result here. */
 {
-    int length;
+    Tcl_Size length;
 
     assert(textPtr);
     assert(objPtr);

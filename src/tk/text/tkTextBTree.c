@@ -3679,7 +3679,8 @@ LoadMakeTagInfo(
     TkTextTagSet **tagInfoPtr,
     Tcl_Obj *obj)
 {
-    int objc, i;
+    int i;
+    Tcl_Size objc;
     Tcl_Obj **objv;
 
     if (Tcl_ListObjGetElements(textPtr->interp, obj, &objc, &objv) != TCL_OK) {
@@ -3700,7 +3701,8 @@ LoadRemoveTags(
     TkTextTagSet **tagInfoPtr,
     Tcl_Obj *obj)
 {
-    int objc, i;
+    int i;
+    Tcl_Size objc;
     Tcl_Obj **objv;
 
     assert(*tagInfoPtr);
@@ -3775,7 +3777,8 @@ TkBTreeLoad(
     };
 
     Tcl_Obj **objv;
-    int objc, i;
+    int i;
+    Tcl_Size objc;
     int byteLength;
     TkTextTagSet *tagInfoPtr;
     TkSharedText *sharedTextPtr;
@@ -3847,7 +3850,7 @@ TkBTreeLoad(
     for (i = 0; i < objc; ++i) {
 	const char *type;
 	Tcl_Obj **argv;
-	int argc;
+	Tcl_Size argc;
 
 	if (Tcl_ListObjGetElements(interp, objv[i], &argc, &argv) != TCL_OK) {
 	    return TCL_ERROR;
@@ -3865,7 +3868,8 @@ TkBTreeLoad(
 	     */
 
 	    Tcl_Obj **objv;
-	    int objc, k;
+	    int k;
+	    Tcl_Size objc;
 
 	    if (strcmp(type, "setup") != 0) {
 		return LoadError(interp, "invalid item identifier", i, 0, -1, &data);

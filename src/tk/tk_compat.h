@@ -33,11 +33,23 @@
 // ======================================================================
 // Diese Makros gelten für C und C++ gleichermassen.
 
+// Tcl_Size (= ptrdiff_t) kam mit Tcl 8.7/9.0. Aeltere 8.6-Header (z.B. das
+// System-Tcl 8.6 unter /usr/include/tcl8.6) kennen es nicht; neuere 8.6.x
+// liefern den Shim bereits selbst mit, deshalb die #ifndef-Absicherung.
+#if TCL_MAJOR_VERSION < 9
+# ifndef Tcl_Size
+#  define Tcl_Size int
+# endif
+#endif
+
 #if TK_MAJOR_VERSION > 8
 
 // Tk 9 hat diese vormals internen Funktionen in die öffentliche API übernommen
 # define TkpDrawHighlightBorder	Tk_DrawHighlightBorder
 # define TkpGetSystemDefault	Tk_GetSystemDefault
+# define TkSendVirtualEvent	Tk_SendVirtualEvent
+# define TkNewWindowObj		Tk_NewWindowObj
+# define TkpAlwaysShowSelection	Tk_AlwaysShowSelection
 
 // Tk_BackgroundError wurde in Tk 9 entfernt
 # define Tk_BackgroundError(interp)	Tcl_BackgroundException((interp), TCL_ERROR)

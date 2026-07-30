@@ -1867,7 +1867,8 @@ TreeItemList_FromObj(
 	)
 {
 	Tcl_Interp *interp = tree->interp;
-	int i, objc, index, listIndex, id;
+	int i, index, listIndex, id;
+	Tcl_Size objc;
 	Tcl_HashEntry *hPtr;
 	Tcl_HashSearch search;
 	Tcl_Obj **objv, *elemPtr;
@@ -1992,7 +1993,7 @@ TreeItemList_FromObj(
 				break;
 			}
 			case INDEX_LIST: {
-				int listObjc;
+				Tcl_Size listObjc;
 				Tcl_Obj **listObjv;
 				int count;
 
@@ -4933,7 +4934,7 @@ ItemCreateCmd(
 		}
 		switch (index) {
 			case OPT_BUTTON: {
-				int length;
+				Tcl_Size length;
 				char *s = Tcl_GetStringFromObj(objv[i + 1], &length);
 				if (s[0] == 'a' && strncmp(s, "auto", length) == 0) {
 					button = ITEM_FLAG_BUTTON_AUTO;
@@ -5342,7 +5343,7 @@ ItemElementCmd(
 				/* Look for a + or , */
 				for (index = indexElem + 1; index < objc; index++) {
 					if (numArgs % 2 == 0) {
-						int length;
+						Tcl_Size length;
 						char *s = Tcl_GetStringFromObj(objv[index], &length);
 
 						if ((length == 1) && ((s[0] == '+') || (s[0] == ','))) {
@@ -5584,7 +5585,7 @@ ItemStyleCmd(
 			TreeColumn treeColumn;
 			Column *column;
 			int columnIndex;
-			int objcM;
+			Tcl_Size objcM;
 			Tcl_Obj **objvM;
 			ItemForEach iter;
 			ColumnForEach citer;
@@ -5648,7 +5649,8 @@ doneMAP:
 			struct columnStyle staticCS[STATIC_SIZE], *cs = staticCS;
 			TreeColumn treeColumn;
 			Column *column;
-			int i, count = 0, length, changed = FALSE, changedI;
+			int i, count = 0, changed = FALSE, changedI;
+			Tcl_Size length;
 			ItemForEach iter;
 			ColumnForEach citer;
 
@@ -6006,7 +6008,8 @@ CompareCmd(
 {
 	Tcl_Interp *interp = sortData->tree->interp;
 	Tcl_Obj **objv, *paramObjv[2];
-	int objc, v;
+	int v;
+	Tcl_Size objc;
 
 	paramObjv[0] = a->obj;
 	paramObjv[1] = b->obj;
@@ -6367,7 +6370,7 @@ ItemSortCmd(
 				sortData.columns[sortData.columnCount - 1].sortBy = SORT_DICT;
 				break;
 			case OPT_ELEMENT: {
-				int listObjc;
+				Tcl_Size listObjc;
 				Tcl_Obj **listObjv;
 
 				if (Tcl_ListObjGetElements(interp, objv[i + 1], &listObjc,
@@ -7024,7 +7027,8 @@ ItemTagCmd(
 	switch (index) {
 		/* T item tag add I tagList */
 		case COMMAND_ADD: {
-			int i, numTags;
+			int i;
+			Tcl_Size numTags;
 			Tcl_Obj **listObjv;
 			Tk_Uid staticTags[STATIC_SIZE], *tags = staticTags;
 
@@ -7107,7 +7111,8 @@ ItemTagCmd(
 
 		/* T item tag remove I tagList */
 		case COMMAND_REMOVE: {
-			int i, numTags;
+			int i;
+			Tcl_Size numTags;
 			Tcl_Obj **listObjv;
 			Tk_Uid staticTags[STATIC_SIZE], *tags = staticTags;
 
@@ -7540,7 +7545,7 @@ TreeItemCmd(
 			TreeItemList items;
 
 			if (numArgs == 2) {
-				int len;
+				Tcl_Size len;
 				char *s = Tcl_GetStringFromObj(objv[4], &len);
 				if (strncmp(s, "-recurse", len)) {
 					FormatResult(interp, "bad option \"%s\": must be -recurse",
@@ -7603,7 +7608,7 @@ TreeItemCmd(
 #ifdef DEPRECATED
 		case COMMAND_COMPLEX: {
 			int i, j, columnIndex;
-			int objc1, objc2;
+			Tcl_Size objc1, objc2;
 			Tcl_Obj **objv1, **objv2;
 			TreeColumn treeColumn = tree->columns;
 			Column *column;
@@ -7969,7 +7974,7 @@ TreeItemCmd(
 		case COMMAND_ORDER: {
 			int visible = FALSE;
 			if (objc == 5) {
-				int len;
+				Tcl_Size len;
 				char *s = Tcl_GetStringFromObj(objv[4], &len);
 				if ((s[0] == '-') && (strncmp(s, "-visible", len) == 0))
 					visible = TRUE;

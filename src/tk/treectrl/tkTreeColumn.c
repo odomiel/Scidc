@@ -102,7 +102,7 @@ struct TreeColumn_
 	Tk_OptionTable optionTable;
 	int id;						/* unique column identifier */
 	int index;					/* order in list of columns */
-	int textLen;
+	Tcl_Size textLen;
 	int textWidth;
 	Tk_Image image;
 	int neededWidth;			/* calculated from borders + image/bitmap +
@@ -160,7 +160,7 @@ UniformGroupCO_Set(
 	Tk_Window tkwin,
 	Tcl_Obj **valuePtr,
 	char *recordPtr,
-	int internalOffset,
+	Tcl_Size internalOffset,
 	char *saveInternalPtr,
 	int flags
 	)
@@ -212,7 +212,7 @@ UniformGroupCO_Get(
 	ClientData clientData,
 	Tk_Window tkwin,
 	char *recordPtr,
-	int internalOffset
+	Tcl_Size internalOffset
 	)
 {
 	TreeCtrl *tree = (TreeCtrl *) TkWinGetInstanceData(tkwin);
@@ -461,7 +461,7 @@ ColumnCO_Set(
 								 * We use a pointer to the pointer because
 								 * we may need to return a value (NULL). */
 	char *recordPtr,			/* Pointer to storage for the widget record. */
-	int internalOffset,			/* Offset within *recordPtr at which the
+	Tcl_Size internalOffset,			/* Offset within *recordPtr at which the
 								 * internal value is to be stored. */
 	char *saveInternalPtr,		/* Pointer to storage for the old value. */
 	int flags					/* Flags for the option, set Tk_SetOptions. */
@@ -518,7 +518,7 @@ ColumnCO_Get(
 	ClientData clientData,		/* Not used. */
 	Tk_Window tkwin,			/* Window for which option is being set. */
 	char *recordPtr,			/* Pointer to widget record. */
-	int internalOffset			/* Offset within *recordPtr containing the
+	Tcl_Size internalOffset			/* Offset within *recordPtr containing the
 								 * sticky value. */
 	)
 {
@@ -690,7 +690,8 @@ ColumnStateFromObj(
 	)
 {
 	Tcl_Interp *interp = tree->interp;
-	int i, op = STATE_OP_ON, op2, op3, length, state = 0;
+	int i, op = STATE_OP_ON, op2, op3, state = 0;
+	Tcl_Size length;
 	char ch0, *string;
 	CONST char *stateNames[4] = { "normal", "active", "pressed", "up" };
 	int states[3];
@@ -967,7 +968,8 @@ Qualifiers_Scan(
 				break;
 			}
 			case QUAL_STATE: {
-				int i, listObjc;
+				int i;
+				Tcl_Size listObjc;
 				Tcl_Obj **listObjv;
 
 				if (Tcl_ListObjGetElements(interp, objv[j + 1],
@@ -1141,7 +1143,8 @@ TreeColumnList_FromObj(
 	)
 {
 	Tcl_Interp *interp = tree->interp;
-	int i, objc, index, listIndex;
+	int i, index, listIndex;
+	Tcl_Size objc;
 	Tcl_Obj **objv, *elemPtr;
 	TreeColumn column = NULL;
 	Qualifiers q;
@@ -1252,7 +1255,7 @@ TreeColumnList_FromObj(
 				break;
 			}
 			case INDEX_LIST: {
-				int listObjc;
+				Tcl_Size listObjc;
 				Tcl_Obj **listObjv;
 				int count;
 
@@ -2138,7 +2141,8 @@ Column_Config(
 					column->itemBgColor = NULL;
 					column->itemBgCount = 0;
 				} else {
-					int i, length, listObjc;
+					int i;
+					Tcl_Size length, listObjc;
 					Tcl_Obj **listObjv;
 					XColor **colors;
 
@@ -2913,6 +2917,9 @@ Column_DoLayout(
 	}
 	if (iText != -1) {
 		switch (column->justify) {
+#if TK_MAJOR_VERSION > 8
+			case TK_JUSTIFY_NULL:	/* Tk 9: -justify nicht gesetzt -> wie links */
+#endif
 			case TK_JUSTIFY_LEFT:
 				partText.left = 0;
 				break;
@@ -2932,6 +2939,9 @@ Column_DoLayout(
 
 	if (iImage != -1) {
 		switch (column->justify) {
+#if TK_MAJOR_VERSION > 8
+			case TK_JUSTIFY_NULL:	/* Tk 9: -justify nicht gesetzt -> wie links */
+#endif
 			case TK_JUSTIFY_LEFT:
 				partImage.left = 0;
 				break;
@@ -2952,6 +2962,9 @@ Column_DoLayout(
 		goto finish;
 
 	switch (column->justify) {
+#if TK_MAJOR_VERSION > 8
+		case TK_JUSTIFY_NULL:	/* Tk 9: -justify nicht gesetzt -> wie links */
+#endif
 		case TK_JUSTIFY_LEFT:
 			switch (column->arrowSide) {
 				case SIDE_LEFT:
@@ -3662,7 +3675,8 @@ ColumnTagCmd(
 	switch (index) {
 		/* T column tag add C tagList */
 		case COMMAND_ADD: {
-			int i, numTags;
+			int i;
+			Tcl_Size numTags;
 			Tcl_Obj **listObjv;
 			Tk_Uid staticTags[STATIC_SIZE], *tags = staticTags;
 
@@ -3745,7 +3759,8 @@ ColumnTagCmd(
 
 		/* T column tag remove C tagList */
 		case COMMAND_REMOVE: {
-			int i, numTags;
+			int i;
+			Tcl_Size numTags;
 			Tcl_Obj **listObjv;
 			Tk_Uid staticTags[STATIC_SIZE], *tags = staticTags;
 
@@ -4400,7 +4415,7 @@ doneDELETE:
 				return TCL_ERROR;
 			}
 			if (objc == 4) {
-				int len;
+				Tcl_Size len;
 				char *s = Tcl_GetStringFromObj(objv[3], &len);
 				if ((s[0] == '-') && (strncmp(s, "-visible", len) == 0))
 					visible = TRUE;
@@ -4552,7 +4567,8 @@ doneDELETE:
 
 		case COMMAND_FIT: {
 			TreeColumn column;
-			int i, length = 0;
+			int i;
+			Tcl_Size length = 0;
 
 			if (objc == 4) {
 				if (Tcl_ListObjLength(tree->interp, objv[3], &length) != TCL_OK)
@@ -4592,7 +4608,8 @@ doneDELETE:
 		}
 		case COMMAND_OPTIMZE: {
 			TreeColumn column;
-			int i, length = 0;
+			int i;
+			Tcl_Size length = 0;
 
 			if (objc == 4) {
 				if (Tcl_ListObjLength(tree->interp, objv[3], &length) != TCL_OK)
@@ -4633,7 +4650,8 @@ doneDELETE:
 
 		case COMMAND_SQUEEZE: {
 			TreeColumn column;
-			int i, length = 0;
+			int i;
+			Tcl_Size length = 0;
 
 			if (objc == 4) {
 				if (Tcl_ListObjLength(tree->interp, objv[3], &length) != TCL_OK)
@@ -4745,7 +4763,7 @@ doneDELETE:
 				return TCL_ERROR;
 			}
 			if (objc == 5) {
-				int len;
+				Tcl_Size len;
 				char *s = Tcl_GetStringFromObj(objv[4], &len);
 				if ((s[0] == '-') && (strncmp(s, "-visible", len) == 0))
 					visible = TRUE;
