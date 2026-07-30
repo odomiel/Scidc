@@ -8,7 +8,7 @@ include ../../Makefile.in
 .PRECIOUS:
 
 INCL_PRE		=  -I. -I../mstl -I../sys -I../util -I../util/zlib -I../tcl -Isvg -Isvg/agg -Ijpeg
-INCL_POST	= -Itcl$(TCL_VERSION) -Itk$(TCL_VERSION)
+INCL_POST	=
 INCLUDE		= $(INCL_PRE) $(INCL_POST)
 ALL_INCLUDE	= $(INCL_PRE) $(TCL_INCLUDE) $(TK_INCLUDE) $(X_INCLUDE) $(INCL_POST)
 CFLAGS		+= $(OPTIMIZE) $(PROFILING) $(C_DEBUG) $(SYS_CFLAGS)
@@ -95,10 +95,6 @@ tk_base.o: ../mstl/m_string.h
 tk_base.o: ../mstl/m_string.ipp
 tk_base.o: ../tcl/tcl_exception.h
 tk_base.o: ../util/u_exception.h
-tk_base.o: tk8.6/tkInt.h
-tk_base.o: tk8.6/tkPort.h
-tk_base.o: tk8.6/tkUnixPort.h
-tk_base.o: tk8.6/tkIntDecls.h
 tk_busy.o: tk_init.h
 tk_busy.o: ../tcl/tcl_base.h
 tk_busy.o: ../tcl/tcl_base.ipp
@@ -128,10 +124,6 @@ tk_busy.o: ../mstl/m_algobase.ipp
 tk_busy.o: ../mstl/m_algorithm.ipp
 tk_busy.o: ../mstl/m_string.h
 tk_busy.o: ../mstl/m_string.ipp
-tk_busy.o: tk8.6/tkInt.h
-tk_busy.o: tk8.6/tkPort.h
-tk_busy.o: tk8.6/tkUnixPort.h
-tk_busy.o: tk8.6/tkIntDecls.h
 tk_clock.o: tk_init.h
 tk_clock.o: ../tcl/tcl_base.h
 tk_clock.o: ../tcl/tcl_base.ipp
@@ -189,10 +181,6 @@ tk_clock.o: svg/agg/agg_scanline_u.h
 tk_clock.o: svg/agg/agg_renderer_scanline.h
 tk_clock.o: svg/agg/agg_renderer_base.h
 tk_fixes.o: tk_init.h
-tk_fixes.o: tk8.6/tkInt.h
-tk_fixes.o: tk8.6/tkPort.h
-tk_fixes.o: tk8.6/tkUnixPort.h
-tk_fixes.o: tk8.6/tkIntDecls.h
 tk_image.o: tk_init.h
 tk_image.o: svg/svg_path_renderer.h
 tk_image.o: svg/svg_path_tokenizer.h
@@ -285,10 +273,6 @@ tk_image.o: svg/agg/agg_blur.h
 tk_image.o: svg/agg/agg_pixfmt_transposer.h
 tk_init.o: tk_init.h
 tk_init.o: tk_session_manager.h
-tk_init.o: tk8.6/tkInt.h
-tk_init.o: tk8.6/tkPort.h
-tk_init.o: tk8.6/tkUnixPort.h
-tk_init.o: tk8.6/tkIntDecls.h
 tk_jpeg.o: tk_init.h
 tk_jpeg.o: jpeg/jpeg_image.h
 tk_jpeg.o: jpeg/jpeg_scanline.h
@@ -330,10 +314,6 @@ tk_misc.o: ../mstl/m_algorithm.ipp
 tk_misc.o: ../mstl/m_string.h
 tk_misc.o: ../mstl/m_string.ipp
 tk_multiwindow.o: tk_init.h
-tk_multiwindow.o: tk8.6/tkInt.h
-tk_multiwindow.o: tk8.6/tkPort.h
-tk_multiwindow.o: tk8.6/tkUnixPort.h
-tk_multiwindow.o: tk8.6/tkIntDecls.h
 tk_multiwindow.o: ../tcl/tcl_base.h
 tk_multiwindow.o: ../tcl/tcl_base.ipp
 tk_multiwindow.o: ../mstl/m_carray.h
@@ -391,10 +371,6 @@ tk_notebook.o: ../mstl/m_algobase.ipp
 tk_notebook.o: ../mstl/m_algorithm.ipp
 tk_notebook.o: ../mstl/m_string.h
 tk_notebook.o: ../mstl/m_string.ipp
-tk_notebook.o: tk8.6/tkInt.h
-tk_notebook.o: tk8.6/tkPort.h
-tk_notebook.o: tk8.6/tkUnixPort.h
-tk_notebook.o: tk8.6/tkIntDecls.h
 tk_panedwindow.o: tk_init.h
 tk_panedwindow.o: ../tcl/tcl_base.h
 tk_panedwindow.o: ../tcl/tcl_base.ipp
@@ -424,10 +400,6 @@ tk_panedwindow.o: ../mstl/m_algobase.ipp
 tk_panedwindow.o: ../mstl/m_algorithm.ipp
 tk_panedwindow.o: ../mstl/m_string.h
 tk_panedwindow.o: ../mstl/m_string.ipp
-tk_panedwindow.o: tk8.6/tkInt.h
-tk_panedwindow.o: tk8.6/tkPort.h
-tk_panedwindow.o: tk8.6/tkUnixPort.h
-tk_panedwindow.o: tk8.6/tkIntDecls.h
 tk_png.o: ../util/zlib/zlib.h
 tk_png.o: ../util/zlib/zconf.h
 tk_png.o: tk_init.h
