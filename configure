@@ -8,13 +8,13 @@
 # files), and creates the file "Makefile.in".
 
 
-# Try to find the best version of Tcl/Tk 8.x that is installed,
+# Try to find the best version of Tcl/Tk that is installed,
 # by searching the PATH directories for tclsh8.5, tclsh85, etc. If no
 # tclsh program with a version number in the file name is found, the
 # default program to execute is just tclsh.
 # The backslashes at the end of these lines are needed: \
 tclsh=tclsh; \
-for tclver in 86 8.6 85 8.5; do \
+for tclver in 90 9.0 86 8.6 85 8.5; do \
     IFS=:; \
     for dir in $PATH; do \
         if [ -x $dir/tclsh$tclver ]; \
@@ -27,7 +27,7 @@ done
 # The backslash at the end of this line is needed: \
 exec $tclsh "$0" ${1+"$@"}
 
-set Versions {8.6 8.5}
+set Versions {8.6 8.5 9.0}
 set IgnorePatches {8.6b1 8.6b1.1 8.6b2}
 
 
@@ -508,7 +508,10 @@ proc FindDir {f path {exp ""}} {
 
     foreach dir $path {
         set p [file join $dir $f]
-        if {![catch {glob $p}]} {
+        # Achtung: In Tcl 8.6 wirft [glob] bei fehlender Datei einen Fehler, ab
+        # Tcl 9 liefert es nur eine leere Liste. Ein blosses [catch] wuerde dort
+        # jedes Verzeichnis akzeptieren - deshalb das Ergebnis auswerten.
+        if {[llength [glob -nocomplain $p]] > 0} {
             if {$best == ""} { set best $dir }
             if {$exp != ""} {
                 if {[catch {exec grep -c $exp $p}] == 0} {
@@ -572,6 +575,147 @@ proc FindTclTkPathsAqua {} {
         set package(tk-lib) [list $configure(tcl-libraries) -framework Tk]
     }
     puts "    Location of Tcl/Tk frameworks: $fw_path"
+    return 1
+}
+
+
+# LibraryName:
+#    Basisname der Tcl- bzw. Tk-Bibliothek ohne "lib"-Praefix.
+#    Bis Tcl 8.6: libtcl8.6.so / libtk8.6.so
+#    Ab  Tcl 9:   libtcl9.0.so / libtcl9tk9.0.so - Tk traegt die
+#                 Tcl-Hauptversion im Namen.
+#
+proc LibraryName {module version} {
+    set major [lindex [split $version .] 0]
+    if {$module eq "tk" && $major >= 9} {
+        return "tcl${major}tk${version}"
+    }
+    return "${module}${version}"
+}
+
+
+# ReadConfigShFile:
+#    Liest eine tclConfig.sh/tkConfig.sh und gibt deren Zuweisungen als
+#    Dictionary zurueck. Diese Dateien bestehen aus Zeilen der Form
+#    NAME='wert' und sind der von Tcl selbst gepflegte, verlaessliche Weg an
+#    Include- und Link-Optionen zu kommen - im Gegensatz zum Raten von Pfaden.
+#
+proc ReadConfigShFile {file} {
+    set result {}
+    if {[catch { open $file r } f]} { return $result }
+    while {[gets $f line] >= 0} {
+        if {[regexp {^([A-Za-z_][A-Za-z0-9_]*)='(.*)'$} $line -> name value]} {
+            dict set result $name $value
+        }
+    }
+    close $f
+    return $result
+}
+
+
+# FindConfigShDir:
+#    Sucht ein Verzeichnis, das sowohl tclConfig.sh als auch tkConfig.sh
+#    enthaelt. Reihenfolge: --with-tcl=DIR, das Praefix des laufenden tclsh,
+#    dann die ueblichen Systemverzeichnisse.
+#
+proc FindConfigShDir {} {
+    global package tclv
+
+    set candidates {}
+    if {[info exists package(tcl)]} {
+        lappend candidates $package(tcl) [file join $package(tcl) lib]
+    }
+    set exe [info nameofexecutable]
+    if {[string length $exe]} {
+        set prefix [file dirname [file dirname $exe]]
+        lappend candidates [file join $prefix lib]
+    }
+    foreach dir {/usr/local/lib /usr/lib /usr/lib64} {
+        lappend candidates $dir [file join $dir tcl$tclv]
+        foreach sub [glob -nocomplain -types d -directory $dir *-linux-gnu*] {
+            lappend candidates $sub
+        }
+    }
+
+    foreach dir $candidates {
+        if {[file readable [file join $dir tclConfig.sh]]
+         && [file readable [file join $dir tkConfig.sh]]} {
+            return $dir
+        }
+    }
+    return ""
+}
+
+
+# UseTclTkConfigSh:
+#    Uebernimmt Include- und Link-Optionen aus tclConfig.sh/tkConfig.sh.
+#    Gibt 1 zurueck wenn das geklappt hat, sonst 0 (dann greift die alte
+#    Pfadsuche weiter unten).
+#
+proc UseTclTkConfigSh {} {
+    global configure package tclv tclv_nodot
+
+    # Explizit gesetzte Pfade haben Vorrang - dann nicht dazwischenfunken.
+    foreach key {tcl-includes tcl-libraries tk-includes tk-libraries} {
+        if {[info exists configure($key)]} { return 0 }
+    }
+
+    set dir [FindConfigShDir]
+    if {[string length $dir] == 0} { return 0 }
+
+    set tclCfg [ReadConfigShFile [file join $dir tclConfig.sh]]
+    set tkCfg  [ReadConfigShFile [file join $dir tkConfig.sh]]
+
+    foreach key {TCL_VERSION TCL_INCLUDE_SPEC TCL_LIB_SPEC} {
+        if {![dict exists $tclCfg $key]} { return 0 }
+    }
+    foreach key {TK_VERSION TK_INCLUDE_SPEC TK_LIB_SPEC} {
+        if {![dict exists $tkCfg $key]} { return 0 }
+    }
+
+    set version [dict get $tclCfg TCL_VERSION]
+    if {$version ne [dict get $tkCfg TK_VERSION]} { return 0 }
+    if {$version ne $tclv} {
+        # Der Benutzer hat eine andere Version verlangt - nicht ueberstimmen.
+        if {[info exists configure(tcl-version-given)]} { return 0 }
+        set configure(tcl-version) $version
+        set configure(tk-version)  $version
+        set tclv $version
+        set tclv_nodot [expr {round($tclv*10)}]
+    }
+
+    set package(tcl-inc) [dict get $tclCfg TCL_INCLUDE_SPEC]
+    set package(tk-inc)  [dict get $tkCfg  TK_INCLUDE_SPEC]
+
+    # TCL_LIB_SPEC enthaelt bereits -L und -l; zusaetzlich rpath, damit das
+    # Programm die Bibliotheken auch aus einem eigenen Praefix findet.
+    set libdir ""
+    if {[dict exists $tclCfg TCL_EXEC_PREFIX]} {
+        set libdir [file join [dict get $tclCfg TCL_EXEC_PREFIX] lib]
+    }
+    set package(tcl-lib) [dict get $tclCfg TCL_LIB_SPEC]
+    set package(tk-lib)  [dict get $tkCfg  TK_LIB_SPEC]
+    if {[string length $libdir] && [file isdirectory $libdir]} {
+        set package(tcl-lib) "[MakeOption -Wl,-rpath, $libdir] $package(tcl-lib)"
+        set package(tk-lib)  "[MakeOption -Wl,-rpath, $libdir] $package(tk-lib)"
+        set configure(tcl-libraries) $libdir
+        set configure(tk-libraries)  $libdir
+    }
+
+    # Der passende Shell gehoert zur selben Installation. Ab Tcl 9 gibt es
+    # nur noch den versionierten Namen (tclsh9.0).
+    if {[dict exists $tclCfg TCL_EXEC_PREFIX]} {
+        set bin [file join [dict get $tclCfg TCL_EXEC_PREFIX] bin]
+        foreach name [list tclsh$version tclsh[expr {round($version*10)}] tclsh] {
+            if {[file executable [file join $bin $name]]} {
+                set configure(tcl-shell) [file join $bin $name]
+                break
+            }
+        }
+    }
+
+    set configure(use-config-sh) 1
+    puts "    Using [file join $dir tclConfig.sh] (Tcl/Tk $version)"
     return 1
 }
 
@@ -748,12 +892,19 @@ proc findTclTkPathsAndMore {} {
     }
     set path(tk,libraries) $path(tcl,libraries)
 
+    # Bevorzugt tclConfig.sh/tkConfig.sh auswerten - das ist der von Tcl selbst
+    # gepflegte Weg. Nur wenn das nicht gelingt, wird wie bisher geraten.
+    UseTclTkConfigSh
+    puts "    Tcl/Tk version: $tclv"
+
     set exp(tcl) "TCL_VERSION.*$tclv"
     set exp(tk)  "TK_VERSION.*$tclv"
     set exp(x)   ""
 
     foreach module {tcl tk} {
-        if {[info exists configure($module-includes)]} {
+        if {[info exists configure(use-config-sh)]} {
+            # package($module-inc) stammt bereits aus ${module}Config.sh
+        } elseif {[info exists configure($module-includes)]} {
             set package($module-inc) [MakeOption -I $configure($module-includes)]
         } else {
             set file "$module.h"
@@ -784,26 +935,29 @@ proc findTclTkPathsAndMore {} {
     }
 
     foreach module {tcl tk} {
-        if {[info exists configure($module-libraries)]} {
-#           set package($module-lib) [MakeOption -L $configure($module-libraries)]
-            set package($module-lib) [MakeOption -Wl,-rpath= $configure($module-libraries)]
-            Append package($module-lib) " -l${module}${tclv}"
+        if {[info exists configure(use-config-sh)]} {
+            # package($module-lib) stammt bereits aus ${module}Config.sh
+        } elseif {[info exists configure($module-libraries)]} {
+            # -L ist zwingend: -Wl,-rpath ist nur ein Laufzeit-, kein Suchpfad.
+            set package($module-lib) [MakeOption -L $configure($module-libraries)]
+            Append package($module-lib) " [MakeOption -Wl,-rpath, $configure($module-libraries)]"
+            Append package($module-lib) " -l[LibraryName $module $tclv]"
         } else {
             set libPaths $path($module,libraries)
-            set configure($module-libraries) [FindDir "lib${module}${tclv}.*" $libPaths]
+            set libName [LibraryName $module $tclv]
+            set configure($module-libraries) [FindDir "lib${libName}.*" $libPaths]
             if {[string length $configure($module-libraries)] == 0} {
-                set configure($module-libraries) [FindDir "lib${module}${tclv_nodot}.*" $libPaths]
-                if {[string length $configure($module-libraries)] > 0} {
-                    set package($module-lib) $configure($module-libraries)
-                }
-            } else {
-#               set package($module-lib) [MakeOption -L $configure($module-libraries)]
-                set package($module-lib) [MakeOption -Wl,-rpath= $configure($module-libraries)]
+                set configure($module-libraries) \
+                    [FindDir "lib${module}${tclv_nodot}.*" $libPaths]
             }
             puts -nonewline "    Location of [string toupper $module 0 0] $tclv library: "
-            if {[info exists package($module-lib)]} {
+            if {[string length $configure($module-libraries)] > 0} {
+                # -L ist zwingend: -Wl,-rpath ist nur ein Laufzeit-, kein Suchpfad.
+                set package($module-lib) [MakeOption -L $configure($module-libraries)]
+                Append package($module-lib) \
+                    " [MakeOption -Wl,-rpath, $configure($module-libraries)]"
                 append opt " " $package($module-lib)
-                append package($module-lib) " " -l$module\$(TCL_VERSION)
+                Append package($module-lib) " -l$libName"
                 puts $configure($module-libraries)
             } else {
                 puts "not found"
@@ -845,6 +999,7 @@ proc findTclTkPathsAndMore {} {
         set attr [string tolower $lib]
         if {[info exists configure(${attr}-libraries)]} {
             set package(${attr}-lib) [MakeOption -L $configure(${attr}-libraries)]
+            append package(${attr}-lib) " -l${lib}"
         } else {
             set configure(${attr}-libraries) [FindDir "lib${lib}*" $path(x,libraries)]
             puts -nonewline "    Location of ${lib} library: "
@@ -2061,6 +2216,8 @@ proc usage {rc} {
     puts "  --program-suffix=SUFFIX    append SUFFIX to installed program names"
     puts ""
     puts "Tcl/Tk features:"
+    puts "  --with-tcl=DIR             directory holding tclConfig.sh and tkConfig.sh"
+    puts "                             (preferred over the search below)"
     puts "  --tcl-version=VER          Tcl/Tk version \[$configure(tcl-version)\]"
     puts "  --tcl-includes=DIR         Tcl include files are in DIR"
     puts "  --tcl-libraries=DIR        Tcl library files are in DIR"
@@ -2180,6 +2337,7 @@ foreach arg $argv {
             set environment($arg0) $arg1
         } elseif {[string match --* $arg0]} {
             set configure([string range $arg0 2 end]) $arg1
+            if {$arg0 eq "--tcl-version"} { set configure(tcl-version-given) 1 }
         } else {
             puts "Invalid argument: $arg\n"
             exit 1
@@ -2204,7 +2362,6 @@ if {[file readable "Makefile.in"]} {
 set tclv $configure(tcl-version)
 set tclv_nodot [expr round($tclv*10)]
 
-puts "    Tcl/Tk version: $tclv"
 puts "    Your operating system is: $tcl_platform(os) $tcl_platform(osVersion)"
 
 detectUnixDistribution

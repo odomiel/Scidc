@@ -30,6 +30,7 @@ engines/fairy-stockfish/fairy-stockfish-scidc
 
 # Von ./configure erzeugt, enthaelt maschinenspezifische Pfade
 Makefile.in
+Makefile.in.bak
 
 # Temporary / local files
 debug.txt
