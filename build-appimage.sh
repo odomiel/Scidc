@@ -21,6 +21,13 @@ SRCBIN="src/tkscidc-beta"
 TCLSCRIPT="tcl/scidc-beta"
 SHAREDIR="$APPDIR/usr/share/scidc-beta"
 
+# Tcl/Tk 9: Tk traegt die Tcl-Hauptversion im Bibliotheksnamen, und die
+# Skript-Library steckt als zipfs in der .so - es gibt also keine
+# lib/tcl9.0/-Verzeichnisse mehr zu kopieren.
+TCLTK_VERSION="9.0"
+TCL_LIB="libtcl${TCLTK_VERSION}.so"
+TK_LIB="libtcl${TCLTK_VERSION%%.*}tk${TCLTK_VERSION}.so"
+
 echo "=== Scidc AppImage Builder ==="
 
 # --- Voraussetzungen prüfen --------------------------------------------------
@@ -36,8 +43,9 @@ if [ ! -f "$TCLSCRIPT" ]; then
     exit 1
 fi
 
-if [ ! -f "$TCLTKDIR/lib/libtcl8.6.so" ] || [ ! -f "$TCLTKDIR/lib/libtk8.6.so" ]; then
-    echo "FEHLER: Tcl/Tk 8.6 nicht gefunden in $TCLTKDIR"
+if [ ! -f "$TCLTKDIR/lib/$TCL_LIB" ] || [ ! -f "$TCLTKDIR/lib/$TK_LIB" ]; then
+    echo "FEHLER: Tcl/Tk $TCLTK_VERSION nicht gefunden in $TCLTKDIR"
+    echo "Erwartet: lib/$TCL_LIB und lib/$TK_LIB"
     echo "Bitte zuerst ausführen: bash build-tcltk.sh"
     exit 1
 fi
@@ -86,14 +94,22 @@ cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 # Engines werden nicht ins AppImage gebündelt – das Programm bietet beim
 # ersten Start an sie von Codeberg herunterzuladen.
 
-# --- Schritt 3a: Tcl/Tk 8.6 aus lokalem Build --------------------------------
-echo "Kopiere Tcl/Tk 8.6..."
-cp -L  "$TCLTKDIR/lib/libtcl8.6.so" "$APPDIR/usr/lib/"
-cp -L  "$TCLTKDIR/lib/libtk8.6.so"  "$APPDIR/usr/lib/"
-cp -rL "$TCLTKDIR/lib/tcl8.6"       "$APPDIR/usr/lib/"
-cp -rL "$TCLTKDIR/lib/tk8.6"        "$APPDIR/usr/lib/"
-# Tcl-Module (msgcat, http, …): Source-Build legt diese unter lib/tcl8/{ver}/
-cp -rL "$TCLTKDIR/lib/tcl8"         "$APPDIR/usr/lib/"
+# --- Schritt 3a: Tcl/Tk aus lokalem Build ------------------------------------
+echo "Kopiere Tcl/Tk $TCLTK_VERSION..."
+cp -L "$TCLTKDIR/lib/$TCL_LIB" "$APPDIR/usr/lib/"
+cp -L "$TCLTKDIR/lib/$TK_LIB"  "$APPDIR/usr/lib/"
+
+# Ab Tcl 9 sind die Skript-Libraries von Tcl und Tk als zipfs in den beiden
+# .so-Dateien eingebettet (info library liefert //zipfs:/lib/tcl/tcl_library).
+# Es bleiben nur noch die Tcl-Module und Tks pkgIndex.tcl.
+if [ -d "$TCLTKDIR/lib/tcl${TCLTK_VERSION%%.*}" ]; then
+    cp -rL "$TCLTKDIR/lib/tcl${TCLTK_VERSION%%.*}" "$APPDIR/usr/lib/"
+fi
+if [ -f "$TCLTKDIR/lib/tk${TCLTK_VERSION}/pkgIndex.tcl" ]; then
+    mkdir -p "$APPDIR/usr/lib/tk${TCLTK_VERSION}"
+    cp -L "$TCLTKDIR/lib/tk${TCLTK_VERSION}/pkgIndex.tcl" \
+          "$APPDIR/usr/lib/tk${TCLTK_VERSION}/"
+fi
 
 # --- Schritt 3b: Weitere Shared Libraries via ldd ----------------------------
 echo "Kopiere weitere Bibliotheken..."
@@ -107,7 +123,7 @@ for binary in "$APPDIR/usr/bin/tkscidc-beta" \
         name=$(basename "$lib")
         case "$name" in
             libc.so*|libm.so*|libpthread.so*|libdl.so*|librt.so*|libutil.so*|ld-linux*.so*|libgcc_s.so*|\
-            libtcl8.6.so|libtk8.6.so)
+            "$TCL_LIB"|"$TK_LIB")
                 ;;
             *)
                 cp -L "$lib" "$APPDIR/usr/lib/" 2>/dev/null && echo "  $name" || true
@@ -125,10 +141,11 @@ HERE=$(dirname "$SELF")
 export PATH="$HERE/usr/bin:$PATH"
 export APPIMAGE_ORIG_LD="${LD_LIBRARY_PATH:-}"
 export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
-export TCL_LIBRARY="$HERE/usr/lib/tcl8.6"
-export TK_LIBRARY="$HERE/usr/lib/tk8.6"
-export TCLLIBPATH="$HERE/usr/share/scidc-beta $HERE/usr/lib/tcl8.6 $HERE/usr/lib/tk8.6"
-export TCL8_6_TM_PATH="$HERE/usr/lib/tcl8"
+# Ab Tcl 9 liegen die Skript-Libraries als zipfs in libtcl9.0.so bzw.
+# libtcl9tk9.0.so - TCL_LIBRARY/TK_LIBRARY werden nicht mehr gesetzt, sonst
+# wuerde Tcl an einem leeren Verzeichnis haengenbleiben.
+export TCLLIBPATH="$HERE/usr/share/scidc-beta $HERE/usr/lib"
+export TCL9_0_TM_PATH="$HERE/usr/lib/tcl9/9.0"
 export SCIDB_SHAREDIR="$HERE/usr/share/scidc-beta"
 
 exec "$HERE/usr/bin/tkscidc-beta" "$HERE/usr/bin/scidc-beta" "$@"
