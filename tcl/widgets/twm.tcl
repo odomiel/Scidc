@@ -588,7 +588,14 @@ proc NotebookHeaderSize {twm {nb}} {
 		puts stderr "\[ttk::style lookup TNotebook.Tab -padding\] returns empty list"
 		set padding {2 2}
 	}
-	set size [expr {2*[ttk::style lookup TNotebook -borderwidth] + 1}] ;# plus one overlapping pixel
+	# Tk 9 gibt Paddings/Rahmenbreiten als skalierbare Bildschirmdistanzen
+	# zurueck ("1.5p"); vor dem Rechnen in Pixel umrechnen.
+	set pixelPadding {}
+	foreach value $padding { lappend pixelPadding [winfo pixels $nb $value] }
+	set padding $pixelPadding
+	set borderwidth [ttk::style lookup TNotebook -borderwidth]
+	if {[catch { winfo pixels $nb $borderwidth } borderwidth]} { set borderwidth 1 }
+	set size [expr {2*$borderwidth + 1}] ;# plus one overlapping pixel
 	switch [llength $padding] {
 		2 { incr size [expr {2*[lindex $padding 1]}] }
 		3 { incr size [lindex $padding 1] }

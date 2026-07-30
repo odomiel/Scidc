@@ -390,12 +390,12 @@ proc translate {str} {
 }
 
 
-proc mapForSort {str}	{ return [string map $mc::SortMapping $str] }
-proc mapToAscii {str}	{ return [string map $mc::AsciiMapping $str] }
+proc mapForSort {str}	{ return [string map $::mc::SortMapping $str] }
+proc mapToAscii {str}	{ return [string map $::mc::AsciiMapping $str] }
 
-proc mappingForSort {}	{ return $mc::SortMapping }
-proc mappingToAscii {}	{ return $mc::AsciiMapping }
-proc sortOrderTable {}	{ return $mc::SortOrder }
+proc mappingForSort {}	{ return $::mc::SortMapping }
+proc mappingToAscii {}	{ return $::mc::AsciiMapping }
+proc sortOrderTable {}	{ return $::mc::SortOrder }
 
 
 proc extract {msg n} {
@@ -446,7 +446,7 @@ proc selectLang {{lang {}}} {
 	set langID [set ::mc::lang$Language]
 	set encoding [set ::mc::encoding$Language]
 
-	set file [file join $::scidc::dir::share lang $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang $::mc::input($Language)]
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
@@ -462,7 +462,7 @@ proc selectLang {{lang {}}} {
 
 	if {[tk windowingsystem] eq "aqua"} { set ::mc::Ctrl "Cmd" }
 
-	set file [file join $::scidc::dir::share lang nag $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang nag $::mc::input($Language)]
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
@@ -480,10 +480,10 @@ proc selectLang {{lang {}}} {
 	array unset EcoTrans
 	array unset EcoMatch
 
-	set file [file join $::scidc::dir::share lang eco $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang eco $::mc::input($Language)]
 	if {![file readable $file]} {
 		# use English descriptions as fallback
-		set file [file join $::scidc::dir::share lang eco $mc::input(English)]
+		set file [file join $::scidc::dir::share lang eco $::mc::input(English)]
 	}
 	if {[file readable $file]} {
 		set f [open $file r]

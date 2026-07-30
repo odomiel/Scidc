@@ -580,6 +580,14 @@ ttk::copyBindings TCombobox TTCombobox
 bind TTCombobox <B1-Leave>	{ break } ;# avoid AutoScroll (bug in Tk)
 #bind TTCombobox <<PasteSelection>> { %W forgeticon }	;# not working! why?
 
+# Tk 9 hat ttk::combobox::LBMaster in LBMain umbenannt (Master/Slave-Bereinigung).
+# Den alten Namen wiederherstellen, damit die folgenden Umbenennungen und die
+# Aufrufer (theme.tcl, searchentry.tcl) unveraendert funktionieren.
+if {   [llength [info commands ttk::combobox::LBMaster]] == 0
+	&& [llength [info commands ttk::combobox::LBMain]] > 0} {
+	proc ttk::combobox::LBMaster {lb} { return [ttk::combobox::LBMain $lb] }
+}
+
 rename ttk::combobox::Press				ttk::combobox::Press_tcb_orig_
 rename ttk::combobox::LBSelect			ttk::combobox::LBSelect_tcb_orig_
 rename ttk::combobox::LBSelected			ttk::combobox::LBSelected_tcb_orig_
@@ -793,11 +801,14 @@ proc ConfigureListbox {cb} {
 		set padding 0
 	}
 	set padding [lindex $padding 0]
+	# Tk 9 liefert Bildschirmdistanzen mit Einheit ("1.5p") - in Pixel umrechnen.
+	if {[catch { winfo pixels $cb $padding } padding]} { set padding 0 }
 
 	set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
 	if {[llength $borderwidth] == 0} {
 		set borderwidth 1
 	}
+	if {[catch { winfo pixels $cb $borderwidth } borderwidth]} { set borderwidth 1 }
 
 	$popdown.l configure -minwidth [expr {[winfo width $cb] - 2*$padding - 2*$borderwidth}]
 	$popdown.l configure -cursor {}

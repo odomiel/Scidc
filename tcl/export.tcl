@@ -1380,7 +1380,7 @@ proc SearchDiagramStyles {} {
 	set diagramStyles {}
 	set DiagramStyles {}
 	set DiagramSizes {}
-	set path [file join $scidc::dir::share pdf sets]
+	set path [file join $::scidc::dir::share pdf sets]
 
 	foreach sub1 [glob -directory $path -nocomplain -types d *] {
 		foreach sub2 [glob -directory $sub1 -nocomplain -types d *] {

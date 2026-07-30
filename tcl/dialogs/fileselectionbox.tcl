@@ -132,7 +132,7 @@ set FileEncodings [list                    \
 	.zip  	1 $::encoding::defaultEncoding \
 	.ZIP  	1 $::encoding::defaultEncoding \
 ]
-if {$tcl_platform(platform) eq "windows"} {
+if {$::tcl_platform(platform) eq "windows"} {
 	set FileEncodings(.cbh) [list 1 $::encoding::systemEncoding] ;# XXX ok?
 }
 

@@ -331,7 +331,8 @@ proc notebookBorderwidth {} {
 		clam - clearlooks - scidblue - darkmode { return 2 }
 	}
 	set result [ttk::style lookup TNotebook -borderwidth]
-	if {[string is integer -strict $result]} { return $result }
+	# Tk 9 liefert Bildschirmdistanzen mit Einheit ("1.5p") - in Pixel umrechnen.
+	if {![catch { winfo pixels . $result } pixels]} { return $pixels }
 	return 1
 }
 
@@ -342,6 +343,11 @@ proc notebookTabPaneSize {nb} {
 		puts stderr "\[ttk::style lookup TNotebook.Tab -padding\] returns empty list for '[currentTheme]'"
 		set padding {2 2}
 	}
+	# Tk 9 gibt Paddings als skalierbare Bildschirmdistanzen zurueck ("1.5p");
+	# vor dem Rechnen in Pixel umrechnen.
+	set pixelPadding {}
+	foreach value $padding { lappend pixelPadding [winfo pixels $nb $value] }
+	set padding $pixelPadding
 	set size [expr {2*[notebookBorderwidth] + 1}] ;# plus one overlapping pixel
 	switch [llength $padding] {
 		2 { incr size [expr {2*[lindex $padding 1]}] }

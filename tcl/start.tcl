@@ -263,6 +263,9 @@ proc update {} {
 			} else {
 				set ignore 1
 				set f [open $file r]
+				# Tcl 9 liest Kanaele mit dem Profil "strict"; Alt-Themedateien
+				# enthalten teils Latin-1-Bytes und wuerden den Start abbrechen.
+				catch { fconfigure $f -profile replace }
 				while {[gets $f line] >= 0} {
 					if {[string match *identifier* $line]} {
 						if {	[regexp {[{](.*)[}]} $line _ identifier]
@@ -279,6 +282,7 @@ proc update {} {
 				if {[file exists $path]} {
 					set exisiting 0
 					set f [open $path r]
+					catch { fconfigure $f -profile replace }
 					while {[gets $f line] >= 0} {
 						if {[string match *identifier* $line]} {
 							if {	[regexp {[{](.*)[}]} $line _ identifier]

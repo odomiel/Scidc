@@ -2303,7 +2303,7 @@ proc ApplyFont {context monospaced applycmd font} {
 } ;# namespace html
 
 
-if {$tcl_platform(platform) ne "windows"} {
+if {$::tcl_platform(platform) ne "windows"} {
 
 	proc installChessBaseFonts {parent {windowsFontDirs {/c/Windows/Fonts /c/WINDOWS/Fonts}}} {
 		variable Count_

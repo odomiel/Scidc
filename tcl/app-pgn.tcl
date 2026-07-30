@@ -3256,7 +3256,7 @@ switch [tk windowingsystem] {
 					set expand [::xcursor::loadCursor $file2]
 				}
 			} else {
-				::log::info PGN-Editor [format $mc::CannotOpenCursorFiles "$file1 $file2"]
+				::log::info PGN-Editor [format $::mc::CannotOpenCursorFiles "$file1 $file2"]
 			}
 		}
 	}
@@ -3273,7 +3273,7 @@ switch [tk windowingsystem] {
 			set collapse [list @$file1]
 			set expand [list @$file2]
 		} else {
-			::log::info PGN-Editor [format $mc::CannotOpenCursorFiles "$file1 $file2"]
+			::log::info PGN-Editor [format $::mc::CannotOpenCursorFiles "$file1 $file2"]
 		}
 	}
 }

@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.30 b3 Beta"
+	set version "26.07.30 b4 Beta"
 }
 
 
@@ -890,6 +890,7 @@ proc update {} {
 			} else {
 				set ignore 1
 				set f [open $file r]
+				catch { fconfigure $f -profile replace }
 				while {[gets $f line] >= 0} {
 					if {[string match *identifier* $line]} {
 						if {	[regexp {[{](.*)[}]} $line _ identifier]
@@ -906,6 +907,7 @@ proc update {} {
 				if {[file exists $path]} {
 					set exisiting 0
 					set f [open $path r]
+					catch { fconfigure $f -profile replace }
 					while {[gets $f line] >= 0} {
 						if {[string match *identifier* $line]} {
 							if {	[regexp {[{](.*)[}]} $line _ identifier]
@@ -3768,7 +3770,7 @@ proc notebookBorderwidth {} {
 		clam - clearlooks - scidblue - darkmode { return 2 }
 	}
 	set result [ttk::style lookup TNotebook -borderwidth]
-	if {[string is integer -strict $result]} { return $result }
+	if {![catch { winfo pixels . $result } pixels]} { return $pixels }
 	return 1
 }
 
@@ -3779,6 +3781,9 @@ proc notebookTabPaneSize {nb} {
 		puts stderr "\[ttk::style lookup TNotebook.Tab -padding\] returns empty list for '[currentTheme]'"
 		set padding {2 2}
 	}
+	set pixelPadding {}
+	foreach value $padding { lappend pixelPadding [winfo pixels $nb $value] }
+	set padding $pixelPadding
 	set size [expr {2*[notebookBorderwidth] + 1}] ;# plus one overlapping pixel
 	switch [llength $padding] {
 		2 { incr size [expr {2*[lindex $padding 1]}] }
@@ -18088,7 +18093,7 @@ proc writeLog {} {
 
 
 proc write {} {
-	set chan [open [file join $scidc::dir::config load.tcl] w]
+	set chan [open [file join $::scidc::dir::config load.tcl] w]
 	fconfigure $chan -encoding utf-8
 
 	foreach name [info vars ::load::mc::*] {
@@ -18107,8 +18112,8 @@ proc write {} {
 } ;# namespace load
 
 
-if {[file readable [file join $scidc::dir::config load.tcl]]} {
-	catch { source -encoding utf-8 [file join $scidc::dir::config load.tcl] }
+if {[file readable [file join $::scidc::dir::config load.tcl]]} {
+	catch { source -encoding utf-8 [file join $::scidc::dir::config load.tcl] }
 }
 
 
@@ -18623,12 +18628,12 @@ proc translate {str} {
 }
 
 
-proc mapForSort {str}	{ return [string map $mc::SortMapping $str] }
-proc mapToAscii {str}	{ return [string map $mc::AsciiMapping $str] }
+proc mapForSort {str}	{ return [string map $::mc::SortMapping $str] }
+proc mapToAscii {str}	{ return [string map $::mc::AsciiMapping $str] }
 
-proc mappingForSort {}	{ return $mc::SortMapping }
-proc mappingToAscii {}	{ return $mc::AsciiMapping }
-proc sortOrderTable {}	{ return $mc::SortOrder }
+proc mappingForSort {}	{ return $::mc::SortMapping }
+proc mappingToAscii {}	{ return $::mc::AsciiMapping }
+proc sortOrderTable {}	{ return $::mc::SortOrder }
 
 
 proc extract {msg n} {
@@ -18679,7 +18684,7 @@ proc selectLang {{lang {}}} {
 	set langID [set ::mc::lang$Language]
 	set encoding [set ::mc::encoding$Language]
 
-	set file [file join $::scidc::dir::share lang $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang $::mc::input($Language)]
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
@@ -18695,7 +18700,7 @@ proc selectLang {{lang {}}} {
 
 	if {[tk windowingsystem] eq "aqua"} { set ::mc::Ctrl "Cmd" }
 
-	set file [file join $::scidc::dir::share lang nag $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang nag $::mc::input($Language)]
 	if {[file readable $file]} {
 		set f [open $file r]
 		chan configure $f -encoding $encoding
@@ -18713,9 +18718,9 @@ proc selectLang {{lang {}}} {
 	array unset EcoTrans
 	array unset EcoMatch
 
-	set file [file join $::scidc::dir::share lang eco $mc::input($Language)]
+	set file [file join $::scidc::dir::share lang eco $::mc::input($Language)]
 	if {![file readable $file]} {
-		set file [file join $::scidc::dir::share lang eco $mc::input(English)]
+		set file [file join $::scidc::dir::share lang eco $::mc::input(English)]
 	}
 	if {[file readable $file]} {
 		set f [open $file r]
@@ -21203,7 +21208,7 @@ proc ApplyFont {context monospaced applycmd font} {
 } ;# namespace html
 
 
-if {$tcl_platform(platform) ne "windows"} {
+if {$::tcl_platform(platform) ne "windows"} {
 
 	proc installChessBaseFonts {parent {windowsFontDirs {/c/Windows/Fonts /c/WINDOWS/Fonts}}} {
 		variable Count_
@@ -39000,7 +39005,7 @@ set FileEncodings [list                    \
 	.zip  	1 $::encoding::defaultEncoding \
 	.ZIP  	1 $::encoding::defaultEncoding \
 ]
-if {$tcl_platform(platform) eq "windows"} {
+if {$::tcl_platform(platform) eq "windows"} {
 	set FileEncodings(.cbh) [list 1 $::encoding::systemEncoding] ;# XXX ok?
 }
 
@@ -49287,6 +49292,11 @@ ttk::copyBindings TCombobox TTCombobox
 bind TTCombobox <B1-Leave>	{ break } ;# avoid AutoScroll (bug in Tk)
 #bind TTCombobox <<PasteSelection>> { %W forgeticon }	;# not working! why?
 
+if {   [llength [info commands ttk::combobox::LBMaster]] == 0
+	&& [llength [info commands ttk::combobox::LBMain]] > 0} {
+	proc ttk::combobox::LBMaster {lb} { return [ttk::combobox::LBMain $lb] }
+}
+
 rename ttk::combobox::Press				ttk::combobox::Press_tcb_orig_
 rename ttk::combobox::LBSelect			ttk::combobox::LBSelect_tcb_orig_
 rename ttk::combobox::LBSelected			ttk::combobox::LBSelected_tcb_orig_
@@ -49499,11 +49509,13 @@ proc ConfigureListbox {cb} {
 		set padding 0
 	}
 	set padding [lindex $padding 0]
+	if {[catch { winfo pixels $cb $padding } padding]} { set padding 0 }
 
 	set borderwidth [::ttk::style lookup ComboboxPopdownFrame -borderwidth]
 	if {[llength $borderwidth] == 0} {
 		set borderwidth 1
 	}
+	if {[catch { winfo pixels $cb $borderwidth } borderwidth]} { set borderwidth 1 }
 
 	$popdown.l configure -minwidth [expr {[winfo width $cb] - 2*$padding - 2*$borderwidth}]
 	$popdown.l configure -cursor {}
@@ -73722,7 +73734,12 @@ proc NotebookHeaderSize {twm {nb}} {
 		puts stderr "\[ttk::style lookup TNotebook.Tab -padding\] returns empty list"
 		set padding {2 2}
 	}
-	set size [expr {2*[ttk::style lookup TNotebook -borderwidth] + 1}] ;# plus one overlapping pixel
+	set pixelPadding {}
+	foreach value $padding { lappend pixelPadding [winfo pixels $nb $value] }
+	set padding $pixelPadding
+	set borderwidth [ttk::style lookup TNotebook -borderwidth]
+	if {[catch { winfo pixels $nb $borderwidth } borderwidth]} { set borderwidth 1 }
+	set size [expr {2*$borderwidth + 1}] ;# plus one overlapping pixel
 	switch [llength $padding] {
 		2 { incr size [expr {2*[lindex $padding 1]}] }
 		3 { incr size [lindex $padding 1] }
@@ -97061,7 +97078,7 @@ theme::bindCut		Comment { comment::TextCut %W }
 theme::bindPaste	Comment { comment::TextPaste %W }
 
 theme::bindPasteSelection Comment {
-	if {![info exists tk::Priv(mouseMoved)] || !$tk::Priv(mouseMoved)} {
+	if {![info exists ::tk::Priv(mouseMoved)] || !$::tk::Priv(mouseMoved)} {
 		comment::TextPasteSelection %W %x %y
 	}
 }
@@ -121219,7 +121236,7 @@ switch [tk windowingsystem] {
 					set expand [::xcursor::loadCursor $file2]
 				}
 			} else {
-				::log::info PGN-Editor [format $mc::CannotOpenCursorFiles "$file1 $file2"]
+				::log::info PGN-Editor [format $::mc::CannotOpenCursorFiles "$file1 $file2"]
 			}
 		}
 	}
@@ -121232,7 +121249,7 @@ switch [tk windowingsystem] {
 			set collapse [list @$file1]
 			set expand [list @$file2]
 		} else {
-			::log::info PGN-Editor [format $mc::CannotOpenCursorFiles "$file1 $file2"]
+			::log::info PGN-Editor [format $::mc::CannotOpenCursorFiles "$file1 $file2"]
 		}
 	}
 }
@@ -131551,7 +131568,7 @@ proc UpdateRatingTags {top color typeField scoreField} {
 	UpdateTagList $t $ratingTagName $value
 
 	if {[llength $value] == 0} {
-		foreach ratingType $ratingbox::ratings(all) {
+		foreach ratingType $::ratingbox::ratings(all) {
 			set name $color$ratingType
 			if {[info exists Lookup($name)] && $TagOrder($name) == 99} {
 				set Priv($typeField) $ratingType
@@ -131905,7 +131922,7 @@ proc MakeMatchEntry {top index entry attr} {
 		}
 
 		site {
-			if {[llength $country]} { set country $country::icon::flag($country) }
+			if {[llength $country]} { set country $::country::icon::flag($country) }
 			set entry [list $index $freq $name $country]
 		}
 
@@ -134482,7 +134499,7 @@ proc SearchDiagramStyles {} {
 	set diagramStyles {}
 	set DiagramStyles {}
 	set DiagramSizes {}
-	set path [file join $scidc::dir::share pdf sets]
+	set path [file join $::scidc::dir::share pdf sets]
 
 	foreach sub1 [glob -directory $path -nocomplain -types d *] {
 		foreach sub2 [glob -directory $sub1 -nocomplain -types d *] {
@@ -151028,8 +151045,9 @@ if {[catch {
 			set ::comment::Geometry [list $w $h $x $y]
 		}
 	}
-}]} {
-	puts "Start-up failed."
+} startupError]} {
+	puts "Start-up failed: $startupError"
+	puts $::errorInfo
 	puts "Please try \"[file tail $nameofexecutable] --first-time\"."
 	exit 1
 }

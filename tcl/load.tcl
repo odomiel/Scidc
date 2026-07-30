@@ -144,7 +144,7 @@ proc writeLog {} {
 
 
 proc write {} {
-	set chan [open [file join $scidc::dir::config load.tcl] w]
+	set chan [open [file join $::scidc::dir::config load.tcl] w]
 	fconfigure $chan -encoding utf-8
 
 	foreach name [info vars ::load::mc::*] {
@@ -163,8 +163,8 @@ proc write {} {
 } ;# namespace load
 
 
-if {[file readable [file join $scidc::dir::config load.tcl]]} {
-	catch { source -encoding utf-8 [file join $scidc::dir::config load.tcl] }
+if {[file readable [file join $::scidc::dir::config load.tcl]]} {
+	catch { source -encoding utf-8 [file join $::scidc::dir::config load.tcl] }
 }
 
 

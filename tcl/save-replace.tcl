@@ -1630,7 +1630,7 @@ proc UpdateRatingTags {top color typeField scoreField} {
 	UpdateTagList $t $ratingTagName $value
 
 	if {[llength $value] == 0} {
-		foreach ratingType $ratingbox::ratings(all) {
+		foreach ratingType $::ratingbox::ratings(all) {
 			set name $color$ratingType
 			if {[info exists Lookup($name)] && $TagOrder($name) == 99} {
 				set Priv($typeField) $ratingType
@@ -1985,7 +1985,7 @@ proc MakeMatchEntry {top index entry attr} {
 		}
 
 		site {
-			if {[llength $country]} { set country $country::icon::flag($country) }
+			if {[llength $country]} { set country $::country::icon::flag($country) }
 			set entry [list $index $freq $name $country]
 		}
 

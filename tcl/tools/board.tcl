@@ -69,7 +69,7 @@ namespace eval mc {
 		set langID [set ::mc::lang$Language]
 		set encoding [set ::mc::encoding$Language]
 
-		set file [file join $::scidc::dir::share lang $mc::input($Language)]
+		set file [file join $::scidc::dir::share lang $::mc::input($Language)]
 		if {[file readable $file]} {
 			set f [open $file r]
 			chan configure $f -encoding $encoding

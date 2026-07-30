@@ -439,8 +439,9 @@ if {[catch {
 			set ::comment::Geometry [list $w $h $x $y]
 		}
 	}
-}]} {
-	puts "Start-up failed."
+} startupError]} {
+	puts "Start-up failed: $startupError"
+	puts $::errorInfo
 	puts "Please try \"[file tail $nameofexecutable] --first-time\"."
 	exit 1
 }

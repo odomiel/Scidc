@@ -2758,7 +2758,7 @@ theme::bindCut		Comment { comment::TextCut %W }
 theme::bindPaste	Comment { comment::TextPaste %W }
 
 theme::bindPasteSelection Comment {
-	if {![info exists tk::Priv(mouseMoved)] || !$tk::Priv(mouseMoved)} {
+	if {![info exists ::tk::Priv(mouseMoved)] || !$::tk::Priv(mouseMoved)} {
 		comment::TextPasteSelection %W %x %y
 	}
 }
