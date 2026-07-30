@@ -30,15 +30,15 @@
 #! The next line restarts using tkscidc: \
 exec "`dirname "$0"`"/tk`basename $0` "$0" ${1+"$@"}
 
-package require Tcl 8.6-
-package require Tk 8.6-
+package require Tcl 9
+package require Tk 9
 package require Ttk
 package require tkscidc
 
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.07.30 b5 Beta"
+	set version "26.07.30 b6 Beta"
 }
 
 
@@ -673,7 +673,7 @@ if {[info exists ::env(SCIDB_SHAREDIR)]} {
 } elseif {$::tcl_platform(platform) eq "windows"} {
 	set share [file dirname $::nameofexecutable]
 } else {
-	set share "/usr/local/share/scidc"
+	set share "/usr/local/share/scidc-beta"
 	if {[string match ?SHAREDIR? $share]} {
 		set share [file tail $::nameofexecutable]
 		set share [string range $share [string first scidb $share] end]
@@ -9603,7 +9603,7 @@ proc ::TreeCtrl::TextExpanderKeypress {T} {
 }
 
 
-package require Tcl 8.6-
+package require Tcl 9
 package provide http 2.8.13
 
 namespace eval http {
@@ -10780,7 +10780,7 @@ proc http::make-transformation-chunked {chan command} {
 
 
 
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package provide messagebox 1.0
 
@@ -11713,7 +11713,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package provide progressbar 1.0
 
@@ -12033,7 +12033,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package provide choosecolor 1.0
 
@@ -14930,7 +14930,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require progressbar
 package provide choosefont 1.1
 
@@ -37751,7 +37751,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require tkDND 3.0
 
 namespace eval tkdnd {
@@ -42630,7 +42630,7 @@ update idletasks
 
 catch { package forget tooltip }
 
-package require Tk 8.6-
+package require Tk 9
 package provide tooltip 1.5.0
 
 proc tooltip {args} { return [::tooltip::tooltip {*}$args ] }
@@ -43403,7 +43403,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package provide toolbar 1.0
 
 namespace eval toolbar {
@@ -47047,7 +47047,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require tktreectrl 2.2
 package provide tlistbox 1.0
 
@@ -48748,7 +48748,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require Ttk
 package require tlistbox
 package provide tcombobox 1.0
@@ -49566,7 +49566,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require choosecolor
 package require place
 if {[catch { package require tkpng }]} { package require Img }
@@ -50029,7 +50029,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require tktreectrl 2.2
 package require tooltip
 package provide table
@@ -53314,7 +53314,7 @@ update idletasks
 
 ::util::source scrolled-frame
 
-package require Tk 8.6-
+package require Tk 9
 package require Ttk
 
 proc scrolledframe {path args} {
@@ -57027,7 +57027,7 @@ update idletasks
 
 ::util::source game-history
 
-package require Tk 8.6-
+package require Tk 9
 package require tktreectrl 2.2
 package require scrolledframe
 
@@ -59031,7 +59031,7 @@ update idletasks
 
 
 package require Ttk
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package require place
 package provide calendar 1.0
@@ -64697,7 +64697,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require Tkhtml 3.1
 
 rename html __html_widget
@@ -66301,7 +66301,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package require tooltip
 package provide choosedir 1.0
@@ -66908,7 +66908,7 @@ update idletasks
 
 
 
-package require Tk 8.6-
+package require Tk 9
 package require tktreectrl 2.2
 package require toolbar
 package require choosedir
@@ -73191,7 +73191,7 @@ update idletasks
 
 ::util::source tiled-window-manager
 
-package require Tk 8.6-
+package require Tk 9
 package require tktwm 1.0
 package require Ttk
 
@@ -79183,7 +79183,7 @@ update idletasks
 ::util::source combo-search-box
 
 package require Ttk
-package require Tk 8.6-
+package require Tk 9
 if {[catch { package require tkpng }]} { package require Img }
 package require tooltip
 

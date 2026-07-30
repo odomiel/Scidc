@@ -2727,7 +2727,7 @@ StringReadPNG(Tcl_Interp *interp, Tcl_Obj *pObjData, Tcl_Obj *pObjFmt,
 extern Tk_PhotoImageFormat tkImgFmtPNG;
 
 #ifndef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#define	TKPNG_REQUIRE "8.6-"
+#define	TKPNG_REQUIRE "9.0"
 #endif /* !USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 /*

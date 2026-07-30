@@ -26,7 +26,7 @@
 
 ::util::source tiled-window-manager
 
-package require Tk 8.6-
+package require Tk 9
 package require tktwm 1.0
 package require Ttk
 

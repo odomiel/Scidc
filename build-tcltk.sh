@@ -6,12 +6,12 @@
 #     bash build-tcltk.sh [version] [prefix]
 #
 # unterstützte Versionen:
-#     8.6.18 (Standard, stabil)
-#     9.0.4 (experimentell, für Tk 9.0 Portierung)
+#     9.0.4  (Standard - Mindestanforderung von Scidc)
+#     8.6.18 (nur noch fuer Vergleichszwecke; Scidc laeuft damit nicht mehr)
 #
 # Beispiele:
-#     bash build-tcltk.sh               # baut Tcl/Tk 8.6.18 nach deps/tcltk
-#     bash build-tcltk.sh 9.0.4         # baut Tcl/Tk 9.0.4 nach deps/tcltk
+#     bash build-tcltk.sh               # baut Tcl/Tk 9.0.4 nach deps/tcltk
+#     bash build-tcltk.sh 8.6.18        # baut Tcl/Tk 8.6.18 nach deps/tcltk
 #     bash build-tcltk.sh 9.0.4 ~/tcl9  # baut nach ~/tcl9 (Entwickler-Installation)
 #
 # Ohne <prefix> wird nach deps/tcltk gebaut (Quelle für die AppImage, deshalb
@@ -28,7 +28,7 @@ set -e
 # --- Konfiguration -------------------------------------------------------------
 
 # Standardversion
-DEFAULT_VERSION="8.6.18"
+DEFAULT_VERSION="9.0.4"
 
 # Versions-spezifische URLs und Optionen
 declare -A TCL_URLS=(

@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.6-
+package require Tk 9
 package require tktreectrl 2.2
 package require tooltip
 package provide table

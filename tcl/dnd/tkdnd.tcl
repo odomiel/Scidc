@@ -51,7 +51,7 @@
 # MODIFICATIONS.
 #
 
-package require Tk 8.6-
+package require Tk 9
 package require tkDND 3.0
 
 namespace eval tkdnd {

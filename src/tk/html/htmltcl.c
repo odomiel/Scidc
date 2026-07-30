@@ -3250,15 +3250,15 @@ Tkhtml_Init(Tcl_Interp *interp)
 
     /* Require stubs libraries version 8.6 or greater. */
 #ifdef USE_TCL_STUBS
-    if (Tcl_InitStubs(interp, "8.6-", 0) == 0) {
+    if (Tcl_InitStubs(interp, "9.0", 0) == 0) {
         return TCL_ERROR;
     }
-    if (Tk_InitStubs(interp, "8.6-", 0) == 0) {
+    if (Tk_InitStubs(interp, "9.0", 0) == 0) {
         return TCL_ERROR;
     }
 #endif
 
-    if (0 == Tcl_PkgRequire(interp, "Tk", "8.6-", 0)) {
+    if (0 == Tcl_PkgRequire(interp, "Tk", "9.0", 0)) {
         return TCL_ERROR;
     }
     Tcl_PkgProvide(interp, "Tkhtml", HTML_PKGVERSION);

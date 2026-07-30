@@ -2,16 +2,14 @@
 // Copyright: (C) 2026 Mirik
 // ======================================================================
 //
-// tk_compat.h - Tcl/Tk Kompatibilitäts-Schicht für Tk 8.6 und Tk 9.0
+// tk_compat.h - Zugriffsschicht auf Tk-Interna
 //
-// Ziel: Abstrahierung von Tk-internen Strukturzugriffen, die sich zwischen
-// Tk 8.6 und Tk 9.0 unterscheiden.
+// Buendelt zwei Dinge:
+//   1. die in Tk 9 umbenannte bzw. entfallene API (Makros unten)
+//   2. Wrapper fuer direkte TkWindow-Strukturzugriffe
 //
-// In Tk 9.0 wurde die TkWindow-Struktur komplett überarbeitet, und viele
-// direkte Strukturzugriffe (winPtr->field) funktionieren nicht mehr.
-//
-// Diese Header-Datei stellt Wrapper-Funktionen bereit, die in beiden
-// Versionen funktionieren.
+// Mindestanforderung ist Tcl/Tk 9.0; die frueheren Tk-8.6-Zweige sind
+// entfallen.
 //
 // Verwendung:
 //   #include "tk_compat.h"
@@ -33,35 +31,20 @@
 // ======================================================================
 // Diese Makros gelten für C und C++ gleichermassen.
 
-// Tcl_Size (= ptrdiff_t) kam mit Tcl 8.7/9.0. Aeltere 8.6-Header (z.B. das
-// System-Tcl 8.6 unter /usr/include/tcl8.6) kennen es nicht; neuere 8.6.x
-// liefern den Shim bereits selbst mit, deshalb die #ifndef-Absicherung.
-#if TCL_MAJOR_VERSION < 9
-# ifndef Tcl_Size
-#  define Tcl_Size int
-# endif
-#endif
-
-#if TK_MAJOR_VERSION > 8
-
 // Tk 9 hat diese vormals internen Funktionen in die öffentliche API übernommen
-# define TkpDrawHighlightBorder	Tk_DrawHighlightBorder
-# define TkpGetSystemDefault	Tk_GetSystemDefault
-# define TkSendVirtualEvent	Tk_SendVirtualEvent
-# define TkNewWindowObj		Tk_NewWindowObj
-# define TkpAlwaysShowSelection	Tk_AlwaysShowSelection
+#define TkpDrawHighlightBorder	Tk_DrawHighlightBorder
+#define TkpGetSystemDefault	Tk_GetSystemDefault
+#define TkSendVirtualEvent	Tk_SendVirtualEvent
+#define TkNewWindowObj		Tk_NewWindowObj
+#define TkpAlwaysShowSelection	Tk_AlwaysShowSelection
 
 // Tk_BackgroundError wurde in Tk 9 entfernt
-# define Tk_BackgroundError(interp)	Tcl_BackgroundException((interp), TCL_ERROR)
-
-#endif // TK_MAJOR_VERSION > 8
-
-#if TCL_MAJOR_VERSION > 8
+#define Tk_BackgroundError(interp)	Tcl_BackgroundException((interp), TCL_ERROR)
 
 // 'panic' (Makro auf Tcl_Panic) wurde in Tcl 9 entfernt
-# ifndef panic
-#  define panic	Tcl_Panic
-# endif
+#ifndef panic
+# define panic	Tcl_Panic
+#endif
 
 // TclGetIntForIndex (intern, Tcl 8.6) wurde zu Tcl_GetIntForIndex (öffentlich).
 // Der Ausgabeparameter wechselte dabei von int* auf Tcl_Size*, deshalb ein
@@ -77,9 +60,7 @@ TkCompat_GetIntForIndex(Tcl_Interp* interp, Tcl_Obj* objPtr, int endValue, int* 
 	*indexPtr = (int)index;
 	return TCL_OK;
 }
-# define TclGetIntForIndex	TkCompat_GetIntForIndex
-
-#endif // TCL_MAJOR_VERSION > 8
+#define TclGetIntForIndex	TkCompat_GetIntForIndex
 
 // ======================================================================
 // C Makros für direkte TkWindow-Zugriffe (für C-Code)

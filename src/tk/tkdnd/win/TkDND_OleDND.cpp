@@ -378,18 +378,18 @@ int DLLEXPORT Tkdnd_Init(Tcl_Interp *interp) {
 
   if (
 #ifdef USE_TCL_STUBS 
-      Tcl_InitStubs(interp, "8.6-", 0)
+      Tcl_InitStubs(interp, "9.0", 0)
 #else
-      Tcl_PkgRequire(interp, "Tcl", "8.6-", 0)
+      Tcl_PkgRequire(interp, "Tcl", "9.0", 0)
 #endif /* USE_TCL_STUBS */
             == NULL) {
             return TCL_ERROR;
   }
   if (
 #ifdef USE_TK_STUBS
-       Tk_InitStubs(interp, "8.6-", 0)
+       Tk_InitStubs(interp, "9.0", 0)
 #else
-       Tcl_PkgRequire(interp, "Tk", "8.6-", 0)
+       Tcl_PkgRequire(interp, "Tk", "9.0", 0)
 #endif /* USE_TK_STUBS */
             == NULL) {
             return TCL_ERROR;

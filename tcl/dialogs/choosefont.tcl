@@ -21,7 +21,7 @@
 # by Keith Vetter, June 2006
 # ======================================================================
 
-package require Tk 8.6-
+package require Tk 9
 package require progressbar
 package provide choosefont 1.1
 

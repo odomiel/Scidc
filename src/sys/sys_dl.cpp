@@ -27,7 +27,7 @@
 
 using namespace sys::dl;
 
-#if !TCL_PREREQ(8,6)
+#if !TCL_PREREQ(9,0)
 # error  "unsupported TCL version"
 #endif
 

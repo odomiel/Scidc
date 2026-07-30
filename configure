@@ -8,7 +8,8 @@
 # files), and creates the file "Makefile.in".
 
 
-# Try to find the best version of Tcl/Tk that is installed,
+# Try to find a usable tclsh to run this script with. Scidc itself requires
+# Tcl/Tk 9, but this script runs under 8.x as well.
 # by searching the PATH directories for tclsh8.5, tclsh85, etc. If no
 # tclsh program with a version number in the file name is found, the
 # default program to execute is just tclsh.
@@ -27,7 +28,7 @@ done
 # The backslash at the end of this line is needed: \
 exec $tclsh "$0" ${1+"$@"}
 
-set Versions {8.6 8.5 9.0}
+set Versions {9.0}
 set IgnorePatches {8.6b1 8.6b1.1 8.6b2}
 
 

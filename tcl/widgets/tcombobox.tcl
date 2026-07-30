@@ -16,7 +16,7 @@
 # (at your option) any later version.
 # ======================================================================
 
-package require Tk 8.6-
+package require Tk 9
 package require Ttk
 package require tlistbox
 package provide tcombobox 1.0

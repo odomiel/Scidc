@@ -58,9 +58,7 @@ Tcl_SizeFromSizeT(size_t size)
 // These were used to save and restore the interp result
 // In Tcl 9, the result is always an object, so these are no-ops for the result
 // but we need to provide compatibility for code that uses them
-#if TCL_MAJOR_VERSION > 8
 #include <tclPlatDecls.h>
-#endif
 
 // For compatibility with code using the old Tcl_SaveResult API
 // In Tcl 8.6: Tcl_SaveResult(Tcl_Interp *, Tcl_SavedResult *) - macro
