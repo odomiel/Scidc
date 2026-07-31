@@ -617,9 +617,12 @@ proc menuItemHighlightSecond {menu} {
 	##	NOTE: the menu is flickering a lot!
 	##  ----------------------------------
 	set active [$menu index active]
-	set numEntries [expr {[$menu index last] + 1}]
+	set last   [$menu index last]
+	# Tk 9 liefert "" statt "none", wenn der Index auf keinen Eintrag zeigt.
+	if {![string is integer -strict $last]} { return }
+	set numEntries [expr {$last + 1}]
 
-	if {$active eq "none"} {
+	if {![string is integer -strict $active]} {
 		set index -1
 	} else {
 		set index [expr {($active + $numEntries/2) % $numEntries}]

@@ -747,7 +747,7 @@ proc ::tk::MenuButtonDown menu {
 proc ::tk::MenuLeave {menu rootx rooty state} {
     variable ::tk::Priv
     set Priv(menu:window) {}
-    if {[$menu index active] eq "none"} {
+    if {[$menu index active] in {none {}}} {
 	return
     }
     if {[$menu type active] eq "cascade" \
@@ -835,7 +835,7 @@ proc ::tk::MenuInvoke {w buttonRelease} {
 	}
     } else {
 	set active [$w index active]
-	if {$Priv(popup) eq "" || $active ne "none"} {
+	if {$Priv(popup) eq "" || $active ni {none {}}} {
 	    MenuUnpost $w
 	}
 	uplevel #0 [list $w invoke active]
@@ -979,7 +979,7 @@ proc ::tk::MenuNextMenu {menu direction} {
 	if {[winfo class $mb] eq "Menubutton" \
 		&& [$mb cget -state] ne "disabled" \
 		&& [$mb cget -menu] ne "" \
-		&& [[$mb cget -menu] index last] ne "none"} {
+		&& [[$mb cget -menu] index last] ni {none {}}} {
 	    break
 	}
 	if {$mb eq $w} {
@@ -1001,13 +1001,13 @@ proc ::tk::MenuNextMenu {menu direction} {
 #				-1 means go to the next higher entry.
 
 proc ::tk::MenuNextEntry {menu count} {
-    if {[$menu index last] eq "none"} {
+    if {[$menu index last] in {none {}}} {
 	return
     }
     set length [expr {[$menu index last]+1}]
     set quitAfter $length
     set active [$menu index active]
-    if {$active eq "none"} {
+    if {$active in {none {}}} {
 	set i 0
     } else {
 	set i [expr {$active + $count}]
@@ -1211,7 +1211,7 @@ proc ::tk::TraverseWithinMenu {w char} {
     }
     set char [string tolower $char]
     set last [$w index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {
@@ -1253,11 +1253,11 @@ proc ::tk::MenuFirstEntry menu {
 	return
     }
     tk_menuSetFocus $menu
-    if {[$menu index active] ne "none"} {
+    if {[$menu index active] ni {none {}}} {
 	return
     }
     set last [$menu index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {
@@ -1299,7 +1299,7 @@ proc ::tk::MenuFindName {menu s} {
 	return $i
     }
     set last [$menu index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {

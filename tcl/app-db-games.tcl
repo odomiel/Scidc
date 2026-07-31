@@ -286,7 +286,7 @@ proc BuildPane {twm frame uid width height} {
 
 
 proc HeaderMenu {menu} {
-	if {[$menu index end] ne "none"} { $menu add separator }
+	if {[$menu index end] ni {none {}}} { $menu add separator }
 	::application::twm::makeLayoutMenu [::application::twm] $menu
 }
 

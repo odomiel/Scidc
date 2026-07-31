@@ -1162,7 +1162,7 @@ proc PopupMenu {table x y} {
 	set variant $(variant)
 	{*}$(popupcmd) [winfo parent [winfo parent $table]] $menu $base $variant $index $columnName
 
-	if {$index ne "outside" && [$menu index 0] ne "none"} {
+	if {$index ne "outside" && [$menu index 0] ni {none {}}} {
 		::table::keepFocus $table true
 		::bind $menu <<MenuUnpost>> [namespace code [list Popdown $table]]
 		tk_popup $menu {*}[winfo pointerxy $table]

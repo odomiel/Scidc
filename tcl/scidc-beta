@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b1 Beta"
+	set version "26.08.01 b2 Beta"
 }
 
 
@@ -5287,9 +5287,12 @@ proc menuItemHighlightSecond {menu} {
 	##	NOTE: the menu is flickering a lot!
 	##  ----------------------------------
 	set active [$menu index active]
-	set numEntries [expr {[$menu index last] + 1}]
+	set last   [$menu index last]
+	# Tk 9 liefert "" statt "none", wenn der Index auf keinen Eintrag zeigt.
+	if {![string is integer -strict $last]} { return }
+	set numEntries [expr {$last + 1}]
 
-	if {$active eq "none"} {
+	if {![string is integer -strict $active]} {
 		set index -1
 	} else {
 		set index [expr {($active + $numEntries/2) % $numEntries}]
@@ -6858,7 +6861,7 @@ proc ::tk::MenuButtonDown menu {
 proc ::tk::MenuLeave {menu rootx rooty state} {
     variable ::tk::Priv
     set Priv(menu:window) {}
-    if {[$menu index active] eq "none"} {
+    if {[$menu index active] in {none {}}} {
 	return
     }
     if {[$menu type active] eq "cascade" \
@@ -6928,7 +6931,7 @@ proc ::tk::MenuInvoke {w buttonRelease} {
 	}
     } else {
 	set active [$w index active]
-	if {$Priv(popup) eq "" || $active ne "none"} {
+	if {$Priv(popup) eq "" || $active ni {none {}}} {
 	    MenuUnpost $w
 	}
 	uplevel #0 [list $w invoke active]
@@ -7051,7 +7054,7 @@ proc ::tk::MenuNextMenu {menu direction} {
 	if {[winfo class $mb] eq "Menubutton" \
 		&& [$mb cget -state] ne "disabled" \
 		&& [$mb cget -menu] ne "" \
-		&& [[$mb cget -menu] index last] ne "none"} {
+		&& [[$mb cget -menu] index last] ni {none {}}} {
 	    break
 	}
 	if {$mb eq $w} {
@@ -7065,13 +7068,13 @@ proc ::tk::MenuNextMenu {menu direction} {
 
 
 proc ::tk::MenuNextEntry {menu count} {
-    if {[$menu index last] eq "none"} {
+    if {[$menu index last] in {none {}}} {
 	return
     }
     set length [expr {[$menu index last]+1}]
     set quitAfter $length
     set active [$menu index active]
-    if {$active eq "none"} {
+    if {$active in {none {}}} {
 	set i 0
     } else {
 	set i [expr {$active + $count}]
@@ -7225,7 +7228,7 @@ proc ::tk::TraverseWithinMenu {w char} {
     }
     set char [string tolower $char]
     set last [$w index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {
@@ -7257,11 +7260,11 @@ proc ::tk::MenuFirstEntry menu {
 	return
     }
     tk_menuSetFocus $menu
-    if {[$menu index active] ne "none"} {
+    if {[$menu index active] ni {none {}}} {
 	return
     }
     set last [$menu index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {
@@ -7289,7 +7292,7 @@ proc ::tk::MenuFindName {menu s} {
 	return $i
     }
     set last [$menu index last]
-    if {$last eq "none"} {
+    if {$last in {none {}}} {
 	return
     }
     for {set i 0} {$i <= $last} {incr i} {
@@ -44165,7 +44168,7 @@ proc addToolbarMenu {menu parent {index -1} {var {}}} {
 		set m [menu $menu.__tb__Toolbar -tearoff false]
 		$menu add cascade -menu $m
 		set index [$menu index last]
-		if {$index eq "none"} { set index -1 }
+		if {$index in {none {}}} { set index -1 }
 	} elseif {[string is integer -strict $index] && $index >= 0} {
 		set m [menu $menu.__tb__Toolbar -tearoff false]
 		$menu insert cascade $index -menu $m
@@ -44181,7 +44184,7 @@ proc addToolbarMenu {menu parent {index -1} {var {}}} {
 	}
 
 	set i [$m index last]
-	if {$i eq "none"} { set i -1}
+	if {$i in {none {}}} { set i -1 }
 	incr i
 
 	foreach tb $Specs(toolbars:$parent) {
@@ -56007,7 +56010,7 @@ proc BuildMenu {gamebar id side menu} {
 		::theme::configureCheckEntry $menu.configuration.layout
 	}
 
-	if {[$menu index end] eq "none"} { return }
+	if {[$menu index end] in {none {}}} { return }
 
 	if {$Specs(player:locked)} {
 		bind $menu <<MenuUnpost>> [namespace code [list LeavePlayer $gamebar $id $side yes]]
@@ -58495,7 +58498,7 @@ proc PopupMenu {table x y} {
 	set variant $(variant)
 	{*}$(popupcmd) [winfo parent [winfo parent $table]] $menu $base $variant $index $columnName
 
-	if {$index ne "outside" && [$menu index 0] ne "none"} {
+	if {$index ne "outside" && [$menu index 0] ni {none {}}} {
 		::table::keepFocus $table true
 		::bind $menu <<MenuUnpost>> [namespace code [list Popdown $table]]
 		tk_popup $menu {*}[winfo pointerxy $table]
@@ -116474,7 +116477,7 @@ proc BuildPane {twm frame uid width height} {
 
 
 proc HeaderMenu {menu} {
-	if {[$menu index end] ne "none"} { $menu add separator }
+	if {[$menu index end] ni {none {}}} { $menu add separator }
 	::application::twm::makeLayoutMenu [::application::twm] $menu
 }
 

@@ -779,7 +779,7 @@ proc addToolbarMenu {menu parent {index -1} {var {}}} {
 		set m [menu $menu.__tb__Toolbar -tearoff false]
 		$menu add cascade -menu $m
 		set index [$menu index last]
-		if {$index eq "none"} { set index -1 }
+		if {$index in {none {}}} { set index -1 }
 	} elseif {[string is integer -strict $index] && $index >= 0} {
 		set m [menu $menu.__tb__Toolbar -tearoff false]
 		$menu insert cascade $index -menu $m
@@ -795,7 +795,7 @@ proc addToolbarMenu {menu parent {index -1} {var {}}} {
 	}
 
 	set i [$m index last]
-	if {$i eq "none"} { set i -1}
+	if {$i in {none {}}} { set i -1 }
 	incr i
 
 	foreach tb $Specs(toolbars:$parent) {

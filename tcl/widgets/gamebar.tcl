@@ -2137,7 +2137,7 @@ proc BuildMenu {gamebar id side menu} {
 		::theme::configureCheckEntry $menu.configuration.layout
 	}
 
-	if {[$menu index end] eq "none"} { return }
+	if {[$menu index end] in {none {}}} { return }
 
 	if {$Specs(player:locked)} {
 		bind $menu <<MenuUnpost>> [namespace code [list LeavePlayer $gamebar $id $side yes]]
