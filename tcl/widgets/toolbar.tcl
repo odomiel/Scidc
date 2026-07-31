@@ -90,9 +90,11 @@ array set Defaults {
 	dialog:snapping:y				35
 }
 # button:selectcolor #d1dbe0
-if {[tk windowingsystem] eq "x11" && [info tclversion] <= "8.6"} {
-	set Defaults(icons:x11Hack) true
-}
+# icons:x11Hack umging einen Zentrierungsfehler von Tk unter X11 (Tk Toolkit
+# Bug #2433781, siehe SetupIcons). Er wurde frueher fuer alle Tcl-Versionen
+# <= 8.6 automatisch aktiviert; seit der Mindestanforderung Tcl/Tk 9.0 konnte
+# diese Bedingung nie mehr zutreffen. Der Umweg bleibt als abschaltbare Option
+# erhalten, ist aber standardmaessig aus.
 
 array set Options {
 	icons:size medium

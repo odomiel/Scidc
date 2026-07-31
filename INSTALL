@@ -10,8 +10,6 @@ Install the required development packages (Debian/Ubuntu/Mint):
 
     sudo apt-get install \
         build-essential \
-        tcl8.6-dev \
-        tk8.6-dev \
         libx11-dev \
         libsm-dev \
         libxcursor-dev \
@@ -20,11 +18,18 @@ Install the required development packages (Debian/Ubuntu/Mint):
         libexpat1-dev \
         zlib1g-dev
 
+No Tcl/Tk packages are listed here on purpose. Scidc requires Tcl/Tk 9.0 and
+compiles against its *private* headers, which distribution packages usually do
+not ship. Step 1 below builds a suitable Tcl/Tk locally.
+
 Building
 --------
-1. Build a local Tcl/Tk 8.6 (required once, used inside the AppImage):
+1. Build a local Tcl/Tk 9 (required once, used inside the AppImage):
 
     bash build-tcltk.sh
+
+   This also installs Tcl/Tk's private headers, which src/tk/ needs: the
+   forked text, treectrl and Tkhtml widgets compile against Tcl/Tk internals.
 
 2. Configure the build system (required on every fresh clone):
 

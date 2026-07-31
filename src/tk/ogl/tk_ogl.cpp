@@ -26,7 +26,7 @@
 #include "tk_ogl.h"
 #include "../tk_compat.h"
 
-#define namespace namespace_	// bug in tcl8.6/tkInt.h
+#define namespace namespace_	// bug in tkInt.h ('namespace' als Feldname)
 #include <tkInt.h>
 #undef namespace
 

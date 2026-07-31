@@ -9,13 +9,13 @@
 
 
 # Try to find a usable tclsh to run this script with. Scidc itself requires
-# Tcl/Tk 9, but this script runs under 8.x as well.
-# by searching the PATH directories for tclsh8.5, tclsh85, etc. If no
-# tclsh program with a version number in the file name is found, the
-# default program to execute is just tclsh.
+# Tcl/Tk 9, but this script runs under 8.6 as well. The PATH directories are
+# searched for tclsh9.0, tclsh90, tclsh8.6, etc. If no tclsh program with a
+# version number in the file name is found, the default program to execute
+# is just tclsh.
 # The backslashes at the end of these lines are needed: \
 tclsh=tclsh; \
-for tclver in 90 9.0 86 8.6 85 8.5; do \
+for tclver in 90 9.0 86 8.6; do \
     IFS=:; \
     for dir in $PATH; do \
         if [ -x $dir/tclsh$tclver ]; \
@@ -29,7 +29,9 @@ done
 exec $tclsh "$0" ${1+"$@"}
 
 set Versions {9.0}
-set IgnorePatches {8.6b1 8.6b1.1 8.6b2}
+# Schwarze Liste fehlerhafter Tk-Patchlevel (z.B. Betas). Die frueheren
+# Eintraege 8.6b1/8.6b1.1/8.6b2 sind entfallen, seit nur noch 9.0 gesucht wird.
+set IgnorePatches {}
 
 
 proc stripDot {version} { return "[string index $version 0][string index $version 2]" }
@@ -268,7 +270,6 @@ array set release {
 
 set problematicGCCVersions {4.6 7.1}
 
-set instableTkLibrary ""
 set x11Libraries " -lX11 -lSM -lICE"
 
 set MinGCCVersion "3.4"
@@ -916,21 +917,6 @@ proc findTclTkPathsAndMore {} {
             } else {
                 set package($module-inc) [MakeOption -I $configure($module-includes)]
                 puts $configure($module-includes)
-
-                if {$module eq "tk"} {
-                    # we have to check the patch level; some insane Unix systems like
-                    # Ubuntu 11.10 do provide instable Tk libraries.
-                    if {![catch [list open [file join $configure($module-includes) $module.h]] f]} {
-                        while {[gets $f line] >= 0} {
-                            if {[string match {\#define TK_PATCH_LEVEL*} $line]} {
-                                set pl [lindex [split $line \"] 1]
-                                if {$pl eq "8.5.10"} { set ::instableTkLibrary $pl }
-                                break
-                            }
-                        }
-                        close $f
-                    }
-                }
             }
         }
     }
@@ -2461,17 +2447,6 @@ if {[string length $gxxVer]} {
 
     if {[lsearch $argv -n] == -1 && [lsearch $argv --no-create] == -1} {
         writeMakefile $success
-    }
-
-    if {[llength $instableTkLibrary]} {
-        # it seems that we build on an insane Unix system (like Ubuntu Oneiric)
-        puts ""
-        puts "IMPORTANT NOTE:"
-        puts "-------------------------------------------------------------------------------"
-        puts "You're about to run Scidc on an insane distribution. Scidc may crash with the"
-        puts "pre-installed Tk library $instableTkLibrary. It is highly recommended to install"
-        puts "a stable Tk version (8.6.0, 8.5.11, or 8.5.6) before building Scidc. Read INSTALL"
-        puts "for instructions how to use alternative library versions."
     }
 
     if {[info exists configure(destdir)]} {
