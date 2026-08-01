@@ -629,7 +629,14 @@ proc UpdateContent {w id key base variant name playerCardArgs} {
 
 	set dlg [winfo toplevel $w]
 	$w parse $html
-	lassign [$w minbbox] x y x2 y2
+	# minbbox liefert eine leere Liste, wenn das Dokument keinen darstellbaren
+	# Inhalt hat (z.B. weil das TeXt-Skript scheiterte). Ohne Rueckfall endet
+	# das folgende incr in "expected integer but got """ statt in einem
+	# leeren Fenster. html.tcl weicht an gleicher Stelle ebenso auf bbox aus.
+	set bbox [$w minbbox]
+	if {[llength $bbox] < 4} { set bbox [$w bbox] }
+	if {[llength $bbox] < 4} { set bbox {0 0 0 0} }
+	lassign $bbox x y x2 y2
 	incr x2 -4
 	incr y2 -4
 	set height [expr {2*$y + $y2}]

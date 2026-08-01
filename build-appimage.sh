@@ -57,7 +57,7 @@ if [ ! -d "$SHAREDIR" ]; then
     make -C tcl install \
         SHAREDIR="$SHAREDIR" \
         BINDIR="$APPDIR/usr/bin"
-    make -C src install-data \
+    make -C src install-data install-scripts \
         SHAREDIR="$SHAREDIR"
     echo "AppDir/usr/share/scidc-beta/ angelegt."
 fi
@@ -75,6 +75,11 @@ cp tcl/engines/engines.dat "$SHAREDIR/engines/engines.dat"
 # Erst-Build befuellt, daher hier bei jedem Build aktualisieren)
 mkdir -p "$SHAREDIR/scripts"
 cp tcl/update-fide-players.py tcl/update-dwz-players.py "$SHAREDIR/scripts/"
+# plain.eXt ist die Makro-Basis der TeXt-Skripte (common.eXt zieht sie via
+# "\input\plain"). Sie liegt in src/util/libTeXt/ und wird vom Make-Ziel
+# install-scripts geliefert - fehlt sie, scheitern Spielerkarte,
+# Kreuztabelle und alle Turniertabellen mit "I can't find file 'plain'".
+cp src/util/libTeXt/plain.eXt "$SHAREDIR/scripts/"
 chmod 755 "$SHAREDIR/scripts/update-fide-players.py" "$SHAREDIR/scripts/update-dwz-players.py"
 
 # Hilfe-HTML-Dateien synchronisieren
