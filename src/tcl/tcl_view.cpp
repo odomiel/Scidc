@@ -600,7 +600,13 @@ cmdSearch(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 	SearchP search;
 
-	if (objc + n >= 6)
+	// Die Abfrage ist das letzte, optionale Argument und steht auf objv[5 + n];
+	// vorhanden ist sie also genau dann, wenn objc >= 6 + n. Die frühere
+	// Bedingung "objc + n >= 6" traf auch ohne Abfrage zu, sobald eine Variante
+	// angegeben war (n = 1, objc = 6), und las dann objv[6] hinter dem Ende des
+	// Argumentfelds -- mit Speicherzugriffsfehler. Die Prüfung darunter benutzt
+	// bereits die richtige Form.
+	if (objc >= int(6 + n))
 		search = buildSearch(cursor.database(), ti, objv[5 + n]);
 
 	if (!search && objc == int(6 + n))
