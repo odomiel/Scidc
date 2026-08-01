@@ -263,7 +263,11 @@ proc update {path base variant size} {
 	set (size) $size
 	::table::clear $table $(size) $(height)
 
-	set (start) [expr {max(0, min($(start:$base:$variant), $(size) - $(height)))}]
+	# (start) ist ein Zeilenindex und muss ganzzahlig bleiben. In max()/min()
+	# genuegt ein einziger Fliesskomma-Operand, damit das Ergebnis ein Double
+	# wird ("180.0"); der Wert geht als Index an ::scidc::db::get, das eine
+	# positive ganze Zahl verlangt und sonst mit einer Ausnahme abbricht.
+	set (start) [expr {int(max(0, min($(start:$base:$variant), $(size) - $(height))))}]
 	set (active) $(active:$base:$variant)
 	set (selection) $(selection:$base:$variant)
 	set (base) $base
@@ -273,9 +277,12 @@ proc update {path base variant size} {
 		set (active) [expr {min($(start) + $size - 1, $(active))}]
 	}
 	if {[llength $(selection)]} {
+		# Das "else" stand hier innerhalb des if-Rumpfes und wurde damit als
+		# Befehl ausgefuehrt ("invalid command name else"), sobald size 0 war
+		# und eine Auswahl bestand.
 		if {$size == 0} {
 			set (selection) {}
-		else
+		} else {
 			set (selection) [expr {min($(start) + $size - 1, $(selection))}]
 		}
 	}
@@ -388,7 +395,7 @@ proc see {path position} {
 		set position [expr {$(size) - 1}]
 	}
 	if {![expr {$(start) <= $position && $position <= $(start) + $(height)}]} {
-		set start [expr {min($(size) - $(height), $position)}]
+		set start [expr {int(min($(size) - $(height), $position))}]
 		if {$start != $(start)} {
 			::table::select $table none
 			set (start) $start
@@ -965,6 +972,11 @@ proc TableResized {table height} {
 proc SetStart {table start {force no}} {
 	variable ${table}::
 
+	# Der Aufrufer kann einen Double liefern (z.B. aus einer Tk-9-Bildschirm-
+	# distanz oder einer Division); die Schnellpfade unten vergleichen aber
+	# ganzzahlig, und (start) muss ein Zeilenindex bleiben.
+	set start [expr {int($start)}]
+
 	if {!$force} {
 		if {$(start) - $start == 1} {
 			return [Scroll $table up]
@@ -1064,7 +1076,7 @@ proc Scroll {table action args} {
 		}
 	}
 
-	set start [expr {max(0, min($start, $(size) - $(height)))}]
+	set start [expr {int(max(0, min($start, $(size) - $(height))))}]
 	set first [expr {$(size) <= 1 ? 0.0 : double($start)/double($(size) - 1)}]
 	set last  [expr {$(size) <= 1 ? 1.0 : double($start + $(height))/double($(size))}]
 

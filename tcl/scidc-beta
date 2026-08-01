@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b17 Beta"
+	set version "26.08.01 b18 Beta"
 }
 
 
@@ -57605,7 +57605,7 @@ proc update {path base variant size} {
 	set (size) $size
 	::table::clear $table $(size) $(height)
 
-	set (start) [expr {max(0, min($(start:$base:$variant), $(size) - $(height)))}]
+	set (start) [expr {int(max(0, min($(start:$base:$variant), $(size) - $(height))))}]
 	set (active) $(active:$base:$variant)
 	set (selection) $(selection:$base:$variant)
 	set (base) $base
@@ -57617,7 +57617,7 @@ proc update {path base variant size} {
 	if {[llength $(selection)]} {
 		if {$size == 0} {
 			set (selection) {}
-		else
+		} else {
 			set (selection) [expr {min($(start) + $size - 1, $(selection))}]
 		}
 	}
@@ -57728,7 +57728,7 @@ proc see {path position} {
 		set position [expr {$(size) - 1}]
 	}
 	if {![expr {$(start) <= $position && $position <= $(start) + $(height)}]} {
-		set start [expr {min($(size) - $(height), $position)}]
+		set start [expr {int(min($(size) - $(height), $position))}]
 		if {$start != $(start)} {
 			::table::select $table none
 			set (start) $start
@@ -58305,6 +58305,8 @@ proc TableResized {table height} {
 proc SetStart {table start {force no}} {
 	variable ${table}::
 
+	set start [expr {int($start)}]
+
 	if {!$force} {
 		if {$(start) - $start == 1} {
 			return [Scroll $table up]
@@ -58403,7 +58405,7 @@ proc Scroll {table action args} {
 		}
 	}
 
-	set start [expr {max(0, min($start, $(size) - $(height)))}]
+	set start [expr {int(max(0, min($start, $(size) - $(height))))}]
 	set first [expr {$(size) <= 1 ? 0.0 : double($start)/double($(size) - 1)}]
 	set last  [expr {$(size) <= 1 ? 1.0 : double($start + $(height))/double($(size))}]
 
