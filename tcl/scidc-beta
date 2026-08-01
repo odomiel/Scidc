@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b6 Beta"
+	set version "26.08.01 b7 Beta"
 }
 
 
@@ -766,9 +766,6 @@ set CannotOverwriteTheme "Cannot overwrite theme %s."
 
 variable Updated 0
 
-# Alt-Themedateien sind teils Latin-1 kodiert, Tcl 9 liest aber strikt
-# UTF-8. Erst UTF-8 versuchen, dann Latin-1 -- so entsteht der gemeinte
-# Text (z.B. "Jose" mit Akzent) und nicht U+FFFD wie bei "-profile replace".
 proc ReadLines {path} {
 	set f [::open $path rb]
 	set data [::read $f]
@@ -5295,7 +5292,6 @@ proc menuItemHighlightSecond {menu} {
 	##  ----------------------------------
 	set active [$menu index active]
 	set last   [$menu index last]
-	# Tk 9 liefert "" statt "none", wenn der Index auf keinen Eintrag zeigt.
 	if {![string is integer -strict $last]} { return }
 	set numEntries [expr {$last + 1}]
 
@@ -7346,10 +7342,6 @@ proc ::tk::PostOverPoint {menu x y {entry {}}}  {
     }
     $menu post $x $y
     ### FIX begin ################################################################
-    # Voll qualifizieren: innerhalb von ::tk wuerde "tk::Priv" relativ zu
-    # ::tk::tk::Priv aufgeloest. Tcl 8.6 fiel dann noch auf den globalen
-    # Namensraum zurueck, Tcl 9 tut das nicht mehr und wirft
-    # "parent namespace doesn't exist".
     set ::tk::Priv(menu:window) $menu
     ### FIX end ##################################################################
     if {$entry ne "" && [$menu entrycget $entry -state] ne "disabled"} {
@@ -18051,12 +18043,6 @@ proc source {path args} {
 	if {$opts(-throw)} {
 		uplevel ::source {*}$enc [list $path]
 	} elseif {[catch {uplevel ::source {*}$enc [list $path]} err]} {
-		# Tcl 9 liest Dateien mit dem Profil "strict". Ein einzelnes Latin-1-Byte
-		# in einer Alt-Datei (z.B. das "e" mit Akzent in themes/Jose.dat) laesst
-		# source scheitern. Der Fehler faellt beim *Lesen* an, es wurde also noch
-		# nichts ausgefuehrt -- ein zweiter Versuch mit Latin-1 ist gefahrlos.
-		# Latin-1 (nicht "-profile replace"), damit der gemeinte Text entsteht
-		# und nicht U+FFFD.
 		if {	[lrange $::errorCode 0 1] eq {POSIX EILSEQ}
 			&& ![catch {uplevel ::source -encoding iso8859-1 [list $path]}]} {
 			if {[string length $msg]} { lappend Log info "$msg: $path" }
@@ -43501,11 +43487,6 @@ array set Defaults {
 	dialog:snapping:x				35
 	dialog:snapping:y				35
 }
-# icons:x11Hack umging einen Zentrierungsfehler von Tk unter X11 (Tk Toolkit
-# Bug #2433781, siehe SetupIcons). Er wurde frueher fuer alle Tcl-Versionen
-# <= 8.6 automatisch aktiviert; seit der Mindestanforderung Tcl/Tk 9.0 konnte
-# diese Bedingung nie mehr zutreffen. Der Umweg bleibt als abschaltbare Option
-# erhalten, ist aber standardmaessig aus.
 
 array set Options {
 	icons:size medium
@@ -103875,7 +103856,7 @@ proc OfferEngineDownload {parent} {
 	if {!$::scidc::dir::setup} return
 
 	set engDir  $::scidc::dir::engines
-	set baseUrl "https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
+	set baseUrl "https://forgejo.example.invalid:3053/forgejouser/Scidc/releases/download/engines-v1"
 	set engines {stockfish-scidc fairy-stockfish-scidc}
 
 	set missing {}
@@ -103987,9 +103968,13 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 
 		if {[catch {
 			if {$downloader eq "wget"} {
-				exec wget -q -L -O $tmpDest $url
+				if {[catch { exec wget -q -L -O $tmpDest $url }]} {
+					exec wget -q -L --no-check-certificate -O $tmpDest $url
+				}
 			} else {
-				exec curl -sS -L -o $tmpDest $url
+				if {[catch { exec curl -sS -L -o $tmpDest $url }]} {
+					exec curl -sS -L -k -o $tmpDest $url
+				}
 			}
 			if {![info exists expectSha($e)]} { error $mc::EngineChecksumMismatch }
 			set got [string tolower [lindex [exec {*}$hasher $tmpDest] 0]]
@@ -146890,11 +146875,6 @@ proc BuildLicenseFrame {w} {
 
 
 proc Url {url}		{ return "<a href='$url'>$url</a>" }
-# Frueher wurden Quelldateien in der Systemkodierung gelesen, sodass die
-# UTF-8-Bytes des Quelltexts hier als Einzelzeichen ankamen und ein zweites
-# Mal dekodiert werden mussten. Tcl 9 liest Quelldateien selbst als UTF-8 --
-# die Namen sind bereits korrekt, und ein erneutes convertfrom scheitert am
-# Profil "strict" ("unexpected byte sequence ... '\xB7'").
 proc Name {name}	{ return $name }
 
 
@@ -148986,9 +148966,6 @@ proc recover {parent} {
 				set header [split $content "\n"]
 				lassign {"" "" "" ""} line1 line2 line3 line4
 				lassign $header line1 line2 line3 line4
-				# Tcl 9 kennt die Kodierung "identity" nicht mehr. Die Datei wird
-				# oben als UTF-8 gelesen, ein BOM kommt also als einzelnes U+FEFF
-				# an; die alte 3-Zeichen-Form wird weiterhin erkannt.
 				if {$line1 in [list \uFEFF \u00EF\u00BB\u00BF]} {
 					set line1 $line2; set line2 $line3; set line3 $line4
 				}

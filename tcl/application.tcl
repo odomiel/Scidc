@@ -1001,7 +1001,7 @@ proc OfferEngineDownload {parent} {
 	if {!$::scidc::dir::setup} return
 
 	set engDir  $::scidc::dir::engines
-	set baseUrl "https://codeberg.org/Mirik/Scidc/releases/download/engines-v1"
+	set baseUrl "https://forgejo.example.invalid:3053/forgejouser/Scidc/releases/download/engines-v1"
 	set engines {stockfish-scidc fairy-stockfish-scidc}
 
 	# Only offer engines that are not yet installed
@@ -1122,11 +1122,22 @@ proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
 		set tmpDest "${dest}.tmp"
 		set url     "$baseUrl/$e"
 
+		# Erst mit Zertifikatspruefung laden. Schlaegt das fehl -- die
+		# Bezugsquelle nutzt ein selbstsigniertes Zertifikat --, ein zweites
+		# Mal ohne Pruefung. Das ist hier vertretbar, weil die Datei
+		# unmittelbar danach gegen die oben fest hinterlegte SHA-256 geprueft
+		# wird: eine untergeschobene oder verfaelschte Datei faellt dabei auf
+		# und wird nicht ausfuehrbar gemacht. Bei einer regulaer
+		# zertifizierten Quelle greift der zweite Versuch nie.
 		if {[catch {
 			if {$downloader eq "wget"} {
-				exec wget -q -L -O $tmpDest $url
+				if {[catch { exec wget -q -L -O $tmpDest $url }]} {
+					exec wget -q -L --no-check-certificate -O $tmpDest $url
+				}
 			} else {
-				exec curl -sS -L -o $tmpDest $url
+				if {[catch { exec curl -sS -L -o $tmpDest $url }]} {
+					exec curl -sS -L -k -o $tmpDest $url
+				}
 			}
 			if {![info exists expectSha($e)]} { error $mc::EngineChecksumMismatch }
 			set got [string tolower [lindex [exec {*}$hasher $tmpDest] 0]]
