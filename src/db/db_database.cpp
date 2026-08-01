@@ -1516,13 +1516,22 @@ Database::exportGames(	Destination& destination,
 	M_REQUIRE(gameFilter.size() == size());
 	M_REQUIRE(	destination.variant() == variant()
 				|| (isScidFormat(format()) && destination.variant() == variant::ThreeCheck));
-	// Die Bedingung war invertiert: der aufrufende exportGames-Ueberladung
-	// (weiter oben) *verlangt* illegalRejected fuer Scid-Ziele und reicht den
-	// Wert hierher durch - womit sich beide Zusicherungen ausschlossen und
-	// jedes Kopieren in eine SI3/SI4/SI5-Datenbank scheiterte. Der Zaehler ist
-	// genau dafuer da, Partien mit illegalen Zuegen auszusortieren (siehe
-	// unten), die diese Formate nicht speichern koennen.
-	M_REQUIRE(illegalRejected || !isScidFormat(destination.format()));
+	// Hier steht bewusst *keine* Bedingung ueber illegalRejected. Diese
+	// Funktion ist der gemeinsame Arbeiter zweier Pfade und kommt mit beiden
+	// Faellen zurecht: die Schleife unten schreibt
+	//
+	//     if (!illegalRejected || !...containsIllegalMoves()) { exportieren }
+	//     else                                               { ++*illegalRejected; }
+	//
+	// Ohne Zaehler wird also alles exportiert (der else-Zweig ist dann gar
+	// nicht erreichbar), mit Zaehler werden Partien mit illegalen Zuegen
+	// aussortiert und gezaehlt. Beides ist richtig.
+	//
+	// Die Vorgabe "ein Scid-Ziel braucht einen Ablehnungszaehler" ist eine
+	// Regel des Datenbank-zu-Datenbank-Pfads und steht dort, wo sie hingehoert:
+	// in copyGames und importGames. Der Dateiexport (View::exportGames, aus
+	// ::scidc::view::export) reicht je nach Ankreuzfeld "illegale Partien
+	// ausschliessen" einen Zeiger oder nullptr durch - beides muss gehen.
 
 	enum { MaxWarnings = 40 };
 
