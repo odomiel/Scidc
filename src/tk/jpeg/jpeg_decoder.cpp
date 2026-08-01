@@ -948,7 +948,12 @@ Decoder::parseStartOfScan()
 	{
 		int quantTableIndex = m_scanComponents[i]->quantTableIndex();
 
-		if (m_quantValues[quantTableIndex] == 0)
+		// m_quantValues[i] ist ein Feld, sein Zerfallszeiger also nie 0 - die
+		// Pruefung lief bisher ins Leere. Eine nie definierte Tabelle ist
+		// genau die, die noch so dasteht wie der Konstruktor sie genullt hat;
+		// parseQuantization weist jeden Nullwert in einer echten Tabelle
+		// zurueck, das erste Element genuegt daher als Kennzeichen.
+		if (m_quantValues[quantTableIndex][0] == 0)
 			throw Exception("undefined quantization table (%d)", quantTableIndex);
 
 		m_scanComponents[i]->setup(m_quantValues[quantTableIndex],

@@ -1864,7 +1864,49 @@ proc checkGCC {cc} {
         # kernel headers from user space" warning (the inventor
         # of this warning has no serious experience in software
         # development).
-        foreach opt {-fno-stack-protector -Wno-cpp} {
+        #
+        # Nicht unterstuetzte Optionen fallen bei der Probe unten von selbst
+        # weg, die Liste darf also ruhig neuere Namen enthalten.
+        #
+        # -fstack-protector-strong loeste das fruehere -fno-stack-protector
+        # ab. Der Code liest Fremddateien (Datenbanken, PGN, Bilder); ein
+        # abgeschaltetes Sicherheitsnetz ist an dieser Stelle die falsche
+        # Sparsamkeit.
+        #
+        # Die -Werror=-Liste bleibt bewusst eng. Ein pauschales -Werror waere
+        # hier nutzlos: der Baum enthaelt Fremdcode (Tk-Text, TkTreeCtrl,
+        # Tkhtml, zlib ...) und einige Meldungen sind Fehlalarme -- man
+        # muesste ganze Kategorien stumm schalten und wuerde damit auch ihre
+        # echten Treffer verlieren. Aufgenommen sind nur Kategorien, die in
+        # diesem Baum ausnahmslos echte Fehler angezeigt haben:
+        #
+        #   parentheses            assert(a = b) statt assert(a == b)
+        #   misleading-indentation ein "if (...);" mit Strichpunkt
+        #   switch                 vergessenes case format::Scid5
+        #   format                 %d fuer ein Tcl_Size (long)
+        #   address                Feldadresse gegen 0 geprueft
+        #   shift-count-overflow   uint32 um 32 Bit geschoben
+        #   return-type            fehlendes return
+        #   narrowing, sizeof-pointer-memaccess, memset-transposed-args,
+        #   logical-not-parentheses, bool-compare, nonnull
+        #
+        foreach opt {
+            -fstack-protector-strong
+            -Wno-cpp
+            -Werror=parentheses
+            -Werror=misleading-indentation
+            -Werror=switch
+            -Werror=format
+            -Werror=address
+            -Werror=shift-count-overflow
+            -Werror=return-type
+            -Werror=narrowing
+            -Werror=sizeof-pointer-memaccess
+            -Werror=memset-transposed-args
+            -Werror=logical-not-parentheses
+            -Werror=bool-compare
+            -Werror=nonnull
+        } {
             if {[ProbeGCC TestCompilerFlag $cc [list %FLAG% $opt]]} {
                 set compiler($opt) $opt
             }

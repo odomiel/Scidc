@@ -1396,6 +1396,7 @@ Application::recode(Cursor& cursor, mstl::string const& encoding, util::Progress
 
 		case format::Scid3:
 		case format::Scid4:
+		case format::Scid5:
 		case format::ChessBase:
 		case format::ChessBaseDOS:
 			stopAllThreads(cursor);

@@ -222,9 +222,13 @@ Sort::process(int objc, Tcl_Obj* const objv[])
 				{
 					if (Tcl_GetIntFromObj(m_interp, indices[j], &m_indexVec[j]) != TCL_OK)
 					{
-						Tcl_AppendObjToErrorInfo(
+						// j ist seit Tcl 9 ein Tcl_Size (long); %d wuerde als
+					// varargs nur 32 Bit lesen. Die Zahl ist eine
+					// Positionsangabe in einer Fehlermeldung, ein int
+					// reicht dafuer aus.
+					Tcl_AppendObjToErrorInfo(
 							m_interp,
-							Tcl_ObjPrintf( "\n    (-index option item number %d)", j));
+							Tcl_ObjPrintf( "\n    (-index option item number %d)", int(j)));
 						return TCL_ERROR;
 					}
 				}

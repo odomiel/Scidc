@@ -1641,7 +1641,7 @@ PgnReader::parseFinalComment(mstl::string const& comment)
 				return setTermination(termination::Normal);
 			if (::matchEndOfSentence(s, "was drawn", 9))
 				return setTermination(termination::Normal);
-			if (::matchEndOfSentence(s, "was adjourned", 13));
+			if (::matchEndOfSentence(s, "was adjourned", 13))
 				return setTermination(termination::Unterminated);
 			if (::matchEndOfSentence(s, "was sent for adjudication", 25))
 				return setTermination(termination::Unterminated);

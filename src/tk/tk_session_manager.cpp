@@ -342,8 +342,11 @@ callbackSaveYourself(SmcConn smcConn,
 			{ C(SmUserID),           C(SmLISTofARRAY8), 1,        vals.user    },
 			{ C(SmRestartStyleHint), C(SmCARD8),        1,        vals.hint    },
 			{ C(SmCurrentDirectory), C(SmARRAY8),       0,        vals.pwd     },
-			{ C(SmCloneCommand),     C(SmLISTofARRAY8), objc,     vals.clone   },
-			{ C(SmRestartCommand),   C(SmLISTofARRAY8), objc + 2, vals.restart },
+			// SmProp::num_vals ist ein int; objc ist seit Tcl 9 ein Tcl_Size
+			// (long). Die Verengung ist unbedenklich - es ist die Laenge der
+			// Kommandozeile -, aber sie gehoert hingeschrieben.
+			{ C(SmCloneCommand),     C(SmLISTofARRAY8), int(objc),     vals.clone   },
+			{ C(SmRestartCommand),   C(SmLISTofARRAY8), int(objc + 2), vals.restart },
 #undef C
 		};
 
