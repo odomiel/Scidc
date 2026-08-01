@@ -36,6 +36,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TARGET = os.path.join(ROOT, "tcl", "engines", "downloads.dat")
 
 # Archive : plain | tar | tar.gz | zip
+# Extra   : weitere Dateien aus dem Archiv, die neben das Programm gehoeren
+#           (z.B. Netzdateien). Muster duerfen Platzhalter enthalten.
 # Extract : binary (nur das Programm) | all (ganzes Archiv, z.B. wegen Netzdatei)
 # Builds  : (Kennung, benoetigte /proc/cpuinfo-Merkmale, Anhang, Pfad im Archiv)
 #           von der schnellsten zur genuegsamsten Variante
@@ -65,6 +67,8 @@ SPECS = [
         id="rubichess", name="RubiChess", author="Andreas Matthies",
         home="https://github.com/Matthies/RubiChess", repo="Matthies/RubiChess",
         archive="zip", extract="binary", target="rubichess",
+        # RubiChess laedt sein Netz aus dem Verzeichnis des Programms.
+        extra=["RubiChess-%TAG%/*.nnue"],
         builds=[
             ("avx512",  "avx512f",       "RubiChess-%TAG%.zip", "RubiChess-%TAG%/linux/RubiChess-%TAG%_x86-64-avx512"),
             ("bmi2",    "avx2 bmi2",     "RubiChess-%TAG%.zip", "RubiChess-%TAG%/linux/RubiChess-%TAG%_x86-64-bmi2"),
@@ -136,7 +140,7 @@ def sha256_of(url, size):
 
 
 def collect(spec):
-    """Liefert (tag, version, [(id, flags, asset, sha, size, member)]) oder None."""
+    """Liefert (tag, version, builds, fehlende Anhaenge, Beidateien)."""
     rel = api(f"/repos/{spec['repo']}/releases/latest")
     tag = rel["tag_name"]
     ver = readable(tag)
@@ -163,7 +167,8 @@ def collect(spec):
             sha = cache[asset] = sha256_of(a["browser_download_url"], a["size"])
         builds.append((bid, flags, asset, sha, a["size"], member))
 
-    return tag, ver, builds, missing
+    extra = [sub(x) for x in spec.get("extra", [])]
+    return tag, ver, builds, missing, extra
 
 
 def render(entries):
@@ -182,7 +187,7 @@ def render(entries):
         "",
         "set ::engine::download::Catalog {",
     ]
-    for spec, tag, ver, builds in entries:
+    for spec, tag, ver, builds, extra in entries:
         out += [
             "\t{",
             f"\t\tId\t\t\t{spec['id']}",
@@ -196,6 +201,7 @@ def render(entries):
             f"\t\tArchive\t\t{spec['archive']}",
             f"\t\tExtract\t\t{spec['extract']}",
             f"\t\tTarget\t\t{spec['target']}",
+            "\t\tExtra\t\t{" + " ".join(extra) + "}",
             "\t\tBuilds {",
         ]
         for bid, flags, asset, sha, size, member in builds:
@@ -229,7 +235,7 @@ def main():
     for spec in specs:
         print(f"  {spec['name']} ...", file=sys.stderr)
         try:
-            tag, ver, builds, missing = collect(spec)
+            tag, ver, builds, missing, extra = collect(spec)
         except (urllib.error.URLError, TimeoutError, KeyError, OSError) as e:
             problems.append(f"{spec['name']}: nicht abrufbar ({e})")
             continue
@@ -240,7 +246,7 @@ def main():
         if missing:
             problems.append(f"{spec['name']}: Anhang fehlt: {', '.join(missing)}")
         print(f"      {tag}  ({len(builds)} Varianten)", file=sys.stderr)
-        entries.append((spec, tag, ver, builds))
+        entries.append((spec, tag, ver, builds, extra))
 
     if problems:
         print("", file=sys.stderr)

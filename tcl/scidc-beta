@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b21 Beta"
+	set version "26.08.01 b22 Beta"
 }
 
 
@@ -101657,8 +101657,44 @@ proc Unpack {entry build file} {
 		default { error "unknown archive type: $e(Archive)" }
 	}
 
+	UnpackExtra $entry $file [file dirname $path]
 	file attributes $path -permissions 0755
 	return $path
+}
+
+
+proc UnpackExtra {entry file dir} {
+	array set e $entry
+	if {![info exists e(Extra)] || [llength $e(Extra)] == 0} { return }
+
+	set tmpdir [file join [TmpDir] "scidc-extra-[pid]"]
+	file delete -force $tmpdir
+	file mkdir $tmpdir
+
+	foreach pattern $e(Extra) {
+		switch $e(Archive) {
+			zip			{ catch { Run {} unzip -q -o -j $file $pattern -d $tmpdir } }
+			tar - tar.gz	{ catch { Run {} tar xf $file -C $tmpdir --wildcards $pattern } }
+		}
+	}
+
+	foreach found [FindFiles $tmpdir] {
+		catch { file copy -force $found [file join $dir [file tail $found]] }
+	}
+	file delete -force $tmpdir
+}
+
+
+proc FindFiles {dir} {
+	set out {}
+	foreach f [glob -nocomplain -directory $dir *] {
+		if {[file isdirectory $f]} {
+			set out [concat $out [FindFiles $f]]
+		} else {
+			lappend out $f
+		}
+	}
+	return $out
 }
 
 

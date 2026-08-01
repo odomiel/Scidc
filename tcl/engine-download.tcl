@@ -342,8 +342,48 @@ proc Unpack {entry build file} {
 		default { error "unknown archive type: $e(Archive)" }
 	}
 
+	UnpackExtra $entry $file [file dirname $path]
 	file attributes $path -permissions 0755
 	return $path
+}
+
+
+# Manche Engines laden ihre Netzdatei aus dem Verzeichnis des Programms
+# (RubiChess sucht nn-*.nnue dort). Der Katalog nennt solche Beidateien im
+# Feld Extra; sie werden flach neben das Programm gelegt.
+proc UnpackExtra {entry file dir} {
+	array set e $entry
+	if {![info exists e(Extra)] || [llength $e(Extra)] == 0} { return }
+
+	set tmpdir [file join [TmpDir] "scidc-extra-[pid]"]
+	file delete -force $tmpdir
+	file mkdir $tmpdir
+
+	foreach pattern $e(Extra) {
+		switch $e(Archive) {
+			zip			{ catch { Run {} unzip -q -o -j $file $pattern -d $tmpdir } }
+			tar - tar.gz	{ catch { Run {} tar xf $file -C $tmpdir --wildcards $pattern } }
+		}
+	}
+
+	# tar erhaelt die Verzeichnisse; alles Gefundene flach herueberholen.
+	foreach found [FindFiles $tmpdir] {
+		catch { file copy -force $found [file join $dir [file tail $found]] }
+	}
+	file delete -force $tmpdir
+}
+
+
+proc FindFiles {dir} {
+	set out {}
+	foreach f [glob -nocomplain -directory $dir *] {
+		if {[file isdirectory $f]} {
+			set out [concat $out [FindFiles $f]]
+		} else {
+			lappend out $f
+		}
+	}
+	return $out
 }
 
 

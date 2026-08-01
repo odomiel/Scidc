@@ -23,6 +23,7 @@ set ::engine::download::Catalog {
 		Archive		tar
 		Extract		binary
 		Target		stockfish
+		Extra		{}
 		Builds {
 			{avx512icl {avx512vbmi avx512vnni} stockfish-ubuntu-x86-64-avx512icl.tar 444e3fff9a5ee66961f917f947083d956b2468da9e531d589a9a4981e437657c 114401280 {stockfish/stockfish-ubuntu-x86-64-avx512icl}}
 			{avx512 {avx512f} stockfish-ubuntu-x86-64-avx512.tar 9ddf29d8589d65cbf4b444c29241e711fccac24e6e9f5452480bb9a2e0fddd83 114391040 {stockfish/stockfish-ubuntu-x86-64-avx512}}
@@ -44,6 +45,7 @@ set ::engine::download::Catalog {
 		Archive		plain
 		Extract		binary
 		Target		fairy-stockfish
+		Extra		{}
 		Builds {
 			{bmi2 {avx2 bmi2} fairy-stockfish-largeboard_x86-64-bmi2 543ee304ae99e9509f91578b001433745030a02912053f21f4c3452891eef34d 2469296 {}}
 			{modern {sse4_1 popcnt} fairy-stockfish-largeboard_x86-64-modern 6532b3dc7d4f2098b946b919216758b4bad2efdee21475deeb1a557670bf520c 2506888 {}}
@@ -62,6 +64,7 @@ set ::engine::download::Catalog {
 		Archive		zip
 		Extract		binary
 		Target		rubichess
+		Extra		{RubiChess-20240817/*.nnue}
 		Builds {
 			{avx512 {avx512f} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-avx512}}
 			{bmi2 {avx2 bmi2} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-bmi2}}
@@ -82,6 +85,7 @@ set ::engine::download::Catalog {
 		Archive		plain
 		Extract		binary
 		Target		stormphrax
+		Extra		{}
 		Builds {
 			{avx512 {avx512f} stormphrax-8.0.0-avx512 52fca8502216c16e71349b189ceccd06cd325f7e268cfd405c7a8e76ecf99592 56790072 {}}
 			{zen2 {avx2 bmi2} stormphrax-8.0.0-zen2 ecee60443f1a6c098654048e941f068b59b2e506a09194f22ce0d10546bfbc4f 56721168 {}}
@@ -100,6 +104,7 @@ set ::engine::download::Catalog {
 		Archive		plain
 		Extract		binary
 		Target		viridithas
+		Extra		{}
 		Builds {
 			{x86-64-v4 {avx512f} viridithas-20-linux-x86-64-v4 226d650fc73a7a7c6cef56a495e55a1e8ea8b68d89fc2257c3c2c968c729ab17 57814624 {}}
 			{x86-64-v3 {avx2 bmi2} viridithas-20-linux-x86-64-v3 eb53de2fde546f3ba294407e3e8986dc3859bb1818f2ef4cf2fd85d077779973 57800608 {}}
@@ -117,6 +122,7 @@ set ::engine::download::Catalog {
 		Archive		tar.gz
 		Extract		all
 		Target		arasanx-64
+		Extra		{}
 		Builds {
 			{avx512 {avx512f} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx512}}
 			{avx2-bmi2 {avx2 bmi2} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx2-bmi2}}
