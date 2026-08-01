@@ -382,7 +382,12 @@ void
 bitset::fill(size_type first, size_type last, unsigned char value)
 {
 	M_ASSERT(first <= last);
-	::memset((void*)m_bits + first, value, sizeof(m_bits[0])*(last - first));
+	// Die Klammern um (m_bits + first) sind wesentlich: m_bits ist ein
+	// bitfield*, die Addition muss also elementweise erfolgen. Bindet der
+	// Cast nur an m_bits, rechnet die Addition byteweise (void*-Arithmetik
+	// als GCC-Erweiterung) und der Speicherbereich wird an der falschen
+	// Stelle beschrieben.
+	::memset((void*)(m_bits + first), value, sizeof(m_bits[0])*(last - first));
 }
 
 
