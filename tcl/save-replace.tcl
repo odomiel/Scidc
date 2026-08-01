@@ -1126,7 +1126,12 @@ proc Build {dlg base variant position number} {
 
 	# Tracing #################################################
 	foreach attr {white-name black-name event-title event-site game-annotator} {
-		trace variable ::${dlg}::Priv($attr) w  \
+		# Tcl 9 kennt die veralteten Unterbefehle "trace variable/vdelete/vinfo"
+		# nicht mehr, nur noch add/info/remove. Die alte Form umging ausserdem
+		# den trace-Wrapper in utils/tcl_bugs.tcl, der vor jedem "add" ein
+		# "remove" absetzt, damit sich beim wiederholten Oeffnen des Dialogs
+		# keine doppelten Traces ansammeln.
+		trace add variable ::${dlg}::Priv($attr) write \
 			[namespace code [list UpdateMatchList $top $attr $attr]]
 	}
 
