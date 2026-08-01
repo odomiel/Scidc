@@ -223,14 +223,19 @@ proc Setup {w} {
 		}
 	}
 
+	# Kollidieren die Anfangsbuchstaben, wird der naechste Buchstabe genommen.
+	# Gelesen wurde dabei aus $mc::Female bzw. $mc::Computer - die gibt es
+	# nicht, die Bezeichnungen stehen im Array $mc::Gender(...), wie in der
+	# Schleife darueber. Der Fehler blieb nur deshalb unbemerkt, weil die
+	# Schleifen nur bei gleichem Anfangsbuchstaben ueberhaupt betreten werden.
 	set i 0
 	while {$Male eq $Female} {
-		set Female [string toupper [string index $mc::Female [incr i]]]
+		set Female [string toupper [string index $mc::Gender(f) [incr i]]]
 	}
 
 	set i 0
 	while {$Computer eq $Male || $Computer eq $Female} {
-		set Computer [string toupper [string index $mc::Computer [incr i]]]
+		set Computer [string toupper [string index $mc::Gender(c) [incr i]]]
 	}
 
 	$w.__w__ listinsert { "" "\u2014" } -index 0
