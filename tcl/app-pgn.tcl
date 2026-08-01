@@ -1714,10 +1714,10 @@ proc InsertDiagram {context position w level key data} {
 					::board::diagram::bind $emb <Double-1> {#} ;# catch double clicks
 					::board::diagram::bind $emb <Button-3> [namespace code [list PopupMenu $w $position]]
 					::board::diagram::bind $emb <Double-3> {#} ;# catch double clicks
-					::board::diagram::bind $emb <Button-4> [string map [list %W $w] [bind $w <Button-4>]]
-					::board::diagram::bind $emb <Button-4> {+ break }
-					::board::diagram::bind $emb <Button-5> [string map [list %W $w] [bind $w <Button-5>]]
-					::board::diagram::bind $emb <Button-5> {+ break }
+					# Tk 9 liefert das Rad als <MouseWheel>, nicht mehr als Button-4/5.
+					::board::diagram::bind $emb <MouseWheel> \
+						[string map [list %W $w] [bind $w <MouseWheel>]]
+					::board::diagram::bind $emb <MouseWheel> {+ break }
 				}
 				$w window create cur \
 					-align center \

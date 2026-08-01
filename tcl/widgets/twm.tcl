@@ -911,17 +911,17 @@ proc MouseWheelBindings {twm frame w} {
 	
 	if {$Vars(state) eq "disabled"} { return }
 
+	# Tk 9: unter X11 kommt das Rad als <MouseWheel> mit %D = +-120 (tkEvent.c);
+	# <Button-4>/<Button-5> feuern dafuer nicht mehr. Der Ausdruck wird geklammert
+	# uebergeben, damit %D erst beim Ereignis ersetzt wird.
 	switch [tk windowingsystem] {
-		x11 {
-			bind $w <Button-4> [list [namespace current]::PlaceLabelBar $twm $frame -5]
-			bind $w <Button-5> [list [namespace current]::PlaceLabelBar $twm $frame +5]
-		}
 		aqua {
-			bind $w <MouseWheel> [list [namespace current]::PlaceLabelBar $twm $frame [list expr {-(%D)}]]
-		}
-		win32 {
 			bind $w <MouseWheel> \
-				[list [namespace current]::PlaceLabelBar $twm $frame [list expr {-(%D/120)*5)}]]
+				[format {%s::PlaceLabelBar %s %s [expr {-(%%D)}]} [namespace current] $twm $frame]
+		}
+		default {
+			bind $w <MouseWheel> \
+				[format {%s::PlaceLabelBar %s %s [expr {%%D > 0 ? -5 : 5}]} [namespace current] $twm $frame]
 		}
 	}
 }

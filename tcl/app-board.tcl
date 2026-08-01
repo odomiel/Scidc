@@ -186,12 +186,9 @@ proc build {w width height} {
 	::bind $canv <<FontSizeChanged>> [list after idle [namespace code Redraw]]
 
 	foreach {bind canvas} [list ::bind $canv ::bind $border ::board::diagram::bind $board] {
-		if {[tk windowingsystem] eq "x11"} {
-			$bind $canvas <Button-4> [namespace code [list goto -1]]
-			$bind $canvas <Button-5> [namespace code [list goto +1]]
-		} else {
-			$bind $canvas <MouseWheel> [namespace code [list goto [expr {%D < 0 ? +1 : -1}]]]
-		}
+		# Tk 9: unter X11 kommt das Rad als <MouseWheel> mit %D = +-120
+		# (tkEvent.c); <Button-4>/<Button-5> feuern dafuer nicht mehr.
+		$bind $canvas <MouseWheel> [namespace code {goto [expr {%D > 0 ? -1 : +1}]}]
 	}
 
 	::board::diagram::bind $board all <Enter>					{ ::move::enterSquare %q }

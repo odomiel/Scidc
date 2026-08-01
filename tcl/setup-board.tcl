@@ -716,12 +716,10 @@ proc open {parent} {
 	}
 
 	set c [::board::diagram::canvas $board]
-	if {[tk windowingsystem] eq "x11"} {
-		bind $c <Button-4> [namespace code [list NextPiece $::util::shiftMask 1]]
-		bind $c <Button-5> [namespace code [list NextPiece 0 1]]
-	} else {
-		bind $c <MouseWheel> [namespace code [list NextPiece [expr {%D < 0 ? $::util::shiftMask : 0}] 1]]
-	}
+	# Tk 9: unter X11 kommt das Rad als <MouseWheel> mit %D = +-120 (tkEvent.c);
+	# <Button-4>/<Button-5> feuern dafuer nicht mehr.
+	bind $c <MouseWheel> \
+		[namespace code {NextPiece [expr {%D > 0 ? $::util::shiftMask : 0}] 1}]
 
 	# panel ###################################################
 	set bcanv [::board::diagram::canvas $board]

@@ -354,10 +354,12 @@ proc table {args} {
 	::bind $table.t <<FontSizeChanged>>	[namespace code [list FontSizeChanged $table]]
 
 	if {[tk windowingsystem] eq "x11"} {
-		::table::bind $table <Button-4> [namespace code [list ScrollHorz $table.t -10 %s]]
-		::table::bind $table <Button-4> {+ break }
-		::table::bind $table <Button-5> [namespace code [list ScrollHorz $table.t +10 %s]]
-		::table::bind $table <Button-5> {+ break }
+		# Tk 9 setzt unter X11 die Mausrad-Knoepfe 4-7 selbst in <MouseWheel>
+		# mit %D = +-120 um (tkEvent.c); <Button-4>/<Button-5> werden fuer das
+		# Rad nicht mehr zugestellt. %D > 0 entspricht dem frueheren Button-4.
+		::table::bind $table <MouseWheel> [namespace code \
+			[format {ScrollHorz %s [expr {%%D > 0 ? -10 : 10}] %%s} $table.t]]
+		::table::bind $table <MouseWheel> {+ break }
 	} else {
 		::table::bind $table <MouseWheel> [namespace code [list \
 			[list ScrollHorz $table.t {[expr {%D < 0 ? -10 : 10}]} %s]]]

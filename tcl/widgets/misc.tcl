@@ -59,25 +59,26 @@ proc focusPrev {w prev} { set [namespace current]::Priv(prev:$w) $prev }
 
 
 proc bindMouseWheel {w {number 5} {units "units"}} {
+	# Tk 9 setzt unter X11 die Mausrad-Knoepfe 4-7 selbst in <MouseWheel> mit
+	# %D = +-120 um (tkEvent.c); <Button-4>/<Button-5> werden fuer das Rad nicht
+	# mehr zugestellt, X11 rechnet damit wie Windows. Die Skripte werden mit
+	# format zusammengesetzt, damit $number und $units beim *Binden* eingesetzt
+	# werden -- in geschweiften Klammern waeren sie zur Ereigniszeit unbekannt.
 	switch [tk windowingsystem] {
-		x11 {
-			bind $w <Button-4> [list %W yview scroll -$number $units]
-			bind $w <Button-5> [list %W yview scroll +$number $units]
-		}
 		aqua {
-			bind $w <MouseWheel> { %W yview scroll [expr {-(%D)}] $units }
+			bind $w <MouseWheel> [format {%%W yview scroll [expr {-(%%D)}] %s} $units]
 		}
 		win32 {
-			bind $w <MouseWheel> { %W yview scroll [expr {-(%D/120)*max(1,$number - 1)}] $units }
+			bind $w <MouseWheel> [format {%%W yview scroll [expr {-(%%D/120)*%d}] %s} \
+				[expr {max(1, $number - 1)}] $units]
+		}
+		default {
+			bind $w <MouseWheel> [format {%%W yview scroll [expr {-(%%D/120)*%d}] %s} \
+				$number $units]
 		}
 	}
 	if {[string first . $w] >= 0} {
-		if {[tk windowingsystem] eq "x11"} {
-			bind $w <Button-4> {+ break }
-			bind $w <Button-5> {+ break }
-		} else {
-			bind $w <MouseWheel> {+ break }
-		}
+		bind $w <MouseWheel> {+ break }
 	}
 }
 

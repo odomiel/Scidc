@@ -591,23 +591,22 @@ proc BindMouseWheel {w recv} {
 
 	set units $($w:wheelunits)
 
+	# Tk 9 stellt unter X11 kein <Button-4>/<Button-5> mehr fuer das Rad zu,
+	# sondern <MouseWheel> mit %D = +-120 (tkEvent.c). Der Rechenausdruck wird
+	# als geklammertes Listenelement uebergeben, damit %D erst beim Ereignis
+	# ersetzt wird -- vorher lief [expr ...] bereits beim Binden und haette
+	# mit dem Literal %D gerechnet.
 	switch [tk windowingsystem] {
-		x11 {
-			bind $recv <Button-4> [namespace code [list Yview $w scroll -$units units]]
-			bind $recv <Button-5> [namespace code [list Yview $w scroll +$units units]]
-			bind $recv <Button-4> {+ break }
-			bind $recv <Button-5> {+ break }
-		}
 		aqua {
-			bind $recv <MouseWheel> [namespace code [list Yview $w scroll [expr {-(%D)}] units]]
-			bind $recv <MouseWheel> {+ break }
+			bind $recv <MouseWheel> [namespace code \
+				[format {Yview %s scroll [expr {-(%%D)}] units} $w]]
 		}
-		win32 {
-			bind $recv <MouseWheel> \
-				[namespace code [list Yview $w scroll [expr {-(%D/120)*max(1, $units - 1)}] units]]
-			bind $recv <MouseWheel> {+ break }
+		default {
+			bind $recv <MouseWheel> [namespace code \
+				[format {Yview %s scroll [expr {-(%%D/120)*%d}] units} $w $units]]
 		}
 	}
+	bind $recv <MouseWheel> {+ break }
 }
 
 

@@ -116,12 +116,10 @@ proc open {parent base variant info view index {fen {}}} {
 	set dlg $parent.browser$position
 	lappend Priv($base:$variant:$number:$view) $dlg
 	tk::toplevel $dlg -class Scidc
-	if {[tk windowingsystem] eq "x11"} {
-		bind $dlg <Button-4> [namespace code [list Goto $position -1]]
-		bind $dlg <Button-5> [namespace code [list Goto $position +1]]
-	} else {
-		bind $dlg <MouseWheel> [namespace code [list Goto $position [expr {%D < 0 ? +1 : -1}]]]
-	}
+	# Tk 9: unter X11 kommt das Rad als <MouseWheel> mit %D = +-120 (tkEvent.c);
+	# <Button-4>/<Button-5> feuern dafuer nicht mehr.
+	bind $dlg <MouseWheel> [namespace code \
+		[format {Goto %s [expr {%%D > 0 ? -1 : +1}]} $position]]
 	namespace eval [namespace current]::${position} {}
 	variable ${position}::Vars
 

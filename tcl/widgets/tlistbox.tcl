@@ -57,8 +57,9 @@ bind TListBox <Key-space>	[namespace code { SelectActive %W }]
 
 switch [tk windowingsystem] {
 	x11 {
-		bind TListBox <Button-4> { %W yview scroll -1 units }
-		bind TListBox <Button-5> { %W yview scroll +1 units }
+		# Tk 9 stellt unter X11 kein <Button-4>/<Button-5> mehr fuer das Rad zu,
+		# sondern <MouseWheel> mit %D = +-120 (tkEvent.c).
+		bind TListBox <MouseWheel> { %W yview scroll [expr {%D > 0 ? -1 : 1}] units }
 	}
 	aqua {
 		bind TreeCtrl <MouseWheel> { %W yview scroll [expr {-(%D)}] units }

@@ -199,12 +199,14 @@ proc build {path columns args} {
 	::bind $tb.t <ButtonRelease-1>	+[namespace code [list MoveRow $tb %x %y]]
 
 	if {[tk windowingsystem] eq "x11"} {
-		::table::bind $tb <Button-4> [namespace code [list MouseWheel $path up 10 %s]]
-		::table::bind $tb <Button-4> {+ break }
-		::table::bind $tb <Button-5> [namespace code [list MouseWheel $path down 10 %s]]
-		::table::bind $tb <Button-5> {+ break }
-		::table::bind $tb <Control-Button-4> [namespace code [list MouseWheel $path back]]
-		::table::bind $tb <Control-Button-5> [namespace code [list MouseWheel $path forward]]
+		# Tk 9 setzt unter X11 die Mausrad-Knoepfe 4-7 selbst in <MouseWheel>
+		# mit %D = +-120 um (tkEvent.c); <Button-4>/<Button-5> werden fuer das
+		# Rad nicht mehr zugestellt. %D > 0 entspricht dem frueheren Button-4.
+		::table::bind $tb <MouseWheel> [namespace code \
+			[format {MouseWheel %s [expr {%%D > 0 ? "up" : "down"}] 10 %%s} $path]]
+		::table::bind $tb <MouseWheel> {+ break }
+		::table::bind $tb <Control-MouseWheel> [namespace code \
+			[format {MouseWheel %s [expr {%%D > 0 ? "back" : "forward"}]} $path]]
 	} else {
 		::table::bind $tb <MouseWheel> [namespace code [list \
 			[list MouseWheel $path {[expr {%D < 0 ? "up" : "down"}]} 10]]]
