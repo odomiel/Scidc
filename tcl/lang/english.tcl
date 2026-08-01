@@ -3236,4 +3236,47 @@
 ### web ################################################################
 ::web::mc::SaveFile "Save File"
 
+
+# Engine download
+::engine::download::mc::Title	"Download Engines"
+::engine::download::mc::Engine	"Engine"
+::engine::download::mc::Version	"Version"
+::engine::download::mc::State	"State"
+::engine::download::mc::Size	"Size"
+::engine::download::mc::Processor	"Processor"
+::engine::download::mc::Installed	"installed"
+::engine::download::mc::NotInstalled	"not installed"
+::engine::download::mc::Newer	"update available"
+::engine::download::mc::Download	"Download"
+::engine::download::mc::Remove	"Remove"
+::engine::download::mc::CheckForUpdates	"Search for newer versions"
+::engine::download::mc::ProjectPage	"Project page"
+::engine::download::mc::Downloading	"Downloading %s (%s)..."
+::engine::download::mc::Verifying	"Checking the checksum..."
+::engine::download::mc::Extracting	"Extracting..."
+::engine::download::mc::Registering	"Registering engine..."
+::engine::download::mc::Succeeded	"%s has been installed."
+::engine::download::mc::Failed	"Installation of %s failed: %s"
+::engine::download::mc::Removed	"%s has been removed."
+::engine::download::mc::NoDownloader	"Neither wget nor curl was found."
+::engine::download::mc::NoChecksumTool	"No program for SHA-256 checksums was found."
+::engine::download::mc::ChecksumMismatch	"The checksum of the downloaded file does not match. The file has been discarded."
+::engine::download::mc::NoSuitableBuild	"The catalog contains no build suitable for this processor."
+::engine::download::mc::CatalogMissing	"The engine catalog was not found: %s"
+::engine::download::mc::NoNetwork	"The project page could not be reached."
+::engine::download::mc::Checking	"Querying %s..."
+::engine::download::mc::UpToDate	"All engines are up to date."
+::engine::download::mc::FoundNewer	"%s %s is available (catalog: %s)."
+::engine::download::mc::UpdateHint	"Newer versions cannot be installed automatically because no checksum exists for them yet. Please report the finding."
+::engine::download::mc::ReallyRemove	"Really remove %s?"
+
+# Welcome dialog (first start)
+::application::mc::WelcomeTitle	"Welcome to Scidc"
+::application::mc::WelcomeLanguage	"Language"
+::application::mc::WelcomeEngines	"Chess engines"
+::application::mc::WelcomeEngineHint	"Engines are needed to analyse games. They are fetched directly from the pages of their original projects and can be added or removed later under Settings, Engines."
+::application::mc::WelcomeDownload	"Download selected"
+::application::mc::WelcomeLater	"Later"
+::application::mc::WelcomeNoCatalog	"The engine catalog was not found - engines can be installed later under Settings, Engines."
+
 # vi:set ts=3 sw=3:

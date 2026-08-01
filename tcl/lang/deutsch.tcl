@@ -3292,4 +3292,14 @@ set ::playerdict::mc::WebSource			"Webquelle"
 ::engine::download::mc::UpdateHint	"Neuere Versionen lassen sich nicht selbsttätig installieren, weil für sie noch keine Prüfsumme vorliegt. Bitte den Fund melden."
 ::engine::download::mc::ReallyRemove	"%s wirklich entfernen?"
 
+
+# Willkommensfenster beim ersten Start
+::application::mc::WelcomeTitle	"Willkommen bei Scidc"
+::application::mc::WelcomeLanguage	"Sprache"
+::application::mc::WelcomeEngines	"Schach-Engines"
+::application::mc::WelcomeEngineHint	"Engines werden für die Analyse von Partien benötigt. Sie werden direkt von den Seiten ihrer Originalprojekte geladen und lassen sich später unter Einstellungen, Motoren ergänzen oder entfernen."
+::application::mc::WelcomeDownload	"Ausgewählte herunterladen"
+::application::mc::WelcomeLater	"Später"
+::application::mc::WelcomeNoCatalog	"Der Motorenkatalog wurde nicht gefunden - Engines lassen sich später unter Einstellungen, Motoren einrichten."
+
 # vi:set ts=3 sw=3:

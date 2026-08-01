@@ -50,7 +50,13 @@ set Changed						"Games changed: %d"
 set Added						"Games added: %d"
 set DescriptionHasChanged	"Description has changed"
 
-set EngineDownloadMsg		"No chess engine is set up yet. Engines are needed for game analysis.\nShall the available engines be shown for download?"
+set WelcomeTitle			"Welcome to Scidc"
+set WelcomeLanguage		"Language"
+set WelcomeEngines		"Chess engines"
+set WelcomeEngineHint	"Engines are needed to analyse games. They are fetched directly from the pages of their original projects and can be added or removed later under Settings, Engines."
+set WelcomeDownload		"Download selected"
+set WelcomeLater			"Later"
+set WelcomeNoCatalog	"The engine catalog was not found - engines can be installed later under Settings, Engines."
 
 } ;# namespace mc
 
@@ -874,51 +880,204 @@ proc UpdateSettingsText {w} {
 }
 
 
-proc ChooseLanguage {parent} {
-	variable ::country::icon::flag
+# Willkommensfenster beim allerersten Start: Sprachwahl und Motorenauswahl in
+# einem Schritt. Frueher waren das zwei aufeinanderfolgende Dialoge.
+proc Welcome {parent} {
+	variable Vars
 
 	if {!$::scidc::dir::setup} { return }
+
 	wm protocol $parent WM_DELETE_WINDOW {#}
-	set dlg $parent.lang
+	set dlg $parent.welcome
+	catch { destroy $dlg }
 	tk::toplevel $dlg -class Scidc
 	wm withdraw $dlg
-	set top [tk::frame $dlg.top -border 2 -relief raised]
-	pack $top
-	set r 0
-	foreach lang [lsort [array names ::mc::input]] {
-		if {[string length $lang]} {
-			set icon ""
-			catch { set icon $flag([set ::mc::langToCountry([set ::mc::lang$lang])]) }
-			if {[string length $icon] == 0} { set icon none }
-			set code [set ::mc::lang$lang]
-			ttk::button $top.$code \
-				-style aligned.TButton \
-				-text " $lang" \
-				-image $icon \
-				-compound left \
-				-command [namespace code [list SetupLang $code]] \
+
+	set Vars(welcome:dlg) $dlg
+	set Vars(welcome:status) ""
+	set Vars(welcome:busy) 0
+
+	set top [tk::frame $dlg.top -border 2 -relief raised -padx 12 -pady 10]
+	pack $top -fill both -expand yes
+
+	ttk::label $top.title -font TkHeadingFont
+	grid $top.title -row 0 -column 0 -columnspan 4 -sticky w -pady {0 8}
+
+	### Sprache ###########################################################
+	ttk::label $top.llang
+	grid $top.llang -row 1 -column 0 -sticky w -pady {0 2}
+
+	set lf [tk::frame $top.langs -takefocus 0]
+	grid $lf -row 2 -column 0 -columnspan 4 -sticky w -pady {0 8}
+	WelcomeLanguages $lf
+
+	grid [ttk::separator $top.sep1 -orient horizontal] \
+		-row 3 -column 0 -columnspan 4 -sticky ew -pady {0 8}
+
+	### Motoren ###########################################################
+	ttk::label $top.lengines
+	grid $top.lengines -row 4 -column 0 -columnspan 4 -sticky w
+
+	ttk::label $top.hint -wraplength 420 -justify left
+	grid $top.hint -row 5 -column 0 -columnspan 4 -sticky w -pady {2 6}
+
+	set row 6
+	set Vars(welcome:ids) {}
+	if {[::engine::download::loadCatalog]} {
+		foreach entry [::engine::download::catalog] {
+			array set en $entry
+			set id $en(Id)
+			lappend Vars(welcome:ids) $id
+			# Stockfish ist vorausgewaehlt - die uebliche Analyse-Engine.
+			set Vars(welcome:sel:$id) [expr {$id eq "stockfish"}]
+			set build [::engine::download::selectBuild $entry]
+			set size [expr {[llength $build] ? [::engine::download::FormatSize [lindex $build 4]] : "-"}]
+
+			ttk::checkbutton $top.c$id \
+				-text $en(Name) \
+				-variable [namespace current]::Vars(welcome:sel:$id) \
 				;
-			grid $top.$code -column 1 -row [incr r 1]
-			bind $top.$code <Return>	{ event generate %W <Key-space>; break }
-			bind $top.$code <Down>		{ focus [tk_focusNext [focus]] }
-			bind $top.$code <Up>			{ focus [tk_focusPrev [focus]] }
+			ttk::label $top.v$id -text $en(Version)
+			ttk::label $top.z$id -text $size -anchor e
+			grid $top.c$id -row $row -column 0 -sticky w -padx {0 12}
+			grid $top.v$id -row $row -column 1 -sticky w -padx {0 12}
+			grid $top.z$id -row $row -column 2 -sticky e
+			incr row
+			array unset en
 		}
+	} else {
+		ttk::label $top.nocat -text $mc::WelcomeNoCatalog -wraplength 420 -justify left
+		grid $top.nocat -row $row -column 0 -columnspan 4 -sticky w
+		incr row
 	}
+
+	grid [ttk::separator $top.sep2 -orient horizontal] \
+		-row $row -column 0 -columnspan 4 -sticky ew -pady {8 4}
+	incr row
+	ttk::label $top.status -textvar [namespace current]::Vars(welcome:status) -anchor w
+	grid $top.status -row $row -column 0 -columnspan 4 -sticky ew
+	incr row
+
+	### Knoepfe ###########################################################
+	set bf [tk::frame $top.buttons -takefocus 0]
+	grid $bf -row $row -column 0 -columnspan 4 -sticky e -pady {8 0}
+	ttk::button $bf.download -command [namespace code [list WelcomeDownload $dlg]]
+	ttk::button $bf.later    -command [namespace code [list WelcomeClose $dlg]]
+	pack $bf.download -side left -padx {0 6}
+	pack $bf.later    -side left
+	set Vars(welcome:button:download) $bf.download
+	set Vars(welcome:button:later) $bf.later
+
+	if {[llength $Vars(welcome:ids)] == 0} { $bf.download configure -state disabled }
+
+	WelcomeRelabel $dlg
+
+	grid columnconfigure $top 3 -weight 1
 	wm resizable $dlg no no
 	wm transient $dlg $parent
+	wm title $dlg $mc::WelcomeTitle
 	::util::place $dlg -parent $parent -position center
 	update idletasks
-	::scidc::tk::wm frameless $dlg
 	wm deiconify $dlg
-	focus $top.en
 	::ttk::grabWindow $dlg
-	vwait ::mc::langID
+	tkwait window $dlg
 	::ttk::releaseGrab $dlg
-	catch { destroy $dlg }
-	::mc::setLang $::mc::langID
+
 	wm protocol $parent WM_DELETE_WINDOW [namespace code shutdown]
 	focus -force .application
 }
+
+
+proc WelcomeLanguages {frame} {
+	variable ::country::icon::flag
+
+	set col 0
+	foreach lang [lsort [array names ::mc::input]] {
+		if {[string length $lang] == 0} { continue }
+		set icon ""
+		catch { set icon $flag([set ::mc::langToCountry([set ::mc::lang$lang])]) }
+		if {[string length $icon] == 0} { set icon none }
+		set code [set ::mc::lang$lang]
+		ttk::button $frame.$code \
+			-style aligned.TButton \
+			-text " $lang" \
+			-image $icon \
+			-compound left \
+			-command [namespace code [list WelcomeSetLang $code]] \
+			;
+		grid $frame.$code -row 0 -column $col -padx {0 4}
+		incr col
+	}
+}
+
+
+# Sprache sofort umschalten und die Beschriftungen des Fensters erneuern -
+# frueher schloss die Sprachwahl den Dialog.
+proc WelcomeSetLang {code} {
+	variable Vars
+
+	SetupLang $code
+	catch { ::mc::setLang $code }
+	if {[info exists Vars(welcome:dlg)] && [winfo exists $Vars(welcome:dlg)]} {
+		WelcomeRelabel $Vars(welcome:dlg)
+	}
+}
+
+
+proc WelcomeRelabel {dlg} {
+	variable Vars
+
+	set top $dlg.top
+	catch { $top.title configure -text $mc::WelcomeTitle }
+	catch { $top.llang configure -text "$mc::WelcomeLanguage:" }
+	catch { $top.lengines configure -text "$mc::WelcomeEngines:" }
+	catch { $top.hint configure -text $mc::WelcomeEngineHint }
+	catch { $top.nocat configure -text $mc::WelcomeNoCatalog }
+	catch { $Vars(welcome:button:download) configure -text $mc::WelcomeDownload }
+	catch { $Vars(welcome:button:later) configure -text $mc::WelcomeLater }
+	catch { wm title $dlg $mc::WelcomeTitle }
+}
+
+
+proc WelcomeDownload {dlg} {
+	variable Vars
+
+	if {$Vars(welcome:busy)} { return }
+
+	set wanted {}
+	foreach id $Vars(welcome:ids) {
+		if {$Vars(welcome:sel:$id)} { lappend wanted $id }
+	}
+	if {[llength $wanted] == 0} { return [WelcomeClose $dlg] }
+
+	set Vars(welcome:busy) 1
+	catch { $Vars(welcome:button:download) configure -state disabled }
+	catch { $Vars(welcome:button:later) configure -state disabled }
+	::widget::busyCursor on
+
+	foreach id $wanted {
+		catch { ::engine::download::install $dlg $id [namespace code WelcomeStatus] }
+	}
+
+	::widget::busyCursor off
+	set Vars(welcome:busy) 0
+	WelcomeClose $dlg
+}
+
+
+proc WelcomeStatus {text} {
+	variable Vars
+	set Vars(welcome:status) $text
+	update idletasks
+}
+
+
+proc WelcomeClose {dlg} {
+	variable Vars
+	if {$Vars(welcome:busy)} { return }
+	catch { destroy $dlg }
+}
+
 
 
 proc SetupLang {langID} {
@@ -986,32 +1145,11 @@ proc Startup {main args} {
 }
 
 
-proc OfferEngineDownload {parent} {
-	# Nur beim allerersten Start, und nur wenn noch keine Engine eingerichtet
-	# ist. Der eigentliche Bezug laeuft ueber den Katalogdialog, der die
-	# Programme direkt von den Seiten der Originalprojekte holt; der frueher
-	# hier eingebaute Direktdownload aus dem eigenen Repository ist entfallen.
-	if {!$::scidc::dir::setup} { return }
-	if {[llength $::engine::Engines]} { return }
-
-	set reply [::dialog::question \
-		-parent $parent \
-		-message $mc::EngineDownloadMsg \
-		-default yes \
-	]
-	if {$reply ne "yes"} { return }
-
-	catch { ::engine::download::open $parent }
-}
-
-
 proc Startup2 {} {
 	set app .application
 	set nb $app.nb
 
-	ChooseLanguage $app
-	set Vars(engdl:done) 0
-	OfferEngineDownload $app
+	Welcome $app
 	::load::writeLog
 	update idletasks
 	set ::scidc::intern::blocked 0
