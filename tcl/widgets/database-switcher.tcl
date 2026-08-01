@@ -1554,13 +1554,18 @@ proc Properties {w id popup} {
 								{Result 0-1} resDraw {Result 1/2-1/2} resLost {Result 0-0}
 								resNone {Result *}} {
 
+		# Tcl 9 loest "mc::X" nur noch relativ zum aktuellen Namensraum auf und
+		# faellt nicht mehr auf ::mc zurueck. Von den Namen dieser Liste liegt
+		# einzig "Variant" global, daher der ausdrueckliche Rueckfall -- der
+		# unten war schon da, wurde aber nicht benutzt.
 		if {[llength $var] == 1} {
 			if {[info exists mc::$var]} { set txt [set mc::$var] } else { set txt [set ::mc::$var] }
-			$label $f.l$name -text "[set mc::$var]:" {*}$options
+			$label $f.l$name -text "$txt:" {*}$options
 		} else {
 			lassign $var v extension
 			if {$v eq "Result"} { set extension [::util::formatResult $extension] }
-			$label $f.l$name -text "[set mc::$v] $extension:" {*}$options
+			if {[info exists mc::$v]} { set txt [set mc::$v] } else { set txt [set ::mc::$v] }
+			$label $f.l$name -text "$txt $extension:" {*}$options
 		}
 		$label $f.t$name -justify left {*}$options
 		if {!$popup} {

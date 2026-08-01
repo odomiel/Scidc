@@ -509,7 +509,7 @@ proc load {parent position base args} {
 				::dialog::error \
 					-parent $parent \
 					-message $::import::mc::AbortedDueToInternalError \
-					-detail "$mc::InternalMessage: \"$opts(-errorinfo)\"" \
+					-detail "$::mc::InternalMessage: \"$opts(-errorinfo)\"" \
 					;
 			}
 			return 0

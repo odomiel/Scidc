@@ -1244,7 +1244,7 @@ proc EmbedButtons {numEntries w} {
 	variable colors_
 	variable current_
 
-	set l [tk::label $w.page -text $mc::Page]
+	set l [tk::label $w.page -text $::mc::Page]
 	grid $l -row 1 -column 1 -sticky s
 	grid columnconfigure $w 2 -minsize $::theme::padx
 	set numPages [expr {($numEntries + $MaxPerPage - 1)/$MaxPerPage}]
@@ -1324,9 +1324,9 @@ proc EmbedUnsavedLayouts {unsaved showVariants w infoFont alertFont} {
 		set hdr [ttk::frame $top.hdr -borderwidth 0]
 		grid $hdr -row 1 -column 1 -sticky ew
 		set tab [::mc::stripAmpersand [set [namespace parent]::mc::Tab($id)]]
-		set l0 [ttk::label $hdr.l0-${id} -font $infoFont  -text "${mc::Tab}: "]
+		set l0 [ttk::label $hdr.l0-${id} -font $infoFont  -text "${::mc::Tab}: "]
 		set l1 [ttk::label $hdr.l1-${id} -font $alertFont -text $tab]
-		set l2 [ttk::label $hdr.l2-${id} -font $infoFont  -text " \u2212 $mc::Layout: "]
+		set l2 [ttk::label $hdr.l2-${id} -font $infoFont  -text " \u2212 $::mc::Layout: "]
 		set l3 [ttk::label $hdr.l3-${id} -font $alertFont -text $Options($id:layout:name)]
 		pack $l0 $l1 $l2 $l3 -side left
 		if {[string length $description]} {

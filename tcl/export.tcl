@@ -721,9 +721,9 @@ proc open {parent args} {
 						annotation AnnotationSetup
 						encoding EncodingSetup}
 		if {[info exists Info(title)]} {
-			set initialfile "$mc::Game-$Info(title)"
+			set initialfile "$::mc::Game-$Info(title)"
 		} else {
-			set initialfile "$mc::Game-$Info(index)"
+			set initialfile "$::mc::Game-$Info(index)"
 		}
 	} else {
 		set Values(Type) scidb

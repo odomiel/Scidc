@@ -812,8 +812,8 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 						tk::label $f.lused -text "$mc::Open:"
 						tk::label $f.tused -text $open
 						if {$ext eq ".sci"} {
-							tk::label $f.lvariant -text "$mc::Variant:"
-							tk::label $f.tvariant -text $mc::VariantName($variant)
+							tk::label $f.lvariant -text "$::mc::Variant:"
+							tk::label $f.tvariant -text $::mc::VariantName($variant)
 						}
 						if {$ext ne ".zip"} {
 							tk::label $f.ldescr -text "$::database::switcher::mc::Description:"

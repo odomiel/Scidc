@@ -89,10 +89,10 @@ proc buildText {reason result toMove termination variant} {
 		}
 		less-material {
 			if {$toMove eq "white" && $result eq "1-0"} {
-				return [format $mc::Termination($termination) $mc::White]
+				return [format $mc::Termination($termination) $::mc::White]
 			}
 			if {$toMove eq "black" && $result eq "0-1"} {
-				return [format $mc::Termination($termination) $mc::Black]
+				return [format $mc::Termination($termination) $::mc::Black]
 			}
 		}
 		default {
@@ -121,10 +121,10 @@ proc buildText {reason result toMove termination variant} {
 		TimeForfeit {
 			switch $result {
 				1-0 {
-					return [format $mc::Reason(TimeForfeit) $mc::Black]
+					return [format $mc::Reason(TimeForfeit) $::mc::Black]
 				}
 				0-1 {
-					return [format $mc::Reason(TimeForfeit) $mc::White]
+					return [format $mc::Reason(TimeForfeit) $::mc::White]
 				}
 				1/2-1/2	{
 					switch  $termination {
@@ -136,11 +136,11 @@ proc buildText {reason result toMove termination variant} {
 							}
 						}
 						white {
-							set mapping [list %causer $mc::Black %opponent $mc::White]
+							set mapping [list %causer $::mc::Black %opponent $::mc::White]
 							return [string map $mapping $mc::Reason(TimeForfeit,remis)]
 						}
 						black {
-							set mapping [list %causer $mc::White %opponent $mc::Black]
+							set mapping [list %causer $::mc::White %opponent $::mc::Black]
 							return [string map $mapping $mc::Reason(TimeForfeit,remis)]
 						}
 						default {

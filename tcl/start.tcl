@@ -734,7 +734,7 @@ proc catchException {cmd {resultVar {}} {optionsVar {}}} {
 			::dialog::error \
 				-parent .application \
 				-message $msg \
-				-detail "$mc::InternalMessage: \"[string toupper $what 0 0]\"" \
+				-detail "$::mc::InternalMessage: \"[string toupper $what 0 0]\"" \
 				-topmost 1 \
 				;
 			return 2

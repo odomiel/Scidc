@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b11 Beta"
+	set version "26.08.01 b12 Beta"
 }
 
 
@@ -1346,7 +1346,7 @@ proc catchException {cmd {resultVar {}} {optionsVar {}}} {
 			::dialog::error \
 				-parent .application \
 				-message $msg \
-				-detail "$mc::InternalMessage: \"[string toupper $what 0 0]\"" \
+				-detail "$::mc::InternalMessage: \"[string toupper $what 0 0]\"" \
 				-topmost 1 \
 				;
 			return 2
@@ -39696,8 +39696,8 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 						tk::label $f.lused -text "$mc::Open:"
 						tk::label $f.tused -text $open
 						if {$ext eq ".sci"} {
-							tk::label $f.lvariant -text "$mc::Variant:"
-							tk::label $f.tvariant -text $mc::VariantName($variant)
+							tk::label $f.lvariant -text "$::mc::Variant:"
+							tk::label $f.tvariant -text $::mc::VariantName($variant)
 						}
 						if {$ext ne ".zip"} {
 							tk::label $f.ldescr -text "$::database::switcher::mc::Description:"
@@ -63725,10 +63725,10 @@ proc buildText {reason result toMove termination variant} {
 		}
 		less-material {
 			if {$toMove eq "white" && $result eq "1-0"} {
-				return [format $mc::Termination($termination) $mc::White]
+				return [format $mc::Termination($termination) $::mc::White]
 			}
 			if {$toMove eq "black" && $result eq "0-1"} {
-				return [format $mc::Termination($termination) $mc::Black]
+				return [format $mc::Termination($termination) $::mc::Black]
 			}
 		}
 		default {
@@ -63757,10 +63757,10 @@ proc buildText {reason result toMove termination variant} {
 		TimeForfeit {
 			switch $result {
 				1-0 {
-					return [format $mc::Reason(TimeForfeit) $mc::Black]
+					return [format $mc::Reason(TimeForfeit) $::mc::Black]
 				}
 				0-1 {
-					return [format $mc::Reason(TimeForfeit) $mc::White]
+					return [format $mc::Reason(TimeForfeit) $::mc::White]
 				}
 				1/2-1/2	{
 					switch  $termination {
@@ -63772,11 +63772,11 @@ proc buildText {reason result toMove termination variant} {
 							}
 						}
 						white {
-							set mapping [list %causer $mc::Black %opponent $mc::White]
+							set mapping [list %causer $::mc::Black %opponent $::mc::White]
 							return [string map $mapping $mc::Reason(TimeForfeit,remis)]
 						}
 						black {
-							set mapping [list %causer $mc::White %opponent $mc::Black]
+							set mapping [list %causer $::mc::White %opponent $::mc::Black]
 							return [string map $mapping $mc::Reason(TimeForfeit,remis)]
 						}
 						default {
@@ -77685,11 +77685,12 @@ proc Properties {w id popup} {
 
 		if {[llength $var] == 1} {
 			if {[info exists mc::$var]} { set txt [set mc::$var] } else { set txt [set ::mc::$var] }
-			$label $f.l$name -text "[set mc::$var]:" {*}$options
+			$label $f.l$name -text "$txt:" {*}$options
 		} else {
 			lassign $var v extension
 			if {$v eq "Result"} { set extension [::util::formatResult $extension] }
-			$label $f.l$name -text "[set mc::$v] $extension:" {*}$options
+			if {[info exists mc::$v]} { set txt [set mc::$v] } else { set txt [set ::mc::$v] }
+			$label $f.l$name -text "$txt $extension:" {*}$options
 		}
 		$label $f.t$name -justify left {*}$options
 		if {!$popup} {
@@ -103783,7 +103784,7 @@ proc ChooseLanguage {parent} {
 	vwait ::mc::langID
 	::ttk::releaseGrab $dlg
 	catch { destroy $dlg }
-	::mc::setLang $mc::langID
+	::mc::setLang $::mc::langID
 	wm protocol $parent WM_DELETE_WINDOW [namespace code shutdown]
 	focus -force .application
 }
@@ -126935,7 +126936,7 @@ proc EmbedButtons {numEntries w} {
 	variable colors_
 	variable current_
 
-	set l [tk::label $w.page -text $mc::Page]
+	set l [tk::label $w.page -text $::mc::Page]
 	grid $l -row 1 -column 1 -sticky s
 	grid columnconfigure $w 2 -minsize $::theme::padx
 	set numPages [expr {($numEntries + $MaxPerPage - 1)/$MaxPerPage}]
@@ -127015,9 +127016,9 @@ proc EmbedUnsavedLayouts {unsaved showVariants w infoFont alertFont} {
 		set hdr [ttk::frame $top.hdr -borderwidth 0]
 		grid $hdr -row 1 -column 1 -sticky ew
 		set tab [::mc::stripAmpersand [set [namespace parent]::mc::Tab($id)]]
-		set l0 [ttk::label $hdr.l0-${id} -font $infoFont  -text "${mc::Tab}: "]
+		set l0 [ttk::label $hdr.l0-${id} -font $infoFont  -text "${::mc::Tab}: "]
 		set l1 [ttk::label $hdr.l1-${id} -font $alertFont -text $tab]
-		set l2 [ttk::label $hdr.l2-${id} -font $infoFont  -text " \u2212 $mc::Layout: "]
+		set l2 [ttk::label $hdr.l2-${id} -font $infoFont  -text " \u2212 $::mc::Layout: "]
 		set l3 [ttk::label $hdr.l3-${id} -font $alertFont -text $Options($id:layout:name)]
 		pack $l0 $l1 $l2 $l3 -side left
 		if {[string length $description]} {
@@ -133858,9 +133859,9 @@ proc open {parent args} {
 						annotation AnnotationSetup
 						encoding EncodingSetup}
 		if {[info exists Info(title)]} {
-			set initialfile "$mc::Game-$Info(title)"
+			set initialfile "$::mc::Game-$Info(title)"
 		} else {
-			set initialfile "$mc::Game-$Info(index)"
+			set initialfile "$::mc::Game-$Info(index)"
 		}
 	} else {
 		set Values(Type) scidb
@@ -148552,7 +148553,7 @@ proc load {parent position base args} {
 				::dialog::error \
 					-parent $parent \
 					-message $::import::mc::AbortedDueToInternalError \
-					-detail "$mc::InternalMessage: \"$opts(-errorinfo)\"" \
+					-detail "$::mc::InternalMessage: \"$opts(-errorinfo)\"" \
 					;
 			}
 			return 0
