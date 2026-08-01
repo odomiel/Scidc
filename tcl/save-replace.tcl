@@ -2801,11 +2801,14 @@ proc Log {_ arguments} {
 proc TruncateValue {top tag value {field ""}} {
 	set str $value
 
-	while {[string bytelength $str] > 255} {
+	# Tcl 9 kennt "string bytelength" nicht mehr. Gemeint ist die Laenge in
+	# Bytes, weil das Datenbankfeld auf 255 Byte begrenzt ist -- nicht die
+	# Zeichenzahl. [encoding convertto utf-8] liefert genau das.
+	while {[string length [encoding convertto utf-8 $str]] > 255} {
 		set str [string range $str 0 end-1]
 	}
 
-	if {[string bytelength $value] > 255} {
+	if {[string length [encoding convertto utf-8 $value]] > 255} {
 		set msg [string map [list %value% $value %trunc% $str] $mc::StringTooLong]
 		uplevel [list lappend warnings [MakeMessage $top $tag $msg $field]]
 	}

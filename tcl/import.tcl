@@ -870,7 +870,13 @@ proc SetFigurines {position} {
 
 			default {
 				set figurine [string map {" " ""} $figurine]
-				if {[string bytelength $figurine] == 6} {
+				# Tcl 9 kennt "string bytelength" nicht mehr; hier steht die
+				# Byte- statt der Zeichenzahl, damit sich die Auswahlliste nicht
+				# aendert. ACHTUNG: die Pruefung meint erkennbar "sechs Figuren",
+				# zaehlt aber Bytes -- Saetze mit nicht-lateinischen Buchstaben
+				# (bg, el, ru ...) haben sechs Zeichen, aber zwoelf Bytes und
+				# fallen dadurch heraus. Das war schon unter Tcl 8.6 so.
+				if {[string length [encoding convertto utf-8 $figurine]] == 6} {
 					lappend Priv($position:sets) [list $lang [::encoding::languageName $lang] $figurine]
 				}
 			}

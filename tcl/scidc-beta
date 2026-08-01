@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b10 Beta"
+	set version "26.08.01 b11 Beta"
 }
 
 
@@ -132744,11 +132744,11 @@ proc Log {_ arguments} {
 proc TruncateValue {top tag value {field ""}} {
 	set str $value
 
-	while {[string bytelength $str] > 255} {
+	while {[string length [encoding convertto utf-8 $str]] > 255} {
 		set str [string range $str 0 end-1]
 	}
 
-	if {[string bytelength $value] > 255} {
+	if {[string length [encoding convertto utf-8 $value]] > 255} {
 		set msg [string map [list %value% $value %trunc% $str] $mc::StringTooLong]
 		uplevel [list lappend warnings [MakeMessage $top $tag $msg $field]]
 	}
@@ -137770,7 +137770,7 @@ proc SetFigurines {position} {
 
 			default {
 				set figurine [string map {" " ""} $figurine]
-				if {[string bytelength $figurine] == 6} {
+				if {[string length [encoding convertto utf-8 $figurine]] == 6} {
 					lappend Priv($position:sets) [list $lang [::encoding::languageName $lang] $figurine]
 				}
 			}
