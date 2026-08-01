@@ -1516,7 +1516,13 @@ Database::exportGames(	Destination& destination,
 	M_REQUIRE(gameFilter.size() == size());
 	M_REQUIRE(	destination.variant() == variant()
 				|| (isScidFormat(format()) && destination.variant() == variant::ThreeCheck));
-	M_REQUIRE(!illegalRejected || !isScidFormat(destination.format()));
+	// Die Bedingung war invertiert: der aufrufende exportGames-Ueberladung
+	// (weiter oben) *verlangt* illegalRejected fuer Scid-Ziele und reicht den
+	// Wert hierher durch - womit sich beide Zusicherungen ausschlossen und
+	// jedes Kopieren in eine SI3/SI4/SI5-Datenbank scheiterte. Der Zaehler ist
+	// genau dafuer da, Partien mit illegalen Zuegen auszusortieren (siehe
+	// unten), die diese Formate nicht speichern koennen.
+	M_REQUIRE(illegalRejected || !isScidFormat(destination.format()));
 
 	enum { MaxWarnings = 40 };
 
@@ -1598,7 +1604,10 @@ Database::exportGames(	Destination& destination,
 		}
 		else
 		{
-			++illegalRejected;
+			// Zuvor "++illegalRejected" - das erhoehte den *Zeiger* statt des
+			// Zaehlers. Der Zweig war durch die invertierte Zusicherung oben nie
+			// erreichbar, sonst waere der Zeiger aus dem Ziel gelaufen.
+			++*illegalRejected;
 		}
 	}
 

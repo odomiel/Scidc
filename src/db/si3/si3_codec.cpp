@@ -1390,7 +1390,12 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	round->incrRef(); event->incrRef();
 	item.m_event = event;
 
-	item.m_gameOffset = (uint64_t(offsetHigh) << 32) | offsetLow;
+	// Offsets jenseits von 4 GB lassen sich in m_gameOffset (32 Bit) nicht
+	// darstellen. Bisher wurde der zusammengesetzte 64-Bit-Wert stillschweigend
+	// gekuerzt und zeigte damit auf eine falsche Stelle der Datei.
+	if (offsetHigh != 0)
+		IO_RAISE(Index, Corrupted, "game offset exceeds 4 GB (not supported)");
+	item.m_gameOffset = offsetLow;
 	item.setGameRecordLength(gameLen);
 	item.m_gameFlags  = flags >> 3;
 	item.m_positionId = (flags & flags::Non_Standard_Start) ? 0 : variant::Standard;
@@ -1509,8 +1514,14 @@ Codec::encodeIndexSi5(GameInfo const& item, unsigned index, ByteStream& buf)
 	uint32_t halfMoves = mstl::min(unsigned(item.m_plyCount), 0x3FFu);
 
 	// Game offset and length
-	uint32_t offsetLow  = (uint32_t)(item.m_gameOffset & 0xFFFFFFFF);
-	uint32_t offsetHigh = (uint32_t)(item.m_gameOffset >> 32) & 0x7FFF;
+	// m_gameOffset ist 32 Bit breit, der hohe Anteil ist damit immer 0. Das
+	// frueher hier stehende ">> 32" auf einen 32-Bit-Wert ist undefiniert; x86
+	// nimmt die Schiebeweite modulo 32 und lieferte deshalb die *unteren* 15 Bit
+	// des Offsets. Scidc selbst fiel das nicht auf, weil der Lesepfad den
+	// zusammengesetzten Wert wieder auf 32 Bit kuerzt - ein fremder SI5-Leser
+	// bekaeme aber einen voellig falschen Offset.
+	uint32_t offsetLow  = item.m_gameOffset;
+	uint32_t offsetHigh = 0;
 	uint32_t gameLen    = item.gameRecordLength() & 0x1FFFF;
 
 	// HomePawns
