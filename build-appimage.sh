@@ -50,6 +50,20 @@ if [ ! -f "$TCLTKDIR/lib/$TCL_LIB" ] || [ ! -f "$TCLTKDIR/lib/$TK_LIB" ]; then
     exit 1
 fi
 
+# --- Versionspruefung (einmal je Tag) ----------------------------------------
+# Meldet neuere Engine-Versionen (Katalog tcl/engines/downloads.dat) sowie
+# neuere Ausgaben der gepinnten Abhaengigkeiten Tcl/Tk und minizip-ng. Rein
+# informativ - ein fehlender Netzzugang darf den Build nicht aufhalten.
+UPDATE_STAMP="deps/.update-check"
+UPDATE_TODAY=$(date +%Y-%m-%d)
+if [ "$(cat "$UPDATE_STAMP" 2>/dev/null)" != "$UPDATE_TODAY" ] \
+   && command -v python3 >/dev/null 2>&1 \
+   && [ -f tools/check-updates.py ]; then
+    python3 tools/check-updates.py || true
+    mkdir -p "$(dirname "$UPDATE_STAMP")"
+    echo "$UPDATE_TODAY" > "$UPDATE_STAMP"
+fi
+
 # --- Schritt 0: AppDir/usr/share/ beim ersten Mal aus Source-Tree befüllen --
 if [ ! -d "$SHAREDIR" ]; then
     echo "Erstmaliger Build: befülle AppDir/usr/share/scidc-beta/ ..."
