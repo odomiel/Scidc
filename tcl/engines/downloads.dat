@@ -1,6 +1,13 @@
 # Scidc engine download catalog
-# Erzeugt aus den Release-Daten der Originalprojekte.
-# Die SHA-256 stammen aus GitHubs digest-Feld bzw. wurden beim Erstellen berechnet.
+#
+# Erzeugt von tools/make-engine-catalog.py aus den Release-Daten der
+# Originalprojekte. Nicht von Hand bearbeiten - die Engine-Tabelle steht
+# im Skript.
+#
+# Je Engine eine feste Version; die SHA-256 stammen aus GitHubs
+# digest-Feld bzw. wurden beim Erzeugen berechnet. Jede geladene Datei
+# wird dagegen geprueft, bevor sie ausfuehrbar gemacht wird.
+#
 # Syntax: Tcl language format
 
 set ::engine::download::Catalog {

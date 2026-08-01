@@ -39,3 +39,4 @@ lizenzübersicht.txt
 fehler/
 migration.txt
 deps/.update-check
+__pycache__/
