@@ -108,7 +108,7 @@ proc ::TreeCtrl::IsSensitive {T x y} {
 
 proc ::TreeCtrl::FileListButton1 {T x y mode} {
     variable Priv
-    set TreeCtrl::Priv(selectMode) $mode
+    set Priv(selectMode) $mode
     focus $T
     set id [$T identify $x $y]
     set marquee 0

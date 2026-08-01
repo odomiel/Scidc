@@ -108,7 +108,7 @@ proc WidgetProc {w command args} {
 
 		invoke {
 			if {[$w cget -state] ne "disabled"} {
-				{*}[set ttk::entrybuttonbox::${w}::Vars(-command)]
+				{*}[set ::ttk::entrybuttonbox::${w}::Vars(-command)]
 			}
 			return
 		}

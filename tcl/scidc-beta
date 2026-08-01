@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b2 Beta"
+	set version "26.08.01 b3 Beta"
 }
 
 
@@ -7339,7 +7339,11 @@ proc ::tk::PostOverPoint {menu x y {entry {}}}  {
     }
     $menu post $x $y
     ### FIX begin ################################################################
-    set tk::Priv(menu:window) $menu
+    # Voll qualifizieren: innerhalb von ::tk wuerde "tk::Priv" relativ zu
+    # ::tk::tk::Priv aufgeloest. Tcl 8.6 fiel dann noch auf den globalen
+    # Namensraum zurueck, Tcl 9 tut das nicht mehr und wirft
+    # "parent namespace doesn't exist".
+    set ::tk::Priv(menu:window) $menu
     ### FIX end ##################################################################
     if {$entry ne "" && [$menu entrycget $entry -state] ne "disabled"} {
 	$menu activate $entry
@@ -8886,7 +8890,7 @@ proc ::TreeCtrl::IsSensitive {T x y} {
 
 proc ::TreeCtrl::FileListButton1 {T x y mode} {
     variable Priv
-    set TreeCtrl::Priv(selectMode) $mode
+    set Priv(selectMode) $mode
     focus $T
     set id [$T identify $x $y]
     set marquee 0
@@ -60606,7 +60610,7 @@ proc WidgetProc {w command args} {
 
 		invoke {
 			if {[$w cget -state] ne "disabled"} {
-				{*}[set ttk::entrybuttonbox::${w}::Vars(-command)]
+				{*}[set ::ttk::entrybuttonbox::${w}::Vars(-command)]
 			}
 			return
 		}

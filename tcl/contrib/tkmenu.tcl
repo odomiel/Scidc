@@ -1369,7 +1369,11 @@ proc ::tk::PostOverPoint {menu x y {entry {}}}  {
     }
     $menu post $x $y
     ### FIX begin ################################################################
-    set tk::Priv(menu:window) $menu
+    # Voll qualifizieren: innerhalb von ::tk wuerde "tk::Priv" relativ zu
+    # ::tk::tk::Priv aufgeloest. Tcl 8.6 fiel dann noch auf den globalen
+    # Namensraum zurueck, Tcl 9 tut das nicht mehr und wirft
+    # "parent namespace doesn't exist".
+    set ::tk::Priv(menu:window) $menu
     ### FIX end ##################################################################
     if {$entry ne "" && [$menu entrycget $entry -state] ne "disabled"} {
 	$menu activate $entry
