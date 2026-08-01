@@ -21,6 +21,8 @@
 #include "tkTreeCtrl.h"
 #include "../tk_compat.h"
 
+#include <limits.h>
+
 typedef struct TreeColumn_ TreeColumn_;
 
 typedef struct UniformGroup {
@@ -2039,6 +2041,48 @@ renumber:
 /*
  *----------------------------------------------------------------------
  *
+ * Column_NormalizeNullPixels --
+ *
+ *		Tk 9 legt bei einer TK_OPTION_PIXELS-Option mit TK_OPTION_NULL_OK
+ *		den Sentinel INT_MIN im Integer-Feld ab, wenn der Wert leer ist
+ *		(tkConfig.c: "newPixels = INT_MIN"). Tk 8.6 hinterliess dort 0.
+ *		TkTreeCtrl ist gegen die alte Zusage geschrieben und prueft an
+ *		mehreren Stellen auf 0 im Sinne von "nicht gesetzt" -- unter anderem
+ *		bei der Ermittlung der Spaltenbreite, wo der Sentinel sonst als
+ *		Breite uebernommen wird (sichtbar als Spalte der Breite INT_MIN).
+ *		Der Zustand "nicht gesetzt" wird hier ohnehin ueber den Tcl_Obj-Zeiger
+ *		gefuehrt (siehe TreeColumn_Width/MinWidth/MaxWidth), das Integer-Feld
+ *		darf also gefahrlos auf den alten Vertrag zurueckgesetzt werden.
+ *
+ * Results:
+ *		None.
+ *
+ * Side effects:
+ *		Betroffene Integer-Felder der Spalte werden auf 0 gesetzt.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static void
+Column_NormalizeNullPixels(
+	TreeColumn column			/* Column record. */
+	)
+{
+	if (column->width == INT_MIN)
+		column->width = 0;
+	if (column->minWidth == INT_MIN)
+		column->minWidth = 0;
+	if (column->maxWidth == INT_MIN)
+		column->maxWidth = 0;
+#ifdef DEPRECATED
+	if (column->stepWidth == INT_MIN)
+		column->stepWidth = 0;
+#endif
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * Column_Config --
  *
  *		This procedure is called to process an objc/objv list to set
@@ -2085,6 +2129,8 @@ Column_Config(
 				mask = 0;
 				continue;
 			}
+
+			Column_NormalizeNullPixels(column);
 
 			/* Wouldn't have to do this if Tk_InitOptions() would return
 			 * a mask of configured options like Tk_SetOptions() does. */
@@ -2361,6 +2407,7 @@ Column_Alloc(
 		WFREE(column, TreeColumn_);
 		return NULL;
 	}
+	Column_NormalizeNullPixels(column);
 #if 0
 	if (Tk_SetOptions(header->tree->interp, (char *) column,
 				column->optionTable, 0,
