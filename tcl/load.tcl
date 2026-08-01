@@ -86,7 +86,18 @@ proc source {path args} {
 	if {$opts(-throw)} {
 		uplevel ::source {*}$enc [list $path]
 	} elseif {[catch {uplevel ::source {*}$enc [list $path]} err]} {
-		lappend Log error [format $mc::FileIsCorrupt $path] error $err
+		# Tcl 9 liest Dateien mit dem Profil "strict". Ein einzelnes Latin-1-Byte
+		# in einer Alt-Datei (z.B. das "e" mit Akzent in themes/Jose.dat) laesst
+		# source scheitern. Der Fehler faellt beim *Lesen* an, es wurde also noch
+		# nichts ausgefuehrt -- ein zweiter Versuch mit Latin-1 ist gefahrlos.
+		# Latin-1 (nicht "-profile replace"), damit der gemeinte Text entsteht
+		# und nicht U+FFFD.
+		if {	[lrange $::errorCode 0 1] eq {POSIX EILSEQ}
+			&& ![catch {uplevel ::source -encoding iso8859-1 [list $path]}]} {
+			if {[string length $msg]} { lappend Log info "$msg: $path" }
+		} else {
+			lappend Log error [format $mc::FileIsCorrupt $path] error $err
+		}
 	} elseif {[string length $msg]} {
 		lappend Log info "$msg: $path"
 	}

@@ -143,6 +143,19 @@ set CannotOverwriteTheme "Cannot overwrite theme %s."
 
 variable Updated 0
 
+# Alt-Themedateien sind teils Latin-1 kodiert, Tcl 9 liest aber strikt
+# UTF-8. Erst UTF-8 versuchen, dann Latin-1 -- so entsteht der gemeinte
+# Text (z.B. "Jose" mit Akzent) und nicht U+FFFD wie bei "-profile replace".
+proc ReadLines {path} {
+	set f [::open $path rb]
+	set data [::read $f]
+	::close $f
+	if {[catch { set text [encoding convertfrom -profile strict utf-8 $data] }]} {
+		set text [encoding convertfrom iso8859-1 $data]
+	}
+	return [split [string map [list \r\n \n \r \n] $text] \n]
+}
+
 proc update {} {
 	variable Updated
 
@@ -165,7 +178,7 @@ proc update {} {
 			{Glass|1243787890671|yellow.color|gregor}
 			{Goldenrod|1243765848112|yellow.color|gregor}
 			{Gray|1248527850611|yellow.color|gregor}
-			{Jos�|1243683856813|yellow.color|gregor}
+			{José|1243683856813|yellow.color|gregor}
 			{Kitsch|1422390619103|purple|gregor}
 			{Kunterbunt|1250851039023|yellow.color|gregor}
 			{Marble - Brown|1243532376507|yellow.color|gregor}
@@ -268,11 +281,7 @@ proc update {} {
 				set ignore 0
 			} else {
 				set ignore 1
-				set f [open $file r]
-				# Tcl 9 liest Kanaele mit dem Profil "strict"; Alt-Themedateien
-				# enthalten teils Latin-1-Bytes und wuerden den Start abbrechen.
-				catch { fconfigure $f -profile replace }
-				while {[gets $f line] >= 0} {
+				foreach line [ReadLines $file] {
 					if {[string match *identifier* $line]} {
 						if {	[regexp {[{](.*)[}]} $line _ identifier]
 							|| [regexp {identifier[ \t]+([^ \t]+)} $line _ identifier]} {
@@ -280,16 +289,13 @@ proc update {} {
 						}
 					}
 				}
-				close $f
 			}
 			if {!$ignore} {
 				set overwrite 1
 				set path [file join $themesDir [file tail $file]]
 				if {[file exists $path]} {
 					set exisiting 0
-					set f [open $path r]
-					catch { fconfigure $f -profile replace }
-					while {[gets $f line] >= 0} {
+					foreach line [ReadLines $path] {
 						if {[string match *identifier* $line]} {
 							if {	[regexp {[{](.*)[}]} $line _ identifier]
 								|| [regexp {identifier[ \t]+([^ \t]+)} $line _ identifier]} {
@@ -301,7 +307,6 @@ proc update {} {
 						puts stderr [format $mc::CannotOverwriteTheme $path]
 						set overwrite 0
 					}
-					close $f
 				}
 				if {$overwrite} {
 					catch { file copy -force $file $path }
