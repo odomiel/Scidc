@@ -120,17 +120,22 @@ uninstall-scripts:
 		fi;                                                                                      \
 	fi
 
+# Nur die Dateien, die zur Laufzeit tatsaechlich gelesen werden. Frueher stand
+# hier "data/*.*", was das gesamte Verzeichnis mitinstallierte - auch reine
+# Bau-Eingaben (eco.orig), die Konvertierskripte und historische Ratinglisten,
+# die kein Codepfad mehr oeffnet. Wer hier etwas ergaenzt, pruefe zuerst, ob
+# load.tcl (oder ein anderer Aufrufer von ::scidc::app::load) die Datei anfasst.
+RUNTIME_DATA = eco.bin engines.txt cities.txt players_list.zip
+
 install-data:
 	@echo "Install data"
 	@install -m 755 -d $(SHAREDIR)/data
-	@install -m 644 -p data/eco.bin $(SHAREDIR)/data
-	@install -m 644 -p data/*.* $(SHAREDIR)/data
+	@for f in $(RUNTIME_DATA); do install -m 644 -p data/$$f $(SHAREDIR)/data; done
 
 uninstall-data:
 	@echo "Uninstall data files"
 	@if [ -d $(SHAREDIR)/data ]; then                                                     \
-		rm -f $(SHAREDIR)/data/eco.bin;                                                    \
-		for f in `ls data/*.*`; do rm -f $(SHAREDIR)/$$f; done;                            \
+		for f in $(RUNTIME_DATA); do rm -f $(SHAREDIR)/data/$$f; done;                     \
 		if [ "`find $(SHAREDIR)/data -type d -empty`" = "`ls -d $(SHAREDIR)/data`" ]; then \
 			rmdir $(SHAREDIR)/data;                                                         \
 		fi;                                                                                \

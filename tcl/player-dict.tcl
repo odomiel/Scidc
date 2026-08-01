@@ -1370,10 +1370,10 @@ proc ShowDataSources {dlg} {
 		? $fide_user \
 		: [file join $::scidc::dir::data players_list.zip]}]
 
-	set dwz_user [file join $::scidc::dir::user dwz-ratings.txt]
-	set dwz_path [expr {[file exists $dwz_user] \
-		? $dwz_user \
-		: [file join $::scidc::dir::data dwz-ratings.txt]}]
+	# Keinen Rueckfall auf data/dwz-ratings.txt: die mitgelieferte Datei ist im
+	# Altformat und wird von load.tcl bewusst nicht geladen. Sie hier als Quelle
+	# auszuweisen liesse den Dialog DWZ-Werte behaupten, die es nicht gibt.
+	set dwz_path [file join $::scidc::dir::user dwz-ratings.txt]
 
 	set sources [list \
 		[list [format $::load::mc::RatingList FIDE] $fide_path \

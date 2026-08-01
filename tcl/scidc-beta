@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b25 Beta"
+	set version "26.08.01 b26 Beta"
 }
 
 
@@ -103186,10 +103186,7 @@ proc ShowDataSources {dlg} {
 		? $fide_user \
 		: [file join $::scidc::dir::data players_list.zip]}]
 
-	set dwz_user [file join $::scidc::dir::user dwz-ratings.txt]
-	set dwz_path [expr {[file exists $dwz_user] \
-		? $dwz_user \
-		: [file join $::scidc::dir::data dwz-ratings.txt]}]
+	set dwz_path [file join $::scidc::dir::user dwz-ratings.txt]
 
 	set sources [list \
 		[list [format $::load::mc::RatingList FIDE] $fide_path \
