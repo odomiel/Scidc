@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b5 Beta"
+	set version "26.08.01 b6 Beta"
 }
 
 
@@ -146402,8 +146402,7 @@ proc DisplayAbout {w} {
 		<font style='font-family: $fam; font-size: 12pt;'>
 			$mc::Version $::scidc::version<br/>
 			Copyright &#x00A9; 2008-2018 Gregor Cramer<br/>
-			Copyright &#x00A9; 2026 Mirik<br/>
-			[Url https://codeberg.org/Mirik/Scidc]<br/><br/>
+			Copyright &#x00A9; 2026 Mirik<br/><br/>
 $mc::Distributed<br/><br/>
 		</font>
 	"

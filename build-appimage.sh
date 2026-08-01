@@ -92,7 +92,7 @@ strip           "$APPDIR/usr/bin/tkscidc-beta"
 cp "$TCLSCRIPT" "$APPDIR/usr/bin/scidc-beta"
 
 # Engines werden nicht ins AppImage gebündelt – das Programm bietet beim
-# ersten Start an sie von Codeberg herunterzuladen.
+# ersten Start an sie herunterzuladen.
 
 # --- Schritt 3a: Tcl/Tk aus lokalem Build ------------------------------------
 echo "Kopiere Tcl/Tk $TCLTK_VERSION..."
