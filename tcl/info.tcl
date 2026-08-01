@@ -442,7 +442,7 @@ proc DisplayContributions {w} {
 				<tr height='7'></tr>
 
 				<tr><td colspan='2'>[Name {Frank David}]</td></tr>
-				<tr><td>\u2001</td><td>[Enc {Chess Olé}]</td></tr>
+				<tr><td>\u2001</td><td>[Name {Chess Olé}]</td></tr>
 				<tr><td>\u2001</td><td>[Url http://www.enpassant.dk/chess/fonteng.htm]</td></tr>
 				<tr height='7'></tr>
 
@@ -658,8 +658,12 @@ proc BuildLicenseFrame {w} {
 
 
 proc Url {url}		{ return "<a href='$url'>$url</a>" }
-proc Enc {name}	{ return [encoding convertfrom utf-8 $name] }
-proc Name {name}	{ return [Enc $name] }
+# Frueher wurden Quelldateien in der Systemkodierung gelesen, sodass die
+# UTF-8-Bytes des Quelltexts hier als Einzelzeichen ankamen und ein zweites
+# Mal dekodiert werden mussten. Tcl 9 liest Quelldateien selbst als UTF-8 --
+# die Namen sind bereits korrekt, und ein erneutes convertfrom scheitert am
+# Profil "strict" ("unexpected byte sequence ... '\xB7'").
+proc Name {name}	{ return $name }
 
 
 set License \

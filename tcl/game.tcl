@@ -924,7 +924,10 @@ proc recover {parent} {
 				set header [split $content "\n"]
 				lassign {"" "" "" ""} line1 line2 line3 line4
 				lassign $header line1 line2 line3 line4
-				if {$line1 eq [encoding convertfrom identity "\xef\xbb\xbf"]} {
+				# Tcl 9 kennt die Kodierung "identity" nicht mehr. Die Datei wird
+				# oben als UTF-8 gelesen, ein BOM kommt also als einzelnes U+FEFF
+				# an; die alte 3-Zeichen-Form wird weiterhin erkannt.
+				if {$line1 in [list \uFEFF \u00EF\u00BB\u00BF]} {
 					set line1 $line2; set line2 $line3; set line3 $line4
 				}
 				set line1 [string range $line1 2 end]

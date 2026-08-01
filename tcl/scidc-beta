@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b4 Beta"
+	set version "26.08.01 b5 Beta"
 }
 
 
@@ -146676,7 +146676,7 @@ proc DisplayContributions {w} {
 				<tr height='7'></tr>
 
 				<tr><td colspan='2'>[Name {Frank David}]</td></tr>
-				<tr><td>\u2001</td><td>[Enc {Chess Olé}]</td></tr>
+				<tr><td>\u2001</td><td>[Name {Chess Olé}]</td></tr>
 				<tr><td>\u2001</td><td>[Url http://www.enpassant.dk/chess/fonteng.htm]</td></tr>
 				<tr height='7'></tr>
 
@@ -146891,8 +146891,12 @@ proc BuildLicenseFrame {w} {
 
 
 proc Url {url}		{ return "<a href='$url'>$url</a>" }
-proc Enc {name}	{ return [encoding convertfrom utf-8 $name] }
-proc Name {name}	{ return [Enc $name] }
+# Frueher wurden Quelldateien in der Systemkodierung gelesen, sodass die
+# UTF-8-Bytes des Quelltexts hier als Einzelzeichen ankamen und ein zweites
+# Mal dekodiert werden mussten. Tcl 9 liest Quelldateien selbst als UTF-8 --
+# die Namen sind bereits korrekt, und ein erneutes convertfrom scheitert am
+# Profil "strict" ("unexpected byte sequence ... '\xB7'").
+proc Name {name}	{ return $name }
 
 
 set License \
@@ -148983,7 +148987,10 @@ proc recover {parent} {
 				set header [split $content "\n"]
 				lassign {"" "" "" ""} line1 line2 line3 line4
 				lassign $header line1 line2 line3 line4
-				if {$line1 eq [encoding convertfrom identity "\xef\xbb\xbf"]} {
+				# Tcl 9 kennt die Kodierung "identity" nicht mehr. Die Datei wird
+				# oben als UTF-8 gelesen, ein BOM kommt also als einzelnes U+FEFF
+				# an; die alte 3-Zeichen-Form wird weiterhin erkannt.
+				if {$line1 in [list \uFEFF \u00EF\u00BB\u00BF]} {
 					set line1 $line2; set line2 $line3; set line3 $line4
 				}
 				set line1 [string range $line1 2 end]
@@ -150705,21 +150712,18 @@ proc welcomeToScidb {parent} {
 proc notYetImplemented {parent what} {
 
 
-	set hdr(de) [Enc "Noch nicht implementiert."]
-	set hdr(en) [Enc "Not yet implemented."]
-	set hdr(es) [Enc "Aún no implementado."]
-	set hdr(it) [Enc "Non ancora implementato."]
+	set hdr(de) "Noch nicht implementiert."
+	set hdr(en) "Not yet implemented."
+	set hdr(es) "Aún no implementado."
+	set hdr(it) "Non ancora implementato."
 
-	set msg(de) [Enc "Diese Funktionalität ist noch nicht implementiert worden, sie dient nur zur Voransicht."]
-	set msg(en) [Enc "This functionality is not yet implemented. This is only a preview."]
-	set msg(es) [Enc "Esta función aún no fue implementada. Esta es sólo una muestra preliminar."]
-	set msg(it) [Enc "Questa funzione non è ancora implementata. Questa è solo un'anteprima."]
+	set msg(de) "Diese Funktionalität ist noch nicht implementiert worden, sie dient nur zur Voransicht."
+	set msg(en) "This functionality is not yet implemented. This is only a preview."
+	set msg(es) "Esta función aún no fue implementada. Esta es sólo una muestra preliminar."
+	set msg(it) "Questa funzione non è ancora implementata. Questa è solo un'anteprima."
 
 	::dialog::info -message $hdr($::mc::langID) -detail $msg($::mc::langID) -parent $parent
 }
-
-
-proc Enc {s} { return [encoding convertfrom utf-8 $s] }
 
 
 proc WriteOptions {chan} {

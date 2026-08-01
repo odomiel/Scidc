@@ -56,22 +56,19 @@ proc notYetImplemented {parent what} {
 
 #	if {[info exists NotYetImplemented($what)]} { return }
 
-	set hdr(de) [Enc "Noch nicht implementiert."]
-	set hdr(en) [Enc "Not yet implemented."]
-	set hdr(es) [Enc "Aún no implementado."]
-	set hdr(it) [Enc "Non ancora implementato."]
+	set hdr(de) "Noch nicht implementiert."
+	set hdr(en) "Not yet implemented."
+	set hdr(es) "Aún no implementado."
+	set hdr(it) "Non ancora implementato."
 
-	set msg(de) [Enc "Diese Funktionalität ist noch nicht implementiert worden, sie dient nur zur Voransicht."]
-	set msg(en) [Enc "This functionality is not yet implemented. This is only a preview."]
-	set msg(es) [Enc "Esta función aún no fue implementada. Esta es sólo una muestra preliminar."]
-	set msg(it) [Enc "Questa funzione non è ancora implementata. Questa è solo un'anteprima."]
+	set msg(de) "Diese Funktionalität ist noch nicht implementiert worden, sie dient nur zur Voransicht."
+	set msg(en) "This functionality is not yet implemented. This is only a preview."
+	set msg(es) "Esta función aún no fue implementada. Esta es sólo una muestra preliminar."
+	set msg(it) "Questa funzione non è ancora implementata. Questa è solo un'anteprima."
 
 	::dialog::info -message $hdr($::mc::langID) -detail $msg($::mc::langID) -parent $parent
 #	set NotYetImplemented($what) 1
 }
-
-
-proc Enc {s} { return [encoding convertfrom utf-8 $s] }
 
 
 proc WriteOptions {chan} {
