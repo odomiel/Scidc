@@ -451,7 +451,11 @@ proc openBase {parent file byUser args} {
 	variable Vars
 	variable RecentFiles
 
-	set file [file normalize $file]
+	# Zuletzt benutzte Dateien werden mit "~" fuer das Home-Verzeichnis gefuehrt
+	# (siehe recentFiles). Tcl 9 expandiert "~" nicht mehr (TIP 602), [file
+	# normalize] machte daraus <cwd>/~/... - die Datei war dann nicht lesbar
+	# und der Aufruf endete im Fehlerdialog "Datei kann nicht geoeffnet werden".
+	set file [file normalize [file tildeexpand $file]]
 	if {[string length [set ext [file extension $file]]]} {
 		set ext [::scidc::misc::mapExtension $ext]
 		set file "[file rootname $file].$ext"
