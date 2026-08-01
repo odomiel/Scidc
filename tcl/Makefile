@@ -111,6 +111,7 @@ SOURCES = \
 	comment.tcl \
 	marks.tcl \
 	engine.tcl \
+	engine-download.tcl \
 	player-dict.tcl \
 	application.tcl \
 	app-information.tcl \

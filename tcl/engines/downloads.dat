@@ -1,0 +1,123 @@
+# Scidc engine download catalog
+# Erzeugt aus den Release-Daten der Originalprojekte.
+# Die SHA-256 stammen aus GitHubs digest-Feld bzw. wurden beim Erstellen berechnet.
+# Syntax: Tcl language format
+
+set ::engine::download::Catalog {
+	{
+		Id			stockfish
+		Name		"Stockfish"
+		Author		"The Stockfish developers"
+		Homepage	https://stockfishchess.org
+		Repo		official-stockfish/Stockfish
+		Version		"18"
+		Tag			sf_18
+		Protocol	UCI
+		Archive		tar
+		Extract		binary
+		Target		stockfish
+		Builds {
+			{avx512icl {avx512vbmi avx512vnni} stockfish-ubuntu-x86-64-avx512icl.tar 444e3fff9a5ee66961f917f947083d956b2468da9e531d589a9a4981e437657c 114401280 {stockfish/stockfish-ubuntu-x86-64-avx512icl}}
+			{avx512 {avx512f} stockfish-ubuntu-x86-64-avx512.tar 9ddf29d8589d65cbf4b444c29241e711fccac24e6e9f5452480bb9a2e0fddd83 114391040 {stockfish/stockfish-ubuntu-x86-64-avx512}}
+			{bmi2 {avx2 bmi2} stockfish-ubuntu-x86-64-bmi2.tar 7b200a3cd8ae6e2b07386cd213058edc91faf05ff77db68604d2f5143c56b69e 114391040 {stockfish/stockfish-ubuntu-x86-64-bmi2}}
+			{avx2 {avx2} stockfish-ubuntu-x86-64-avx2.tar 536c0c2c0cf06450df0bfb5e876ef0d3119950703a8f143627f990c7b5417964 114401280 {stockfish/stockfish-ubuntu-x86-64-avx2}}
+			{sse41-popcnt {sse4_1 popcnt} stockfish-ubuntu-x86-64-sse41-popcnt.tar dea5016a6d9ab705e5697b093d882fca4677d84d8828f470ee33e76de33cf962 114401280 {stockfish/stockfish-ubuntu-x86-64-sse41-popcnt}}
+			{generic {} stockfish-ubuntu-x86-64.tar 5c6f38b02a4da5f3ffe763f27da6c3e743eebefd92b50cb3661623b96696adff 114391040 {stockfish/stockfish-ubuntu-x86-64}}
+		}
+	}
+	{
+		Id			fairy-stockfish
+		Name		"Fairy-Stockfish"
+		Author		"Fabian Fichter"
+		Homepage	https://fairy-stockfish.github.io
+		Repo		fairy-stockfish/Fairy-Stockfish
+		Version		"14"
+		Tag			fairy_sf_14
+		Protocol	UCI
+		Archive		plain
+		Extract		binary
+		Target		fairy-stockfish
+		Builds {
+			{bmi2 {avx2 bmi2} fairy-stockfish-largeboard_x86-64-bmi2 543ee304ae99e9509f91578b001433745030a02912053f21f4c3452891eef34d 2469296 {}}
+			{modern {sse4_1 popcnt} fairy-stockfish-largeboard_x86-64-modern 6532b3dc7d4f2098b946b919216758b4bad2efdee21475deeb1a557670bf520c 2506888 {}}
+			{generic {} fairy-stockfish-largeboard_x86-64 41b8b4d539adfd9924929ee4a948d1a37dd1e9beaa535a811cb5e7fee9e4cb99 2527680 {}}
+		}
+	}
+	{
+		Id			rubichess
+		Name		"RubiChess"
+		Author		"Andreas Matthies"
+		Homepage	https://github.com/Matthies/RubiChess
+		Repo		Matthies/RubiChess
+		Version		"20240817"
+		Tag			20240817
+		Protocol	UCI
+		Archive		zip
+		Extract		binary
+		Target		rubichess
+		Builds {
+			{avx512 {avx512f} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-avx512}}
+			{bmi2 {avx2 bmi2} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-bmi2}}
+			{avx2 {avx2} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-avx2}}
+			{modern {sse4_1 popcnt} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64-modern}}
+			{generic {} RubiChess-20240817.zip 03f613173cdd34998d8a01e972d8348791d11369c1506e96cc33467a1666bf86 31417660 {RubiChess-20240817/linux/RubiChess-20240817_x86-64}}
+		}
+	}
+	{
+		Id			stormphrax
+		Name		"Stormphrax"
+		Author		"Ciekce"
+		Homepage	https://github.com/Ciekce/Stormphrax
+		Repo		Ciekce/Stormphrax
+		Version		"8.0.0"
+		Tag			v8.0.0
+		Protocol	UCI
+		Archive		plain
+		Extract		binary
+		Target		stormphrax
+		Builds {
+			{avx512 {avx512f} stormphrax-8.0.0-avx512 52fca8502216c16e71349b189ceccd06cd325f7e268cfd405c7a8e76ecf99592 56790072 {}}
+			{zen2 {avx2 bmi2} stormphrax-8.0.0-zen2 ecee60443f1a6c098654048e941f068b59b2e506a09194f22ce0d10546bfbc4f 56721168 {}}
+			{avx2-bmi2 {avx2 bmi2} stormphrax-8.0.0-avx2-bmi2 01aa7cfa6135a5ddd24ad80a85945b0b1c310d7f1f3fb41e3bea4951f38ef8f7 56785872 {}}
+		}
+	}
+	{
+		Id			viridithas
+		Name		"Viridithas"
+		Author		"Cosmo Bobak"
+		Homepage	https://github.com/cosmobobak/viridithas
+		Repo		cosmobobak/viridithas
+		Version		"20.0.0"
+		Tag			v20.0.0
+		Protocol	UCI
+		Archive		plain
+		Extract		binary
+		Target		viridithas
+		Builds {
+			{x86-64-v4 {avx512f} viridithas-20-linux-x86-64-v4 226d650fc73a7a7c6cef56a495e55a1e8ea8b68d89fc2257c3c2c968c729ab17 57814624 {}}
+			{x86-64-v3 {avx2 bmi2} viridithas-20-linux-x86-64-v3 eb53de2fde546f3ba294407e3e8986dc3859bb1818f2ef4cf2fd85d077779973 57800608 {}}
+		}
+	}
+	{
+		Id			arasan
+		Name		"Arasan"
+		Author		"Jon Dart"
+		Homepage	https://www.arasanchess.org
+		Repo		jdart1/arasan-chess
+		Version		"26.0"
+		Tag			v26.0
+		Protocol	UCI
+		Archive		tar.gz
+		Extract		all
+		Target		arasanx-64
+		Builds {
+			{avx512 {avx512f} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx512}}
+			{avx2-bmi2 {avx2 bmi2} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx2-bmi2}}
+			{avx2 {avx2} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx2}}
+			{modern {sse4_1 popcnt} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-modern}}
+			{generic {} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64}}
+		}
+	}
+}
+
+# vi:set ts=3 sw=3:

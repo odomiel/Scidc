@@ -70,6 +70,8 @@ cp tcl/lang/*.tcl "$SHAREDIR/lang/"
 
 # Engines-Konfiguration synchronisieren
 cp tcl/engines/engines.dat "$SHAREDIR/engines/engines.dat"
+# Download-Katalog der Engines (gepinnte Versionen samt SHA-256)
+cp tcl/engines/downloads.dat "$SHAREDIR/engines/downloads.dat"
 
 # Spielerlexikon-Update-Skripte synchronisieren (SHAREDIR wird nur beim
 # Erst-Build befuellt, daher hier bei jedem Build aktualisieren)
