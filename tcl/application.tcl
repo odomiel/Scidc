@@ -50,18 +50,7 @@ set Changed						"Games changed: %d"
 set Added						"Games added: %d"
 set DescriptionHasChanged	"Description has changed"
 
-set EngineDownloadTitle		"Chess Engine Download"
-set EngineDownloadMsg		"The following chess engines are available for download.\nEngines are used for game analysis."
-set EngineDownloadBtn		"Download"
-set EngineSkipBtn			"Skip"
-set EngineDownloading		"Downloading %s..."
-set EngineDownloadDone		"Download complete."
-set EngineDownloadRestart	"Please restart the program to use the engines."
-set EngineDownloadFailed	"Download failed: %s"
-set EngineChecksumMismatch	"checksum mismatch (file may be corrupt or tampered)"
-set EngineNoChecksumTool	"sha256sum/shasum not found - cannot verify download integrity"
-set EngineDesc(stockfish-scidc)        "Stockfish — strong engine for game analysis"
-set EngineDesc(fairy-stockfish-scidc)  "Fairy-Stockfish — engine for chess variants"
+set EngineDownloadMsg		"No chess engine is set up yet. Engines are needed for game analysis.\nShall the available engines be shown for download?"
 
 } ;# namespace mc
 
@@ -998,173 +987,21 @@ proc Startup {main args} {
 
 
 proc OfferEngineDownload {parent} {
-	if {!$::scidc::dir::setup} return
+	# Nur beim allerersten Start, und nur wenn noch keine Engine eingerichtet
+	# ist. Der eigentliche Bezug laeuft ueber den Katalogdialog, der die
+	# Programme direkt von den Seiten der Originalprojekte holt; der frueher
+	# hier eingebaute Direktdownload aus dem eigenen Repository ist entfallen.
+	if {!$::scidc::dir::setup} { return }
+	if {[llength $::engine::Engines]} { return }
 
-	set engDir  $::scidc::dir::engines
-	set baseUrl "https://forgejo.example.invalid:3053/forgejouser/Scidc/releases/download/engines-v1"
-	set engines {stockfish-scidc fairy-stockfish-scidc}
+	set reply [::dialog::question \
+		-parent $parent \
+		-message $mc::EngineDownloadMsg \
+		-default yes \
+	]
+	if {$reply ne "yes"} { return }
 
-	# Only offer engines that are not yet installed
-	set missing {}
-	foreach e $engines {
-		if {![file exists [file join $engDir $e]]} { lappend missing $e }
-	}
-	if {[llength $missing] == 0} return
-
-	# --- Build dialog -------------------------------------------------------
-	set dlg $parent.engdl
-	tk::toplevel $dlg -class Scidc
-	wm withdraw $dlg
-	wm title $dlg $mc::EngineDownloadTitle
-	wm resizable $dlg no no
-	wm transient $dlg $parent
-	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list set Vars(engdl:done) 1]]
-
-	set f [tk::frame $dlg.f -padx 16 -pady 12]
-	pack $f -fill both -expand yes
-
-	tk::label $f.msg -text $mc::EngineDownloadMsg -justify left -wraplength 380
-	pack $f.msg -anchor w -pady {0 10}
-
-	# One checkbox per missing engine
-	array set sel {}
-	foreach e $missing { set sel($e) 1 }
-	foreach e $missing {
-		set desc [expr {[info exists mc::EngineDesc($e)] ? $mc::EngineDesc($e) : $e}]
-		ttk::checkbutton $f.cb_$e \
-			-text $desc \
-			-variable [namespace current]::Vars(engsel:$e) \
-			;
-		set [namespace current]::Vars(engsel:$e) 1
-		pack $f.cb_$e -anchor w -pady 2
-	}
-
-	# Status label (shown during download)
-	tk::label $f.status -text "" -justify left -wraplength 380
-	pack $f.status -anchor w -pady {8 0}
-
-	# Buttons
-	set bf [tk::frame $f.bf]
-	pack $bf -pady {10 0} -anchor e
-
-	set downloadBtn [ttk::button $bf.dl \
-		-text $mc::EngineDownloadBtn \
-		-command [namespace code [list DoEngineDownload $dlg $f.status $missing $engDir $baseUrl]] \
-		]
-	ttk::button $bf.skip \
-		-text $mc::EngineSkipBtn \
-		-command [namespace code [list set Vars(engdl:done) 1]] \
-		;
-	pack $bf.dl $bf.skip -side left -padx 4
-
-	::util::place $dlg -parent $parent -position center
-	wm deiconify $dlg
-	focus $bf.dl
-	::ttk::grabWindow $dlg
-	vwait [namespace current]::Vars(engdl:done)
-	::ttk::releaseGrab $dlg
-	catch { destroy $dlg }
-}
-
-
-proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
-	variable Vars
-
-	# Disable buttons during download
-	foreach w [winfo children [winfo parent $statusLbl].bf] {
-		catch { $w configure -state disabled }
-	}
-
-	# Determine download tool (wget or curl)
-	set downloader ""
-	if {![catch {exec wget --version}]} {
-		set downloader wget
-	} elseif {![catch {exec curl --version}]} {
-		set downloader curl
-	}
-
-	if {$downloader eq ""} {
-		$statusLbl configure -foreground red \
-			-text "wget oder curl nicht gefunden. Bitte manuell installieren."
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-		return
-	}
-
-	# Determine checksum tool; refuse to install binaries we cannot verify.
-	set hasher ""
-	if {![catch {exec sha256sum --version}]} {
-		set hasher [list sha256sum]
-	} elseif {![catch {exec shasum --version}]} {
-		set hasher [list shasum -a 256]
-	}
-	if {$hasher eq ""} {
-		$statusLbl configure -foreground red -text $mc::EngineNoChecksumTool
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-		return
-	}
-
-	# Expected SHA-256 of the published release assets. Downloaded binaries are
-	# verified against these before being made executable, so neither a corrupted
-	# transfer nor a tampered release asset can be installed and run.
-	array set expectSha {
-		stockfish-scidc        1cda28ae1efda78ef6940870ba4d105898af19fa42569e0b6b25803039eda747
-		fairy-stockfish-scidc  9c8ff22d7474100cf067a8f2a83b278619369997aa9d0e69284c465f160e3419
-	}
-
-	set failed {}
-	foreach e $engines {
-		if {![info exists Vars(engsel:$e)] || !$Vars(engsel:$e)} continue
-
-		$statusLbl configure -text [format $mc::EngineDownloading $e]
-		update
-
-		set dest    [file join $engDir $e]
-		set tmpDest "${dest}.tmp"
-		set url     "$baseUrl/$e"
-
-		# Erst mit Zertifikatspruefung laden. Schlaegt das fehl -- die
-		# Bezugsquelle nutzt ein selbstsigniertes Zertifikat --, ein zweites
-		# Mal ohne Pruefung. Das ist hier vertretbar, weil die Datei
-		# unmittelbar danach gegen die oben fest hinterlegte SHA-256 geprueft
-		# wird: eine untergeschobene oder verfaelschte Datei faellt dabei auf
-		# und wird nicht ausfuehrbar gemacht. Bei einer regulaer
-		# zertifizierten Quelle greift der zweite Versuch nie.
-		if {[catch {
-			if {$downloader eq "wget"} {
-				if {[catch { exec wget -q -L -O $tmpDest $url }]} {
-					exec wget -q -L --no-check-certificate -O $tmpDest $url
-				}
-			} else {
-				if {[catch { exec curl -sS -L -o $tmpDest $url }]} {
-					exec curl -sS -L -k -o $tmpDest $url
-				}
-			}
-			if {![info exists expectSha($e)]} { error $mc::EngineChecksumMismatch }
-			set got [string tolower [lindex [exec {*}$hasher $tmpDest] 0]]
-			if {$got ne [string tolower $expectSha($e)]} {
-				error $mc::EngineChecksumMismatch
-			}
-			file rename -force $tmpDest $dest
-			exec chmod +x $dest
-		} err]} {
-			catch { file delete -force $tmpDest }
-			lappend failed "$e: $err"
-		}
-	}
-
-	if {[llength $failed]} {
-		$statusLbl configure \
-			-foreground red \
-			-text [format $mc::EngineDownloadFailed [join $failed ", "]]
-		after 3000 [list set [namespace current]::Vars(engdl:done) 1]
-	} else {
-		# Reload engine list: remove local engines.dat so setup() re-reads
-		# the share config and picks up the newly downloaded binaries.
-		catch { file delete $::scidc::file::engines }
-		catch { ::engine::setup }
-		$statusLbl configure -text "$mc::EngineDownloadDone $mc::EngineDownloadRestart"
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-	}
+	catch { ::engine::download::open $parent }
 }
 
 

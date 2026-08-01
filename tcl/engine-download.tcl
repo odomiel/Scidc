@@ -449,6 +449,202 @@ proc checkForUpdates {statusCmd} {
 }
 
 
+# --- Dialog -----------------------------------------------------------
+
+proc open {parent} {
+	variable Priv
+
+	if {![loadCatalog]} {
+		::dialog::error -parent $parent -message [format $mc::CatalogMissing [catalogFile]]
+		return
+	}
+
+	set dlg $parent.engineDownload
+	if {[winfo exists $dlg]} { return [::widget::dialogRaise $dlg] }
+
+	tk::toplevel $dlg -class Scidc
+	wm withdraw $dlg
+	set Priv(dlg) $dlg
+	set Priv(busy) 0
+
+	set top [ttk::frame $dlg.top -takefocus 0]
+	pack $top -fill both -expand yes -padx 8 -pady 8
+
+	ttk::label $top.hname  -text $mc::Engine   -font TkHeadingFont
+	ttk::label $top.hver   -text $mc::Version  -font TkHeadingFont
+	ttk::label $top.hstate -text $mc::State    -font TkHeadingFont
+	ttk::label $top.hsize  -text $mc::Size     -font TkHeadingFont
+	grid $top.hname  -row 0 -column 0 -sticky w  -padx {0 12}
+	grid $top.hver   -row 0 -column 1 -sticky w  -padx {0 12}
+	grid $top.hstate -row 0 -column 2 -sticky w  -padx {0 12}
+	grid $top.hsize  -row 0 -column 3 -sticky e  -padx {0 12}
+	grid [ttk::separator $top.sep -orient horizontal] \
+		-row 1 -column 0 -columnspan 6 -sticky ew -pady {2 6}
+
+	set row 2
+	foreach entry [catalog] {
+		array set e $entry
+		set id $e(Id)
+		set build [selectBuild $entry]
+
+		ttk::label $top.n$id -text $e(Name)
+		ttk::label $top.v$id -text $e(Version)
+		ttk::label $top.s$id -textvar [namespace current]::Priv(state:$id)
+		ttk::label $top.z$id -text [expr {[llength $build] ? [FormatSize [lindex $build 4]] : "-"}] \
+			-anchor e
+		ttk::button $top.b$id -text $mc::Download -width 12 \
+			-command [namespace code [list Action $dlg $id]]
+		ttk::button $top.h$id -text $mc::ProjectPage \
+			-command [list ::web::open $dlg $e(Homepage)]
+
+		grid $top.n$id -row $row -column 0 -sticky w -padx {0 12} -pady 1
+		grid $top.v$id -row $row -column 1 -sticky w -padx {0 12}
+		grid $top.s$id -row $row -column 2 -sticky w -padx {0 12}
+		grid $top.z$id -row $row -column 3 -sticky e -padx {0 12}
+		grid $top.b$id -row $row -column 4 -sticky ew -padx {0 4}
+		grid $top.h$id -row $row -column 5 -sticky ew
+
+		incr row
+		array unset e
+	}
+
+	grid [ttk::separator $top.sep2 -orient horizontal] \
+		-row $row -column 0 -columnspan 6 -sticky ew -pady {8 4}
+	incr row
+	ttk::label $top.status -textvar [namespace current]::Priv(status) -anchor w
+	grid $top.status -row $row -column 0 -columnspan 6 -sticky ew
+	grid columnconfigure $top 0 -weight 1
+
+	set Priv(status) ""
+	UpdateStates
+
+	::widget::dialogButtons $dlg {close} -default close
+	$dlg.close configure -command [namespace code [list Close $dlg]]
+
+	ttk::button $dlg.__buttons.check -text $mc::CheckForUpdates \
+		-command [namespace code [list CheckUpdates $dlg]]
+	pack $dlg.__buttons.check -side left -padx 8
+	set Priv(button:check) $dlg.__buttons.check
+
+	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list Close $dlg]]
+	wm title $dlg $mc::Title
+	wm transient $dlg [winfo toplevel $parent]
+	::util::place $dlg -parent $parent -position center
+	wm deiconify $dlg
+	::ttk::grabWindow $dlg
+	tkwait window $dlg
+	::ttk::releaseGrab $dlg
+}
+
+
+proc Close {dlg} {
+	variable Priv
+	if {$Priv(busy)} { return }
+	set Priv(dlg) ""
+	destroy $dlg
+}
+
+
+proc UpdateStates {} {
+	variable Priv
+
+	if {![winfo exists $Priv(dlg)]} { return }
+	set top $Priv(dlg).top
+
+	foreach entry [catalog] {
+		array set e $entry
+		set id $e(Id)
+		if {[installed? $entry]} {
+			set Priv(state:$id) $mc::Installed
+			catch { $top.b$id configure -text $mc::Remove }
+		} else {
+			set Priv(state:$id) $mc::NotInstalled
+			catch { $top.b$id configure -text $mc::Download }
+		}
+		array unset e
+	}
+}
+
+
+proc Enable {dlg flag} {
+	variable Priv
+
+	set state [expr {$flag ? "normal" : "disabled"}]
+	foreach entry [catalog] {
+		array set e $entry
+		catch { $dlg.top.b$e(Id) configure -state $state }
+		array unset e
+	}
+	catch { $dlg.close configure -state $state }
+	catch { $Priv(button:check) configure -state $state }
+	update idletasks
+}
+
+
+proc Action {dlg id} {
+	variable Priv
+
+	if {$Priv(busy)} { return }
+	set entry [lookup $id]
+	if {[llength $entry] == 0} { return }
+	array set e $entry
+
+	if {[installed? $entry]} {
+		set reply [::dialog::question -parent $dlg \
+			-message [format $mc::ReallyRemove $e(Name)] -default no]
+		if {$reply ne "yes"} { return }
+		remove $dlg $id
+		set Priv(status) [format $mc::Removed $e(Name)]
+		UpdateStates
+		return
+	}
+
+	set Priv(busy) 1
+	Enable $dlg 0
+	::widget::busyCursor on
+	catch { install $dlg $id [namespace code SetStatus] }
+	::widget::busyCursor off
+	Enable $dlg 1
+	set Priv(busy) 0
+	UpdateStates
+}
+
+
+proc SetStatus {text} {
+	variable Priv
+	set Priv(status) $text
+	update idletasks
+}
+
+
+proc CheckUpdates {dlg} {
+	variable Priv
+
+	if {$Priv(busy)} { return }
+	set Priv(busy) 1
+	Enable $dlg 0
+	::widget::busyCursor on
+	set found {}
+	catch { set found [checkForUpdates [namespace code SetStatus]] }
+	::widget::busyCursor off
+	Enable $dlg 1
+	set Priv(busy) 0
+
+	if {[llength $found] == 0} {
+		set Priv(status) $mc::UpToDate
+		return
+	}
+
+	set lines {}
+	foreach f $found {
+		lassign $f name tag old
+		lappend lines [format $mc::FoundNewer $name $tag $old]
+	}
+	set Priv(status) [format $mc::FoundNewer [lindex $found 0 0] [lindex $found 0 1] [lindex $found 0 2]]
+	::dialog::info -parent $dlg -message [join $lines "\n"] -detail $mc::UpdateHint
+}
+
+
 proc Report {statusCmd text} {
 	variable Priv
 	set Priv(status) $text

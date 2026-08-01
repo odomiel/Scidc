@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b20 Beta"
+	set version "26.08.01 b21 Beta"
 }
 
 
@@ -97955,9 +97955,19 @@ proc openAdmininstration {parent} {
 	set Priv(pane:setup) $setup
 	set Priv(notebook) $nb
 
+	### Download ##########################################################
+	ttk::button $top.download \
+		-style aligned.TButton \
+		-text " $::engine::download::mc::Title" \
+		-image $::icon::16x16::plus \
+		-compound left \
+		-command [namespace code [list OpenDownload $dlg $list]] \
+		;
+
 	### Geometry ##########################################################
 	grid $list -row 1 -column 1
-	grid $nb	  -row 1 -column 3 -sticky nswe
+	grid $top.download -row 3 -column 1 -sticky ew
+	grid $nb	  -row 1 -column 3 -rowspan 3 -sticky nswe
 	grid rowconfigure $top {0 2} -minsize $::theme::pady
 	grid columnconfigure $top {0 2 4} -minsize $::theme::padx
 	grid columnconfigure $top {3} -weight 1
@@ -98674,6 +98684,14 @@ proc id {number} {
 proc engineName {number} {
 	variable ${number}::Vars
 	return $Vars(current:name)
+}
+
+
+proc OpenDownload {dlg list} {
+	::ttk::releaseGrab $dlg
+	catch { ::engine::download::open $dlg }
+	RebuildEngineList $list
+	::ttk::grabWindow $dlg
 }
 
 
@@ -101735,6 +101753,201 @@ proc checkForUpdates {statusCmd} {
 }
 
 
+
+proc open {parent} {
+	variable Priv
+
+	if {![loadCatalog]} {
+		::dialog::error -parent $parent -message [format $mc::CatalogMissing [catalogFile]]
+		return
+	}
+
+	set dlg $parent.engineDownload
+	if {[winfo exists $dlg]} { return [::widget::dialogRaise $dlg] }
+
+	tk::toplevel $dlg -class Scidc
+	wm withdraw $dlg
+	set Priv(dlg) $dlg
+	set Priv(busy) 0
+
+	set top [ttk::frame $dlg.top -takefocus 0]
+	pack $top -fill both -expand yes -padx 8 -pady 8
+
+	ttk::label $top.hname  -text $mc::Engine   -font TkHeadingFont
+	ttk::label $top.hver   -text $mc::Version  -font TkHeadingFont
+	ttk::label $top.hstate -text $mc::State    -font TkHeadingFont
+	ttk::label $top.hsize  -text $mc::Size     -font TkHeadingFont
+	grid $top.hname  -row 0 -column 0 -sticky w  -padx {0 12}
+	grid $top.hver   -row 0 -column 1 -sticky w  -padx {0 12}
+	grid $top.hstate -row 0 -column 2 -sticky w  -padx {0 12}
+	grid $top.hsize  -row 0 -column 3 -sticky e  -padx {0 12}
+	grid [ttk::separator $top.sep -orient horizontal] \
+		-row 1 -column 0 -columnspan 6 -sticky ew -pady {2 6}
+
+	set row 2
+	foreach entry [catalog] {
+		array set e $entry
+		set id $e(Id)
+		set build [selectBuild $entry]
+
+		ttk::label $top.n$id -text $e(Name)
+		ttk::label $top.v$id -text $e(Version)
+		ttk::label $top.s$id -textvar [namespace current]::Priv(state:$id)
+		ttk::label $top.z$id -text [expr {[llength $build] ? [FormatSize [lindex $build 4]] : "-"}] \
+			-anchor e
+		ttk::button $top.b$id -text $mc::Download -width 12 \
+			-command [namespace code [list Action $dlg $id]]
+		ttk::button $top.h$id -text $mc::ProjectPage \
+			-command [list ::web::open $dlg $e(Homepage)]
+
+		grid $top.n$id -row $row -column 0 -sticky w -padx {0 12} -pady 1
+		grid $top.v$id -row $row -column 1 -sticky w -padx {0 12}
+		grid $top.s$id -row $row -column 2 -sticky w -padx {0 12}
+		grid $top.z$id -row $row -column 3 -sticky e -padx {0 12}
+		grid $top.b$id -row $row -column 4 -sticky ew -padx {0 4}
+		grid $top.h$id -row $row -column 5 -sticky ew
+
+		incr row
+		array unset e
+	}
+
+	grid [ttk::separator $top.sep2 -orient horizontal] \
+		-row $row -column 0 -columnspan 6 -sticky ew -pady {8 4}
+	incr row
+	ttk::label $top.status -textvar [namespace current]::Priv(status) -anchor w
+	grid $top.status -row $row -column 0 -columnspan 6 -sticky ew
+	grid columnconfigure $top 0 -weight 1
+
+	set Priv(status) ""
+	UpdateStates
+
+	::widget::dialogButtons $dlg {close} -default close
+	$dlg.close configure -command [namespace code [list Close $dlg]]
+
+	ttk::button $dlg.__buttons.check -text $mc::CheckForUpdates \
+		-command [namespace code [list CheckUpdates $dlg]]
+	pack $dlg.__buttons.check -side left -padx 8
+	set Priv(button:check) $dlg.__buttons.check
+
+	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list Close $dlg]]
+	wm title $dlg $mc::Title
+	wm transient $dlg [winfo toplevel $parent]
+	::util::place $dlg -parent $parent -position center
+	wm deiconify $dlg
+	::ttk::grabWindow $dlg
+	tkwait window $dlg
+	::ttk::releaseGrab $dlg
+}
+
+
+proc Close {dlg} {
+	variable Priv
+	if {$Priv(busy)} { return }
+	set Priv(dlg) ""
+	destroy $dlg
+}
+
+
+proc UpdateStates {} {
+	variable Priv
+
+	if {![winfo exists $Priv(dlg)]} { return }
+	set top $Priv(dlg).top
+
+	foreach entry [catalog] {
+		array set e $entry
+		set id $e(Id)
+		if {[installed? $entry]} {
+			set Priv(state:$id) $mc::Installed
+			catch { $top.b$id configure -text $mc::Remove }
+		} else {
+			set Priv(state:$id) $mc::NotInstalled
+			catch { $top.b$id configure -text $mc::Download }
+		}
+		array unset e
+	}
+}
+
+
+proc Enable {dlg flag} {
+	variable Priv
+
+	set state [expr {$flag ? "normal" : "disabled"}]
+	foreach entry [catalog] {
+		array set e $entry
+		catch { $dlg.top.b$e(Id) configure -state $state }
+		array unset e
+	}
+	catch { $dlg.close configure -state $state }
+	catch { $Priv(button:check) configure -state $state }
+	update idletasks
+}
+
+
+proc Action {dlg id} {
+	variable Priv
+
+	if {$Priv(busy)} { return }
+	set entry [lookup $id]
+	if {[llength $entry] == 0} { return }
+	array set e $entry
+
+	if {[installed? $entry]} {
+		set reply [::dialog::question -parent $dlg \
+			-message [format $mc::ReallyRemove $e(Name)] -default no]
+		if {$reply ne "yes"} { return }
+		remove $dlg $id
+		set Priv(status) [format $mc::Removed $e(Name)]
+		UpdateStates
+		return
+	}
+
+	set Priv(busy) 1
+	Enable $dlg 0
+	::widget::busyCursor on
+	catch { install $dlg $id [namespace code SetStatus] }
+	::widget::busyCursor off
+	Enable $dlg 1
+	set Priv(busy) 0
+	UpdateStates
+}
+
+
+proc SetStatus {text} {
+	variable Priv
+	set Priv(status) $text
+	update idletasks
+}
+
+
+proc CheckUpdates {dlg} {
+	variable Priv
+
+	if {$Priv(busy)} { return }
+	set Priv(busy) 1
+	Enable $dlg 0
+	::widget::busyCursor on
+	set found {}
+	catch { set found [checkForUpdates [namespace code SetStatus]] }
+	::widget::busyCursor off
+	Enable $dlg 1
+	set Priv(busy) 0
+
+	if {[llength $found] == 0} {
+		set Priv(status) $mc::UpToDate
+		return
+	}
+
+	set lines {}
+	foreach f $found {
+		lassign $f name tag old
+		lappend lines [format $mc::FoundNewer $name $tag $old]
+	}
+	set Priv(status) [format $mc::FoundNewer [lindex $found 0 0] [lindex $found 0 1] [lindex $found 0 2]]
+	::dialog::info -parent $dlg -message [join $lines "\n"] -detail $mc::UpdateHint
+}
+
+
 proc Report {statusCmd text} {
 	variable Priv
 	set Priv(status) $text
@@ -103323,18 +103536,7 @@ set Changed						"Games changed: %d"
 set Added						"Games added: %d"
 set DescriptionHasChanged	"Description has changed"
 
-set EngineDownloadTitle		"Chess Engine Download"
-set EngineDownloadMsg		"The following chess engines are available for download.\nEngines are used for game analysis."
-set EngineDownloadBtn		"Download"
-set EngineSkipBtn			"Skip"
-set EngineDownloading		"Downloading %s..."
-set EngineDownloadDone		"Download complete."
-set EngineDownloadRestart	"Please restart the program to use the engines."
-set EngineDownloadFailed	"Download failed: %s"
-set EngineChecksumMismatch	"checksum mismatch (file may be corrupt or tampered)"
-set EngineNoChecksumTool	"sha256sum/shasum not found - cannot verify download integrity"
-set EngineDesc(stockfish-scidc)        "Stockfish — strong engine for game analysis"
-set EngineDesc(fairy-stockfish-scidc)  "Fairy-Stockfish — engine for chess variants"
+set EngineDownloadMsg		"No chess engine is set up yet. Engines are needed for game analysis.\nShall the available engines be shown for download?"
 
 } ;# namespace mc
 
@@ -104254,153 +104456,17 @@ proc Startup {main args} {
 
 
 proc OfferEngineDownload {parent} {
-	if {!$::scidc::dir::setup} return
+	if {!$::scidc::dir::setup} { return }
+	if {[llength $::engine::Engines]} { return }
 
-	set engDir  $::scidc::dir::engines
-	set baseUrl "https://forgejo.example.invalid:3053/forgejouser/Scidc/releases/download/engines-v1"
-	set engines {stockfish-scidc fairy-stockfish-scidc}
+	set reply [::dialog::question \
+		-parent $parent \
+		-message $mc::EngineDownloadMsg \
+		-default yes \
+	]
+	if {$reply ne "yes"} { return }
 
-	set missing {}
-	foreach e $engines {
-		if {![file exists [file join $engDir $e]]} { lappend missing $e }
-	}
-	if {[llength $missing] == 0} return
-
-	set dlg $parent.engdl
-	tk::toplevel $dlg -class Scidc
-	wm withdraw $dlg
-	wm title $dlg $mc::EngineDownloadTitle
-	wm resizable $dlg no no
-	wm transient $dlg $parent
-	wm protocol $dlg WM_DELETE_WINDOW [namespace code [list set Vars(engdl:done) 1]]
-
-	set f [tk::frame $dlg.f -padx 16 -pady 12]
-	pack $f -fill both -expand yes
-
-	tk::label $f.msg -text $mc::EngineDownloadMsg -justify left -wraplength 380
-	pack $f.msg -anchor w -pady {0 10}
-
-	array set sel {}
-	foreach e $missing { set sel($e) 1 }
-	foreach e $missing {
-		set desc [expr {[info exists mc::EngineDesc($e)] ? $mc::EngineDesc($e) : $e}]
-		ttk::checkbutton $f.cb_$e \
-			-text $desc \
-			-variable [namespace current]::Vars(engsel:$e) \
-			;
-		set [namespace current]::Vars(engsel:$e) 1
-		pack $f.cb_$e -anchor w -pady 2
-	}
-
-	tk::label $f.status -text "" -justify left -wraplength 380
-	pack $f.status -anchor w -pady {8 0}
-
-	set bf [tk::frame $f.bf]
-	pack $bf -pady {10 0} -anchor e
-
-	set downloadBtn [ttk::button $bf.dl \
-		-text $mc::EngineDownloadBtn \
-		-command [namespace code [list DoEngineDownload $dlg $f.status $missing $engDir $baseUrl]] \
-		]
-	ttk::button $bf.skip \
-		-text $mc::EngineSkipBtn \
-		-command [namespace code [list set Vars(engdl:done) 1]] \
-		;
-	pack $bf.dl $bf.skip -side left -padx 4
-
-	::util::place $dlg -parent $parent -position center
-	wm deiconify $dlg
-	focus $bf.dl
-	::ttk::grabWindow $dlg
-	vwait [namespace current]::Vars(engdl:done)
-	::ttk::releaseGrab $dlg
-	catch { destroy $dlg }
-}
-
-
-proc DoEngineDownload {dlg statusLbl engines engDir baseUrl} {
-	variable Vars
-
-	foreach w [winfo children [winfo parent $statusLbl].bf] {
-		catch { $w configure -state disabled }
-	}
-
-	set downloader ""
-	if {![catch {exec wget --version}]} {
-		set downloader wget
-	} elseif {![catch {exec curl --version}]} {
-		set downloader curl
-	}
-
-	if {$downloader eq ""} {
-		$statusLbl configure -foreground red \
-			-text "wget oder curl nicht gefunden. Bitte manuell installieren."
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-		return
-	}
-
-	set hasher ""
-	if {![catch {exec sha256sum --version}]} {
-		set hasher [list sha256sum]
-	} elseif {![catch {exec shasum --version}]} {
-		set hasher [list shasum -a 256]
-	}
-	if {$hasher eq ""} {
-		$statusLbl configure -foreground red -text $mc::EngineNoChecksumTool
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-		return
-	}
-
-	array set expectSha {
-		stockfish-scidc        1cda28ae1efda78ef6940870ba4d105898af19fa42569e0b6b25803039eda747
-		fairy-stockfish-scidc  9c8ff22d7474100cf067a8f2a83b278619369997aa9d0e69284c465f160e3419
-	}
-
-	set failed {}
-	foreach e $engines {
-		if {![info exists Vars(engsel:$e)] || !$Vars(engsel:$e)} continue
-
-		$statusLbl configure -text [format $mc::EngineDownloading $e]
-		update
-
-		set dest    [file join $engDir $e]
-		set tmpDest "${dest}.tmp"
-		set url     "$baseUrl/$e"
-
-		if {[catch {
-			if {$downloader eq "wget"} {
-				if {[catch { exec wget -q -L -O $tmpDest $url }]} {
-					exec wget -q -L --no-check-certificate -O $tmpDest $url
-				}
-			} else {
-				if {[catch { exec curl -sS -L -o $tmpDest $url }]} {
-					exec curl -sS -L -k -o $tmpDest $url
-				}
-			}
-			if {![info exists expectSha($e)]} { error $mc::EngineChecksumMismatch }
-			set got [string tolower [lindex [exec {*}$hasher $tmpDest] 0]]
-			if {$got ne [string tolower $expectSha($e)]} {
-				error $mc::EngineChecksumMismatch
-			}
-			file rename -force $tmpDest $dest
-			exec chmod +x $dest
-		} err]} {
-			catch { file delete -force $tmpDest }
-			lappend failed "$e: $err"
-		}
-	}
-
-	if {[llength $failed]} {
-		$statusLbl configure \
-			-foreground red \
-			-text [format $mc::EngineDownloadFailed [join $failed ", "]]
-		after 3000 [list set [namespace current]::Vars(engdl:done) 1]
-	} else {
-		catch { file delete $::scidc::file::engines }
-		catch { ::engine::setup }
-		$statusLbl configure -text "$mc::EngineDownloadDone $mc::EngineDownloadRestart"
-		after 4000 [list set [namespace current]::Vars(engdl:done) 1]
-	}
+	catch { ::engine::download::open $parent }
 }
 
 

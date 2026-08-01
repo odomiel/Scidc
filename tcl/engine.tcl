@@ -414,9 +414,19 @@ proc openAdmininstration {parent} {
 	set Priv(pane:setup) $setup
 	set Priv(notebook) $nb
 
+	### Download ##########################################################
+	ttk::button $top.download \
+		-style aligned.TButton \
+		-text " $::engine::download::mc::Title" \
+		-image $::icon::16x16::plus \
+		-compound left \
+		-command [namespace code [list OpenDownload $dlg $list]] \
+		;
+
 	### Geometry ##########################################################
 	grid $list -row 1 -column 1
-	grid $nb	  -row 1 -column 3 -sticky nswe
+	grid $top.download -row 3 -column 1 -sticky ew
+	grid $nb	  -row 1 -column 3 -rowspan 3 -sticky nswe
 	grid rowconfigure $top {0 2} -minsize $::theme::pady
 	grid columnconfigure $top {0 2 4} -minsize $::theme::padx
 	grid columnconfigure $top {3} -weight 1
@@ -1142,6 +1152,16 @@ proc id {number} {
 proc engineName {number} {
 	variable ${number}::Vars
 	return $Vars(current:name)
+}
+
+
+# Oeffnet den Bezugsdialog. Der Verwaltungsdialog haelt einen Grab; er wird
+# fuer den Unterdialog abgegeben und danach wieder uebernommen.
+proc OpenDownload {dlg list} {
+	::ttk::releaseGrab $dlg
+	catch { ::engine::download::open $dlg }
+	RebuildEngineList $list
+	::ttk::grabWindow $dlg
 }
 
 

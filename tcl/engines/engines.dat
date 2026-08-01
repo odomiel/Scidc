@@ -2,78 +2,12 @@
 # Version: 1.1.126 BETA
 # Syntax: Tcl language format
 
-set ::engine::Engines {
-	{
-		Name Stockfish
-		Identifier "Stockfish 18 scidc"
-		Author "The Stockfish developers"
-		Url https://stockfishchess.org
-		Command stockfish-scidc
-		Protocol UCI
-		Variants {standard chess960}
-		Features:UCI {
-			analyze true
-			multiPV 256
-			ponder true
-			hashSize {1 33554432}
-			threads {1 1024}
-			skillLevel {0 20}
-			clearHash true
-		}
-		Profiles:UCI {
-			Default {
-				{Threads spin 1 1 1 1024}
-				{Hash spin 16 16 1 33554432}
-				{{Clear Hash} button {} {} {} {}}
-				{Ponder check false false {} {}}
-				{MultiPV spin 1 1 1 256}
-				{{Skill Level} spin 20 20 0 20}
-				{{Move Overhead} spin 10 10 0 5000}
-				{{UCI_LimitStrength} check false false {} {}}
-				{{UCI_Elo} spin 1320 1320 1320 3190}
-				{{UCI_ShowWDL} check false false {} {}}
-				{{SyzygyPath} string {} {} {} {}}
-				{{SyzygyProbeDepth} spin 1 1 1 100}
-				{{Syzygy50MoveRule} check true true {} {}}
-				{{SyzygyProbeLimit} spin 7 7 0 7}
-			}
-		}
-	}
-	{
-		Name {Fairy-Stockfish}
-		Identifier "Fairy-Stockfish 14 scidc"
-		Author "Fabian Fichter and Stockfish developers"
-		Url https://github.com/fairy-stockfish/Fairy-Stockfish
-		Command fairy-stockfish-scidc
-		Protocol UCI
-		Variants {standard chess960 3check crazyhouse antichess suicide giveaway losers bughouse}
-		Features:UCI {
-			analyze true
-			multiPV 500
-			ponder true
-			hashSize {1 33554432}
-			threads {1 512}
-			skillLevel {-20 20}
-			clearHash true
-		}
-		Profiles:UCI {
-			Default {
-				{Threads spin 1 1 1 512}
-				{Hash spin 16 16 1 33554432}
-				{{Clear Hash} button {} {} {} {}}
-				{Ponder check false false {} {}}
-				{MultiPV spin 1 1 1 500}
-				{{Skill Level} spin 20 20 -20 20}
-				{{Move Overhead} spin 10 10 0 5000}
-				{{Slow Mover} spin 100 100 10 1000}
-				{{UCI_LimitStrength} check false false {} {}}
-				{{UCI_Elo} spin 1350 1350 500 2850}
-				{{UCI_ShowWDL} check false false {} {}}
-				{{SyzygyPath} string {} {} {} {}}
-				{{SyzygyProbeDepth} spin 1 1 1 100}
-				{{Syzygy50MoveRule} check true true {} {}}
-				{{SyzygyProbeLimit} spin 7 7 0 7}
-			}
-		}
-	}
-}
+# Ab Version 26.08.01 werden Engines nicht mehr mitgeliefert, sondern ueber
+# Einstellungen -> Motoren direkt von den Seiten der Originalprojekte geladen
+# (Katalog: downloads.dat). Die frueheren Eintraege verwiesen auf die Dateien
+# stockfish-scidc und fairy-stockfish-scidc aus dem eigenen Repository, die es
+# nicht mehr gibt.
+
+set ::engine::Engines {}
+
+# vi:set ts=3 sw=3:
