@@ -1354,13 +1354,25 @@ TournamentTable::emitCrossTable(TeXt::Receptacle& receptacle, bool isScheveninge
 				if (oppId == prevOppId)
 				{
 					++parity;
-					M_ASSERT(parity < m_parity);
 				}
 				else
 				{
 					prevOppId = oppId;
 					parity = 0;
 				}
+
+				// m_parity wurde in computePerformance ueber die *echten* Gegner
+				// ermittelt (Vergleich der Player-Zeiger). Die Faltung oben
+				// (oppId -= groupSize) kann zwei verschiedene Gegner auf dieselbe
+				// Spalte legen; die Wiederholungszahl wird dann groesser als
+				// m_parity, und der Zugriff unten schreibt hinter das Zeilenende
+				// von resultList/indices -- im Release-Build ohne Assertions ein
+				// Stapelueberlauf. Beobachtet bei einem Turnier, das faelschlich
+				// als Scheveningen erkannt wurde (size 18, groupSize 9): parity
+				// erreichte 10 bei m_parity 10. Die Ausgabeschleife unten liest
+				// ohnehin nur j < m_parity, mehr waere also gar nicht darstellbar.
+				if (parity >= m_parity)
+					continue;
 
 				resultList[oppId][parity] = player->resultScore(clash);
 				indices[oppId][parity] = clash->gameIndex + 1;
