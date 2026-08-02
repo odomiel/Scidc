@@ -268,8 +268,8 @@
 ::menu::mc::ColorScheme						"Color Scheme" ;# NEW
 ::menu::mc::CustomStyleMenu				"Scidc's Style Menu" ;# NEW
 ::menu::mc::DefaultStyleMenu				"Default Style Menu" ;# NEW
-::menu::mc::OrdinaryMonitor				"Ordinary Monitor" ;# NEW
-::menu::mc::HighQualityMonitor			"High Quality Monitor" ;# NEW
+::menu::mc::OrdinaryMonitor				"Monitor normal (claro)"
+::menu::mc::HighQualityMonitor			"Monitor de alta calidad (claro)"
 ::menu::mc::NightMode					"Modo noche (oscuro)"
 ::menu::mc::RestartRequired				"A restart of the application is required before this change can be applied everyplace." ;# NEW
 

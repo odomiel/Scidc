@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.01 b28 Beta"
+	set version "26.08.02 b1 Beta"
 }
 
 
@@ -150221,8 +150221,8 @@ set Theme							"Theme"
 set ColorScheme					"Color Scheme"
 set CustomStyleMenu				"Scidc's Style Menu"
 set DefaultStyleMenu				"Default Style Menu"
-set OrdinaryMonitor				"Ordinary Monitor"
-set HighQualityMonitor			"High Quality Monitor"
+set OrdinaryMonitor				"Ordinary Monitor (Light)"
+set HighQualityMonitor			"High Quality Monitor (Light)"
 set NightMode					"Night Mode (Dark)"
 set RestartRequired				"A restart of the application is required before this change can be applied everyplace."
 

@@ -267,8 +267,8 @@
 ::menu::mc::ColorScheme						"Color Scheme" ;# NEW
 ::menu::mc::CustomStyleMenu				"Scidc's Style Menu" ;# NEW
 ::menu::mc::DefaultStyleMenu				"Default Style Menu" ;# NEW
-::menu::mc::OrdinaryMonitor				"Ordinary Monitor" ;# NEW
-::menu::mc::HighQualityMonitor			"High Quality Monitor" ;# NEW
+::menu::mc::OrdinaryMonitor				"Vanlig skärm (ljust)"
+::menu::mc::HighQualityMonitor			"Högkvalitativ skärm (ljust)"
 ::menu::mc::NightMode					"Nattläge (mörkt)"
 ::menu::mc::RestartRequired				"A restart of the application is required before this change can be applied everyplace." ;# NEW
 

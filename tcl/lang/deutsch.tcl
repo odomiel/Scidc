@@ -266,8 +266,8 @@
 ::menu::mc::ColorScheme						"Farbschema"
 ::menu::mc::CustomStyleMenu				"Scidc's Menüstil"
 ::menu::mc::DefaultStyleMenu				"Standard-Menüstil"
-::menu::mc::OrdinaryMonitor				"Gewöhnlicher Monitor"
-::menu::mc::HighQualityMonitor			"Hochwertiger Monitor"
+::menu::mc::OrdinaryMonitor				"Gewöhnlicher Monitor (Hell)"
+::menu::mc::HighQualityMonitor			"Hochwertiger Monitor (Hell)"
 ::menu::mc::NightMode					"Nachtmodus (Dunkel)"
 ::menu::mc::RestartRequired				"Ein Neustart dieser Applikation ist erforderlich bevor diese Änderung durchgehend angewendet werden kann."
 

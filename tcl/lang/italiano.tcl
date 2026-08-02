@@ -267,8 +267,8 @@
 ::menu::mc::ColorScheme						"Schema Colori"
 ::menu::mc::CustomStyleMenu				"Stile Menu di Scidc"
 ::menu::mc::DefaultStyleMenu				"Stile Menu di Default"
-::menu::mc::OrdinaryMonitor				"Monitor Normale"
-::menu::mc::HighQualityMonitor			"Monitor di Alta Qualità"
+::menu::mc::OrdinaryMonitor				"Monitor Normale (chiaro)"
+::menu::mc::HighQualityMonitor			"Monitor di Alta Qualità (chiaro)"
 ::menu::mc::NightMode					"Modalità notte (scura)"
 ::menu::mc::RestartRequired				"Il riavvio dell'applicazione è necessario prima che sia possibile applicare le modifiche"
 
