@@ -54,11 +54,28 @@ variable Dimensions {}
 event add <<PieceSetChanged>> PieceSetChanged
 
 
+# Ein Brett-Thema kann einen Figurensatz benennen, den es nicht (mehr) gibt -
+# etwa weil der Satz aus dem Lieferumfang entfernt wurde und die Kopie des
+# Themas im Benutzerverzeichnis noch darauf zeigt. Frueher lieferte die Suche
+# dann eine leere Liste, und das Zeichnen scheiterte mit
+# 'can't read "font(wk)": no such variable'. Jetzt faellt der Nachschlag auf
+# den Standardsatz zurueck.
+proc LookupPieceSet {name} {
+	set i [lsearch -exact -index 0 $::board_PieceSet $name]
+	if {$i >= 0} { return [lindex $::board_PieceSet $i] }
+	set fallback [set [namespace parent]::theme::Default(piece-set)]
+	set i [lsearch -exact -index 0 $::board_PieceSet $fallback]
+	if {$i < 0} { set i 0 }
+	puts stderr "unknown piece set '$name', using '[lindex [lindex $::board_PieceSet $i] 0]' instead"
+	return [lindex $::board_PieceSet $i]
+}
+
+
 proc isOutline {{fontName ""}} {
 	variable [namespace parent]::theme::style
 
 	if {[llength $fontName] == 0} { set fontName $style(piece-set) }
-	set pieceSet [lindex $::board_PieceSet [lsearch -exact -index 0 $::board_PieceSet $fontName]]
+	set pieceSet [LookupPieceSet $fontName]
 	return [expr {[lindex $pieceSet 1] eq "truetype"}]
 }
 
@@ -150,7 +167,7 @@ proc makePieces {size {pieces all}} {
 	set texture [list $style(color,w,texture) $style(color,b,texture)]
 	set contour [list $style(color,w,contour) $style(color,b,contour)]
 	set gradients [list $grad(w) $grad(b)]
-	set pieceSet [lindex $::board_PieceSet [lsearch -exact -index 0 $::board_PieceSet $pieceSet]]
+	set pieceSet [LookupPieceSet $pieceSet]
 
 	MakePieces               \
 		{}                    \
@@ -202,7 +219,7 @@ proc MakeFigurines {size dontUseContour} {
 	variable Figurines
 
 	set pieceList {wk bk wq wr wb wn wp bq br bb bn bp}
-	set pieceSet [lindex $::board_PieceSet [lsearch -exact -index 0 $::board_PieceSet $Figurines]]
+	set pieceSet [LookupPieceSet $Figurines]
 	set prefix figurine,$dontUseContour
 	if {$dontUseContour} { set contour 0.0 } else { set contour 1.0 }
 	switch $Figurines {

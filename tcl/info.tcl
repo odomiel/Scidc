@@ -424,10 +424,9 @@ proc DisplayContributions {w} {
 
 				<tr><td colspan='2'>[Name {Gorgonian}]</td></tr>
 				<tr><td>\u2001</td><td>Aquarium (GAquarium), Bookup (GBookup), Celtic (GCeltic),
-											Chess7 (GChess7), ChessCube (GChessCube), Fritz (GFritz),
+											Chess7 (GChess7), ChessCube (GChessCube),
 											Habsburg (GHabsburg), Military (GMilitary), Old Style
-											(GOldStyle), Segoe (GSegoe), Standard (GCMF),
-											Zurich (GZurich)</td></tr>
+											(GOldStyle), Standard (GCMF)</td></tr>
 				<tr><td>\u2001</td><td>[Url http://gorgonian.weebly.com/babaschess.html]</td></tr>
 				<tr height='7'></tr>
 

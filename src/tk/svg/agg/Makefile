@@ -40,7 +40,6 @@ SRC_CXX=\
 	agg_vpgen_segmentator.cpp \
 
 SRC_C=\
-	gpc.c
 
 SRC	= $(SRC_CXX) $(SRC_C)
 OBJS	= $(SRC_CXX:.cpp=.o) $(SRC_C:.c=.o)
@@ -203,4 +202,3 @@ agg_vpgen_clip_polyline.o: agg_clip_liang_barsky.h
 agg_vpgen_segmentator.o: agg_vpgen_segmentator.h
 agg_vpgen_segmentator.o: agg_basics.h
 agg_vpgen_segmentator.o: agg_config.h
-gpc.o: gpc.h
