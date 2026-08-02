@@ -2,11 +2,13 @@ Scidc - Schachdatenbank
 =======================
 
 Scidc ist eine Schachdatenbank-Anwendung, geforkt von Scidb r1531.
-Das Programm unterstützt mehrere Datenbankformate und enthält
-Stockfish und Fairy-Stockfish für die Partienanalyse.
+Das Programm liest und schreibt mehrere Datenbankformate und bringt
+eine Anbindung für Schach-Engines zur Partienanalyse mit. Engines sind
+nicht im Paket enthalten; sie lassen sich aus der Anwendung heraus von
+den Originalprojekten beziehen.
 
 Der Großteil der Änderungen in diesem Fork wurde mit Unterstützung
-von Claude (Anthropic KI) entwickelt.
+von Claude (Anthropic KI) und Mistral (Mistral AI) entwickelt.
 
 Unterstützte Formate
 --------------------
@@ -19,8 +21,8 @@ Voraussetzungen
 ---------------
 - Linux (x86_64)
 - Zum Ausführen: keine (das AppImage enthält alle Abhängigkeiten)
-- Zum Bauen: gcc/g++, make, Tcl/Tk 8.6 Entwicklungsheader,
-  X11 Entwicklungsheader, zlib, expat
+- Zum Bauen: gcc/g++, make, Tcl/Tk 9.0 Entwicklungsheader
+  (einschließlich der privaten), X11 Entwicklungsheader, zlib, expat
 
 Installation
 ------------
