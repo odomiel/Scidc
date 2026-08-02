@@ -2379,6 +2379,7 @@
 ::info::mc::About		"Névjegy"
 ::info::mc::Contributions	"Készítők" ;#Contributions
 ::info::mc::License		"Liszenc"
+::info::mc::Dependencies	"Dependency Licenses"
 ::info::mc::Localization	"Regionális beállítások" ;#"Localization"
 ::info::mc::Testing		"Tesztelés"
 ::info::mc::References		"Referenciák"

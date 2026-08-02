@@ -2373,6 +2373,7 @@
 ::info::mc::About						"Acerca de"
 ::info::mc::Contributions			"Contribuciones"
 ::info::mc::License					"Licencia"
+::info::mc::Dependencies				"Dependency Licenses"
 ::info::mc::Localization			"Localización"
 ::info::mc::Testing					"Pruebas"
 ::info::mc::References				"Referencias"

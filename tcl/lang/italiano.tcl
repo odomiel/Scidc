@@ -2382,6 +2382,7 @@
 ::info::mc::About						"About"
 ::info::mc::Contributions			"Contributi"
 ::info::mc::License					"Licenza"
+::info::mc::Dependencies				"Dependency Licenses"
 ::info::mc::Localization			"Localizzazione"
 ::info::mc::Testing					"Testing"
 ::info::mc::References				"Riferimenti"

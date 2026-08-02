@@ -2379,6 +2379,7 @@
 ::info::mc::About						"Om"
 ::info::mc::Contributions			"Bidrag"
 ::info::mc::License					"Licens"
+::info::mc::Dependencies				"Dependency Licenses"
 ::info::mc::Localization			"Localization"
 ::info::mc::Testing					"Testing"
 ::info::mc::References				"Referenser"

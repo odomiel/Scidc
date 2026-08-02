@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.02 b5 Beta"
+	set version "26.08.02 b6 Beta"
 }
 
 
@@ -146804,6 +146804,7 @@ set Info						"Info"
 set About					"About"
 set Contributions			"Contributions"
 set License					"License"
+set Dependencies			"Dependency Licenses"
 set Localization			"Localization"
 set Testing					"Testing"
 set References				"References"
@@ -146860,7 +146861,7 @@ proc BuildDialog {dlg} {
 	pack $nb -padx $::theme::padx -pady $::theme::pady
 	set count 1
 
-	foreach tab {About Contributions System License} {
+	foreach tab {About Contributions System License Dependencies} {
 		set f [ttk::frame $nb.tab$tab]
 		Build${tab}Frame $f
 		$nb add $f -sticky nsew -padding $::theme::padding
@@ -147432,6 +147433,23 @@ proc Url {url}		{ return "<a href='$url'>$url</a>" }
 proc Name {name}	{ return $name }
 
 
+proc BuildDependenciesFrame {w} {
+	set t [tk::text $w.t \
+		-height 0 \
+		-font TkFixedFont \
+		-yscrollcommand [list $w.s set]] \
+		;
+	ttk::setCursor $t standard
+	set s [ttk::scrollbar $w.s -command [list $t yview]]
+	pack $t -side left -fill both -expand yes
+	pack $s -side left -fill both
+	$t insert end [string map \
+		[list %TCLTK% [format %-11s [info patchlevel]]] \
+		[set [namespace current]::DependencyLicenses]]
+	$t configure -state disabled
+}
+
+
 set License \
 {		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
@@ -147773,6 +147791,338 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.}
+
+
+set DependencyLicenses \
+{Scidc builds on the third-party components listed below. The full text of
+every license follows the overview. Components marked "bundled" are shipped
+inside the AppImage; the remaining ones are compiled into the program.
+
+  Component                  Version    License
+  ---------------------------------------------------------------------
+  Tcl/Tk                     %TCLTK%Tcl/Tk license (BSD-style)
+  Tk text widget (fork)      from Tk    Tcl/Tk license
+  tk_busy, tk_panedwindow    from Tk    Tcl/Tk license
+  TkTreeCtrl                 Scidb ed.  Tcl/Tk-style license
+  Tkhtml3                    Scidb ed.  BSD 3-clause
+  TkDND                      Scidb ed.  Tcl/Tk-style license
+  Anti-Grain Geometry        2.x        GNU GPL v2 or later
+  libharu                    Scidb ed.  zlib/libpng-style license
+  libhyphenate               Scidb ed.  GNU LGPL v2.1 or later
+  libTeXt                    Scidb ed.  GNU GPL v2 or later
+  JPEG decoder               Scidb ed.  GNU GPL v2 or later
+  universalchardet           Mozilla    MPL 1.1 / GPL 2 / LGPL 2.1
+  minizip-ng                 4.2.2      zlib license
+  zziplib                    bundled    GNU LGPL v2 or the ZZIP license
+  zlib                       bundled    zlib license
+  expat                      bundled    MIT license
+  FreeType                   bundled    FreeType license (FTL) or GPL v2
+  libpng                     bundled    libpng license
+  fontconfig                 bundled    MIT-style license
+  Brotli                     bundled    MIT license
+  bzip2                      bundled    BSD-style license
+  libbsd, libmd              bundled    BSD license
+  libuuid (util-linux)       bundled    BSD 3-clause
+  X11 client libraries       bundled    MIT license
+  libstdc++, libgcc          bundled    GPL v3 with GCC Runtime Exception
+
+  X11 client libraries: libX11, libXft, libXcursor, libXrender, libXext,
+  libXfixes, libXss, libXau, libxcb, libSM, libICE.
+
+Scidc itself is distributed under the GNU General Public License version 2
+or later; see the License tab for its full text.
+
+
+========================================================================
+Tcl/Tk license
+(Tcl/Tk, forked Tk text widget, tk_busy, tk_panedwindow)
+========================================================================
+
+This software is copyrighted by the Regents of the University of
+California, Sun Microsystems, Inc., Scriptics Corporation, ActiveState
+Corporation, Apple Inc. and other parties.  The following terms apply to
+all files associated with the software unless explicitly disclaimed in
+individual files.
+
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose, provided
+that existing copyright notices are retained in all copies and that this
+notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.
+Modifications to this software may be copyrighted by their authors
+and need not follow the licensing terms described here, provided that
+the new terms are clearly indicated on the first page of each file where
+they apply.
+
+IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE
+NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+
+GOVERNMENT USE: If you are acquiring this software on behalf of the
+U.S. government, the Government shall have only "Restricted Rights"
+in the software and related documentation as defined in the Federal
+Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+are acquiring the software on behalf of the Department of Defense, the
+software shall be classified as "Commercial Computer Software" and the
+Government shall have only "Restricted Rights" as defined in Clause
+252.227-7013 (b) (3) of DFARs.  Notwithstanding the foregoing, the
+authors grant the U.S. Government and others acting in its behalf
+permission to use and distribute the software in accordance with the
+terms specified in this license.
+
+========================================================================
+TkTreeCtrl
+========================================================================
+
+This software is copyrighted by Tim Baker and other parties.  The
+following terms apply to all files associated with the software unless
+explicitly disclaimed in individual files.
+
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose, provided
+that existing copyright notices are retained in all copies and that this
+notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.
+Modifications to this software may be copyrighted by their authors
+and need not follow the licensing terms described here, provided that
+the new terms are clearly indicated on the first page of each file where
+they apply.
+
+IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE
+NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+
+GOVERNMENT USE: If you are acquiring this software on behalf of the
+U.S. government, the Government shall have only "Restricted Rights"
+in the software and related documentation as defined in the Federal 
+Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+are acquiring the software on behalf of the Department of Defense, the
+software shall be classified as "Commercial Computer Software" and the
+Government shall have only "Restricted Rights" as defined in Clause
+252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the
+authors grant the U.S. Government and others acting in its behalf
+permission to use and distribute the software in accordance with the
+terms specified in this license. 
+
+========================================================================
+TkDND
+========================================================================
+
+This software is copyrighted by:
+   Georgios Petasis, Athens, Greece.
+   e-mail: petasisg@yahoo.gr, petasis@iit.demokritos.gr
+
+   Mac portions (c) 2009 Kevin Walzer/WordTech Communications LLC,
+   kw@codebykevin.com
+
+The following terms apply to all files associated with the
+software unless explicitly disclaimed in individual files.
+
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose, provided
+that existing copyright notices are retained in all copies and that this
+notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.
+Modifications to this software may be copyrighted by their authors
+and need not follow the licensing terms described here, provided that
+the new terms are clearly indicated on the first page of each file where
+they apply.
+
+IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE
+NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+
+GOVERNMENT USE: If you are acquiring this software on behalf of the
+U.S. government, the Government shall have only "Restricted Rights"
+in the software and related documentation as defined in the Federal 
+Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+are acquiring the software on behalf of the Department of Defense, the
+software shall be classified as "Commercial Computer Software" and the
+Government shall have only "Restricted Rights" as defined in Clause
+252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the
+authors grant the U.S. Government and others acting in its behalf
+permission to use and distribute the software in accordance with the
+terms specified in this license. 
+
+========================================================================
+Tkhtml3
+========================================================================
+
+Copyright (c) 2005 Dan Kennedy.
+All rights reserved.
+
+This Open Source project was made possible through the financial support
+of Eolas Technologies Inc.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Eolas Technologies Inc. nor the names of its
+      contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+========================================================================
+expat
+========================================================================
+
+Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd
+                               and Clark Cooper
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+========================================================================
+zlib license
+(zlib, minizip-ng, libharu)
+========================================================================
+
+    THE ZLIB/LIBPNG LICENSE       (copy from opensource.org)
+
+    Copyright (c) <year> <copyright holders>
+
+    This software is provided 'as-is', without any express
+    or implied warranty. In no event will the authors be
+    held liable for any damages arising from the use of this
+    software.
+
+    Permission is granted to anyone to use this software for
+    any purpose, including commercial applications, and to
+    alter it and redistribute it freely, subject to the
+    following restrictions:
+
+	  1. The origin of this software must not be
+	  misrepresented; you must not claim that you
+	  wrote the original software. If you use this
+	  software in a product, an acknowledgment in
+	  the product documentation would be
+	  appreciated but is not required.
+
+	  2. Altered source versions must be plainly
+	  marked as such, and must not be
+	  misrepresented as being the original
+	  software.
+
+	  3. This notice may not be removed or altered
+	  from any source distribution.
+
+========================================================================
+zziplib
+========================================================================
+
+zziplib is dual-licensed under the GNU Lesser General Public License
+version 2 and the ZZIP license (a Mozilla-style license). The full text
+of both ships with the source distribution as
+    src/util/zzip/COPYING.LIB   (LGPL v2)
+    src/util/zzip/COPYING.ZZIP  (ZZIP license)
+and is available at https://github.com/gdraheim/zziplib
+
+========================================================================
+universalchardet
+========================================================================
+
+The Mozilla character-set detector is tri-licensed under the Mozilla
+Public License 1.1, the GNU General Public License version 2 and the
+GNU Lesser General Public License version 2.1. Scidc uses it under the
+GNU General Public License version 2. The license texts are available at
+    https://www.mozilla.org/MPL/1.1/
+    https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+    https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+========================================================================
+libhyphenate
+========================================================================
+
+libhyphenate is distributed under the GNU Lesser General Public License
+version 2.1 or, at your option, any later version. The full text is
+available at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+========================================================================
+Anti-Grain Geometry, libTeXt, JPEG decoder
+========================================================================
+
+These components are distributed under the GNU General Public License
+version 2 or later - the same license as Scidc itself. See the License
+tab for the full text.
+
+========================================================================
+Bundled system libraries
+========================================================================
+
+FreeType, libpng, fontconfig, Brotli, bzip2, libbsd, libmd, libuuid,
+the X11 client libraries and the GCC runtime are shipped unmodified
+inside the AppImage. Their licenses travel with the respective upstream
+projects; none of them places any restriction on redistributing Scidc.
+
+    FreeType     https://freetype.org/license.html
+    libpng       http://www.libpng.org/pub/png/src/libpng-LICENSE.txt
+    fontconfig   https://gitlab.freedesktop.org/fontconfig/fontconfig
+    Brotli       https://github.com/google/brotli
+    bzip2        https://sourceware.org/bzip2/
+    libbsd       https://libbsd.freedesktop.org/
+    util-linux   https://github.com/util-linux/util-linux
+    X.Org        https://www.x.org/wiki/Licenses/
+    GCC runtime  https://www.gnu.org/licenses/gcc-exception-3.1.html
+}
 
 } ;# namespace info
 
