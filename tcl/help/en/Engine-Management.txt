@@ -34,6 +34,17 @@ be configured. The most recently used engines are noted.
 </p>
 
 <p>
-On the first program start Scidc offers to download a set of default engines, since
-no engines are bundled with the program itself.
+No engines are bundled with the program itself &ndash; they are downloaded on
+demand. The <b>Download engines</b> button in the engine management opens a
+download dialog with one row per engine: version, size, state and the buttons
+<b>Download</b> or <b>Remove</b> and <b>Project page</b>. A status line follows the
+progress (download &ndash; checksum &ndash; unpack &ndash; register), and
+<b>Check for newer versions</b> compares the installed engines against their
+original projects. The engines come straight from those projects&rsquo; release
+pages; every file is verified against a SHA-256 checksum after downloading.
+</p>
+
+<p>
+On the very first program start the welcome window already offers the same
+selection, so the desired engines can be set up right away.
 </p>
