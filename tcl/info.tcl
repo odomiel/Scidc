@@ -334,7 +334,13 @@ proc DisplayContributions {w} {
 		<div class='box'>
 			<h1>$mc::AIAssistance</h1>
 			<hr/>
-			<p>[Name {Claude · Anthropic}]</p>
+			<table border='0'>
+				<tr>
+					<td>[Name {Claude · Anthropic}]</td>
+					<td>\u2000\u2000</td>
+					<td>[Name {Mistral · Mistral AI}]</td>
+				</tr>
+			</table>
 		</div>
 		<div class='box'>
 			<h1>$mc::Development</h1>
