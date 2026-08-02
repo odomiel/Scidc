@@ -27,6 +27,10 @@ variable sliderWidth 8
 variable strongTtk false
 variable repeatDelay 0
 variable repeatInterval 0
+# Fest auf 1: seit dem Wegfall des Themen-Menues ist der Menuestil nicht mehr
+# umschaltbar und wird auch nicht mehr gespeichert. Die else-Zweige in
+# configureCheckEntry/configureRadioEntry (und in browser.tcl) sind damit tot,
+# bleiben aber vorerst stehen.
 variable useCustomStyleMenuEntries 1
 
 variable Settings
@@ -328,7 +332,7 @@ proc configureBackground {w} {
 proc notebookBorderwidth {} {
 	switch [currentTheme] {
 		alt { return 1 }
-		clam - clearlooks - scidblue - darkmode { return 2 }
+		clam - darkmode { return 2 }
 	}
 	set result [ttk::style lookup TNotebook -borderwidth]
 	# Tk 9 liefert Bildschirmdistanzen mit Einheit ("1.5p") - in Pixel umrechnen.
@@ -407,8 +411,7 @@ proc SetupCurrentTheme {} {
 
 	# adjust padding of arrows in spinbox (the default padding is quite ugly)
 	switch "_[currentTheme]" {
-		_alt - _clam - _default { ttk::style configure TSpinbox -padding {2 0 2 0} }
-		_clearlooks - _scidblue - _darkmode { ttk::style configure TSpinbox -padding {2 0 2 0} }
+		_alt - _clam - _default - _darkmode { ttk::style configure TSpinbox -padding {2 0 2 0} }
 	}
 
 	# get TTK background color

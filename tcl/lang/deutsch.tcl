@@ -262,10 +262,7 @@
 ::progress::mc::Message(copy-game)				"%s Partie(n) kopieren"
 
 ### menu ###############################################################
-::menu::mc::Theme								"Thema"
 ::menu::mc::ColorScheme						"Farbschema"
-::menu::mc::CustomStyleMenu				"Scidc's Menüstil"
-::menu::mc::DefaultStyleMenu				"Standard-Menüstil"
 ::menu::mc::OrdinaryMonitor				"Gewöhnlicher Monitor (Hell)"
 ::menu::mc::HighQualityMonitor			"Hochwertiger Monitor (Hell)"
 ::menu::mc::NightMode					"Nachtmodus (Dunkel)"

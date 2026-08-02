@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.02 b1 Beta"
+	set version "26.08.02 b2 Beta"
 }
 
 
@@ -3773,7 +3773,7 @@ proc configureBackground {w} {
 proc notebookBorderwidth {} {
 	switch [currentTheme] {
 		alt { return 1 }
-		clam - clearlooks - scidblue - darkmode { return 2 }
+		clam - darkmode { return 2 }
 	}
 	set result [ttk::style lookup TNotebook -borderwidth]
 	if {![catch { winfo pixels . $result } pixels]} { return $pixels }
@@ -3843,8 +3843,7 @@ proc SetupCurrentTheme {} {
 	}
 
 	switch "_[currentTheme]" {
-		_alt - _clam - _default { ttk::style configure TSpinbox -padding {2 0 2 0} }
-		_clearlooks - _scidblue - _darkmode { ttk::style configure TSpinbox -padding {2 0 2 0} }
+		_alt - _clam - _default - _darkmode { ttk::style configure TSpinbox -padding {2 0 2 0} }
 	}
 
 	set background [::ttk::style lookup [currentTheme] -background]
@@ -150217,10 +150216,7 @@ update idletasks
 namespace eval menu {
 namespace eval mc {
 
-set Theme							"Theme"
 set ColorScheme					"Color Scheme"
-set CustomStyleMenu				"Scidc's Style Menu"
-set DefaultStyleMenu				"Default Style Menu"
 set OrdinaryMonitor				"Ordinary Monitor (Light)"
 set HighQualityMonitor			"High Quality Monitor (Light)"
 set NightMode					"Night Mode (Dark)"
@@ -150295,11 +150291,15 @@ if {[info exists ::i18n::languages]} {
 
 variable Fullscreen			0
 variable HideMenu				0
-variable Theme					default
 variable FileSelBoxInUse	0
 variable Entry
 variable SubMenu
 variable MenuWidget
+
+
+proc themeForScheme {scheme} {
+	return [expr {$scheme eq "night" ? "darkmode" : "clam"}]
+}
 
 
 proc setup {} {
@@ -150315,7 +150315,6 @@ proc setup {} {
 
 proc build {menu} {
 	variable Fullscreen
-	variable Theme
 	variable ColorScheme_
 
 	if {![info exists ColorScheme_]} { set ColorScheme_ $::colors::Scheme }
@@ -150361,42 +150360,6 @@ proc build {menu} {
 		::theme::configureRadioEntry $m $text
 	}
 
-	### theme ################################################################
-	set m [menu $menu.mTheme]
-	$menu add cascade \
-		-menu $m \
-		-label " $mc::Theme" \
-		-image $::icon::16x16::none \
-		-compound left \
-		;
-	set Theme [::theme::currentTheme]
-	set styles [lsort -dictionary [ttk::style theme names]]
-	set i [lsearch -exact $styles default]
-	if {$i >= 0} { set styles [linsert [lreplace $styles $i $i] 0 default] }
-	foreach style $styles {
-		if {$style ne "classic"} {
-			$m add radiobutton \
-				-label $style \
-				-variable [namespace current]::Theme \
-				-value $style \
-				-command [list ::theme::setTheme $style] \
-				;
-			::theme::configureRadioEntry $m
-		}
-	}
-	$m add separator
-	$m add radiobutton \
-		-label $mc::CustomStyleMenu \
-		-variable ::theme::useCustomStyleMenuEntries \
-		-value 1 \
-		;
-	::theme::configureRadioEntry $m
-	$m add radiobutton \
-		-label $mc::DefaultStyleMenu \
-		-variable ::theme::useCustomStyleMenuEntries \
-		-value 0 \
-		;
-	::theme::configureRadioEntry $m
 
 	### colors ###############################################################
 	set m [menu $menu.mColors]
@@ -151193,11 +151156,6 @@ proc Progress {cmd w {value 0}} {
 
 proc SwitchColorScheme {scheme restartCmd} {
 	set ::colors::Scheme $scheme
-	if {$scheme eq "night"} {
-		set ::menu::Theme darkmode
-	} elseif {$::menu::Theme eq "darkmode"} {
-		set ::menu::Theme clam
-	}
 	uplevel #0 $restartCmd
 }
 
@@ -151253,7 +151211,6 @@ proc notYetImplemented {parent what} {
 
 proc WriteOptions {chan} {
 	::options::writeItem  $chan [namespace current]::Welcome
-	::options::writeItem  $chan ::theme::useCustomStyleMenuEntries
 }
 ::options::hookWriter [namespace current]::WriteOptions
 
@@ -151372,7 +151329,6 @@ proc colormenu::tooltip {args} { ::tooltip::tooltip {*}$args }
 proc WriteOptions {chan} {
 	options::writeList $chan ::dialog::choosecolor::userColorList
 	options::writeItem $chan ::table::options
-	options::writeItem $chan ::menu::Theme
 	options::writeItem $chan ::colors::Scheme
 	options::writeItem $chan ::toolbar::Options
 	options::writeItem $chan ::fsbox::bookmarks::Bookmarks
@@ -151633,12 +151589,7 @@ set scidc::revision [::scidc::misc::revision]
 splash::print "$load::mc::Startup..."
 mc::setup
 font::useLanguage $mc::langID
-if {$::colors::Scheme eq "night"} {
-	set ::menu::Theme darkmode
-} elseif {$::menu::Theme eq "darkmode"} {
-	set ::menu::Theme clam
-}
-theme::setTheme $menu::Theme
+theme::setTheme [menu::themeForScheme $::colors::Scheme]
 menu::setup
 board::setup
 tooltip::init

@@ -264,10 +264,7 @@
 ::progress::mc::Message(copy-game)		"%s játszná(k) másolása"
 
 ### menu ###############################################################
-::menu::mc::Theme			"Téma"
 ::menu::mc::ColorScheme			"Color Scheme" ;# NEW
-::menu::mc::CustomStyleMenu		"Scidc's Style Menu" ;# NEW
-::menu::mc::DefaultStyleMenu		"Default Style Menu" ;# NEW
 ::menu::mc::OrdinaryMonitor		"Normál monitor (világos)"
 ::menu::mc::HighQualityMonitor		"Kiváló minőségű monitor (világos)"
 ::menu::mc::NightMode					"Éjszakai mód (sötét)"

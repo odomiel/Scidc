@@ -263,10 +263,7 @@
 ::progress::mc::Message(copy-game)				"Copia %s partite"
 
 ### menu ###############################################################
-::menu::mc::Theme								"Tema"
 ::menu::mc::ColorScheme						"Schema Colori"
-::menu::mc::CustomStyleMenu				"Stile Menu di Scidc"
-::menu::mc::DefaultStyleMenu				"Stile Menu di Default"
 ::menu::mc::OrdinaryMonitor				"Monitor Normale (chiaro)"
 ::menu::mc::HighQualityMonitor			"Monitor di Alta Qualità (chiaro)"
 ::menu::mc::NightMode					"Modalità notte (scura)"

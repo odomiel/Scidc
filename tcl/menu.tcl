@@ -29,10 +29,7 @@
 namespace eval menu {
 namespace eval mc {
 
-set Theme							"Theme"
 set ColorScheme					"Color Scheme"
-set CustomStyleMenu				"Scidc's Style Menu"
-set DefaultStyleMenu				"Default Style Menu"
 set OrdinaryMonitor				"Ordinary Monitor (Light)"
 set HighQualityMonitor			"High Quality Monitor (Light)"
 set NightMode					"Night Mode (Dark)"
@@ -113,11 +110,25 @@ if {[info exists ::i18n::languages]} {
 
 variable Fullscreen			0
 variable HideMenu				0
-variable Theme					default
 variable FileSelBoxInUse	0
 variable Entry
 variable SubMenu
 variable MenuWidget
+
+
+# Das ttk-Thema ist keine eigene Einstellung mehr, sondern folgt dem
+# Farbschema. Frueher liess das Menue "Thema" jedes ttk-Thema zu, auch
+# unbrauchbare Mischungen wie helles Schema mit dunklem Thema.
+#
+#    Nachtmodus                        -> darkmode
+#    Gewoehnlicher/Hochwertiger Monitor -> clam
+#
+# "darkmode" ist Pflicht fuer den Nachtmodus: nur dieses Thema setzt
+# strongTtk, wodurch auch die klassischen (nicht-ttk) Tk-Widgets - Menues,
+# Eingabefelder, Listen - dunkle Hintergruende bekommen.
+proc themeForScheme {scheme} {
+	return [expr {$scheme eq "night" ? "darkmode" : "clam"}]
+}
 
 
 proc setup {} {
@@ -133,7 +144,6 @@ proc setup {} {
 
 proc build {menu} {
 	variable Fullscreen
-	variable Theme
 	variable ColorScheme_
 
 	if {![info exists ColorScheme_]} { set ColorScheme_ $::colors::Scheme }
@@ -179,42 +189,9 @@ proc build {menu} {
 		::theme::configureRadioEntry $m $text
 	}
 
-	### theme ################################################################
-	set m [menu $menu.mTheme]
-	$menu add cascade \
-		-menu $m \
-		-label " $mc::Theme" \
-		-image $::icon::16x16::none \
-		-compound left \
-		;
-	set Theme [::theme::currentTheme]
-	set styles [lsort -dictionary [ttk::style theme names]]
-	set i [lsearch -exact $styles default]
-	if {$i >= 0} { set styles [linsert [lreplace $styles $i $i] 0 default] }
-	foreach style $styles {
-		if {$style ne "classic"} {
-			$m add radiobutton \
-				-label $style \
-				-variable [namespace current]::Theme \
-				-value $style \
-				-command [list ::theme::setTheme $style] \
-				;
-			::theme::configureRadioEntry $m
-		}
-	}
-	$m add separator
-	$m add radiobutton \
-		-label $mc::CustomStyleMenu \
-		-variable ::theme::useCustomStyleMenuEntries \
-		-value 1 \
-		;
-	::theme::configureRadioEntry $m
-	$m add radiobutton \
-		-label $mc::DefaultStyleMenu \
-		-variable ::theme::useCustomStyleMenuEntries \
-		-value 0 \
-		;
-	::theme::configureRadioEntry $m
+	# Hier stand das Menue "Thema" mit der freien Wahl des ttk-Themas sowie den
+	# beiden Eintraegen zum Menuestil. Das Thema folgt jetzt dem Farbschema
+	# (siehe themeForScheme), der Menuestil liegt fest.
 
 	### colors ###############################################################
 	set m [menu $menu.mColors]
@@ -1052,11 +1029,8 @@ proc Progress {cmd w {value 0}} {
 
 proc SwitchColorScheme {scheme restartCmd} {
 	set ::colors::Scheme $scheme
-	if {$scheme eq "night"} {
-		set ::menu::Theme darkmode
-	} elseif {$::menu::Theme eq "darkmode"} {
-		set ::menu::Theme clam
-	}
+	# Das passende ttk-Thema zieht der naechste Start aus dem Schema nach
+	# (end.tcl); nur das Schema selbst wird gespeichert.
 	uplevel #0 $restartCmd
 }
 

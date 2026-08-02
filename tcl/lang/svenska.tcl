@@ -263,10 +263,7 @@
 ::progress::mc::Message(copy-game)				"Kopiera %s parti(er)"
 
 ### menu ###############################################################
-::menu::mc::Theme								"Tema"
 ::menu::mc::ColorScheme						"Color Scheme" ;# NEW
-::menu::mc::CustomStyleMenu				"Scidc's Style Menu" ;# NEW
-::menu::mc::DefaultStyleMenu				"Default Style Menu" ;# NEW
 ::menu::mc::OrdinaryMonitor				"Vanlig skärm (ljust)"
 ::menu::mc::HighQualityMonitor			"Högkvalitativ skärm (ljust)"
 ::menu::mc::NightMode					"Nattläge (mörkt)"

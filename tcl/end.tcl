@@ -74,7 +74,8 @@ proc notYetImplemented {parent what} {
 proc WriteOptions {chan} {
 	::options::writeItem  $chan [namespace current]::Welcome
 #	::options::writeItem  $chan [namespace current]::NotYetImplemented
-	::options::writeItem  $chan ::theme::useCustomStyleMenuEntries
+	# ::theme::useCustomStyleMenuEntries wird nicht mehr gespeichert - der
+	# Menuestil ist seit dem Wegfall des Themen-Menues fest.
 }
 ::options::hookWriter [namespace current]::WriteOptions
 
@@ -194,7 +195,8 @@ proc colormenu::tooltip {args} { ::tooltip::tooltip {*}$args }
 proc WriteOptions {chan} {
 	options::writeList $chan ::dialog::choosecolor::userColorList
 	options::writeItem $chan ::table::options
-	options::writeItem $chan ::menu::Theme
+	# ::menu::Theme wird nicht mehr gespeichert - das ttk-Thema wird beim Start
+	# aus ::colors::Scheme abgeleitet (::menu::themeForScheme).
 	options::writeItem $chan ::colors::Scheme
 	options::writeItem $chan ::toolbar::Options
 	options::writeItem $chan ::fsbox::bookmarks::Bookmarks
@@ -466,12 +468,7 @@ set scidc::revision [::scidc::misc::revision]
 splash::print "$load::mc::Startup..."
 mc::setup
 font::useLanguage $mc::langID
-if {$::colors::Scheme eq "night"} {
-	set ::menu::Theme darkmode
-} elseif {$::menu::Theme eq "darkmode"} {
-	set ::menu::Theme clam
-}
-theme::setTheme $menu::Theme
+theme::setTheme [menu::themeForScheme $::colors::Scheme]
 menu::setup
 board::setup
 tooltip::init
