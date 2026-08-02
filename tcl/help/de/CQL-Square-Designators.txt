@@ -191,7 +191,6 @@ können Skripte formuliert werden für alle Schachformen gemeinsam.
     <td class="left"><expr>&N;[+]</expr></td>
     <td class="right">
       kennzeichnet einen weißen Springer in der Rückhand</td>
-    </td>
   </tr>
 </table>
 

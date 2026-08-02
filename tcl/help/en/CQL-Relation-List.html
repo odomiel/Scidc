@@ -60,7 +60,7 @@ Example:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:relation</span></span> (<span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:missingpiececount">:missingpiececount</span></a> <span class='cql' title='Any white piece'>&#x25cb;</span> 1 unlimited))
+(position <span style='white-space:nowrap;'><span class='keyword'>:relation</span></span> (<span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:missingpiececount">:missingpiececount</a></span> <span class='cql' title='Any white piece'>&#x25cb;</span> 1 unlimited))
 </code></div>
 
 <p>
@@ -108,7 +108,7 @@ To search games in which the same position occurs with white and black to move
 </p>
 
 <div class='verb'><code>
-position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</span></a> (<span style='white-space:nowrap;'><span class='keyword'>:changesidetomove</span></span>))
+position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</a></span> (<span style='white-space:nowrap;'><span class='keyword'>:changesidetomove</span></span>))
 </code></div>
 
 <h3 id="relation:flip">:flip</h3>
@@ -129,11 +129,11 @@ Side to move information is ignored.
 
 <p>
 This keyword takes the same parameters as does the
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> keyword in a position list: a pieced
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> keyword in a position list: a pieced
 designator followed by a range. A missing piece is a piece that occurs in
 P1 on a square that is empty on P2. P2 matches if the number of these
 missing pieces lies within the range specifier. Unlike the case of the
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> keyowrd, at most one
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> keyowrd, at most one
 <span style='white-space:nowrap;'>:missingpiececount</span> specifier can occur inside the relation list.
 No shift or flip transformation specifiers in the containing position list
 affect the piece designator in this keyword.
@@ -148,11 +148,11 @@ be no missing pieces.
 <h3 id="relation:newpiececount">:newpiececount</h3>
 
 <p>
-This keyword takes the same parameters as does the <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a>
+This keyword takes the same parameters as does the <a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a>
 keyword in a position list: a pieced designator followed by a range. A new piece
 is a piece that occurs in P2 on a square that is empty on P1. P2 matches if the
 number of these new pieces lies within the range specifier. Unlike the case of
-the <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pieccount">:pieccount</span></span> : <span style='white-space:nowrap;'>position</span></a> keyowrd, at most one <span style='white-space:nowrap;'>:newpiececount</span>
+the <a href="CQL-Position-List.html#position:pieccount"><span style='white-space:nowrap;'>:pieccount</span> : <span style='white-space:nowrap;'>position</span></a> keyowrd, at most one <span style='white-space:nowrap;'>:newpiececount</span>
 specifier can occur. No shift or flip transformation specifiers in the
 containing position list affect the piece designator in this keyword.
 </p>

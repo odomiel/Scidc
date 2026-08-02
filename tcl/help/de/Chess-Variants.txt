@@ -43,6 +43,7 @@ Scidc unterstützt verschiedene Schachformen, zur Zeit sind dies:
       <td></td>
       <td>(<a href="http://en.wikipedia.org/wiki/Crazyhouse">Crazyhouse</a>)</td>
       <td>(<a href="http://www.chessvariants.org/other.dir/chessgi.html">Chessgi</a> (Englisch))</td>
+    </tr>
     <tr>
       <td><a href="http://de.wikipedia.org/wiki/R%C3%A4uberschach">
         %::mc::VariantName(Antichess)%</a></td>

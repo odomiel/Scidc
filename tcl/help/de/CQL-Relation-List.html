@@ -50,7 +50,7 @@
 <h2 id="relation">Das Schlüsselwort :relation</h2>
 
 <p>
-Das Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</span></span> : <span style='white-space:nowrap;'>position</span></a> kann in einer Positionsliste verwendet
+Das Schlüsselwort <a href="CQL-Position-List.html#position:relation"><span style='white-space:nowrap;'>:relation</span> : <span style='white-space:nowrap;'>position</span></a> kann in einer Positionsliste verwendet
 werden. Es erwartet als Argument eine Relationenspezifikation. Eine
 Relationenspezifikation ist eine Liste von Argumenten für dieses Schlüsselwort.
 </p>
@@ -60,7 +60,7 @@ Beispiel:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:relation</span></span> (<span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:missingpiececount">:missingpiececount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> &gt;0))
+(position <span style='white-space:nowrap;'><span class='keyword'>:relation</span></span> (<span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:missingpiececount">:missingpiececount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> &gt;0))
 </code></div>
 
 <p>
@@ -111,7 +111,7 @@ sinnvoll bei der Suche nach beidseitigem Zugzwang, wie folgt:
 </p>
 
 <div class='verb'><code>
-position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</span></a> (<span style='white-space:nowrap;'><span class='keyword'>:changesidetomove</span></span>))
+position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</a></span> (<span style='white-space:nowrap;'><span class='keyword'>:changesidetomove</span></span>))
 </code></div>
 
 <h3 id="relation:flip">:flip&emsp;<span class='normal'>(Spiegelung)</span></h3>
@@ -132,13 +132,13 @@ Das Zugrecht wird ignoriert beim Stellungsvergleich.
 
 <p>
 Dieses Schlüsselwort erwartet die gleichen Argumente wie das Schlüsselwort
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> in der Positionsliste: einen
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> in der Positionsliste: einen
 Figurenbezeichner gefolgt von einer
 <a href="CQL-Range-Specifiers.html">Bereichsangabe</a>. Eine fehlende Figur
 ist eine Figur, die in P1 auf einem Feld steht das in P2 leerstehend ist.
 P2 wird gefiltert wenn die Anzahl der fehlenden Figuren innerhalb des
 gegebenen Bereichs liegt. Anders als im Fall des Schlüsselworts
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> kann <span style='white-space:nowrap;'>:missingpiececount</span> nur
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> kann <span style='white-space:nowrap;'>:missingpiececount</span> nur
 einmalig innerhalb der Relationsliste verwendet werden. Keine diedrische
 Transformation und auch keine Translation in der beinhaltenden Positionsliste
 beeinflußt den Figurenbezeichner dieses Schlüsselworts.
@@ -154,13 +154,13 @@ es keine fehlenden Figuren geben.
 
 <p>
 Dieses Schlüsselwort erwartet die gleichen Argument wie das Schlüsselwort
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> in der Positionsliste: einen Figurenbezeichner
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> in der Positionsliste: einen Figurenbezeichner
 gefolget von einer
 <a href="CQL-Range-Specifiers.html">Bereichsangabe</a>. Eine zusätzliche Figur
 ist eine Figur, die in P2 auf einem Feld steht das in P1 leerstehend ist.
 P2 wird gefiltert wenn die Anzahl der zusätzlichen Figuren innerhalb des
 gegebenen Bereichs liegt. Anders als im Fall des Schlüsselworts
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></span> : <span style='white-space:nowrap;'>position</span></a> kann <span style='white-space:nowrap;'>:newpiececount</span> nur
+<a href="CQL-Position-List.html#position:piececount"><span style='white-space:nowrap;'>:piececount</span> : <span style='white-space:nowrap;'>position</span></a> kann <span style='white-space:nowrap;'>:newpiececount</span> nur
 einmalig innerhalb der Relationsliste verwendet werden. Keine diedrische
 Transformation und auch keine Translation in der beinhaltenden Positionsliste
 beeinflußt den Figurenbezeichner dieses Schlüsselworts.

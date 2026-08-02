@@ -41,7 +41,7 @@ BEGIN
   <tr><td>      &#x2022;</td><td><a href="#match:elo">:elo</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:whiteelo">:whiteelo</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:blackelo">:blackelo</a></td></tr>
-  <tr><td>      &#x2022;</td><td><a href="#match:error">:error</a></td>
+  <tr><td>      &#x2022;</td><td><a href="#match:error">:error</a></td></tr>
   <tr><td>      &#x2022;</td><td><a href="#match:event">:event</a></td></tr>
   <tr><td>      &#x2022;</td><td><a href="#match:eventcategory">:eventcategory</a></td></tr>
   <tr><td>      &#x2022;</td><td><a href="#match:eventcountry">:eventcountry</a></td></tr>

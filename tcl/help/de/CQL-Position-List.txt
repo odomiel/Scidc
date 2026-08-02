@@ -418,6 +418,7 @@ einen schwarzfeldrigen Läufer hat, aber nicht beides.
     <td>      &#x2022;</td><td><a href="#position:initial">:initial</a></td>
     <td>&emsp;&#x2022;</td><td><a href="#position:whitecannotwin">:whitecannotwin</a></td>
   </tr>
+  <tr>
     <td>      &#x2022;</td><td><a href="#position:insidevariation">:insidevariation</a></td>
     <td>&emsp;&#x2022;</td><td><a href="#position:wtm">:wtm</a></td>
   </tr>
@@ -1873,13 +1874,13 @@ Die unterstützen Bauerneigenschaften bzw. Bauernstruktureigenschaften sind:
                     gleichen Linie stehen. Z.B. kann ein weißer Bauer c7 unmittelbar
                     hinter einem schwarzen Bauer c6 stehen.</td>
     </tr>
-    </tr>
+    <tr>
       <td class="l" valign="top"><expr>stoppable</expr></td>
       <td class="r">Stoppbare Bauern: alle Bauern, die am Weiterrücken bis
                     zur gegnerischen Grundreihe von einem gegnerischen Bauern
                     in einer benachbarten Linie gehindert werden.</td>
     </tr>
-    </tr>
+    <tr>
       <td class="l" valign="top"><expr>stopped</expr></td>
       <td class="r">Gestoppte Bauern: alle Bauern, die am Weiterrücken von
                     einem gegnerischen Bauern, der in einer benachbarten Reihe

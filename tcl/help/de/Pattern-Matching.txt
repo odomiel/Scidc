@@ -202,7 +202,7 @@ oder <expr>"Kasparova"</expr>.
 Kasparov, Garry
 </verb>
 
-</p>
+<p>
 Dies findet <expr>"Kasparov, Garry"</expr> auf. Aufgrund der Regelung mit dem
 Trennzeichen können ebenfalls auch die folgende Zeichenketten aufgefunden werden:
 <expr>"Kasparov,Garry"</expr> (fehlendes Leerzeichen) und

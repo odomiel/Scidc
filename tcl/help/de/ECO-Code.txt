@@ -30,8 +30,8 @@ und bewertet, auf Worte wird verzichtet, so daß die Ausgaben international verst
 </p>
 
 <ul>
-  <li><a href="#overview">Übersicht</li>
-  <li><a href="#details">Detaillierte Auflistung</li>
+  <li><a href="#overview">Übersicht</a></li>
+  <li><a href="#details">Detaillierte Auflistung</a></li>
   <li><a href="#links">Weiterführende Links</a></li>
 </ul>
 

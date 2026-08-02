@@ -640,12 +640,21 @@ proc readContents {chan file} {
 				set text [join [lrange $parts 1 end] ":"]
 				set Section [string toupper $section 0 0]
 				set href [string map {* _} $keyword]
-				append newline \
-					"<nobr>$exclamationMark<a href=\"CQL-$Section-List.html#$section:$href\">:$text</nobr>"
+				# Achtung: <a> und <nobr> duerfen sich nicht ueberkreuzen. Frueher
+				# stand hier <nobr>...<a>...</nobr>...</a>, was zu
+				# <span><a>...</span></a> wurde. Tkhtml stellt das klaglos dar,
+				# aber die Hilfesuche parst mit expat (util::html::Search) und
+				# lehnt es als "mismatched tag" ab - die betroffene Seite wurde
+				# dann bei jeder Suche stillschweigend uebersprungen.
+				set url "CQL-$Section-List.html#$section:$href"
 				if {!$insideVerbatim && [string length $thisSection] && $section ne $thisSection} {
-					append newline "</nobr> : <nobr>$section</nobr>"
+					# Verweis aussen, damit beide <nobr> vollstaendig hineinpassen
+					append newline "<a href=\"$url\">"
+					append newline "<nobr>$exclamationMark:$text</nobr> : <nobr>$section</nobr>"
+					append newline "</a>"
+				} else {
+					append newline "<nobr>$exclamationMark<a href=\"$url\">:$text</a></nobr>"
 				}
-				append newline "</a>"
 			}
 			append newline [string range $line [expr {$k + 1}] end]
 			set line $newline

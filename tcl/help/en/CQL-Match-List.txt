@@ -764,7 +764,7 @@ Search for blitz and bullet games.
   <tr><td>      &#x2022;</td><td><a href="#match:rating">:rating</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:whiteplayer">:whiteplayer</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:blackplayer">:blackplayer</a></td></tr>
-  <tr><td>      &#x2022;</td><td><a href="#match:ratingdifference:">:ratingdifference</a></td></tr>
+  <tr><td>      &#x2022;</td><td><a href="#match:ratingdifference">:ratingdifference</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:whiterating">:whiterating</a></td>
       <td>&emsp;&#x2022;</td><td><a href="#match:blackrating">:blackrating</a></td></tr>
   <tr><td>      &#x2022;</td><td><a href="#match:title">:title</a></td>
@@ -2259,7 +2259,6 @@ Locate issues that occured while importing games from Scid or ChessBase database
       <td class="r" valign="top">
         In seldom cases this problem can happen because the decoding in a
         ChessBase databases was not possible.</td>
-      </td>
     </tr>
     <tr>
       <td class="l" valign="top" style="white-space:nowrap">GameDataCorrupted</td>

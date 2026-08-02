@@ -76,8 +76,8 @@ Erweiterung ist, also nicht zum CQL-Standard gehört.
 </p>
 
 <p>
-Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:castling">:castling</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgame">:endgame</span></a>
-und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:inside">:inside</span></a> sind von Chess Assistant 9 entlehnt worden. Die
+Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:castling">:castling</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgame">:endgame</a></span>
+und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:inside">:inside</a></span> sind von Chess Assistant 9 entlehnt worden. Die
 Beschreibung dieser Schlüsselwörter entstammt dem Dokument
 <a href="http://hornid.com/chess/docs/CQL-3GX.pdf" target="blank_">The CQL 3.GX Extension&nbsp;<span class="awesome">&#xf08e;</span></a>.
 </p>
@@ -88,7 +88,7 @@ werden, dies ist dann eine Kurzschreibweise; z.B. ist
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:check">:check</span></a>)
+(position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:check">:check</a></span>)
 </code></div>
 
 <p>
@@ -96,7 +96,7 @@ eine Kurzschreibweise für
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a> (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>))
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span> (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>))
 </code></div>
 
 <p>
@@ -332,10 +332,10 @@ Beispiel:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:wtm">:wtm</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:wtm">:wtm</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:and</span></span> (
-    (position <span class='piece'>&#x2654;</span>e2 <span class='piece'>&#x265a;</span>g2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a>)
+    (position <span class='piece'>&#x2654;</span>e2 <span class='piece'>&#x265a;</span>g2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span>)
     (position <span class='piece'>&#x2658;</span>e2)))<!--
 --></code></pre></div>
 
@@ -386,12 +386,12 @@ gewertet, wenn alle zuvorigen Klauseln nicht erfüllt werden.
 <p>
 Tatsächlich ist das Schlüsselwort <span style='white-space:nowrap;'>:cond</span> nicht redundant, denn
 die folgende Umformumg mit <span style='white-space:nowrap;'>:or</span> ist nicht in allen Fällen äquivalent
-(die Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a>
-oder <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:skip">:skip</span></a> durchbricht die Äquivalenz):
+(die Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span>
+oder <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:skip">:skip</a></span> durchbricht die Äquivalenz):
 </p>
 
 <div class='box'><pre><code><!--
--->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+-->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
   (position &lt;Bedingung<sub>1</sub>&gt; &lt;Ausdruck<sub>1</sub>&gt;)
   (position &lt;Bedingung<sub>2</sub>&gt; &lt;Ausdruck<sub>2</sub>&gt;)
   ...
@@ -428,7 +428,7 @@ markiert.
 
 <p>
 Für ein reelles Beispiel für die Anwendung von <span style='white-space:nowrap;'>:cond</span> siehe bei
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span>.
 </p>
 
 <h3 id="position:not">:not&emsp;<span class='normal'>(Nicht)</span></h3>
@@ -449,23 +449,23 @@ Beispiele:
 <div class='box'><pre><code><!--
 -->(position
   <span class='comment'>; wir suchen für beide Seiten</span>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span class='comment'>; die Mattposition muß alle folgenden Kriterien erfüllen</span>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</span></a> (
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</a></span> (
     <span class='comment'>; der König ist von Leerfeldern umgeben, wird einmal</span>
     <span class='comment'>; attackiert, und ist matt</span>
     (position
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='piece'>&#x265a;</span> . 8
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 1
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</span></a>)
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='piece'>&#x265a;</span> . 8
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 1
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</a></span>)
     <span class='comment'>; überprüfe daß kein Nachbar des schwarzen Königs</span>
     <span class='comment'>; mehr als einmal attackiert wird</span>
     (position
       <span style='white-space:nowrap;'><span class='keyword'>:not</span></span>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='piece'>&#x265a;</span> .e4 1
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> .e4 &gt;=2
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)))<!--
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='piece'>&#x265a;</span> .e4 1
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> .e4 &gt;=2
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)))<!--
 --></code></pre></div>
 
 <p>
@@ -517,10 +517,10 @@ Beispiel:
 <div class='box'><pre><code><!--
 -->(position
   <span style='white-space:nowrap;'><span class='keyword'>:or</span></span> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2657;</span><span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265d;</span><span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2657;</span><span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265d;</span><span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2)))<!--
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2657;</span><span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265d;</span><span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2657;</span><span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265d;</span><span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2)))<!--
 --></code></pre></div>
 
 <p>
@@ -606,6 +606,7 @@ einen schwarzfeldrigen Läufer hat, aber nicht beides.
     <td>      &#x2022;</td><td><a href="#position:initial">:initial</a></td>
     <td>&emsp;&#x2022;</td><td><a href="#position:whitecannotwin">:whitecannotwin</a></td>
   </tr>
+  <tr>
     <td>      &#x2022;</td><td><a href="#position:insidevariation">:insidevariation</a></td>
     <td>&emsp;&#x2022;</td><td><a href="#position:wtm">:wtm</a></td>
   </tr>
@@ -625,11 +626,11 @@ Normalerweise ist dies äquivalent zu folgender Abfrage:
 </p>
 
 <div class='box'><pre><code><!--
---><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+--><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
   <span class='comment'>; nur schwarzer König</span>
-  (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> 1)
+  (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> 1)
   <span class='comment'>; nur schwarzer König und schwarze Leichtfigur</span>
-  (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span> 1))<!--
+  (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span> 1))<!--
 --></code></pre></div>
 
 <p>
@@ -653,7 +654,7 @@ Filtere alle Positionen, in denen Schwarz (theoretisch) noch Gewinnmöglichkeite
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:whitecannotwin">:whitecannotwin</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:whitecannotwin">:whitecannotwin</a></span>.
 </p>
 
 <h3 id="position:btm">:btm&emsp;<span class='normal'>(Schwarz am Zug)</span></h3>
@@ -663,7 +664,7 @@ Filtere nur wenn Schwarz am Zug ist.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:wtm">:wtm</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:wtm">:wtm</a></span>.
 </p>
 
 <h3 id="position:check">:check&emsp;<span class='normal'>(Schachgebot)</span></h3>
@@ -698,9 +699,9 @@ Eine weiße Dame auf der gegnerischen Grundreihe bietet Schach.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span>.
 </p>
 
 <h3 id="position:castling">:castling&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Rochade)</span></h3>
@@ -762,7 +763,7 @@ Weiß hat das Recht für kurze und lange Rochade.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span>,
 </p>
 
 <h3 id="position:contactcheck">:contactcheck&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Kontaktschachgebot)</span></h3>
@@ -779,12 +780,12 @@ Dies ist äquivalent zu:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a> <span class='comment'>; um Schlagschachpartien auszufiltern</span>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> [<span class='piece'>&#x2658;</span><span class='piece'>&#x2659;</span>] <span class='piece'>&#x265a;</span> 1 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>)
-    (position [<span class='piece'>&#x2655;</span><span class='piece'>&#x2656;</span>]d4 <span class='piece'>&#x265a;</span>[c4,e4,d3,d5] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)
-    (position [<span class='piece'>&#x2655;</span><span class='piece'>&#x2657;</span>]d4 <span class='piece'>&#x265a;</span>[c3,c5,e3,e5] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)))<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span> <span class='comment'>; um Schlagschachpartien auszufiltern</span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> [<span class='piece'>&#x2658;</span><span class='piece'>&#x2659;</span>] <span class='piece'>&#x265a;</span> 1 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>)
+    (position [<span class='piece'>&#x2655;</span><span class='piece'>&#x2656;</span>]d4 <span class='piece'>&#x265a;</span>[c4,e4,d3,d5] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)
+    (position [<span class='piece'>&#x2655;</span><span class='piece'>&#x2657;</span>]d4 <span class='piece'>&#x265a;</span>[c3,c5,e3,e5] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)))<!--
 --></code></pre></div>
 
 <p>
@@ -815,9 +816,9 @@ Eine weiße Dame steht benachbart zum gegnerischen König (ein Kontaktschachgebo
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscontactcheck">:iscontactcheck</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscontactcheck">:iscontactcheck</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span>.
 </p>
 
 <h3 id="position:doublecheck">:doublecheck&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Doppelschachgebot)</span></h3>
@@ -832,9 +833,9 @@ Tatsächlich ist dies eine Kurzschreibweise für:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a> <span class='comment'>; um Schlagschachpartien auszufiltern</span>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span> <span class='comment'>; um Schlagschachpartien auszufiltern</span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>)<!--
 --></code></pre></div>
 
 <p>
@@ -866,7 +867,7 @@ Schach bieten (wie in der "immergrünen" Partie).
 
 <p>
 Sollen auch die Felder der beiden Figuren spezifiziert werden, dann ist hier die
-Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a> angebracht:
+Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span> angebracht:
 </p>
 
 <div class='box'><pre><code><!--
@@ -875,9 +876,9 @@ Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isdoublecheck">:isdoublecheck</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isdoublecheck">:isdoublecheck</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</a></span>.
 </p>
 
 <h3 id="position:endgame">:endgame&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Endspiel)</span></h3>
@@ -889,24 +890,24 @@ zur folgenden Abfrage:
 
 <div class='box'><pre><code><!--
 -->  (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>] 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x2656;</span><span class='piece'>&#x2657;</span><span class='piece'>&#x2658;</span>] 0 3
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265c;</span><span class='piece'>&#x265d;</span><span class='piece'>&#x265e;</span>] 0 3)
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>] 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x2657;</span><span class='piece'>&#x2658;</span>] 0 3
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265c;</span><span class='piece'>&#x265d;</span><span class='piece'>&#x265e;</span>] 0 3)
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2655;</span> 1
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265b;</span> 1
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>] 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 0 1
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span> 0 1)
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2655;</span> 1
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265b;</span> 1
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>] 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 0 1
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span> 0 1)
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2655;</span> 1
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2656;</span> 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 0 1
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265b;</span> 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</span></a> [<span class='piece'>&#x265c;</span><span class='piece'>&#x265d;</span><span class='piece'>&#x265e;</span>] 0 16
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>)))<!--
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2655;</span> 1
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2656;</span> 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 0 1
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265b;</span> 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</a></span> [<span class='piece'>&#x265c;</span><span class='piece'>&#x265d;</span><span class='piece'>&#x265e;</span>] 0 16
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>)))<!--
 --></code></pre></div>
 
 <p>
@@ -915,7 +916,7 @@ Ausrufungszeichen &ndash; verwendet werden. Beispiel:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:endgame">:endgame</span></a>)
+(position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:endgame">:endgame</a></span>)
 </code></div>
 
 <p>
@@ -945,7 +946,7 @@ mit der Zugfolge 1.e4 e6 2.d4 d5 erreicht wird.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</a></span>.
 </p>
 
 <h3 id="position:fivefoldrepetition">:fivefoldrepetition&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Fünffache Stellungswiederholung)</span></h3>
@@ -977,11 +978,11 @@ Ausrufungszeichen &ndash; verwendet werden. Beispiel:
 Filtere nur Positionen, in denen keine fünffache Stellungswiederholung
 aufgetreten ist. Soll keine Positionen mehr aufgefunden werden nachdem eine
 fünffache Zugwiederholung stattgefunden hat, so wird dies mit
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a> realisiert:
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span> realisiert:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:fivefoldrepetition</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:fivefoldrepetition</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>)
 </code></div>
 
 <h3 id="position:gameisover">:gameisover&ensp;<img src="../images/ft-scidb-tiny.png" alt="" /></h3>
@@ -991,13 +992,13 @@ Dies ist eine Kurzschreibweise für:
 </p>
 
 <div class='box'><pre><code><!--
--->  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:losing">:losing</span></a>)           <span class='comment'>; Schlagschach</span>
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:threechecks">:threechecks</span></a>)      <span class='comment'>; Dreimal-Schach</span>
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:kingonthehill">:kingonthehill</span></a>)    <span class='comment'>; König-auf-dem-Hügel</span>
-    (position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:matingmaterial">:matingmaterial</span></a>))<!--
+-->  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:losing">:losing</a></span>)           <span class='comment'>; Schlagschach</span>
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:threechecks">:threechecks</a></span>)      <span class='comment'>; Dreimal-Schach</span>
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:kingonthehill">:kingonthehill</a></span>)    <span class='comment'>; König-auf-dem-Hügel</span>
+    (position <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:matingmaterial">:matingmaterial</a></span>))<!--
 --></code></pre></div>
 
 <p>
@@ -1062,7 +1063,7 @@ wurde.
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:halfmoveclock</span></span> 100 !<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:halfmoveclock</span></span> 100 !<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>)
 </code></div>
 
 <p>
@@ -1078,7 +1079,7 @@ dies nur eine andere Schreibweise für:
 </p>
 
 <div class='verb'><code>
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a> 0
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span> 0
 </code></div>
 
 <p>
@@ -1095,14 +1096,14 @@ Filtere alle Positionen außer der ersten Position in der Partie.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>.
 </p>
 
 <h3 id="position:insidevariation">:insidevariation&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Innerhalb einer Untervariante)</span></h3>
 
 <p>
 Dieses Schlüsselwort filtert genau dann, wenn eine Position in einer Untervariante
-aufgefunden wird. Dies kann niemals geschehen, wenn nicht mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</span></a>
+aufgefunden wird. Dies kann niemals geschehen, wenn nicht mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</a></span>
 die Suche in Untervarianten zugelassen wird.
 </p>
 
@@ -1120,7 +1121,7 @@ Diese Position wird nicht in einer Untervariante vorgefunden.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</a></span>.
 </p>
 
 <h3 id="position:kingonthehill">:kingonthehill&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(König auf dem Hügel)</span></h3>
@@ -1194,7 +1195,7 @@ Ein weiteres Beispiel:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:mate</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movenumber">:movenumber</span></a> 1 20)
+(position <span style='white-space:nowrap;'><span class='keyword'>:mate</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movenumber">:movenumber</a></span> 1 20)
 </code></div>
 
 <p>
@@ -1202,7 +1203,7 @@ Filtere nur dann wenn eine Seite in den ersten 20 Zügen mattgesetzt wurde.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span>,
 </p>
 
 <h3 id="position:matingmaterial">:matingmaterial&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Mattmaterial)</span></h3>
@@ -1231,15 +1232,15 @@ Normalerweise ist dies äquivalent zur folgenden Abfrage:
 </p>
 
 <div class='box'><pre><code><!--
---><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+--><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
   <span class='comment'>; König gegen König</span>
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 2)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 2)
   <span class='comment'>; König und Leichtfigur gegen König</span>
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 3 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span><span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span>] 1)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 3 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span><span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span>] 1)
   <span class='comment'>; König and Läufer gegen König und Läufer,</span>
   <span class='comment'>; beide Läufer entweder weiß- oder schwarzfeldrig</span>
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 4 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>]<span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 4 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>]<span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 4 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>]<span class='cql' title='Weiße Felder'>&#x25a1;</span>? 2)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 4 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>]<span class='cql' title='Schwarze Felder'>&#x25a0;</span>? 2))<!--
 --></code></pre></div>
 
 <p>
@@ -1272,7 +1273,7 @@ Schachformen (als Schlagschach) immer erfüllt.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mustcapture">:mustcapture</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mustcapture">:mustcapture</a></span>,
 </p>
 
 <h3 id="position:nocheck">:nocheck&emsp;<span class='normal'>(Kein Schachgebot)</span></h3>
@@ -1280,7 +1281,7 @@ Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#po
 <p>
 Dieses Schlüsselwort ist veraltet und sollte nicht mehr verwendet werden, es wird
 nur aus Kompatibilitätsgründen zu CQL unterstützt. Es hat die gleiche Bedeutung
-wie <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:check">:check</span></a>.
+wie <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:check">:check</a></span>.
 </p>
 
 <h3 id="position:stalemate">:stalemate&emsp;<span class='normal'>(Patt)</span></h3>
@@ -1303,7 +1304,7 @@ Filtere nur Positionen in denen niemand patt ist.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isstalemate">:isstalemate</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isstalemate">:isstalemate</a></span>,
 </p>
 
 <h3 id="position:terminal">:terminal&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Endstellung)</span></h3>
@@ -1314,7 +1315,7 @@ dies nur eine andere Schreibweise für:
 </p>
 
 <div class='verb'><code>
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a> end
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span> end
 </code></div>
 
 <p>
@@ -1331,7 +1332,7 @@ Dies ist nicht die letzte Position in der Partie.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a>,<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span>,<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>.
 </p>
 
 <h3 id="position:threefoldrepetition">:threefoldrepetition&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Dreifache Stellungswiederholung)</span></h3>
@@ -1363,11 +1364,11 @@ Ausrufungszeichen &ndash; verwendet werden. Beispiel:
 Filtere nur Positionen, in denen keine dreifache Stellungswiederholung
 aufgetreten ist. Soll keine Positionen mehr aufgefunden werden nachdem eine
 dreifache Zugwiederholung stattgefunden hat, so wird dies mit
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a> realisiert:
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span> realisiert:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:threefoldrepetition</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:threefoldrepetition</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>)
 </code></div>
 
 <h3 id="position:threechecks">:threechecks&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Drittes Schach)</span></h3>
@@ -1380,7 +1381,7 @@ Somit ist dieses Schlüsselwort nicht identisch zu
 </p>
 
 <div class='verb'><code>
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</span></a> 3 : &lt;=2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</a></span> 3 : &lt;=2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
 </code></div>
 
 <p>
@@ -1416,11 +1417,11 @@ Normalerweise ist dies äquivalent zur folgenden Abfrage:
 </p>
 
 <div class='box'><pre><code><!--
---><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+--><span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
   <span class='comment'>; nur weißer König</span>
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> 1)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> 1)
   <span class='comment'>; nur weißer König und weiße Leichtfigur</span>
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 1))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> 1))<!--
 --></code></pre></div>
 
 <p>
@@ -1445,7 +1446,7 @@ Filtere alle Positionen, in denen Weiß noch Gewinnmöglichkeiten hat
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:blackcannotwin">:blackcannotwin</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:blackcannotwin">:blackcannotwin</a></span>.
 </p>
 
 <h3 id="position:wtm">:wtm&emsp;<span class='normal'>(Weiß am Zug)</span></h3>
@@ -1477,7 +1478,7 @@ Filtert nur wenn Weiß am Zug ist.
 <h3 id="position:flip">:flip&emsp;<span class='normal'>(Spiegelung)</span></h3>
 
 <p>
-Dies ist identisch zu <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipdihedral">:flipdihedral</span></a> (&#x21d2;
+Dies ist identisch zu <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipdihedral">:flipdihedral</a></span> (&#x21d2;
 <a href="CQL-Transformations.html">Transformationen</a>).
 </p>
 
@@ -1490,9 +1491,9 @@ Spiegelung an der vertikalen Halbierungslinie des Schachbretts
 zum anderen einen Austausch der Farben; aus Weiß wird Schwarz, und aus Schwarz
 wird Weiß. Diese Farbwechseltransformation wirkt sich nicht auf die Suchliste
 <span style='white-space:nowrap;'><code>(match</code></span> <span style='white-space:nowrap;'><code>...)</code></span> aus (dafür gibt es
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:eithercolor">:eithercolor</span></span> : <span style='white-space:nowrap;'>match</span></a>). <span style='white-space:nowrap;'><a href="CQL-Flipcolor-List.html#flipcolor:">:</span></span> : <span style='white-space:nowrap;'>flipcolor</span></a> darf nicht verwendet werden
-wenn in der zugehörigen Suchliste <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:eithercolor">:eithercolor</span></span> : <span style='white-space:nowrap;'>match</span></a> verwendet wird
-(denn <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:eithercolor">:eithercolor</span></span> : <span style='white-space:nowrap;'>match</span></a> bewirkt bereits eine Farbwechseltransformation
+<a href="CQL-Match-List.html#match:eithercolor"><span style='white-space:nowrap;'>:eithercolor</span> : <span style='white-space:nowrap;'>match</span></a>). <a href="CQL-Flipcolor-List.html#flipcolor:"><span style='white-space:nowrap;'>:</span> : <span style='white-space:nowrap;'>flipcolor</span></a> darf nicht verwendet werden
+wenn in der zugehörigen Suchliste <a href="CQL-Match-List.html#match:eithercolor"><span style='white-space:nowrap;'>:eithercolor</span> : <span style='white-space:nowrap;'>match</span></a> verwendet wird
+(denn <a href="CQL-Match-List.html#match:eithercolor"><span style='white-space:nowrap;'>:eithercolor</span> : <span style='white-space:nowrap;'>match</span></a> bewirkt bereits eine Farbwechseltransformation
 in den Positionslisten).
 </p>
 
@@ -1538,7 +1539,7 @@ einbezogen ist), auf einem Feld steht, das vom zweiten Argument bezeichnet wird.
 
 <p>
 Die nachfolgenden Beispiele dienen nur zur Demonstration, zur
-Trippelbauernsuche sollte das Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a>
+Trippelbauernsuche sollte das Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span>
 eingesetzt werden.
 </p>
 
@@ -1548,8 +1549,8 @@ Wir formulieren die folgende Abfrage um Trippelbauern aufzufinden:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span>[b2-7] 3
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shifthorizontal">:shifthorizontal</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span>[b2-7] 3
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shifthorizontal">:shifthorizontal</a></span>)<!--
 --></code></pre></div>
 
 <p>
@@ -1560,8 +1561,8 @@ wir diese Abfrage:
 <div class='box'><pre><code><!--
 -->(position
   <span style='white-space:nowrap;'><span class='keyword'>:inside</span></span> <span class='piece'>&#x2659;</span>[b2-7] [b2,c3,d4,e5,f6,g7]
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span>[b2-7] 3
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shifthorizontal">:shifthorizontal</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span>[b2-7] 3
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shifthorizontal">:shifthorizontal</a></span>)<!--
 --></code></pre></div>
 
 <h3 id="position:shift">:shift&emsp;<span class='normal'>(Translation)</span></h3>
@@ -1659,17 +1660,17 @@ Beispiele:
 <p>
 Filtert jede Position mit einem Doppelangriff weißer Figuren auf den
 schwarzen König (jedoch sollte für diese Abfrage
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a> in Verbindung mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</span></a>
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span> in Verbindung mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</a></span>
 vorgezogen werden).
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:attackcount</span></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:attackcount</span></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='piece'>&#x265a;</span> 2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>)
 </code></div>
 
 <p>
 Filtert jede Position mit einem Doppelangriff auf einen König
-(auch hier sollte <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a> vorgezogen werden).
+(auch hier sollte <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span> vorgezogen werden).
 </p>
 
 <div class='verb'><code>
@@ -1722,7 +1723,7 @@ Keine weiße Figur kann in dieser Position auf die schwarze Grundreihe ziehen.
 
 <p>
 In dieser Position gibt es nur einen möglichen Zug. Allerdings
-sollte zu diesem Zweck <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forced">:forced</span></a> verwendet werden.
+sollte zu diesem Zweck <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forced">:forced</a></span> verwendet werden.
 </p>
 
 <div class='verb'><code>
@@ -2061,13 +2062,13 @@ Die unterstützen Bauerneigenschaften bzw. Bauernstruktureigenschaften sind:
                     gleichen Linie stehen. Z.B. kann ein weißer Bauer c7 unmittelbar
                     hinter einem schwarzen Bauer c6 stehen.</td>
     </tr>
-    </tr>
+    <tr>
       <td class="l" valign="top"><span style='white-space:nowrap;'><code>stoppable</code></span></td>
       <td class="r">Stoppbare Bauern: alle Bauern, die am Weiterrücken bis
                     zur gegnerischen Grundreihe von einem gegnerischen Bauern
                     in einer benachbarten Linie gehindert werden.</td>
     </tr>
-    </tr>
+    <tr>
       <td class="l" valign="top"><span style='white-space:nowrap;'><code>stopped</code></span></td>
       <td class="r">Gestoppte Bauern: alle Bauern, die am Weiterrücken von
                     einem gegnerischen Bauern, der in einer benachbarten Reihe
@@ -2465,7 +2466,7 @@ auf dem Damenflügel gibt).
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:pawncount</span></span> <span class='piece'>&#x2659;</span> double-!advanced-compounds &gt;=2)<!--
 --></code></pre></div>
 
@@ -2565,9 +2566,9 @@ Siehe bei <a href="CQL-Examples.html#pawnending">CQL-Beispiele</a> für weiter B
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</a></span>.
 </p>
 
 <h3 id="position:pawncountdifference">:pawncountdifference&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Bauerndifferenz)</span></h3>
@@ -2590,7 +2591,7 @@ muß innerhalb der Bereichsangabe liegen, damit eine Position gefiltert wird.
 
 <p>
 Die unterstützen Bauerneigenschaften bzw. Bauernstruktureigenschaften sind
-die gleichen wie unter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a>.
+die gleichen wie unter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span>.
 </p>
 
 <p>
@@ -2611,9 +2612,9 @@ verwendet werden).
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</a></span>.
 </p>
 
 <h3 id="position:perpendicular">:perpendicular&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(senkrecht verlaufend zu)</span></h3>
@@ -2671,9 +2672,9 @@ Schreibweise dieser Abfrage ist:
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</a></span>.
 </p>
 
 <h3 id="position:piececountdifference">:piececountdifference&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Materialdifferenz)</span></h3>
@@ -2716,7 +2717,7 @@ Weiß hat mehr fianchettierte Läufer als Schwarz.
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:piececountdifference</span></span> <span class='piece'>&#x265b;</span> <span class='piece'>&#x2655;</span> 1
   <span style='white-space:nowrap;'><span class='keyword'>:piececountdifference</span></span> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span> <span class='cql' title='Schwarze Leichtfigur'>&#x25bc;</span> 1
   <span style='white-space:nowrap;'><span class='keyword'>:piececountdifference</span></span> <span class='piece'>&#x2659;</span> <span class='piece'>&#x265f;</span> 1 2)<!--
@@ -2730,9 +2731,9 @@ zwei Bauern mehr hat.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawndifference">:pawndifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawndifference">:pawndifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</a></span>.
 </p>
 
 <h3 id="position:power">:power&emsp;<span class='normal'>(Figurenpotential)</span></h3>
@@ -2822,8 +2823,8 @@ Figuren in der weißen Hälfte einen Wert zwischen 10 und 25 aufweist (inklusive
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span>.
 </p>
 
 <h3 id="position:powerdifference">:powerdifference&emsp;<span class='normal'>(Figurenpotentialdifferenz)</span></h3>
@@ -2832,7 +2833,7 @@ Siehe auch:
 Dieses Schlüsselwort erwartet als Argumente ein oder zwei Figurenbezeichner,
 gefolgt von einer <a href="CQL-Range-Specifiers.html">Bereichsangabe</a>. Es
 filtert Positionen, in denen die Differenz des Figurenpotentials (&#x21d2;
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</span></a>) der bezeichneten Figuren innerhalb der gegebenen
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</a></span>) der bezeichneten Figuren innerhalb der gegebenen
 Bereichsangabe liegt. Im Falle nur eines Figurenbezeichners ist die Differenz
 die Summe des Figurenpotentials aller bezeichneten weißen Figuren im Figurenbezeichner
 minus dem Figurenpotential aller bezeichneten schwarzen Figuren im
@@ -2878,7 +2879,7 @@ Dies filtert Positionen, in denen Schwarz mindestens eine Qualität Vorteil hat.
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:powerdifference</span></span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x2657;</span><span class='piece'>&#x2658;</span>] [<span class='piece'>&#x265c;</span><span class='piece'>&#x265d;</span><span class='piece'>&#x265e;</span>] &lt;=&#x2212;2)<!--
 --></code></pre></div>
 
@@ -2889,14 +2890,14 @@ Dies filtert Positionen, in denen eine der Partien mindestens eine Qualität Vor
 <div id="eithercolor:example">
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:result">:result</span></a> 1-0
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:result">:result</a></span> 1-0
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span> (
       (position
         <span style='white-space:nowrap;'><span class='keyword'>:powerdifference</span></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> -2 +2
         <span style='white-space:nowrap;'><span class='keyword'>:powerdifference</span></span> <span class='piece'>&#x2655;</span> <span class='piece'>&#x265b;</span> 0)
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:repetitioncount">:repetitioncount</span></a> &gt;=12
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:repetitioncount">:repetitioncount</a></span> &gt;=12
         <span style='white-space:nowrap;'><span class='keyword'>:powerdifference</span></span> <span class='piece'>&#x2655;</span> <span class='piece'>&#x265b;</span> &lt;=&#x2212;9))))<!--
 --></code></pre></div>
 </div>
@@ -2910,9 +2911,9 @@ Materialnachteil, um letztendlich zu gewinnen.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncountdifference">:pawncountdifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececountdifference">:piececountdifference</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</a></span>.
 </p>
 
 <h3 id="position:ray">:ray&emsp;<span class='normal'>(Strahl)</span></h3>
@@ -2991,13 +2992,13 @@ Zwei bis vier schwarze Springer sind gefesselt.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:rayattack">:rayattack</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:rayattack">:rayattack</a></span>.
 </p>
 
 <h3 id="position:rayattack">:rayattack&emsp;<span class='normal'>(Strahlenangriff)</span></h3>
 
 <p>
-Hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>. Es hat auch die gleiche
+Hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>. Es hat auch die gleiche
 Semantik, außer das nur orthogonale Strahlen, die auf einem Feld mit einer
 Schwerfigur starten, sowie diagonale Strahlen, die auf einem Feld mit einer
 Dame oder einem Läufer starten, eingeschlossen sind.
@@ -3026,8 +3027,8 @@ ersten vier Reihen stehen.
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</span></a> <span style='white-space:nowrap;'><span class='keyword'>:rayattack</span></span>
-(<span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> <span class='piece'>&#x265a;</span>) 2 8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</a></span> <span style='white-space:nowrap;'><span class='keyword'>:rayattack</span></span>
+(<span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span> <span class='piece'>&#x265a;</span>) 2 8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>)
 </code></div>
 
 <p>
@@ -3035,34 +3036,34 @@ Findet Pattstellungen mit Mehrfachfesselungen auf.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>.
 </p>
 
 <h3 id="position:raydiagonal">:raydiagonal&emsp;<span class='normal'>(Diagonalstrahl)</span></h3>
 
 <p>
-Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>, nur daß die
+Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>, nur daß die
 Strahlen auf diagonale Linien beschränkt sind.
 </p>
 
 <h3 id="position:rayhorizontal">:rayhorizontal&emsp;<span class='normal'>(Horizontaler Strahl)</span></h3>
 
 <p>
-Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>, nur daß die
+Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>, nur daß die
 Strahlen auf horizontale Linien beschränkt sind.
 </p>
 
 <h3 id="position:rayorthogonal">:rayorthogonal&emsp;<span class='normal'>(Othogonaler Strahl)</span></h3>
 
 <p>
-Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>, nur daß die
+Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>, nur daß die
 Strahlen auf vertikale und horizontale Linien beschränkt sind.
 </p>
 
 <h3 id="position:rayvertical">:rayvertical&emsp;<span class='normal'>(Vertikaler Strahl)</span></h3>
 
 <p>
-Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</span></a>, nur daß die
+Dieses Schlüsselwort arbeitet genauso wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ray">:ray</a></span>, nur daß die
 Strahlen auf  vertikale Linien beschränkt sind.
 </p>
 
@@ -3091,13 +3092,13 @@ Zuges nach e4, der keine Figur schlägt, ist <span style='white-space:nowrap;'><
 
 <p>
 Es werden einige Schlüsselwörter angeboten, die auf die nachfolgende
-Position vorausschauen, wie z.B. <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a>. Während
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a> die Position findet, in der eine der Seiten matt
-ist, findet <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a> die Position, in der die Seite am
+Position vorausschauen, wie z.B. <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span>. Während
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span> die Position findet, in der eine der Seiten matt
+ist, findet <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span> die Position, in der die Seite am
 Zug matt setzt. In einigen Fällen ist diese Vorausschau sehr nützlich,
-insbesondere in Verbindung mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cond">:cond</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a> und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a>. Diese
-Vorausschau kann auch die Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a>
+insbesondere in Verbindung mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cond">:cond</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span> und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span>. Diese
+Vorausschau kann auch die Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span>
 ersparen.
 </p>
 
@@ -3148,7 +3149,7 @@ in allen anderen Schachformen wird diese Bedingung immer erfüllt.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mustcapture">:mustcapture</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mustcapture">:mustcapture</a></span>.
 </p>
 
 <h3 id="position:forced">:forced&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Forciert)</span></h3>
@@ -3213,7 +3214,7 @@ identisch zu:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>)
 </code></div>
 
 <p>
@@ -3228,7 +3229,7 @@ Auch dazu Beispiele:
 
 <p>
 Dies bezeichnet die Endposition (nach dem letzten Zug der Partie); siehe auch
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>.
 </p>
 
 <div class='verb'><code>
@@ -3241,7 +3242,7 @@ noch drei Halbzüge.
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:halfmovenumber</span></span> end-1 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:halfmovenumber</span></span> end-1 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>)
 </code></div>
 
 <p>
@@ -3250,9 +3251,9 @@ Dies ist einfacher und viel effizienter als der äquivalente Ausdruck:
 </p>
 
 <div class='box'><pre><code><!--
--->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a> (
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>)
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>)))<!--
+-->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span> (
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>)))<!--
 --></code></pre></div>
 
 <div class='annotation'><img src='../images/annotation.png' style='float:left; margin:0 1em 0 0' alt='annotation' />
@@ -3261,9 +3262,9 @@ Der Einsatz von <span style='white-space:nowrap;'>:halfmovenumber</span> kann di
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movenumber">:movenumber</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movenumber">:movenumber</a></span>.
 </p>
 
 <h3 id="position:iscastling">:iscastling&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Rochadezug?)</span></h3>
@@ -3291,12 +3292,12 @@ Beispiele:
 </code></div>
 
 <p>
-Hier muß zur Negierung das Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a> verwendet werden;
+Hier muß zur Negierung das Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span> verwendet werden;
 zum Beispiel:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a> (position <span style='white-space:nowrap;'><span class='keyword'>:iscastling</span></span> <span class='piece'>&#x2654;</span>))
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span> (position <span style='white-space:nowrap;'><span class='keyword'>:iscastling</span></span> <span class='piece'>&#x2654;</span>))
 </code></div>
 
 <p>
@@ -3304,7 +3305,7 @@ Der nächste Zug ist keine kurze weiße Rochade.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:castling">:castling</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:castling">:castling</a></span>,
 </p>
 
 <h3 id="position:ischeck">:ischeck&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Schachgebot?)</span></h3>
@@ -3335,7 +3336,7 @@ Schach. Dies kann nur eine Endstellung sein (in Dreimal-Schach).
 
 <div class='verb'><code>
 (position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> 1
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> 1
   <span style='white-space:nowrap;'><span class='keyword'>:ischeck</span></span>)
 </code></div>
 
@@ -3357,7 +3358,7 @@ Der nächste Zug ist kein Schachgebot.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</a></span>,
 </p>
 
 <h3 id="position:iscontactcheck">:iscontactcheck&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Kontaktschachgebot?)</span></h3>
@@ -3381,7 +3382,7 @@ ein Schachgebot).
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:contactcheck">:contactcheck</a></span>,
 </p>
 
 <h3 id="position:isdoublecheck">:isdoublecheck&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Doppelschachgebot?)</span></h3>
@@ -3405,7 +3406,7 @@ ein Schachgebot).
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:doublecheck">:doublecheck</a></span>,
 </p>
 
 <h3 id="position:isillegal">:isillegal&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Regelwidrig?)</span></h3>
@@ -3469,7 +3470,7 @@ Der nächste Zug ist kein Mattgebot.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>,
 </p>
 
 <h3 id="position:isnull">:isnull&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Nullzug?)</span></h3>
@@ -3519,7 +3520,7 @@ Der nächste Zug ist kein Pattgebot.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:stalemate">:stalemate</a></span>,
 </p>
 
 <h3 id="position:movefrom">:movefrom&emsp;<span class='normal'>(Zug von)</span></h3>
@@ -3552,7 +3553,7 @@ achten Reihe geschieht.
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:movefrom</span></span> <span class='piece'>&#x2655;</span>[+] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .?8)
+(position <span style='white-space:nowrap;'><span class='keyword'>:movefrom</span></span> <span class='piece'>&#x2655;</span>[+] <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .?8)
 </code></div>
 
 <p>
@@ -3581,10 +3582,10 @@ Dies kann niemals gefiltert werden, auch keinen Einsetzzug
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span>.
 </p>
 
 <h3 id="position:movenumber">:movenumber&emsp;<span class='normal'>(Zugnummer)</span></h3>
@@ -3602,7 +3603,7 @@ Beispiele:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:movenumber</span></span> 10 20 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:movenumber</span></span> 10 20 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)
 </code></div>
 
 <p>
@@ -3611,7 +3612,7 @@ Filtert eine Position, in der ein Schachgebot zwischen dem 10. und dem
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:movenumber</span></span> 35 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:movenumber</span></span> 35 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>)
 </code></div>
 
 <p>
@@ -3622,7 +3623,7 @@ Filtert eine Position, in der im 35. Zug mattgesetzt wird.
 Als eine Erweiterung (des CQL-Standards) kann auch <span style='white-space:nowrap;'><code>end</code></span>, bzw.
 <span style='white-space:nowrap;'><span style='white-space:nowrap;'><code>end</code></span>&minus;N</span> als Argument verwendet werden.
 Jedoch ist das Verhalten undefiniert, wenn die Suche in den Untervarianten erfolgt
-(&#x21d2; <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</span></a>), sollte also in diesem Fall nicht
+(&#x21d2; <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:variations">:variations</a></span>), sollte also in diesem Fall nicht
 verwendet werden. Auch dazu Beispiele:
 </p>
 
@@ -3632,7 +3633,7 @@ verwendet werden. Auch dazu Beispiele:
 
 <p>
 Dies bezeichnet die Endposition (nach dem letzten Zug der Partie); siehe auch
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>.
 </p>
 
 <div class='verb'><code>
@@ -3641,7 +3642,7 @@ Dies bezeichnet die Endposition (nach dem letzten Zug der Partie); siehe auch
 
 <p>
 Dies bezeichnet den drittletzten Zug in der Partie (nicht zu
-verwechseln mit Halbzügen; siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a>).
+verwechseln mit Halbzügen; siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span>).
 </p>
 
 <div class='verb'><code>
@@ -3655,9 +3656,9 @@ in der Partie.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>.
 </p>
 
 <h3 id="position:moveto">:moveto&emsp;<span class='normal'>(Zug nach)</span></h3>
@@ -3717,7 +3718,7 @@ Und dies wiederum geschieht in CQL auf diese Weise:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2656;</span> <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> ?b?)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2656;</span> <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> ?b?)
 </code></div>
 
 <p>
@@ -3728,7 +3729,7 @@ einbezogen werden, so ist folgende Erweiterung notwendig:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2656;</span>[*] <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> ?b?)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2656;</span>[*] <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> ?b?)
 </code></div>
 
 <p>
@@ -3736,7 +3737,7 @@ Im nächsten Beispiel wird der en-passant-Fall behandelt:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> .e6 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:enpassant">:enpassant</span></a>)
+(position <span style='white-space:nowrap;'><span class='keyword'>:moveto</span></span> .e6 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:enpassant">:enpassant</a></span>)
 </code></div>
 
 <p>
@@ -3745,10 +3746,10 @@ Ein Bauer auf e5 wird en-passant geschlagen.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span>.
 </p>
 
 <h3 id="position:noenpassant">:noenpassant&emsp;<span class='normal'>(Kein en-passant)</span></h3>
@@ -3790,7 +3791,7 @@ eine Leichtfigur ist.
 
 <div class='verb'><code>
 (position <span style='white-space:nowrap;'><span class='keyword'>:promote</span></span> <span class='piece'>&#x2656;</span>e8
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>f7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='piece'>&#x265b;</span>)
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>f7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='piece'>&#x265b;</span>)
 </code></div>
 
 <p>
@@ -3810,10 +3811,10 @@ Filtert eine Position, in der der nächster Zug keine Bauernumwandlung ist
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</span></a>.
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</a></span>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span>,
 </p>
 
 <h3 id="position:takeslastpiece">:takeslastpiece&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Schlägt die letzte Figur)</span></h3>
@@ -3840,7 +3841,7 @@ wird diese Bedingung immer erfüllt.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:losing">:losing</span></a>,
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:losing">:losing</a></span>,
 </p>
 
 <!-- ############################################################################## -->
@@ -3852,7 +3853,7 @@ Standard-CQL hat die folgende Einschränkung:
 Die Gesamtzahl von Sequenzen in Positionslisten, die auf oberster Ebene
 einer Positionsliste auftreten können, darf Eins nicht überschreiten.
 Um die Wirkung von beiden Schlüsselwörtern in einer Positionsliste zu
-erhalten, wird mit dem Gebrauch von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</span></a> bewerkstelligt.
+erhalten, wird mit dem Gebrauch von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</a></span> bewerkstelligt.
 </p>
 
 <p>
@@ -3899,11 +3900,11 @@ letztere Liste.
 </p>
 
 <p>
-Eine löchrige Folge (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a>) mit Argument B
+Eine löchrige Folge (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span>) mit Argument B
 filtert eine Position genau dann, wenn es eine Verfeinerung A von B gibt, so
-daß eine Folge (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a>) mit Argument A diese Position
+daß eine Folge (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span>) mit Argument A diese Position
 filtern würde. D.h., <span style='white-space:nowrap;'>:gappedsequence</span> ist wie
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a>, außer das die Folge von filternden Positionen
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span>, außer das die Folge von filternden Positionen
 dazwischenliegende Positionen der Partie enthalten kann.
 </p>
 
@@ -3914,8 +3915,8 @@ Beispiele:
 <div class='box'><pre><code><!--
 -->(position
   <span style='white-space:nowrap;'><span class='keyword'>:gappedsequence</span></span> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2656;</span>a3)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2656;</span>b4)))<!--
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2656;</span>a3)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2656;</span>b4)))<!--
 --></code></pre></div>
 
 <p>
@@ -3938,7 +3939,7 @@ steht in irgendeiner Partiestellung, aber nach der gefundenen Position:
 --></code></pre></div>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:match">:match</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:match">:match</a></span>.
 </p>
 
 <h3 id="position:line">:line&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Zugfolge)</span></h3>
@@ -3952,12 +3953,12 @@ enstprechende Formulierung mit <span style='white-space:nowrap;'>:sequence</span
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>e2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> e4)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x265f;</span>e7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> e6)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>d2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> d4)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x265f;</span>d7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> d5)))<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span> (
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>e2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> e4)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x265f;</span>e7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> e6)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>d2 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> d4)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x265f;</span>d7 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> d5)))<!--
 --></code></pre></div>
 
 <p>
@@ -4075,8 +4076,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code>e2-e4</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> ?e2<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .e4
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> ?e2<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .e4
     </code></span></td>
     <td class="r">
       Eine beliebige Figur zieht von e2 nach e4.
@@ -4086,8 +4087,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>e2-e4</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>e2<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .e4
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>e2<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .e4
     </code></span></td>
     <td class="r">
       Eine weißer Bauer zieht von e2 nach e4.
@@ -4097,9 +4098,9 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code>1.e2-e4</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a> 1<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> ?e2<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .e4
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span> 1<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> ?e2<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .e4
     </code></span></td>
     <td class="r">
       Im ersten Zug der Partie zieht die Figur auf e2 nach e4
@@ -4109,9 +4110,9 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code>1...e7-e5</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</span></a> 2<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> ?e7<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .e5
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:halfmovenumber">:halfmovenumber</a></span> 2<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> ?e7<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .e5
     </code></span></td>
     <td class="r">
       Im ersten Zug der Partie zieht die Figur auf e7 nach e5
@@ -4121,9 +4122,9 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>d5xe6 ep</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>d5<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .e6<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:enpassant">:enpassant</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>d5<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .e6<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:enpassant">:enpassant</a></span>
     </code></span></td>
     <td class="r">
       Weißer Bauer auf d5 schlägt en-passant den Bauern auf e5
@@ -4134,8 +4135,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>d5x<span class='piece'>&#x265f;</span>e6</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>d5<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='piece'>&#x265f;</span>e6
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>d5<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='piece'>&#x265f;</span>e6
     </code></span></td>
     <td class="r">
       Weißer Bauer auf d5 schlägt den Bauern auf e6
@@ -4146,7 +4147,7 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>=<span class='piece'>&#x2655;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> <span class='piece'>&#x2655;</span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> <span class='piece'>&#x2655;</span>
     </code></span></td>
     <td class="r">
       Weißer Bauer zieht auf die Grundreihe und verwandelt
@@ -4157,8 +4158,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>=<span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span>#</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span>
     </code></span></td>
     <td class="r">
       Ein weißer Bauer zieht auf die Grundreihe, und verwandelt beliebig
@@ -4169,9 +4170,9 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2655;</span>+*</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a><br/>
-      <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:ismate">:ismate</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span><br/>
+      <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:ismate">:ismate</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Dame bietet dem König Schach, aber es ist
@@ -4182,8 +4183,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2655;</span>+++</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscontactcheck">:iscontactcheck</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscontactcheck">:iscontactcheck</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Dame bietet dem König Kontaktschach.
@@ -4193,8 +4194,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>b1-[ac]3</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span>b1<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .[ac]3
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span>b1<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .[ac]3
     </code></span></td>
     <td class="r">
       Weißer Springer zieht von b1 nach a3 oder nach c3.
@@ -4204,8 +4205,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x265d;</span>[bg]7x<span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span>?1</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x265d;</span>[bg]7<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span>?1
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x265d;</span>[bg]7<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Weiße Leichtfigur'>&#x25bd;</span>?1
     </code></span></td>
     <td class="r">
       Schwarzer Läufer auf b7 oder g7 schlägt eine weiße
@@ -4216,9 +4217,9 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]-?8+</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .?8<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .?8<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Schwerfigur zieht auf die schwarze Grundreihe
@@ -4229,9 +4230,9 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]-?8-</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .?8<br/>
-      <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='cql' title='Weiße Schwerfigur'>&#x25b3;</span>?[1-7]<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .?8<br/>
+      <span style='white-space:nowrap;'>!<a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Schwerfigur zieht auf die schwarze Grundreihe
@@ -4242,9 +4243,9 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2657;</span>g5++</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2657;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .g5<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isdoublecheck">:isdoublecheck</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2657;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .g5<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isdoublecheck">:isdoublecheck</a></span>
     </code></span></td>
     <td class="r">
       Weißer Läufer zieht auf das Feld g5 und Schwarz wird
@@ -4254,9 +4255,9 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>:f7#</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> ?f7<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> ?f7<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span>
     </code></span></td>
     <td class="r">
       Weißer Springer zieht auf das Feld f7 und setzt matt;
@@ -4267,8 +4268,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x265e;</span>x<span class='piece'>&#x2659;</span>e4</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x265e;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='piece'>&#x2659;</span>e4
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x265e;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='piece'>&#x2659;</span>e4
     </code></span></td>
     <td class="r">
       Ein schwarzer Springer schlägt einen Bauern auf dem Feld e4.
@@ -4278,8 +4279,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>xe4</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x265e;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> ?e4
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x265e;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> ?e4
     </code></span></td>
     <td class="r">
       Ein weißer Springer schlägt eine beliebige Figur auf dem Feld e4.
@@ -4289,8 +4290,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .
     </code></span></td>
     <td class="r">
       Ein beliebiger Springerzug eines weißen Springers auf ein freies Feld.
@@ -4300,8 +4301,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>x</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Beliebige schwarze Figur'>&#x25cf;</span>
     </code></span></td>
     <td class="r">
       Ein beliebiger Springerzug eines weißen Springers auf ein besetztes Feld.
@@ -4311,8 +4312,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>x<span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span>
     </code></span></td>
     <td class="r">
       Ein beliebiger Springerzug eines weißen Springers,
@@ -4323,8 +4324,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code>x<span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Schwarze Schwerfigur'>&#x25b2;</span>
     </code></span></td>
     <td class="r">
       Ein beliebiger Zug mit einer weißen Figur,
@@ -4335,7 +4336,7 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2658;</span>:</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2658;</span>:
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2658;</span>:
     </code></span></td>
     <td class="r">
       Ein beliebiger Springerzug eines weißen Springers auf ein freies
@@ -4346,7 +4347,7 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code>O-O</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a> [<span class='piece'>&#x2654;</span><span class='piece'>&#x265a;</span>]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span> [<span class='piece'>&#x2654;</span><span class='piece'>&#x265a;</span>]
     </code></span></td>
     <td class="r">
       Die Seite am Zug führt die kurze Rochade aus.
@@ -4356,7 +4357,7 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code>O-O-O</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>]
     </code></span></td>
     <td class="r">
       Die Seite am Zug führt die lange Rochade aus.
@@ -4366,7 +4367,7 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code>O-O-O-O</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span>
     </code></span></td>
     <td class="r">
       Die Seite am Zug führt eine Rochade aus (lang oder kurz).
@@ -4376,7 +4377,7 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2654;</span>-<span class='piece'>&#x2655;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a> [<span class='piece'>&#x2655;</span>]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span> [<span class='piece'>&#x2655;</span>]
     </code></span></td>
     <td class="r">
       Weiß führt eine lange Rochade aus.
@@ -4386,7 +4387,7 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x265a;</span>-<span class='piece'>&#x265a;</span><span class='piece'>&#x265b;</span></code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</span></a> [<span class='piece'>&#x265a;</span><span class='piece'>&#x265b;</span>]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:iscastling">:iscastling</a></span> [<span class='piece'>&#x265a;</span><span class='piece'>&#x265b;</span>]
     </code></span></td>
     <td class="r">
       Schwarz führt eine Rochade aus (lang oder kurz).
@@ -4396,8 +4397,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2654;</span>!</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2654;</span><br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forced">:forced</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2654;</span><br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forced">:forced</a></span>
     </code></span></td>
     <td class="r">
       Der weiße König zieht, und es handelt sich
@@ -4408,7 +4409,7 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='cql' title='Irgendeine Figur'>&#x25d1;</span>x[<span class='piece'>&#x2655;</span>~<span class='piece'>&#x265b;</span>~]</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> [<span class='piece'>&#x2655;</span>~<span class='piece'>&#x265b;</span>~]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> [<span class='piece'>&#x2655;</span>~<span class='piece'>&#x265b;</span>~]
     </code></span></td>
     <td class="r">
       Die Seite am Zug schlägt eine Dame, die aus einer Bauernumwandlung
@@ -4419,8 +4420,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2655;</span>~~#</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>~~<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>~~<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ismate">:ismate</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Dame, die nicht das Resultat einer Bauernumwandlung ist,
@@ -4431,8 +4432,8 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code><span class='piece'>&#x2659;</span>@?7</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2659;</span>[+]<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> ?7
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2659;</span>[+]<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> ?7
     </code></span></td>
     <td class="r">
       Eine weißer Bauer wird auf der siebten Reihe eingesetzt
@@ -4443,8 +4444,8 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code><span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span>@+</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span>[+]<br/>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='cql' title='Beliebige weiße Figur'>&#x25cb;</span>[+]<br/>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span>
     </code></span></td>
     <td class="r">
       Eine weiße Figur wird mit Schachgebot eingesetzt
@@ -4455,7 +4456,7 @@ Beispiele:
   <tr valign="top">
     <td class="l"><span style='white-space:nowrap;'><code>--</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>[*]
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>[*]
     </code></span></td>
     <td class="r">
       Diese Kurzschreibweise bezeichnet einen beliebigen Zug
@@ -4466,7 +4467,7 @@ Beispiele:
   <tr valign="top" class="stripes">
     <td class="l"><span style='white-space:nowrap;'><code>null</code></span></td>
     <td class="m"><span style='white-space:nowrap;'><code>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</span></a>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</a></span>
     </code></span></td>
     <td class="r">
       Dieses Symbol bezeichnet einen Nullzug.
@@ -4479,7 +4480,7 @@ Die Zugfolgen können mit oder ohne Zugnummern notiert werden. Mit der Verwendun
 Zugnummern können statt den CQL-Standardfigurenartbezeichnern auch die normalen
 <a href="http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm" target="blank_">PGN&nbsp;<span class="awesome">&#xf08e;</span></a>-Figurenbezeichner
 verwendet werden, denn hier ergeben sich die Figurenfarben aus der Position in der
-Notation. Bei Gebrauch von Zugnummern kann <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> nicht mehr
+Notation. Bei Gebrauch von Zugnummern kann <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> nicht mehr
 verwendet werden.
 </p>
 
@@ -4528,8 +4529,8 @@ Beispiele:
     </dt>
     <dd>
       Die Seite am Zug schlägt mit der Dame einen Turm. Dies erspart zwar die Verwendung
-      von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>, aber für die Lesbarkeit ist grundsätzlich die
-      Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> vorzuziehen.
+      von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>, aber für die Lesbarkeit ist grundsätzlich die
+      Verwendung von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> vorzuziehen.
     </dd>
   </dl>
 </div>
@@ -4541,10 +4542,10 @@ Mischung von Sequenzen mit und ohne Zugnummern ist nicht zulässig.
 
 <p>
 Transformationen der Figuren- bzw. Felderbezeichner
-(<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>,
+(<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>,
 usw.) wirken nicht auf das Schlüsselwort <span style='white-space:nowrap;'>:line</span>. Dazu muß
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a> verwendet werden, wenn solche Transformationen
-verlangt sind. Aber die Farbwechseltransformation <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span> verwendet werden, wenn solche Transformationen
+verlangt sind. Aber die Farbwechseltransformation <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
 kann verwendet, wie bereits beschrieben wurde.
 </p>
 
@@ -4567,7 +4568,7 @@ existiert, so daß die Stellung (dies muß keine Endstellung sein) mit der restl
 fortgesetzt werden könnte. Die Züge
 <span style='white-space:nowrap;'><code>&lt;m<sub>k+1</sub>&gt;</code></span> <span style='white-space:nowrap;'><code>&hellip;</code></span> <span style='white-space:nowrap;'><code>&lt;m<sub>n-1</sub>&gt;</code></span>
 sollten (müssen aber nicht) eindeutig bestimmt sein
-(siehe bei <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</span></a> wegen der eindeutigen Bestimmtheit), ansonsten kann
+(siehe bei <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</a></span> wegen der eindeutigen Bestimmtheit), ansonsten kann
 die Suchzeit exponentiell wachsen (d.h. die Suchzeit kann sich sehr rapide steigern).
 </p>
 
@@ -4579,13 +4580,13 @@ nur dann vor, wenn ein Patt durch Schlagen des Turms vermieden werden will.
 
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:result">:result</span></a> 1/2
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:result">:result</a></span> 1/2
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span> (
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (<span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ | <span class='piece'>&#x265a;</span>))
-      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</span></a>))))<!--
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (<span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ <span class='piece'>&#x265a;</span> <span class='piece'>&#x2656;</span>:+ | <span class='piece'>&#x265a;</span>))
+      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:terminal">:terminal</a></span>))))<!--
 --></code></pre></div>
 
 <p>
@@ -4615,17 +4616,17 @@ für weitere Anwendungen potentieller Zugfolgen.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isnull">:isnull</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line_">:line*</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span>.
 </p>
 
 <h3 id="position:line_">:line*&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Transpositionsinvariante Zugfolge)</span></h3>
 
 <p>
-Diese Version von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> prüft Zugsequenzen
+Diese Version von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> prüft Zugsequenzen
 transpositionsinvariant, und die Suche beginnt deshalb immer mit dem ersten
 Zug in der vorliegenden Grundstellung. Es können optional Zugnummern verwendet
 werden, sie sind jedoch hier nicht erforderlich.  Eine transpositionsinvariante
@@ -4634,8 +4635,8 @@ Herkunftsfeld, eindeutiges Zielfeld, eindeutige Figuren, eindeutige
 Bauernumwandlung). Dies ist erforderlich damit beispielsweise auch
 Schach-960-Positionen korrekt geprüft werden. Weiterhin wird bei der
 transpositionsinvarianten Suche ein mögliches en-passant-Recht ignoriert.
-Transformierende Schlüsselwörter (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>, &hellip;) sind in Verbindung mit
+Transformierende Schlüsselwörter (<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>, &hellip;) sind in Verbindung mit
 Transpositionsinvarianz nicht erlaubt.
 </p>
 
@@ -4725,7 +4726,7 @@ wie 1.d4 d5 2.e4 e6. Dies ist in Partien, die mit der Standardstartposition begi
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:fen">:fen</span></a> "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:fen">:fen</a></span> "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")<!--
 --></code></pre></div>
 
 <p>
@@ -4735,17 +4736,17 @@ beginnen.
 
 <p>
 Wird die exakte Eröffnungszugfolge 1.e4 e6 2.d4 d5 gesucht,
-so geschieht dies mittels <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>:
+so geschieht dies mittels <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>:
 </p>
 
 <div class='box'><pre><code><!--
--->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (1.<span class='piece'>&#x2659;</span>e2-e4 <span class='piece'>&#x2659;</span>e7-e6 2.<span class='piece'>&#x2659;</span>d2-d4 <span class='piece'>&#x2659;</span>d7-d5))<!--
+-->(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (1.<span class='piece'>&#x2659;</span>e2-e4 <span class='piece'>&#x2659;</span>e7-e6 2.<span class='piece'>&#x2659;</span>d2-d4 <span class='piece'>&#x2659;</span>d7-d5))<!--
 --></code></pre></div>
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:fen">:fen</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:fen">:fen</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>,
 </p>
 
 <h3 id="position:match">:match&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Suchfolge)</span></h3>
@@ -4761,9 +4762,9 @@ logischen Schlüsselwörter dient. Ein formales Beispiel:
 <div class='box'><pre><code><!--
 -->(match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</a></span> (
       (position ...)
-      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:match">:match</span></a> (
+      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:match">:match</a></span> (
         (position ...)
         (position ...)
         ...
@@ -4784,11 +4785,11 @@ Beispiel:
 <div class='box'><pre><code><!--
 -->(match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
     <span style='white-space:nowrap;'><span class='keyword'>:matchconsecutive</span></span> (
-      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> <span class='piece'>&#x2657;</span>)
+      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> <span class='piece'>&#x2657;</span>)
       (position)
-      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> <span class='piece'>&#x2658;</span>))))<!--
+      (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> <span class='piece'>&#x2658;</span>))))<!--
 --></code></pre></div>
 
 <p>
@@ -4831,7 +4832,7 @@ Diese Positionsliste ist offensichtlich identisch zu:
 </p>
 
 <div class='verb'><code>
-(position <span class='piece'>&#x2656;</span>e8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>f3 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> .g2)
+(position <span class='piece'>&#x2656;</span>e8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>f3 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> .g2)
 </code></div>
 
 <p>
@@ -4839,7 +4840,7 @@ Außerdem ist sie identisch zu:
 </p>
 
 <div class='verb'><code>
-(position <span class='piece'>&#x2656;</span>e8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (<span class='piece'>&#x2655;</span>f3-g2))
+(position <span class='piece'>&#x2656;</span>e8 <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (<span class='piece'>&#x2655;</span>f3-g2))
 </code></div>
 
 <p>
@@ -4849,39 +4850,39 @@ Treppenschachmanövern mit einer Dame:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:sequence</span></span> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>a2)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>b2)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>b3)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>c3)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> <span class='piece'>&#x2655;</span>c4)
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>)))<!--
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>a2)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>b2)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>b3)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>c3)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> <span class='piece'>&#x2655;</span>c4)
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>)))<!--
 --></code></pre></div>
 
 <p>
 Diese Positionsliste filtert eine Position mit einer weißen Dame auf a2,
 die nacheinander auf die bezeichneten Felder zieht und dabei Schach bietet.
-Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a>, und
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> suchen nach den gespiegelten oder gedrehten
+Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span>, und
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> suchen nach den gespiegelten oder gedrehten
 Manövern irgendwo auf dem Schachbrett. Jedoch kann dies folgendermaßen
 viel einfacher ausgedrückt werden:
 </p>
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (<span class='piece'>&#x2655;</span>a2-b2+ -- <span class='piece'>&#x2655;</span>b2-b3+ -- <span class='piece'>&#x2655;</span>b3-c3+ -- <span class='piece'>&#x2655;</span>c3-c4+))<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (<span class='piece'>&#x2655;</span>a2-b2+ -- <span class='piece'>&#x2655;</span>b2-b3+ -- <span class='piece'>&#x2655;</span>b3-c3+ -- <span class='piece'>&#x2655;</span>c3-c4+))<!--
 --></code></pre></div>
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchconsecutive">:matchconsecutive</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchconsecutive">:matchconsecutive</a></span>.
 </p>
 
 <!-- ############################################################################## -->
@@ -4897,8 +4898,8 @@ anzupassen.
 </p>
 
 <p>
-Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:elo">:elo</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:whiteelo">:whiteelo</span></a> und
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:blackelo">:blackelo</span></a> werden nur unterstützt, um kompatibel mit
+Die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:elo">:elo</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:whiteelo">:whiteelo</a></span> und
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:blackelo">:blackelo</a></span> werden nur unterstützt, um kompatibel mit
 Standard-CQL zu sein, und sollten nicht mehr in Positionslisten verwendet werden.
 </p>
 
@@ -4918,7 +4919,7 @@ Standard-CQL zu sein, und sollten nicht mehr in Positionslisten verwendet werden
 <p>
 Dieses Schlüsselwort wird nur unterstützt, um kompatibel mit dem CQL-Standard
 zu sein. Es wird zur Verwendung des gleichnamigen Schlüsselworts
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:blackelo">:blackelo</span></span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
+<a href="CQL-Match-List.html#match:blackelo"><span style='white-space:nowrap;'>:blackelo</span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
 beschrieben.
 </p>
 
@@ -4927,7 +4928,7 @@ beschrieben.
 <p>
 Dieses Schlüsselwort wird nur unterstützt, um kompatibel mit dem CQL-Standard
 zu sein. Es wird zur Verwendung des gleichnamigen Schlüsselworts
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:elo">:elo</span></span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
+<a href="CQL-Match-List.html#match:elo"><span style='white-space:nowrap;'>:elo</span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
 beschrieben.
 </p>
 
@@ -4939,7 +4940,7 @@ die Standardstartposition 518. Diese Schlüsselwort ist eine Kurzschreibweise f�
 </p>
 
 <div class='verb'><code>
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:startposition">:startposition</span></a> 1-960
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:startposition">:startposition</a></span> 1-960
 </code></div>
 
 <p>
@@ -4956,7 +4957,7 @@ Filtert Partien, die nicht mit einer Schach-960-Position beginnen.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isshufflechess">:isshufflechess</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isshufflechess">:isshufflechess</a></span>.
 </p>
 
 <h3 id="position:isshufflechess">:isshufflechess&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Shuffle-Schach?)</span></h3>
@@ -4967,7 +4968,7 @@ Schach-960-Positionen. Diese Schlüsselwort ist eine Kurzschreibweise für:
 </p>
 
 <div class='verb'><code>
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:startposition">:startposition</span></a> 1-3840
+<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:startposition">:startposition</a></span> 1-3840
 </code></div>
 
 <p>
@@ -4984,7 +4985,7 @@ Filtert Partien, die nicht mit einer Schuffle-Schach-Position beginnen.
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischess960">:ischess960</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischess960">:ischess960</a></span>.
 </p>
 
 <h3 id="position:result">:result&emsp;<span class='normal'>(Ergebnis)</span></h3>
@@ -4992,13 +4993,13 @@ Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#po
 <p>
 Dieses Schlüsselwort wird nur aus Kompatibilätsgründen zu CQL 1.0
 unterstützt, sollte aber nicht mehr verwendet werden (denn <span style='white-space:nowrap;'>CQL-S</span>
-bietet <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:eithercolor">:eithercolor</span></span> : <span style='white-space:nowrap;'>match</span></a> als Erweiterung zu
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>).
+bietet <a href="CQL-Match-List.html#match:eithercolor"><span style='white-space:nowrap;'>:eithercolor</span> : <span style='white-space:nowrap;'>match</span></a> als Erweiterung zu
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>).
 </p>
 
 <p>
 Dieses Schlüsselwort erwartet das gleiche Argument wie das Schlüsselwort
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:result">:result</span></span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste.
+<a href="CQL-Match-List.html#match:result"><span style='white-space:nowrap;'>:result</span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste.
 </p>
 
 <h3 id="position:startposition">:startposition&ensp;<img src="../images/ft-scidb-tiny.png" alt="" /></h3>
@@ -5007,20 +5008,20 @@ Dieses Schlüsselwort erwartet das gleiche Argument wie das Schlüsselwort
 Erwartet eine kommaseparierte Liste von Startpositionsbereichen. Eine Startposition
 ist entweder eine Positionsnummer, oder eine FICS-Variantenbezeichnung. Ein
 Startpositionsbereich ist eine Folge von Startpositionen.
-Für eine genauere Beschreibung siehe bei <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:startposition">:startposition</span></span> : <span style='white-space:nowrap;'>match</span></a>.
+Für eine genauere Beschreibung siehe bei <a href="CQL-Match-List.html#match:startposition"><span style='white-space:nowrap;'>:startposition</span> : <span style='white-space:nowrap;'>match</span></a>.
 </p>
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischess960">:ischess960</span></a>,
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isshufflechess">:isshufflechess</span></a>.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischess960">:ischess960</a></span>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:isshufflechess">:isshufflechess</a></span>.
 </p>
 
 <h3 id="position:variant">:variant</h3>
 
 <p>
 Für eine Beschreibung dieses Schlüsselwortes siehe beim gleichnamigen
-Schlüsselwort <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:variant">:variant</span></span> : <span style='white-space:nowrap;'>match</span></a> der Suchliste. Dieses
+Schlüsselwort <a href="CQL-Match-List.html#match:variant"><span style='white-space:nowrap;'>:variant</span> : <span style='white-space:nowrap;'>match</span></a> der Suchliste. Dieses
 Schlüsselwort wird hier bereitgestellt, um bei einzelnen Positionslisten
 eine Unterscheidung zwischen den
 <a href="Chess-Variants.html">Schachformen</a> treffen zu können.
@@ -5031,7 +5032,7 @@ eine Unterscheidung zwischen den
 <p>
 Dieses Schlüsselwort wird nur unterstützt, um kompatibel mit dem CQL-Standard
 zu sein. Es wird zur Verwendung des gleichnamigen Schlüsselworts
-<span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:whiteelo">:whiteelo</span></span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
+<a href="CQL-Match-List.html#match:whiteelo"><span style='white-space:nowrap;'>:whiteelo</span> : <span style='white-space:nowrap;'>match</span></a> in der Suchliste geraten. Dort wird es auch genauer
 beschrieben.
 </p>
 
@@ -5106,7 +5107,7 @@ können nur im Wertebereich Null bis 2 liegen.
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a> <span style='white-space:nowrap;'><span class='keyword'>:checkcount</span></span> 0 : 0)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span> <span style='white-space:nowrap;'><span class='keyword'>:checkcount</span></span> 0 : 0)
 </code></div>
 
 <p>
@@ -5124,19 +5125,19 @@ Diese Position würde gefiltert werden (das Schlüsselwort <span style='white-sp
 beachten), denn Schwarz hat dem weißen König bereits zweimal Schach geboten.
 Mit anderen Worten: diese Abfrage sucht nach Partien die mit einer
 fortgeschrittenen Stellung beginnen, wobei eine Seite der anderen bereits ein
-Schachgebot gab. Kombiniert mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a> finden wir alle
+Schachgebot gab. Kombiniert mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span> finden wir alle
 Partien auf, die mit einer Startstellung beginnen, in denen eine der Seiten
 bereits Schachgebote erhalten hat:
 </p>
 
 <div class='box'><pre><code><!--
 -->(position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a> (position <span style='white-space:nowrap;'><span class='keyword'>:checkcount</span></span> 0 : 0))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span> (position <span style='white-space:nowrap;'><span class='keyword'>:checkcount</span></span> 0 : 0))<!--
 --></code></pre></div>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:ischeck">:ischeck</a></span>.
 </p>
 
 <h3 id="position:matchcount">:matchcount&emsp;<span class='normal'>(Übereinstimmungszähler)</span></h3>
@@ -5152,7 +5153,7 @@ Beispiel:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>] <span style='white-space:nowrap;'><span class='keyword'>:matchcount</span></span> &gt;=4)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>] <span style='white-space:nowrap;'><span class='keyword'>:matchcount</span></span> &gt;=4)
 </code></div>
 
 <p>
@@ -5161,10 +5162,10 @@ Filtert jede Partie in der mindestens vier Damen geschlagen wurden.
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
   <span style='white-space:nowrap;'><span class='keyword'>:matchcount</span></span> &gt;=4
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> Q
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> ?[a1,a8,h1,h8])<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> Q
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> ?[a1,a8,h1,h8])<!--
 --></code></pre></div>
 
 <p>
@@ -5175,20 +5176,20 @@ mindestend vier mal auf ein Eckfeld zog, dann wird stattdessen folgender Ausdruc
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</span></a> &gt;=4
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> Q
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> ?[a1,a8,h1,h8])<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</a></span> &gt;=4
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> Q
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> ?[a1,a8,h1,h8])<!--
 --></code></pre></div>
 
 <p>
-Siehe dazu <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</span></a>.
+Siehe dazu <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</a></span>.
 </p>
 
 <h3 id="position:pretransformmatchcount">:pretransformmatchcount&emsp;<span class='normal'>(Prä-Transformation-Übereinstimmungszähler)</span></h3>
 
 <p>
-Dieses Schlüsselwort hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a>.
+Dieses Schlüsselwort hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span>.
 Zur Beschreibung dieses Schlüsselwortes nehmen wir folgende allgemeine Form
 einer Positionsliste an:
 </p>
@@ -5214,11 +5215,11 @@ Transformationsschritte bezeichnen. Nun bilden wir einen neuen Ausdruck:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
-    (position Y<sub>1,1</sub> Y<sub>2,1</sub> ... Y<sub>n,1</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> n<sub>1</sub> n<sub>2</sub>)
-    (position Y<sub>1,2</sub> Y<sub>2,2</sub> ... Y<sub>n,2</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> n<sub>1</sub> n<sub>2</sub>)
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
+    (position Y<sub>1,1</sub> Y<sub>2,1</sub> ... Y<sub>n,1</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> n<sub>1</sub> n<sub>2</sub>)
+    (position Y<sub>1,2</sub> Y<sub>2,2</sub> ... Y<sub>n,2</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> n<sub>1</sub> n<sub>2</sub>)
     ...
-    (position Y<sub>1,m</sub> Y<sub>2,m</sub> ... Y<sub>n,m</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> n<sub>1</sub> n<sub>2</sub>)))<!--
+    (position Y<sub>1,m</sub> Y<sub>2,m</sub> ... Y<sub>n,m</sub> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> n<sub>1</sub> n<sub>2</sub>)))<!--
 --></code></pre></div>
 
 <p>
@@ -5234,15 +5235,15 @@ Beispiel:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>d4
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>d4
   <span style='white-space:nowrap;'><span class='keyword'>:pretransformmatchcount</span></span> &gt;=12
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)<!--
 --></code></pre></div>
 
 <p>
 Dies würde jede Partie finden in der mindestens 12 Figuren auf dem gleichen
 Feld geschlagen wurden. Ersetzen wir <span style='white-space:nowrap;'>:pretransformmatchcount</span>
-durch <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a>, dann würde diese Positionsliste Partien
+durch <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span>, dann würde diese Positionsliste Partien
 auffinden in denen mindestens 12 Figuren irgendwo auf dem Schachbrett geschlagen
 wurden.
 </p>
@@ -5250,9 +5251,9 @@ wurden.
 <h3 id="position:pretransformrepetitioncount">:pretransformrepetitioncount&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Prä-Transformation-Wiederholungszähler)</span></h3>
 
 <p>
-Dieses Schlüsselwort hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:repetitioncount">:repetitioncount</span></a>,
+Dieses Schlüsselwort hat die gleiche Syntax wie <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:repetitioncount">:repetitioncount</a></span>,
 und ist so zu verstehen wie das ähnliche Schlüsselwort
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</span></a>, nur daß <span style='white-space:nowrap;'>:repetitioncount</span>
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pretransformmatchcount">:pretransformmatchcount</a></span>, nur daß <span style='white-space:nowrap;'>:repetitioncount</span>
 aufeinanderfolgende Positionsmerkmale zählt.
 </p>
 
@@ -5262,9 +5263,9 @@ Beispiel:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>d4
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span>d4
   <span style='white-space:nowrap;'><span class='keyword'>:pretransformrepetitioncount</span></span> &gt;=6
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)<!--
 --></code></pre></div>
 
 <p>
@@ -5285,7 +5286,7 @@ Beispiele:
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><span class='keyword'>:repetitioncount</span></span> &gt;=10)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><span class='keyword'>:repetitioncount</span></span> &gt;=10)
 </code></div>
 
 <p>
@@ -5293,7 +5294,7 @@ Filtert jede Position, in der aufeinanderfolgend mindestens zehn Figuren geschla
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><span class='keyword'>:repetitioncount</span></span> 0)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><span class='keyword'>:repetitioncount</span></span> 0)
 </code></div>
 
 <p>
@@ -5301,7 +5302,7 @@ Filtert jede Partie, in der niemals eine Figur geschlagen wird. Dies ist äquiva
 </p>
 
 <div class='verb'><code>
-(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> 0)
+(position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveto">:moveto</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> 0)
 </code></div>
 
 <!-- ############################################################################## -->
@@ -5310,10 +5311,10 @@ Filtert jede Partie, in der niemals eine Figur geschlagen wird. Dies ist äquiva
 
 <p>
 Die folgenden Schlüsselwörter analysieren Positionen.
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:evaluation">:evaluation</span></a> und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveevaluation">:moveevaluation</span></a> sollten
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:evaluation">:evaluation</a></span> und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:moveevaluation">:moveevaluation</a></span> sollten
 mit Vorsicht verwendet werden, es sind sehr, sehr langsame Operationen. In einigen
-Fällen mögen die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exchangeevaluation">:exchangeevaluation</span></a> und
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:maxswapevaluation">:maxswapevaluation</span></a> eine Alternative sein, diese Operationen
+Fällen mögen die Schlüsselwörter <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exchangeevaluation">:exchangeevaluation</a></span> und
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:maxswapevaluation">:maxswapevaluation</a></span> eine Alternative sein, diese Operationen
 sind viel schneller, aber auch noch recht zeitverbrauchend.
 </p>
 
@@ -5371,9 +5372,9 @@ Beispiele:
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span> 2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span> 2
   <span style='white-space:nowrap;'><span class='keyword'>:endgameevaluation</span></span> *mate)<!--
 --></code></pre></div>
 
@@ -5384,9 +5385,9 @@ Filtert alle Positionen mit einem Endspiel <span style='white-space:nowrap;'><co
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span> 2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span> 2
   <span style='white-space:nowrap;'><span class='keyword'>:endgameevaluation</span></span> mate &gt;=40)<!--
 --></code></pre></div>
 
@@ -5400,22 +5401,22 @@ benötigt.
 <h3 id="position:endgameevaluation_">:endgameevaluation*&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Endspielbewertung)</span></h3>
 
 <p>
-Diese Version von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgameevaluation">:endgameevaluation</span></a> untersucht nur die Positionen,
+Diese Version von <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgameevaluation">:endgameevaluation</a></span> untersucht nur die Positionen,
 in denen die spezifizierte Figurenkonstellation zum ersten Mal in der Partie erfüllt wird.
 Somit ist diese Version unter Umständen erheblich schneller in der Suche.
 </p>
 
 <p>
-TODO: wird nicht benötigt, denn dies kann mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:">::cut</span></a> realisiert werden:
+TODO: wird nicht benötigt, denn dies kann mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:">::cut</a></span> realisiert werden:
 </p>
 
 <div class='box'><pre><code><!--
 -->(position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span> 2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> 6
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span> 2
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span> 2
   <span style='white-space:nowrap;'><span class='keyword'>:endgameevaluation</span></span> mate &gt;=40
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>)<!--
 --></code></pre></div>
 
 <h3 id="position:evaluation">:evaluation&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Bewertung)</span></h3>
@@ -5539,7 +5540,7 @@ Funktion hängt nicht vom Zugrecht ab.
 </p>
 
 <p>
-Bezüglich der Figurenwerte siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</span></a>.
+Bezüglich der Figurenwerte siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</a></span>.
 </p>
 
 <p>
@@ -5589,7 +5590,7 @@ gedeckt werden. Der Wert dieser Funktion hängt nicht vom Zugrecht ab.
 </p>
 
 <p>
-Bezüglich der Figurenwerte siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</span></a>.
+Bezüglich der Figurenwerte siehe <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:power">:power</a></span>.
 </p>
 
 <p>
@@ -5710,7 +5711,7 @@ weiße Zug (wahrscheinlich) ein Patzer war. Nur Schlagzüge werden bewertet.
 -->(match
   (position <span style='white-space:nowrap;'><span class='keyword'>:moveevaluation</span></span> [<span class='piece'>&#x2659;</span><span class='piece'>&#x265f;</span>] ?[?1,?8]
              &lt;=0.0 movetime 5000 absolute)
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promotion">:promotion</span></a> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promotion">:promotion</a></span> <span class='cql' title='Irgendeine Figur'>&#x25d1;</span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>))<!--
 --></code></pre></div>
 
 <p>
@@ -5722,7 +5723,7 @@ Bauernumwandlungszüge bewertet werden.
 
 <p>
 Siehe auch:
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgameevaluation">:endgameevaluation</span></a>,
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:endgameevaluation">:endgameevaluation</a></span>,
 </p>
 
 
@@ -5755,9 +5756,9 @@ Positionslisten eine Position filtert, wird der mit diesem Namen assoziierte
 Akkumulator inkrementiert. Der Akkumulator wird wieder auf Null gesetzt,
 sobald eine neue Position untersucht wird (nach einem Zug). Als Folge davon
 sollte <span style='white-space:nowrap;'>:accumulate</span> nicht innerhalb von folgenden Schlüsselwörtern
-verwendet werden: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</span></a>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</span></a>,
-und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a>. Zu beachten ist daß
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> in den meisten Fällen unerwartete Ergebnisse
+verwendet werden: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:not">:not</a></span>, <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sequence">:sequence</a></span>,
+und <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span>. Zu beachten ist daß
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> in den meisten Fällen unerwartete Ergebnisse
 hervorruft, wenn es zusammen mit <span style='white-space:nowrap;'>:accumulate</span> verwendet wird,
 denn der Akkumulator wird nicht auf Null zurückgesetzt zwischen den
 Farbwechseln.
@@ -5769,13 +5770,13 @@ Für Beispiele siehe:
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</a></span>.
 </p>
 
 <h3 id="position:accumulate_">:accumulate*&ensp;<img src="../images/ft-scidb-tiny.png" alt="" />&emsp;<span class='normal'>(Akkumulieren)</span></h3>
 
 <p>
-Um auch <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> verwenden zu können
+Um auch <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> verwenden zu können
 bietet <span style='white-space:nowrap;'>CQL-S</span> eine Erweiterung, indem <span style='white-space:nowrap;'><code>accumulate*</code></span>
 verwendet wird, hier wird für jede Farbe einzeln gezählt, dies macht eine
 getrennte Zählung möglich.
@@ -5787,7 +5788,7 @@ Für ein Beispiel siehe: <a href="CQL-Examples.html#accumulator#passed-pawn"
 </p>
 
 <p>
-Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a>.
+Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span>.
 </p>
 
 
@@ -5797,7 +5798,7 @@ Siehe auch: <span style='white-space:nowrap;'><a href="CQL-Position-List.html#po
 Dies erwartet als Argument den Namen eines Akkumulator und eine
 <a href="CQL-Range-Specifiers.html">Bereichsangabe</a>. Es filtert eine
 Position, wenn der Wert des bezeichneten Akkumulators innerhalb des gegebenen
-Bereichs liegt. Wenn <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</span></a> verwendet wird, dann unterscheidet
+Bereichs liegt. Wenn <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</a></span> verwendet wird, dann unterscheidet
 <span style='white-space:nowrap;'>:sumrange</span> automatisch zwischen den Farben.
 </p>
 
@@ -5857,11 +5858,11 @@ Das heißt, daß eine Position gefiltert wird, wenn alle anderen Filter diese
 Position akzeptieren, unabhängig vom Resultat des <span style='white-space:nowrap;'>:cut</span>-Filters.
 Soll die Suche aber immer mit einem negativen Resultat abschliessen, wenn
 die <span style='white-space:nowrap;'>:cut</span>-Bedingung zutrifft, dann wird stattdessen das Schlüsselwort
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a> verwendet.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span> verwendet.
 </p>
 
 <p><img src='../images/note.png' alt='note' /> 
-<span style='white-space:nowrap;'>:cut</span> hat eine niedrigere Priorität als <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a>.
+<span style='white-space:nowrap;'>:cut</span> hat eine niedrigere Priorität als <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span>.
 </p>
 
 <p>
@@ -5870,14 +5871,14 @@ Beispiele für <span style='white-space:nowrap;'>:cut</span>:
 
 <div class='box'><pre><code><!--
 -->(match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>)
-  (position <span style='white-space:nowrap;'><span class='keyword'>:cut</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a>))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>)
+  (position <span style='white-space:nowrap;'><span class='keyword'>:cut</span></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span>))<!--
 --></code></pre></div>
 
 <p>
 Suche nach Partien die mit einem Matt enden, und keine der beiden Seiten hat
 jemals zuvor Schach geboten. Hier kann <span style='white-space:nowrap;'>:cut</span> nicht durch
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</span></a> ersetzt werden, denn ein Mattgebot enthält
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:exclude">:exclude</a></span> ersetzt werden, denn ein Mattgebot enthält
 immer auch ein Schachgebot, und dies würde auch die Partie ausschliessen.
 </p>
 
@@ -5888,8 +5889,8 @@ Suchkriterium nicht erforderlich, wie folgende Umformung zeigt:
 
 <div class='box'><pre><code><!--
 -->(match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>)
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</span></a> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> 1))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:check">:check</a></span> <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> 1))<!--
 --></code></pre></div>
 
 <p>
@@ -5901,15 +5902,15 @@ effizienter sein als der Gebrauch von <span style='white-space:nowrap;'><code>":
 
 <p>
 Diese Suche nach dem ersten Schachgebot in der Partie, das zugleich auch Matt
-bietet, kann auch mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</span></a> formuliert werden:
+bietet, kann auch mit <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</a></span> formuliert werden:
 </p>
 
 <div class='box'><pre><code><!--
 -->(match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</span></a> 1 : 0
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:checkcount">:checkcount</a></span> 1 : 0
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>))<!--
 --></code></pre></div>
 
 <p>
@@ -5937,7 +5938,7 @@ vollständig aus der Suche aus (wenn die Hauptvariante ausgeschlossen wurde).
 </p>
 
 <p><img src='../images/note.png' alt='note' /> 
-<span style='white-space:nowrap;'>:exclude</span> hat eine höhere Priorität als <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>.
+<span style='white-space:nowrap;'>:exclude</span> hat eine höhere Priorität als <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>.
 </p>
 
 <p>
@@ -5963,7 +5964,7 @@ dann kann folgender Ausdruck verwendet werden:
 
 <div class='box'><pre><code><!--
 -->(match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a> &lt;A&gt;)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span> &lt;A&gt;)
   (position <span style='white-space:nowrap;'><span class='keyword'>:exclude</span></span> &lt;B&gt;))<!--
 --></code></pre></div>
 
@@ -5975,8 +5976,8 @@ solange &lt;A&gt; nicht erfüllt ist, so geschieht dies folgendermaßen:
 
 <div class='box'><pre><code><!--
 -->(match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cond">:cond</span></a> (
-    (position &lt;A&gt;) (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</span></a>)
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cond">:cond</a></span> (
+    (position &lt;A&gt;) (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:cut">:cut</a></span>)
     (position <span style='white-space:nowrap;'><span class='keyword'>:exclude</span></span> &lt;B&gt;)))<!--
 --></code></pre></div>
 
@@ -5991,7 +5992,7 @@ wurde, so geschieht dies mit:
 
 <div class='box'><pre><code><!--
 -->(match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a> (
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span> (
     (position &lt;A&gt;)
     (position <span style='white-space:nowrap;'><span class='keyword'>:exclude</span></span> &lt;B&gt;)))<!--
 --></code></pre></div>

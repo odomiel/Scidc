@@ -81,8 +81,8 @@
 <h2 id="accumulator">Using accumulators to count passed pawns</h2>
 
 <p>
-We will show how to use <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a> and
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> to look for games that have at least 3 white
+We will show how to use <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span> and
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> to look for games that have at least 3 white
 passed pawns in a position.
 A passed pawn is one which does not have an opposing pawn on its file or on
 adjacent files on its way to promotion.
@@ -94,9 +94,9 @@ match any position with a white passed pawn:
 --><span class='comment'>; match a position with a white passed pawn</span>
 (position
   <span class='piece'>&#x2659;</span>d2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>)<!--
 --></code></pre></div>
 
 <p>
@@ -107,11 +107,11 @@ Now, to find at least three white passed pawns, we add in some accumulation code
 --><span class='comment'>; match a position with at least three white passed pawns</span>
 (position
   <span class='piece'>&#x2659;</span>d2
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a> white_passer_counter
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> white_passer_counter 3 8)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span> white_passer_counter
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> white_passer_counter 3 8)<!--
 --></code></pre></div>
 
 <p>
@@ -123,11 +123,11 @@ We can use:
 --><span class='comment'>;match a position with at least two black passed pawns</span>
 (position
   <span class='piece'>&#x265f;</span>d7
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d2-6] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span>[c2-6,e2-6] 0
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a> black_passer_counter
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> black_passer_counter 2 8)<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d2-6] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span>[c2-6,e2-6] 0
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span> black_passer_counter
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> black_passer_counter 2 8)<!--
 --></code></pre></div>
 
 <p>
@@ -139,21 +139,21 @@ white passers, we combine these lists:
 --><span class='comment'>; match a position with at least three white</span>
 <span class='comment'>; and at least two black passers</span>
 (position
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> white_passer_counter 3 8
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> black_passer_counter 2 8
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</span></a> (
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> white_passer_counter 3 8
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> black_passer_counter 2 8
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:and">:and</a></span> (
     (position
       <span class='piece'>&#x2659;</span>d2
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a> white_passer_counter)
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d3-7] 0
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x265f;</span>[c3-7,e3-7] 0
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span> white_passer_counter)
     (position
       <span class='piece'>&#x265f;</span>d7
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d2-6] 0
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> <span class='piece'>&#x2659;</span>[c2-6,e2-6] 0
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a> black_passer_counter)))<!--
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='piece'>&#x265f;</span><span class='piece'>&#x2659;</span>][d2-6] 0
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> <span class='piece'>&#x2659;</span>[c2-6,e2-6] 0
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+      <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span> black_passer_counter)))<!--
 --></code></pre></div>
 
 <p id="accumulator:passed-pawn">
@@ -165,21 +165,21 @@ We are searching for positions with at least three passed pawns.
 
 (match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:or">:or</a></span> (
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</span></a> counter 3 8
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:sumrange">:sumrange</a></span> counter 3 8
         Pd2
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [pP][d3-7] 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> p[c3-7,e3-7] 0
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> <span class='comment'>; accumulate* is counting each color separately</span>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</span></a> counter))))<!--
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [pP][d3-7] 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> p[c3-7,e3-7] 0
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> <span class='comment'>; accumulate* is counting each color separately</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate_">:accumulate*</a></span> counter))))<!--
 --></code></pre></div>
 
 <p>
 At least we should mention that these are examples to become clear
-about the art of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</span></a>. In fact all these examples
-can be realized quite more efficient with the use of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a>.
+about the art of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:accumulate">:accumulate</a></span>. In fact all these examples
+can be realized quite more efficient with the use of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span>.
 </p>
 
 <h2 id="relation">Relation list example</h2>
@@ -200,19 +200,19 @@ are on the same square as the pattern:
 <div class='box'><pre><code><!--
 -->(position
   <span class='piece'>&#x2654;</span>e6 <span class='piece'>&#x265d;</span>e7 <span class='piece'>&#x265d;</span>e4 <span class='piece'>&#x265e;</span>d5
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</span></a>
-  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</span></a> (
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:pattern">:pattern</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:shift">:shift</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:flip">:flip</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:originalsamecount">:originalsamecount</span></a> 0
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:samesidetomove">:samesidetomove</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:variations">:variations</span></a>))<!--
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:shift">:shift</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flip">:flip</a></span>
+  <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:relation">:relation</a></span> (
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:pattern">:pattern</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:shift">:shift</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:flip">:flip</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:originalsamecount">:originalsamecount</a></span> 0
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:samesidetomove">:samesidetomove</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:variations">:variations</a></span>))<!--
 --></code></pre></div>
 
 <p>
-If one modified the <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:originalsamecount">:originalsamecount</span></a> parameter to, say,
+If one modified the <span style='white-space:nowrap;'><a href="CQL-Relation-List.html#relation:originalsamecount">:originalsamecount</a></span> parameter to, say,
 <span style='white-space:nowrap;'><code>0 3</code></span> from its current value of 0, then it would be allowed to
 overlap with at most three squares of the pattern in the original position.
 </p>
@@ -226,7 +226,7 @@ four corners of the board:
 
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</span></a> rook [<span class='piece'>&#x265c;</span><span class='piece'>&#x2656;</span>] <span class='comment'>; loop over the possible rooks</span>
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</a></span> rook [<span class='piece'>&#x265c;</span><span class='piece'>&#x2656;</span>] <span class='comment'>; loop over the possible rooks</span>
   (position $rook[a1])
   (position $rook[h1])
   (position $rook[h8])
@@ -234,7 +234,7 @@ four corners of the board:
 --></code></pre></div>
 
 <p>
-Here, the <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forany">:forany</span></a> keyword in the match list introduces a tag named
+Here, the <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forany">:forany</a></span> keyword in the match list introduces a tag named
 "rook" which is constrained to range over white or black rooks, or over pawns that
 eventually promote to one of those.
 </p>
@@ -244,7 +244,7 @@ The first position list matches games in which there is a position such that the
 tag "rook" represents a rook on a1. The next position list matches games in which
 there is a position such that the tag represents a rook on h1. The tag represents
 the same mark, that is, the same piece, between the position lists. The
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forany">:forany</span></a> keyword will sequentially bind the tag to each allowed mark.
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:forany">:forany</a></span> keyword will sequentially bind the tag to each allowed mark.
 </p>
 
 <p>
@@ -259,16 +259,16 @@ promotes.
 
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</span></a> pawn [<span class='piece'>&#x2659;</span><span class='piece'>&#x265f;</span>]
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</a></span> pawn [<span class='piece'>&#x2659;</span><span class='piece'>&#x265f;</span>]
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:tagmatch">:tagmatch</span></a> pawn [<span class='piece'>&#x2659;</span><span class='piece'>&#x265f;</span>]?[27]
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a> ((position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> $pawn <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> <span class='cql' title='Any piece at all'>&#x25d1;</span>))))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:initial">:initial</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:tagmatch">:tagmatch</a></span> pawn [<span class='piece'>&#x2659;</span><span class='piece'>&#x265f;</span>]?[27]
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span> ((position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> $pawn <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> <span class='cql' title='Any piece at all'>&#x25d1;</span>))))<!--
 --></code></pre></div>
 
 <p>
-<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:tagmatch">:tagmatch</span></a> is matching pawns on second or seventh rank in
-start position, and the position sequence of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a>
+<span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:tagmatch">:tagmatch</a></span> is matching pawns on second or seventh rank in
+start position, and the position sequence of <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span>
 is matching if the tagged "pawn" is promoting in any subsequent game position.
 </p>
 
@@ -278,12 +278,12 @@ Third example: the same piece delivers at least 30 checks in the game.
 
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</span></a> checker <span class='cql' title='Any white piece'>&#x25cb;</span>
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</a></span> checker <span class='cql' title='Any white piece'>&#x25cb;</span>
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> $checker <span class='piece'>&#x265a;</span> 1
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> &gt;=30
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> $checker <span class='piece'>&#x265a;</span> 1
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> &gt;=30
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>))<!--
 --></code></pre></div>
 
 <p>
@@ -292,13 +292,13 @@ Fourth example: knight gives mate with its first move.
 
 <div class='box'><pre><code><!--
 -->(match
-  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</span></a> knight <span class='piece'>&#x2658;</span>
+  <span style='white-space:nowrap;'><a href="CQL-Match-List.html#match:forany">:forany</a></span> knight <span class='piece'>&#x2658;</span>
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</span></a> $knight
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</span></a> 1)
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:movefrom">:movefrom</a></span> $knight
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchcount">:matchcount</a></span> 1)
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> $knight <span class='piece'>&#x265a;</span> 1))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> $knight <span class='piece'>&#x265a;</span> 1))<!--
 --></code></pre></div>
 
 <h3 id="line">Examples for move lines</h3>
@@ -313,9 +313,9 @@ Fourth example: knight gives mate with its first move.
 
 (match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> <span class='comment'>; also look for the color flipped theme</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> <span class='comment'>; also look for the color flipped theme</span>
     <span class='comment'>; Remember: '!' means 'singular move'.</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (<span class='piece'>&#x2658;</span>xe5 <span class='piece'>&#x265d;</span>x<span class='piece'>&#x2655;</span> <span class='piece'>&#x2657;</span>xf7+ | <span class='piece'>&#x265a;</span>e7! <span class='piece'>&#x2658;</span>d5#)))<!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (<span class='piece'>&#x2658;</span>xe5 <span class='piece'>&#x265d;</span>x<span class='piece'>&#x2655;</span> <span class='piece'>&#x2657;</span>xf7+ | <span class='piece'>&#x265a;</span>e7! <span class='piece'>&#x2658;</span>d5#)))<!--
 --></code></pre></div>
 
 <div class='box'><pre><code><!--
@@ -329,9 +329,9 @@ Fourth example: knight gives mate with its first move.
 
 (match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a> <span class='comment'>; also look for the color flipped theme</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span> <span class='comment'>; also look for the color flipped theme</span>
     <span class='comment'>; Remember: '!' means 'singular move'.</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</span></a> (<span class='piece'>&#x2655;</span>d8+ | <span class='piece'>&#x265a;</span>xd8! <span class='piece'>&#x2657;</span>:g5++ <span class='piece'>&#x265a;</span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x2657;</span>]d8#)))
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:line">:line</a></span> (<span class='piece'>&#x2655;</span>d8+ | <span class='piece'>&#x265a;</span>xd8! <span class='piece'>&#x2657;</span>:g5++ <span class='piece'>&#x265a;</span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x2657;</span>]d8#)))
 
 <span class='comment'>; This will also find the following game:</span>
 <span class='comment'>; <span style='white-space:nowrap;'><code>1.e4</code></span> <span style='white-space:nowrap;'><code>c5</code></span> <span style='white-space:nowrap;'><code>2.d4</code></span> <span style='white-space:nowrap;'><code>cxd4</code></span> <span style='white-space:nowrap;'><code>3.c3</code></span> <span style='white-space:nowrap;'><code>d5</code></span> <span style='white-space:nowrap;'><code>4.exd5</code></span> <span style='white-space:nowrap;'><code><span class='piece'>&#x2655;</span>xd5</code></span> <span style='white-space:nowrap;'><code>5.<span class='piece'>&#x2658;</span>f3</code></span> <span style='white-space:nowrap;'><code><span class='piece'>&#x2657;</span>g4</code></span> <span style='white-space:nowrap;'><code>6.<span class='piece'>&#x2655;</span>a4+</code></span></span>
@@ -348,19 +348,19 @@ Fourth example: knight gives mate with its first move.
 
 (match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>    <span class='comment'>; also look for the color flipped theme</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:result">:result</span></a> 1-0   <span class='comment'>; White is winning the game</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</span></a> (
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>    <span class='comment'>; also look for the color flipped theme</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:result">:result</a></span> 1-0   <span class='comment'>; White is winning the game</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:gappedsequence">:gappedsequence</a></span> (
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='cql' title='White major piece'>&#x25b3;</span><span class='cql' title='Black major piece'>&#x25b2;</span><span class='cql' title='White minor piece'>&#x25bd;</span><span class='cql' title='Black minor piece'>&#x25bc;</span>] 0          <span class='comment'>; it's a pawn ending</span>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</span></a> <span class='cql' title='Any piece at all'>&#x25d1;</span> 0           <span class='comment'>; material balance</span>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a> <span class='piece'>&#x2659;</span> passed-!inside 0) <span class='comment'>; no unstoppable passed pawn yet</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='cql' title='White major piece'>&#x25b3;</span><span class='cql' title='Black major piece'>&#x25b2;</span><span class='cql' title='White minor piece'>&#x25bd;</span><span class='cql' title='Black minor piece'>&#x25bc;</span>] 0          <span class='comment'>; it's a pawn ending</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</a></span> <span class='cql' title='Any piece at all'>&#x25d1;</span> 0           <span class='comment'>; material balance</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span> <span class='piece'>&#x2659;</span> passed-!inside 0) <span class='comment'>; no unstoppable passed pawn yet</span>
       (position
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</span></a>                            <span class='comment'>; Black to move</span>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</span></a> [<span class='cql' title='White major piece'>&#x25b3;</span><span class='cql' title='Black major piece'>&#x25b2;</span><span class='cql' title='White minor piece'>&#x25bd;</span><span class='cql' title='Black minor piece'>&#x25bc;</span>] 0           <span class='comment'>; it's still a pawn ending</span>
-          <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</span></a> <span class='cql' title='Any piece at all'>&#x25d1;</span> &lt;=&#x2212;2         <span class='comment'>; two pawns less</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:btm">:btm</a></span>                            <span class='comment'>; Black to move</span>
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:piececount">:piececount</a></span> [<span class='cql' title='White major piece'>&#x25b3;</span><span class='cql' title='Black major piece'>&#x25b2;</span><span class='cql' title='White minor piece'>&#x25bd;</span><span class='cql' title='Black minor piece'>&#x25bc;</span>] 0           <span class='comment'>; it's still a pawn ending</span>
+          <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:powerdifference">:powerdifference</a></span> <span class='cql' title='Any piece at all'>&#x25d1;</span> &lt;=&#x2212;2         <span class='comment'>; two pawns less</span>
         <span class='comment'>; at least one unstoppable passed pawn</span>
-        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</span></a> <span class='piece'>&#x2659;</span> passed-!inside &gt;=1))))<!--
+        <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:pawncount">:pawncount</a></span> <span class='piece'>&#x2659;</span> passed-!inside &gt;=1))))<!--
 --></code></pre></div>
 
 
@@ -375,9 +375,9 @@ Fourth example: knight gives mate with its first move.
 
 (match
   (position
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</span></a>            <span class='comment'>; either color</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</span></a> <span class='piece'>&#x265a;</span> [<span class='cql' title='Any white piece'>&#x25cb;</span>.] 0 <span class='comment'>; king is smothered by own pieces</span>
-    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</span></a>))               <span class='comment'>; and is mate</span><!--
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:flipcolor">:flipcolor</a></span>            <span class='comment'>; either color</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:attackcount">:attackcount</a></span> <span class='piece'>&#x265a;</span> [<span class='cql' title='Any white piece'>&#x25cb;</span>.] 0 <span class='comment'>; king is smothered by own pieces</span>
+    <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:mate">:mate</a></span>))               <span class='comment'>; and is mate</span><!--
 --></code></pre></div>
 
 <div class='box'><pre><code><!--
@@ -385,10 +385,10 @@ Fourth example: knight gives mate with its first move.
 <span class='comment'>; pieces. The order of position lists is not significant.</span>
 
 (match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>])
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>])
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>])
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2658;</span><span class='piece'>&#x265e;</span>]))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>])
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>])
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>])
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2658;</span><span class='piece'>&#x265e;</span>]))<!--
 --></code></pre></div>
 
 <div class='box'><pre><code><!--
@@ -397,11 +397,11 @@ Fourth example: knight gives mate with its first move.
 <span class='comment'>; It is required that all promotions are done in succession.</span>
 
 (match
-  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchconsecutive">:matchconsecutive</span></a> (
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>])
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>])
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>])
-    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</span></a> [<span class='piece'>&#x2658;</span><span class='piece'>&#x265e;</span>])))<!--
+  (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:matchconsecutive">:matchconsecutive</a></span> (
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2655;</span><span class='piece'>&#x265b;</span>])
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2656;</span><span class='piece'>&#x265c;</span>])
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2657;</span><span class='piece'>&#x265d;</span>])
+    (position <span style='white-space:nowrap;'><a href="CQL-Position-List.html#position:promote">:promote</a></span> [<span class='piece'>&#x2658;</span><span class='piece'>&#x265e;</span>])))<!--
 --></code></pre></div>
 
 </body>

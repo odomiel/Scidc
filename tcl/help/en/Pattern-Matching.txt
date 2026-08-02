@@ -198,7 +198,7 @@ or <expr>"Kasparova"</expr>.
 Kasparov, Garry
 </verb>
 
-</p>
+<p>
 This is matching the string <expr>"Kasparov, Garry"</expr>. Because of the
 special rule with separating characters also the following strings will
 match: <expr>"Kasparov,Garry"</expr> (lacking blank character), and
@@ -213,6 +213,7 @@ Kasparov{,} Garry
 This is matching <expr>"Kasparov, Garry"</expr>, but not <expr>"Kasparov,Garry"</expr>,
 because an expression inside curly braces is switching off the special rules
 concerning the blanks.
+</p>
 
 <verb>
 Kasparov,\ Garry
@@ -232,7 +233,7 @@ blank character), all special rules concerning blanks are switched off.
 </verb>
 
 <p>
-Now the string <expr>"{Kasparov,&nbsp;Garry}" will match, because the curly brace is
+Now the string <expr>"{Kasparov,&nbsp;Garry}"</expr> will match, because the curly brace is
 protected and has no special meaning.
 </p>
 
@@ -250,7 +251,7 @@ because the match is case-sensitive.
 </verb>
 
 <p>
-This will only match <epxr>"!!"</expr>. The first character has to be
+This will only match <expr>"!!"</expr>. The first character has to be
 protected, otherwise it will be recognized as a switch for case insensitive
 search, and not as the character <expr>!</expr>.
 </p>

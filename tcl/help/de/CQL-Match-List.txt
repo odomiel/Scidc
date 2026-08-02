@@ -1485,7 +1485,7 @@ Beispiele:
 </p>
 
 <verb>
-(match <keyword>match:playerid<keyword> FIDE 4100018)
+(match <keyword>match:playerid</keyword> FIDE 4100018)
 </verb>
 
 <p>
@@ -1494,7 +1494,7 @@ Partien eine FIDE-Kennung zugeordnet wurde.
 </p>
 
 <verb>
-(match <keyword>match:playerid<keyword> DSB 55039-*)
+(match <keyword>match:playerid</keyword> DSB 55039-*)
 </verb>
 
 <p>
@@ -2565,7 +2565,7 @@ Die Kommentarsuche wird auf Deutsch und "Sprachenunabhängig" eingeschränkt.
 
 <p>
 Siehe auch: 
-<cql>match:comment*</cwl>.
+<cql>match:comment*</cql>.
 <cql>match:hascomments</cql>,
 </p>
 
@@ -2579,7 +2579,7 @@ vollständig vom Suchmuster ersetzt werden, damit die Partie gefiltert wird.
 
 <p>
 Siehe auch: 
-<cql>match:comment</cwl>.
+<cql>match:comment</cql>.
 <cql>match:hascomments</cql>,
 </p>
 
