@@ -39,6 +39,17 @@ Aus dem Quellcode bauen
 -----------------------
 Die ausführliche Bauanleitung befindet sich in der Datei INSTALL.
 
+Skripte für Betreuer
+--------------------
+- bump-version.sh    erhöht den Build-Zähler in allen Versionsdateien
+                     und baut neu
+- build-appimage.sh  baut das AppImage
+- release.sh         veröffentlicht ein gebautes AppImage als Release:
+                     Tag setzen, hochladen und gegenprüfen, indem der
+                     Anhang zurückgeladen und gestartet wird
+
+Einzelheiten stehen in der Datei INSTALL.
+
 Lizenz
 ------
 Siehe die Datei COPYING.

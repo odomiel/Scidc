@@ -39,6 +39,15 @@ Building from source
 --------------------
 See the file INSTALL for detailed build instructions.
 
+Maintainer scripts
+------------------
+- bump-version.sh    raise the build counter in all version files and rebuild
+- build-appimage.sh  build the AppImage
+- release.sh         publish a built AppImage as a release: tag, upload, and
+                     verify by downloading the asset back and running it
+
+See the file INSTALL for details.
+
 License
 -------
 See the file COPYING.

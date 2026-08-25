@@ -39,7 +39,7 @@ Building
 
     make
 
-3. Create the AppImage:
+4. Create the AppImage:
 
     bash build-appimage.sh
 
@@ -65,3 +65,40 @@ an AppImage (requires AppDir/usr/share/ to exist from a prior
 build-appimage.sh run):
 
     ./run-scidb.sh
+
+To raise the build counter (the bN in the version JJ.MM.TT bN) in all
+version files and rebuild everything:
+
+    bash bump-version.sh
+
+Releasing
+---------
+release.sh publishes a built AppImage as a release on the project's
+Forgejo instance. It works in four steps: create and push the tag,
+create the release, upload the AppImage, and then verify - the asset is
+downloaded back, its SHA-256 compared against the built file, and the
+downloaded copy is started with --version.
+
+    bash release.sh              # version taken from Makefile.version
+    bash release.sh --dry-run    # run all checks, publish nothing
+
+Before writing anything it checks that the three version files agree,
+that the AppImage exists, and that the API answers. Each step is
+skipped if it was already done, so an interrupted run can be repeated;
+an existing asset of the same name needs --force to be replaced.
+
+The release text defaults to this build's entry in CHANGELOG.md
+(-m TEXT or -n FILE override it). Further options: --stable (not a
+prerelease), --draft, --no-run (skip starting the downloaded file).
+
+Two things to watch out for:
+
+  - bump-version.sh already sets the tag when it raises the version.
+    Commits made afterwards - the CHANGELOG entry, for instance - are
+    then outside the tag, and the release would carry an outdated tree.
+    release.sh warns when the tag does not point at HEAD; move the tag
+    (git tag -d T && git push origin --delete T) and run it again.
+
+  - Credentials for the API come from $FORGEJO_CRED or ~/.git-credentials.
+    The secret is never printed and never passed as a command line
+    argument, so it does not show up in ps.
