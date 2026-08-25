@@ -105,6 +105,10 @@ find tcl/help -name "*.html" | while read f; do
     [ -f "$dest" ] && cp "$f" "$dest"
 done
 
+# ttk-Themes synchronisieren (wird zur Laufzeit aus share/ geladen, nicht aus dem Bundle)
+mkdir -p "$SHAREDIR/themes/ttk"
+cp -f tcl/themes/ttk/*.tcl "$SHAREDIR/themes/ttk/"
+
 rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 
