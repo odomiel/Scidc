@@ -160,7 +160,12 @@ fi
 step "Schritt 1/4: Tag $TAG"
 
 if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-	echo "Tag existiert lokal bereits ($(git rev-parse --short "$TAG"))."
+	# rev-list statt rev-parse: bei einem annotierten Tag liefert rev-parse das
+	# Tag-Objekt, nicht den Commit, auf den es zeigt.
+	TAGGED=$(git rev-list -n1 --abbrev-commit "$TAG")
+	echo "Tag existiert lokal bereits (Commit $TAGGED)."
+	[ "$TAGGED" = "$(git rev-parse --short=${#TAGGED} HEAD)" ] \
+		|| echo "HINWEIS: Tag zeigt nicht auf HEAD ($(git rev-parse --short HEAD)) - Release bekommt den Stand von $TAGGED."
 else
 	# Tag-Namen duerfen keine Leerzeichen enthalten - daher $TAG, nicht $SPACED.
 	git tag -a "$TAG" -m "Scidc $SPACED"
