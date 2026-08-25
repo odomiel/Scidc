@@ -1433,3 +1433,18 @@ tkscidc.o: mstl/m_ios.ipp
 tkscidc.o: mstl/m_istream.ipp
 tkscidc.o: mstl/m_ostream.h
 tkscidc.o: mstl/m_ostream.ipp
+
+# ======================================================================
+# Versionsverwaltung
+# ======================================================================
+.PHONY: bump-version
+bump-version:
+	@OLD_VERSION=$$(grep SCIDB_VERSION ../Makefile.version | sed 's/.*="\(.*\)"/\1/'); \
+	NEW_VERSION=$$(echo "$$OLD_VERSION" | sed 's/-b\([0-9]\+\)-Beta/-b$$((\1+1))-Beta/'); \
+	sed -i "s|$$OLD_VERSION|$$NEW_VERSION|g" ../Makefile.version; \
+	sed -i "s|$$(echo "$$OLD_VERSION" | sed 's/-b\([0-9]\+\)-Beta/ b\1 Beta/')|$$(echo "$$NEW_VERSION" | sed 's/-b\([0-9]\+\)-Beta/ b\1 Beta/')|g" ../src/tcl/tcl_misc.cpp; \
+	sed -i "s|$$(echo "$$OLD_VERSION" | sed 's/-b\([0-9]\+\)-Beta/ b\1 Beta/')|$$(echo "$$NEW_VERSION" | sed 's/-b\([0-9]\+\)-Beta/ b\1 Beta/')|g" ../tcl/exec.tcl; \
+	@echo "Version auf $$NEW_VERSION erhöht."; \
+	@echo "Jetzt ausführen:"; \
+	@echo "  make clean && make"; \
+	@echo "  bash build-appimage.sh"
