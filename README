@@ -22,8 +22,8 @@ Requirements
 - Linux (x86_64)
 - For running: none (AppImage bundles all dependencies)
 - For building: gcc/g++, make, Tcl/Tk 9.0 dev headers (including the
-  private ones), X11 dev headers, zlib
-  (expat is built from src/util/expat and linked statically)
+  private ones), X11 dev headers
+  (expat and zlib are built from src/util/ and linked statically)
 
 Installation
 ------------

@@ -164,7 +164,7 @@ array set feature {
 }
 
 array set force {
-    zlib    no
+    zlib    yes
     zziplib no
     expat   yes
 }
@@ -1435,9 +1435,14 @@ proc SystemHasZlib {} {
 #    if necessary. 
 #
 proc checkZlib {} {
-    global environment package subdir
+    global environment package subdir force
 
     if {[string first "libz." $environment(LDFLAGS)] >= 0} {
+        return
+    }
+    if {$force(zlib)} {
+        puts "    Using bundled zlib compression library."
+        UseBundledZlib
         return
     }
     puts -nonewline "    Checking if your system already has zlib installed: "
@@ -1446,10 +1451,21 @@ proc checkZlib {} {
         puts "yes."
     } else {
         puts "no.\n      Using bundled library."
-        set subdir(zlib) "util/zlib"
-        set package(zlib-lib) "[pwd]/src/util/zlib/libz.a"
-        set package(zlib-inc) "-I[pwd]/src/util/zlib"
+        UseBundledZlib
     }
+}
+
+
+# UseBundledZlib:
+#    Builds and links the zlib copy in src/util/zlib instead of the
+#    library of the build host.
+#
+proc UseBundledZlib {} {
+    global subdir package
+
+    set subdir(zlib) "util/zlib"
+    set package(zlib-lib) "[pwd]/src/util/zlib/libz.a"
+    set package(zlib-inc) "-I[pwd]/src/util/zlib"
 }
 
 
@@ -2291,7 +2307,7 @@ proc usage {rc} {
     puts "  --with-expat-inc=DIR       path to Expat XML Parser headers"
     puts "  --with-expat-lib=DIR       link options for Expat XML Parser library"
     puts ""
-    puts "  --force-bundled-zlib       \[default=no\]"
+    puts "  --force-bundled-zlib       \[default=yes\]"
     puts "  --force-bundled-zziplib    \[default=no\]"
     puts "  --force-bundled-expat      \[default=yes\]"
     puts ""

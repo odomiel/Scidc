@@ -5,18 +5,14 @@
 #   * die Engines aus tcl/engines/downloads.dat
 #   * Tcl/Tk (Vorgabeversion in build-tcltk.sh)
 #   * die aus dem Baum gebauten Bibliotheken: minizip-ng, libharu, zziplib,
-#     expat
-#   * zlib
+#     expat, zlib
 #
-# zlib liegt zwar auch im Baum (src/util/zlib), wird aber nicht gebaut:
-# configure setzt ZLIB_LIB=-lz, und build-appimage.sh legt die so gefundene
-# Systembibliothek ins Paket. Geprueft wird deshalb, was pkg-config meldet -
-# genau das landet im AppImage. Eine veraltete Fassung ist dort nicht durch
-# eine Aenderung im Baum zu beheben, sondern nur ueber das Bausystem.
-#
-# expat war bis 26.09.05-b4 ebenso ein Systemfund; seitdem wird die Kopie in
-# src/util/expat gebaut und statisch gebunden, weil sie Kommentare aus fremden
-# Datenbankdateien liest. Geprueft wird darum die Version im Baum.
+# expat und zlib waren bis 26.09.05-b3 Systemfunde: configure setzte
+# EXPAT_LIB=-lexpat und ZLIB_LIB=-lz, ausgeliefert wurde also die Bibliothek
+# des Bausystems, und die Versionsnummern der Quellen im Baum sagten darueber
+# nichts aus. Seit b4 (expat) bzw. b5 (zlib) werden die Kopien im Baum gebaut
+# und statisch gebunden - beide lesen Daten aus fremden Dateien. Geprueft wird
+# darum jetzt fuer alle Bibliotheken die Version im Baum.
 #
 # Wird von build-appimage.sh beim ersten Build des Tages aufgerufen. Der
 # Aufruf ist rein informativ: das Skript endet immer mit 0, damit ein
@@ -28,7 +24,6 @@
 import json
 import os
 import re
-import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -208,15 +203,6 @@ def check_zziplib(report):
             latest_tag("gdraheim/zziplib", r"^v(\d+\.\d+\.\d+)$"))
 
 
-def pkgconfig_version(name):
-    try:
-        r = subprocess.run(["pkg-config", "--modversion", name],
-                           capture_output=True, text=True, timeout=10)
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
-
-
 def check_expat(report):
     have = define_version(
         ("src", "util", "expat", "expat.h"),
@@ -228,9 +214,11 @@ def check_expat(report):
             latest_tag("libexpat/libexpat", r"^R_(\d+_\d+_\d+)$"))
 
 
-def check_system_libs(report):
-    compare(report, "zlib (System)", pkgconfig_version("zlib"),
-            latest_release("madler/zlib"))
+def check_zlib(report):
+    have = define_version(
+        ("src", "util", "zlib", "zlib.h"),
+        r'^#\s*define\s+ZLIB_VERSION\s+"([^"]+)"')
+    compare(report, "zlib", have, latest_release("madler/zlib"))
 
 
 # --- Bericht ----------------------------------------------------------
@@ -243,7 +231,7 @@ def main():
     check_libharu(report)
     check_zziplib(report)
     check_expat(report)
-    check_system_libs(report)
+    check_zlib(report)
 
     if not report:
         return 0
@@ -270,11 +258,13 @@ def main():
         print("  tcl/engines/downloads.dat braucht Version, URL, Groesse und SHA-256.")
         print("  Erzeugen mit: python3 tools/make-engine-catalog.py")
 
-    if any(r[1].endswith("(System)") for r in outdated):
+    lib_names = {"expat", "zlib", "minizip-ng", "libharu", "zziplib"}
+    if any(r[1] in lib_names for r in outdated):
         print("")
-        print("  Die mit (System) sind nicht im Baum, sondern werden vom Bausystem")
-        print("  gelinkt und von build-appimage.sh ins Paket gelegt. Eine neuere")
-        print("  Fassung gibt es nur ueber die Pakete des Bausystems.")
+        print("  Die Bibliotheken liegen als Kopie im Baum und werden dort gebaut:")
+        print("  neue Quellen hineinkopieren, dann uebersetzen. Bei expat und zlib")
+        print("  bleibt die von Hand gepflegte Konfiguration erhalten (expat_config.h")
+        print("  bzw. die DEFINES im Makefile).")
 
     print("")
     return 0

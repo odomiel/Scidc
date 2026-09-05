@@ -14,12 +14,11 @@ Install the required development packages (Debian/Ubuntu/Mint):
         libsm-dev \
         libxcursor-dev \
         libfreetype6-dev \
-        libfontconfig1-dev \
-        zlib1g-dev
+        libfontconfig1-dev
 
-expat is not listed: Scidc builds the copy in src/util/expat and links it
-statically, because that parser reads comments from foreign database files
-and the version shipped must not depend on the build host.
+expat and zlib are not listed: Scidc builds the copies in src/util/expat and
+src/util/zlib and links them statically. Both read data from foreign files, so
+the version shipped must not depend on the build host.
 
 No Tcl/Tk packages are listed here on purpose. Scidc requires Tcl/Tk 9.0 and
 compiles against its *private* headers, which distribution packages usually do
