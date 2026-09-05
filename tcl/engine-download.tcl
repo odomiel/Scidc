@@ -203,8 +203,8 @@ proc registered? {command} {
 # --- Hilfsmittel ------------------------------------------------------
 
 proc Downloader {} {
-	if {![catch { exec wget --version }]} { return wget }
-	if {![catch { exec curl --version }]} { return curl }
+	if {![catch { Capture wget --version }]} { return wget }
+	if {![catch { Capture curl --version }]} { return curl }
 	return ""
 }
 
@@ -228,6 +228,28 @@ proc Run {expect args} {
 }
 
 
+# Dasselbe fuer Hilfsprogramme, deren Ausgabe gebraucht wird: dort gibt es
+# keine Ergebnisdatei, an der sich der Erfolg ablesen liesse. Tcl haengt die
+# Klage ueber das verlorene Kind aber an die bereits eingesammelte Ausgabe an;
+# liegt Ausgabe vor, ist das Programm gelaufen und nur die Statusabfrage kam zu
+# spaet. Die Meldung wird dann abgeschnitten und die Ausgabe geliefert.
+#
+# Ohne das schlug jeder Bezug nach dem ersten fehl: sobald eine Engine gelaufen
+# ist, faengt die Prozessverwaltung SIGCHLD ab, "sha256sum --version" meldete
+# den verlorenen Kindprozess, und der Bezug brach mit der irrefuehrenden
+# Meldung "kein Programm fuer SHA-256-Pruefsummen gefunden" ab. Das traf auch
+# das Willkommensfenster, das mehrere Engines nacheinander laedt.
+proc Capture {args} {
+	if {![catch { exec {*}$args } out]} { return $out }
+	if {![string match "*child process lost*" $out]} { error $out }
+
+	set lines [split $out \n]
+	set i [lsearch -glob $lines "*child process lost*"]
+	if {$i <= 0} { error $out }
+	return [join [lrange $lines 0 [expr {$i - 1}]] \n]
+}
+
+
 proc Fetch {url dest} {
 	# Die Originalprojekte liegen auf Servern mit gueltigen Zertifikaten;
 	# anders als beim frueheren Bezug aus dem lokalen Repository ist hier
@@ -244,11 +266,11 @@ proc Fetch {url dest} {
 
 
 proc Sha256 {file} {
-	if {![catch { exec sha256sum --version }]} {
-		return [string tolower [lindex [exec sha256sum $file] 0]]
+	if {![catch { Capture sha256sum --version }]} {
+		return [string tolower [lindex [Capture sha256sum $file] 0]]
 	}
-	if {![catch { exec shasum -a 256 --version }]} {
-		return [string tolower [lindex [exec shasum -a 256 $file] 0]]
+	if {![catch { Capture shasum -a 256 --version }]} {
+		return [string tolower [lindex [Capture shasum -a 256 $file] 0]]
 	}
 	error $mc::NoChecksumTool
 }

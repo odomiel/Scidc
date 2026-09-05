@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.09.05 b1 Beta"
+	set version "26.09.05 b2 Beta"
 }
 
 
@@ -101467,8 +101467,8 @@ proc registered? {command} {
 
 
 proc Downloader {} {
-	if {![catch { exec wget --version }]} { return wget }
-	if {![catch { exec curl --version }]} { return curl }
+	if {![catch { Capture wget --version }]} { return wget }
+	if {![catch { Capture curl --version }]} { return curl }
 	return ""
 }
 
@@ -101486,6 +101486,17 @@ proc Run {expect args} {
 }
 
 
+proc Capture {args} {
+	if {![catch { exec {*}$args } out]} { return $out }
+	if {![string match "*child process lost*" $out]} { error $out }
+
+	set lines [split $out \n]
+	set i [lsearch -glob $lines "*child process lost*"]
+	if {$i <= 0} { error $out }
+	return [join [lrange $lines 0 [expr {$i - 1}]] \n]
+}
+
+
 proc Fetch {url dest} {
 	catch { file delete -force $dest }
 
@@ -101499,11 +101510,11 @@ proc Fetch {url dest} {
 
 
 proc Sha256 {file} {
-	if {![catch { exec sha256sum --version }]} {
-		return [string tolower [lindex [exec sha256sum $file] 0]]
+	if {![catch { Capture sha256sum --version }]} {
+		return [string tolower [lindex [Capture sha256sum $file] 0]]
 	}
-	if {![catch { exec shasum -a 256 --version }]} {
-		return [string tolower [lindex [exec shasum -a 256 $file] 0]]
+	if {![catch { Capture shasum -a 256 --version }]} {
+		return [string tolower [lindex [Capture shasum -a 256 $file] 0]]
 	}
 	error $mc::NoChecksumTool
 }

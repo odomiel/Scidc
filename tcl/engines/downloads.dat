@@ -17,20 +17,15 @@ set ::engine::download::Catalog {
 		Author		"The Stockfish developers"
 		Homepage	https://stockfishchess.org
 		Repo		official-stockfish/Stockfish
-		Version		"18"
-		Tag			sf_18
+		Version		"19"
+		Tag			sf_19
 		Protocol	UCI
-		Archive		tar
+		Archive		tar.gz
 		Extract		binary
 		Target		stockfish
 		Extra		{}
 		Builds {
-			{avx512icl {avx512vbmi avx512vnni} stockfish-ubuntu-x86-64-avx512icl.tar 444e3fff9a5ee66961f917f947083d956b2468da9e531d589a9a4981e437657c 114401280 {stockfish/stockfish-ubuntu-x86-64-avx512icl}}
-			{avx512 {avx512f} stockfish-ubuntu-x86-64-avx512.tar 9ddf29d8589d65cbf4b444c29241e711fccac24e6e9f5452480bb9a2e0fddd83 114391040 {stockfish/stockfish-ubuntu-x86-64-avx512}}
-			{bmi2 {avx2 bmi2} stockfish-ubuntu-x86-64-bmi2.tar 7b200a3cd8ae6e2b07386cd213058edc91faf05ff77db68604d2f5143c56b69e 114391040 {stockfish/stockfish-ubuntu-x86-64-bmi2}}
-			{avx2 {avx2} stockfish-ubuntu-x86-64-avx2.tar 536c0c2c0cf06450df0bfb5e876ef0d3119950703a8f143627f990c7b5417964 114401280 {stockfish/stockfish-ubuntu-x86-64-avx2}}
-			{sse41-popcnt {sse4_1 popcnt} stockfish-ubuntu-x86-64-sse41-popcnt.tar dea5016a6d9ab705e5697b093d882fca4677d84d8828f470ee33e76de33cf962 114401280 {stockfish/stockfish-ubuntu-x86-64-sse41-popcnt}}
-			{generic {} stockfish-ubuntu-x86-64.tar 5c6f38b02a4da5f3ffe763f27da6c3e743eebefd92b50cb3661623b96696adff 114391040 {stockfish/stockfish-ubuntu-x86-64}}
+			{universal {} stockfish-linux-x86-64-universal.tar.gz 9defc0d4e55d49c65a6d042f3e571a39fcea499ade6dbe741b53b8c65e03611f 81388977 {stockfish/stockfish-linux-x86-64-universal}}
 		}
 	}
 	{
@@ -124,11 +119,11 @@ set ::engine::download::Catalog {
 		Target		arasanx-64
 		Extra		{}
 		Builds {
-			{avx512 {avx512f} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx512}}
-			{avx2-bmi2 {avx2 bmi2} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx2-bmi2}}
-			{avx2 {avx2} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-avx2}}
-			{modern {sse4_1 popcnt} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64-modern}}
-			{generic {} arasan-linux-binaries-26.0.tar.gz 9d818d11cc9bafdf3642b6a8b9395ce5033e401980f5989736b803bd307a1197 28249053 {arasanx-64}}
+			{avx512 {avx512f} arasan-linux-binaries-26.0.tar.gz 03f0e4f41cda5c0d8eb7016f42d5569be27a58515848a45f20eab5ab581b02b3 28281986 {arasanx-64-avx512}}
+			{avx2-bmi2 {avx2 bmi2} arasan-linux-binaries-26.0.tar.gz 03f0e4f41cda5c0d8eb7016f42d5569be27a58515848a45f20eab5ab581b02b3 28281986 {arasanx-64-avx2-bmi2}}
+			{avx2 {avx2} arasan-linux-binaries-26.0.tar.gz 03f0e4f41cda5c0d8eb7016f42d5569be27a58515848a45f20eab5ab581b02b3 28281986 {arasanx-64-avx2}}
+			{modern {sse4_1 popcnt} arasan-linux-binaries-26.0.tar.gz 03f0e4f41cda5c0d8eb7016f42d5569be27a58515848a45f20eab5ab581b02b3 28281986 {arasanx-64-modern}}
+			{generic {} arasan-linux-binaries-26.0.tar.gz 03f0e4f41cda5c0d8eb7016f42d5569be27a58515848a45f20eab5ab581b02b3 28281986 {arasanx-64}}
 		}
 	}
 }

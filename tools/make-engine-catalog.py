@@ -45,14 +45,15 @@ SPECS = [
     dict(
         id="stockfish", name="Stockfish", author="The Stockfish developers",
         home="https://stockfishchess.org", repo="official-stockfish/Stockfish",
-        archive="tar", extract="binary", target="stockfish",
+        # Seit sf_19 liefert das Projekt je Plattform nur noch eine
+        # "universal"-Datei: sie erkennt die Merkmale des Prozessors beim Start
+        # selbst und waehlt den passenden Code. Die frueheren sechs Anhaenge je
+        # Prozessorvariante (avx512icl ... generic) gibt es nicht mehr, deshalb
+        # hier ein einziger Eintrag ohne geforderte Merkmale. Auch das
+        # Archivformat hat gewechselt, von .tar auf .tar.gz.
+        archive="tar.gz", extract="binary", target="stockfish",
         builds=[
-            ("avx512icl",    "avx512vbmi avx512vnni", "stockfish-ubuntu-x86-64-avx512icl.tar",    "stockfish/stockfish-ubuntu-x86-64-avx512icl"),
-            ("avx512",       "avx512f",               "stockfish-ubuntu-x86-64-avx512.tar",       "stockfish/stockfish-ubuntu-x86-64-avx512"),
-            ("bmi2",         "avx2 bmi2",             "stockfish-ubuntu-x86-64-bmi2.tar",         "stockfish/stockfish-ubuntu-x86-64-bmi2"),
-            ("avx2",         "avx2",                  "stockfish-ubuntu-x86-64-avx2.tar",         "stockfish/stockfish-ubuntu-x86-64-avx2"),
-            ("sse41-popcnt", "sse4_1 popcnt",         "stockfish-ubuntu-x86-64-sse41-popcnt.tar", "stockfish/stockfish-ubuntu-x86-64-sse41-popcnt"),
-            ("generic",      "",                      "stockfish-ubuntu-x86-64.tar",              "stockfish/stockfish-ubuntu-x86-64"),
+            ("universal", "", "stockfish-linux-x86-64-universal.tar.gz", "stockfish/stockfish-linux-x86-64-universal"),
         ]),
     dict(
         id="fairy-stockfish", name="Fairy-Stockfish", author="Fabian Fichter",
