@@ -31,8 +31,11 @@ set Installed				"installed"
 set NotInstalled			"not installed"
 set Newer					"update available"
 
+set Unknown					"installed (version unknown)"
+
 set Download				"Download"
 set Remove					"Remove"
+set Update					"Update"
 set CheckForUpdates		"Search for newer versions"
 set ProjectPage			"Project page"
 
@@ -43,6 +46,7 @@ set Registering			"Registering engine..."
 set Succeeded				"%s has been installed."
 set Failed					"Installation of %s failed: %s"
 set Removed					"%s has been removed."
+set Updated					"%s has been updated to %s."
 
 set NoDownloader			"Neither wget nor curl was found."
 set NoChecksumTool		"No program for SHA-256 checksums was found."
@@ -62,6 +66,14 @@ set ReallyRemove			"Really remove %s?"
 
 variable Catalog {}
 variable Priv
+
+# Welcher Katalogstand liegt je Engine installiert (Id -> Tag). Das gehoert
+# bewusst nicht in engines.dat: die Motorenliste fuehrt auch von Hand
+# eingerichtete Engines, die zu keinem Katalogeintrag gehoeren.
+variable Installed
+variable HaveState 0
+
+array set Installed {}
 
 array set Priv {
 	dlg			""
@@ -200,6 +212,121 @@ proc registered? {command} {
 }
 
 
+# --- Vermerk ueber den installierten Katalogstand ---------------------
+#
+# Ohne diesen Vermerk weiss der Dialog nur, *dass* eine Engine daliegt, nicht
+# welche Fassung - eine im Katalog nachgezogene Version bliebe damit unbemerkt.
+
+proc stateFile {} {
+	return [file join [file dirname $::scidc::dir::engines] installed.dat]
+}
+
+
+proc LoadState {} {
+	variable HaveState
+
+	if {$HaveState} { return }
+	set HaveState 1
+	set file [stateFile]
+	if {[file readable $file]} { catch { uplevel #0 [list source $file] } }
+}
+
+
+proc SaveState {} {
+	variable Installed
+
+	set file [stateFile]
+	set f ""
+
+	if {[catch {
+		file mkdir [file dirname $file]
+		set f [::open $file.tmp w]
+		fconfigure $f -encoding utf-8
+		puts $f "# Scidc installed engines file"
+		puts $f "# Syntax: Tcl language format"
+		puts $f ""
+		puts $f "array set ::engine::download::Installed \{"
+		foreach id [lsort [array names Installed]] {
+			puts $f "\t$id\t$Installed($id)"
+		}
+		puts $f "\}"
+		close $f
+		set f ""
+		file rename -force $file.tmp $file
+	}]} {
+		if {[string length $f]} { catch { close $f } }
+		catch { file delete -force $file.tmp }
+		return 0
+	}
+
+	return 1
+}
+
+
+proc Record {id tag} {
+	variable Installed
+
+	LoadState
+	set Installed($id) $tag
+	SaveState
+}
+
+
+proc Forget {id} {
+	variable Installed
+
+	LoadState
+	if {[info exists Installed($id)]} {
+		unset Installed($id)
+		SaveState
+	}
+}
+
+
+# Bei Archive "plain" ist der Anhang selbst die Programmdatei. Dann laesst sich
+# der installierte Stand auch ohne Vermerk bestimmen: passt die Pruefsumme zu
+# einer der Ausgaben des Katalogeintrags, liegt genau dieser Stand da. Passt
+# keine, ist die Datei aelter *oder* eine fremde Ausgabe - das bleibt offen.
+# Bei tar/zip geht das nicht, dort ist die Pruefsumme die des Archivs.
+proc Identify {entry} {
+	array set e $entry
+
+	if {$e(Archive) ne "plain"} { return "" }
+	set path [binaryPath $entry]
+	if {![file readable $path]} { return "" }
+	if {[catch { Sha256 $path } sum]} { return "" }
+
+	foreach build $e(Builds) {
+		if {$sum eq [string tolower [lindex $build 3]]} { return $e(Tag) }
+	}
+	return ""
+}
+
+
+# Liefert "none", "current", "outdated" oder "unknown". "unknown" heisst: die
+# Engine liegt da, stammt aber aus einer Fassung ohne Vermerk und laesst sich
+# auch nicht nachtraeglich bestimmen - dann wird keine Aktualisierung angeboten,
+# denn eine falsche Behauptung waere schlimmer als keine Aussage.
+proc state {entry} {
+	variable Installed
+
+	array set e $entry
+	if {![installed? $entry]} { return none }
+
+	LoadState
+	if {![info exists Installed($e(Id))]} {
+		if {[Identify $entry] eq $e(Tag)} {
+			Record $e(Id) $e(Tag)
+		} else {
+			return unknown
+		}
+	}
+
+	if {$Installed($e(Id)) eq $e(Tag)} { return current }
+	return outdated
+}
+
+
 # --- Hilfsmittel ------------------------------------------------------
 
 proc Downloader {} {
@@ -310,6 +437,8 @@ proc install {parent id {statusCmd {}}} {
 	set tmp [file join [TmpDir] "scidc-engine-[pid]-$asset"]
 	file mkdir [file dirname $tmp]
 
+	set was [state $entry]
+
 	set rc [catch {
 		Report $statusCmd [format $mc::Downloading $e(Name) [FormatSize $size]]
 		Fetch $url $tmp
@@ -331,7 +460,13 @@ proc install {parent id {statusCmd {}}} {
 		return 0
 	}
 
-	Report $statusCmd [format $mc::Succeeded $e(Name)]
+	Record $e(Id) $e(Tag)
+
+	if {$was eq "outdated"} {
+		Report $statusCmd [format $mc::Updated $e(Name) $e(Version)]
+	} else {
+		Report $statusCmd [format $mc::Succeeded $e(Name)]
+	}
 	return 1
 }
 
@@ -490,6 +625,7 @@ proc remove {parent id} {
 	}
 
 	Unregister $path
+	Forget $e(Id)
 	return 1
 }
 
@@ -665,12 +801,23 @@ proc UpdateStates {} {
 	foreach entry [catalog] {
 		array set e $entry
 		set id $e(Id)
-		if {[installed? $entry]} {
-			set Priv(state:$id) $mc::Installed
-			catch { $top.b$id configure -text $mc::Remove }
-		} else {
-			set Priv(state:$id) $mc::NotInstalled
-			catch { $top.b$id configure -text $mc::Download }
+		switch [state $entry] {
+			outdated {
+				set Priv(state:$id) $mc::Newer
+				catch { $top.b$id configure -text $mc::Update }
+			}
+			current {
+				set Priv(state:$id) $mc::Installed
+				catch { $top.b$id configure -text $mc::Remove }
+			}
+			unknown {
+				set Priv(state:$id) $mc::Unknown
+				catch { $top.b$id configure -text $mc::Remove }
+			}
+			default {
+				set Priv(state:$id) $mc::NotInstalled
+				catch { $top.b$id configure -text $mc::Download }
+			}
 		}
 		array unset e
 	}
@@ -700,7 +847,10 @@ proc Action {dlg id} {
 	if {[llength $entry] == 0} { return }
 	array set e $entry
 
-	if {[installed? $entry]} {
+	# Bei einer veralteten Engine fuehrt der Knopf die Aktualisierung aus: der
+	# Bezug legt die neue Datei ueber die alte und frischt den vorhandenen
+	# Konfigurationseintrag auf. Nur beim Entfernen wird nachgefragt.
+	if {[state $entry] ni {none outdated}} {
 		set reply [::dialog::question -parent $dlg \
 			-message [format $mc::ReallyRemove $e(Name)] -default no]
 		if {$reply ne "yes"} { return }
