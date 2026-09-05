@@ -53,6 +53,8 @@ or fixed since the fork:</p>
   <li class="space">Fixed missing engine entries</li>
   <li class="space">Various SI5 export and import bugs fixed</li>
   <li class="space">Numerous dark mode rendering issues fixed</li>
+  <li class="space">Engines fetched with the download dialog now stay: the entry was kept in memory only and was gone after the next start</li>
+  <li class="space">The engine list is no longer lost when the program is closed after saving in engine management</li>
 </ul>
 
 END

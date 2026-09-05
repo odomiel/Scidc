@@ -53,6 +53,8 @@ vagy javításra a fork óta:</p>
   <li class="space">Hiányzó motorbejegyzések pótolva</li>
   <li class="space">Különböző SI5 exportálási és importálási hibák javítva</li>
   <li class="space">Számos sötét módú megjelenítési hiba javítva</li>
+  <li class="space">Engines fetched with the download dialog now stay: the entry was kept in memory only and was gone after the next start</li>
+  <li class="space">The engine list is no longer lost when the program is closed after saving in engine management</li>
 </ul>
 
 END

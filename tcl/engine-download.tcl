@@ -178,10 +178,25 @@ proc binaryPath {entry} {
 }
 
 
+# Eine Engine gilt erst als installiert, wenn sie auch in der Konfiguration
+# steht - nur dann taucht sie in der Analyse auf. Eine Datei ohne Eintrag ist
+# ein Ueberbleibsel (etwa aus einer Fassung, die den Eintrag nicht sicherte);
+# der Dialog bietet dafuer wieder "Beziehen" an und bringt beides in Ordnung.
 proc installed? {entry} {
 	set path [binaryPath $entry]
 	if {[string length $path] == 0} { return 0 }
-	return [file executable $path]
+	if {![file executable $path]} { return 0 }
+	return [registered? $path]
+}
+
+
+proc registered? {command} {
+	foreach entry $::engine::Engines {
+		array unset e
+		array set e $entry
+		if {$e(Command) eq $command} { return 1 }
+	}
+	return 0
 }
 
 
@@ -404,6 +419,12 @@ proc Register {parent entry path} {
 	# und Fairy-Stockfish landet als "Stockfish (3)". Fuer Eintraege aus dem
 	# Katalog ist der Name aber bekannt; er wird deshalb nachtraeglich gesetzt.
 	SetName $path $e(Name)
+
+	# ProbeNewEngine aendert nur die Liste im Speicher. Beim Beenden schreibt
+	# ::options::saveOptionsFile ausschliesslich Dateien, fuer die ein Schreiber
+	# angemeldet ist -- fuer engines.dat ist das nach einem Bezug keiner. Ohne
+	# das folgende Speichern waere die Engine beim naechsten Start wieder weg.
+	::engine::SaveEngineList
 }
 
 
@@ -438,12 +459,40 @@ proc remove {parent id} {
 	if {[llength $entry] == 0} { return 0 }
 	array set e $entry
 
+	set path [binaryPath $entry]
+
 	if {$e(Extract) eq "all"} {
 		catch { file delete -force [engineDir $entry] }
 	} else {
-		catch { file delete -force [binaryPath $entry] }
+		catch { file delete -force $path }
 	}
+
+	Unregister $path
 	return 1
+}
+
+
+# Gegenstueck zu Register: nimmt den Eintrag wieder aus der Konfiguration.
+# Bleibt er stehen, fuehrt die Motorenverwaltung nach dem Entfernen einen
+# Eintrag auf eine geloeschte Datei.
+proc Unregister {command} {
+	variable ::engine::Engines
+
+	if {[string length $command] == 0} { return }
+
+	set kept {}
+	set changed 0
+
+	foreach entry $::engine::Engines {
+		array unset e
+		array set e $entry
+		if {$e(Command) eq $command} { set changed 1 } else { lappend kept $entry }
+	}
+
+	if {$changed} {
+		set ::engine::Engines $kept
+		::engine::SaveEngineList
+	}
 }
 
 

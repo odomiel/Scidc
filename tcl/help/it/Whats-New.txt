@@ -53,6 +53,8 @@ modificate o corrette dal fork:</p>
   <li class="space">Aggiunte voci di motore mancanti</li>
   <li class="space">Vari bug di esportazione e importazione SI5 corretti</li>
   <li class="space">Numerosi problemi di visualizzazione in modalità scura corretti</li>
+  <li class="space">Engines fetched with the download dialog now stay: the entry was kept in memory only and was gone after the next start</li>
+  <li class="space">The engine list is no longer lost when the program is closed after saving in engine management</li>
 </ul>
 
 END

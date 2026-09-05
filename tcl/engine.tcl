@@ -3026,28 +3026,37 @@ proc SaveEngine {list} {
 }
 
 
+# Schreibt die Motorenliste sofort nach engines.dat. Wird auch aus dem
+# Bezugsdialog gerufen, der beim ersten Start laeuft, wenn .application noch
+# nicht existiert -- deshalb ein Elternfenster, das es dann auch gibt, und das
+# Oeffnen der Datei innerhalb des catch.
 proc SaveEngineList {} {
 	set filename $::scidc::file::engines
-	set f [open $filename.tmp "w"]
-	fconfigure $f -encoding utf-8
+	set f ""
 
 	if {[catch {
+		set f [open $filename.tmp "w"]
+		fconfigure $f -encoding utf-8
 		::options::writeHeader $f engines
 		::options::writeList $f [namespace current]::Engines
-	}]} {
 		close $f
-		file delete -force $filename.tmp
+		set f ""
+		file rename -force $filename.tmp $filename
+	}]} {
+		if {[string length $f]} { catch { close $f } }
+		catch { file delete -force $filename.tmp }
 		append msg $::util::mc::IOErrorOccurred
 		append msg ": "
 		append msg $::util::mc::IOError(WriteFailed)
 		append msg "."
 		append detail [format $::fsbox::mc::PermissionDenied [file dirname $filename.tmp]]
-		::dialog::error -parent .application -topmost yes -message $msg -detail $detail
-	} else {
-		close $f
-		file rename -force $filename.tmp $filename
-		::options::unhookWriter [namespace current]::WriteEngineOptions engines
+		set parent [expr {[winfo exists .application] ? ".application" : "."}]
+		::dialog::error -parent $parent -topmost yes -message $msg -detail $detail
+		return 0
 	}
+
+	::options::unhookWriter [namespace current]::WriteEngineOptions engines
+	return 1
 }
 
 

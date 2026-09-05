@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.08.02 b8 Beta"
+	set version "26.09.05 b1 Beta"
 }
 
 
@@ -1560,6 +1560,7 @@ proc unhookWriter {callback {file options}} {
 	if {[info exists WriteCallbacks($file)]} {
 		set i [lsearch -exact $WriteCallbacks($file) $callback]
 		if {$i >= 0} { set WriteCallbacks($file) [lreplace $WriteCallbacks($file) $i $i] }
+		if {[llength $WriteCallbacks($file)] == 0} { unset WriteCallbacks($file) }
 	}
 }
 
@@ -100564,26 +100565,31 @@ proc SaveEngine {list} {
 
 proc SaveEngineList {} {
 	set filename $::scidc::file::engines
-	set f [open $filename.tmp "w"]
-	fconfigure $f -encoding utf-8
+	set f ""
 
 	if {[catch {
+		set f [open $filename.tmp "w"]
+		fconfigure $f -encoding utf-8
 		::options::writeHeader $f engines
 		::options::writeList $f [namespace current]::Engines
-	}]} {
 		close $f
-		file delete -force $filename.tmp
+		set f ""
+		file rename -force $filename.tmp $filename
+	}]} {
+		if {[string length $f]} { catch { close $f } }
+		catch { file delete -force $filename.tmp }
 		append msg $::util::mc::IOErrorOccurred
 		append msg ": "
 		append msg $::util::mc::IOError(WriteFailed)
 		append msg "."
 		append detail [format $::fsbox::mc::PermissionDenied [file dirname $filename.tmp]]
-		::dialog::error -parent .application -topmost yes -message $msg -detail $detail
-	} else {
-		close $f
-		file rename -force $filename.tmp $filename
-		::options::unhookWriter [namespace current]::WriteEngineOptions engines
+		set parent [expr {[winfo exists .application] ? ".application" : "."}]
+		::dialog::error -parent $parent -topmost yes -message $msg -detail $detail
+		return 0
 	}
+
+	::options::unhookWriter [namespace current]::WriteEngineOptions engines
+	return 1
 }
 
 
@@ -101444,7 +101450,18 @@ proc binaryPath {entry} {
 proc installed? {entry} {
 	set path [binaryPath $entry]
 	if {[string length $path] == 0} { return 0 }
-	return [file executable $path]
+	if {![file executable $path]} { return 0 }
+	return [registered? $path]
+}
+
+
+proc registered? {command} {
+	foreach entry $::engine::Engines {
+		array unset e
+		array set e $entry
+		if {$e(Command) eq $command} { return 1 }
+	}
+	return 0
 }
 
 
@@ -101642,6 +101659,8 @@ proc Register {parent entry path} {
 	}
 
 	SetName $path $e(Name)
+
+	::engine::SaveEngineList
 }
 
 
@@ -101675,12 +101694,37 @@ proc remove {parent id} {
 	if {[llength $entry] == 0} { return 0 }
 	array set e $entry
 
+	set path [binaryPath $entry]
+
 	if {$e(Extract) eq "all"} {
 		catch { file delete -force [engineDir $entry] }
 	} else {
-		catch { file delete -force [binaryPath $entry] }
+		catch { file delete -force $path }
 	}
+
+	Unregister $path
 	return 1
+}
+
+
+proc Unregister {command} {
+	variable ::engine::Engines
+
+	if {[string length $command] == 0} { return }
+
+	set kept {}
+	set changed 0
+
+	foreach entry $::engine::Engines {
+		array unset e
+		array set e $entry
+		if {$e(Command) eq $command} { set changed 1 } else { lappend kept $entry }
+	}
+
+	if {$changed} {
+		set ::engine::Engines $kept
+		::engine::SaveEngineList
+	}
 }
 
 

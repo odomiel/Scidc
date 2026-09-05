@@ -103,6 +103,12 @@ proc unhookWriter {callback {file options}} {
 	if {[info exists WriteCallbacks($file)]} {
 		set i [lsearch -exact $WriteCallbacks($file) $callback]
 		if {$i >= 0} { set WriteCallbacks($file) [lreplace $WriteCallbacks($file) $i $i] }
+		# Bleibt kein Schreiber uebrig, muss auch der Eintrag verschwinden:
+		# saveOptionsFile geht ueber [array names WriteCallbacks], legt die Datei
+		# neu an und schriebe dann nur noch den Kopf hinein. engines.dat verlor
+		# so beim Beenden die Motorenliste, die SaveEngineList kurz zuvor
+		# vollstaendig geschrieben hatte.
+		if {[llength $WriteCallbacks($file)] == 0} { unset WriteCallbacks($file) }
 	}
 }
 
