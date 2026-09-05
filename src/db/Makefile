@@ -1029,7 +1029,6 @@ db_comment.o: ../mstl/m_stack.ipp
 db_comment.o: ../mstl/m_set.h
 db_comment.o: ../mstl/m_set.ipp
 db_comment.o: ../util/expat/expat.h
-db_comment.o: ../util/expat/xmlparse.h
 db_common.o: db_common.h
 db_common.o: ../util/u_base.h
 db_common.o: ../mstl/m_types.h

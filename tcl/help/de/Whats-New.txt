@@ -56,6 +56,7 @@ geändert oder behoben:</p>
   <li class="space">Zahlreiche Dark-Mode-Darstellungsfehler behoben</li>
   <li class="space">Über den Bezugsdialog geladene Motoren bleiben erhalten: der Eintrag stand bisher nur im Arbeitsspeicher und war nach dem nächsten Start wieder weg</li>
   <li class="space">Die Motorenliste geht nicht mehr verloren, wenn das Programm nach dem Speichern in der Motorenverwaltung beendet wird</li>
+  <li class="space">Der XML-Zerteiler (expat) ist jetzt Teil des Programms und auf dem Stand 2.8.4. Bisher wurde die Fassung des Bausystems ausgeliefert (2.7.4), der fünf Sicherheitskorrekturen fehlten. Über diesen Zerteiler laufen Kommentare aus fremden Datenbankdateien, SVG-Grafiken und die Hilfeseiten.</li>
 </ul>
 
 END

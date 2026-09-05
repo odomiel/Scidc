@@ -22,7 +22,8 @@ Voraussetzungen
 - Linux (x86_64)
 - Zum Ausführen: keine (das AppImage enthält alle Abhängigkeiten)
 - Zum Bauen: gcc/g++, make, Tcl/Tk 9.0 Entwicklungsheader
-  (einschließlich der privaten), X11 Entwicklungsheader, zlib, expat
+  (einschließlich der privaten), X11 Entwicklungsheader, zlib
+  (expat wird aus src/util/expat gebaut und statisch gebunden)
 
 Installation
 ------------

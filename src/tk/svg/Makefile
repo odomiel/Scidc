@@ -174,7 +174,6 @@ svg_parser.o: agg/agg_ellipse.h
 svg_parser.o: ../../util/u_base.h
 svg_parser.o: ../../mstl/m_stdio.h
 svg_parser.o: ../../util/expat/expat.h
-svg_parser.o: ../../util/expat/xmlparse.h
 svg_path_renderer.o: svg_path_renderer.h
 svg_path_renderer.o: svg_path_tokenizer.h
 svg_path_renderer.o: svg_gradient.h

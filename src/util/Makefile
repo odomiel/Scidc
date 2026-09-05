@@ -219,7 +219,6 @@ u_html.o: ../sys/sys_utf8.ipp
 u_html.o: ../mstl/m_map.h
 u_html.o: ../mstl/m_map.ipp
 u_html.o: expat/expat.h
-u_html.o: expat/xmlparse.h
 u_http.o: u_http.h
 u_http.o: ../mstl/m_string.h
 u_http.o: ../mstl/m_types.h

@@ -1638,7 +1638,6 @@ tcl_misc.o: ../util/u_zstream.h
 tcl_misc.o: ../mstl/m_iostream.h
 tcl_misc.o: ../util/u_emoticons.h
 tcl_misc.o: ../util/expat/expat.h
-tcl_misc.o: ../util/expat/xmlparse.h
 tcl_pgn_reader.o: tcl_pgn_reader.h
 tcl_pgn_reader.o: ../db/db_pgn_reader.h
 tcl_pgn_reader.o: ../db/db_reader.h

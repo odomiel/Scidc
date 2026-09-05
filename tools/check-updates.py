@@ -4,15 +4,19 @@
 #
 #   * die Engines aus tcl/engines/downloads.dat
 #   * Tcl/Tk (Vorgabeversion in build-tcltk.sh)
-#   * die aus dem Baum gebauten Bibliotheken: minizip-ng, libharu, zziplib
-#   * expat und zlib
+#   * die aus dem Baum gebauten Bibliotheken: minizip-ng, libharu, zziplib,
+#     expat
+#   * zlib
 #
-# expat und zlib liegen zwar auch im Baum (src/util/expat, src/util/zlib),
-# werden aber nicht gebaut: configure setzt EXPAT_LIB=-lexpat und ZLIB_LIB=-lz,
-# und build-appimage.sh legt die so gefundenen Systembibliotheken ins Paket.
-# Geprueft wird deshalb, was pkg-config meldet - genau das landet im AppImage.
-# Eine veraltete Fassung ist dort nicht durch eine Aenderung im Baum zu
-# beheben, sondern nur ueber das Bausystem.
+# zlib liegt zwar auch im Baum (src/util/zlib), wird aber nicht gebaut:
+# configure setzt ZLIB_LIB=-lz, und build-appimage.sh legt die so gefundene
+# Systembibliothek ins Paket. Geprueft wird deshalb, was pkg-config meldet -
+# genau das landet im AppImage. Eine veraltete Fassung ist dort nicht durch
+# eine Aenderung im Baum zu beheben, sondern nur ueber das Bausystem.
+#
+# expat war bis 26.09.05-b4 ebenso ein Systemfund; seitdem wird die Kopie in
+# src/util/expat gebaut und statisch gebunden, weil sie Kommentare aus fremden
+# Datenbankdateien liest. Geprueft wird darum die Version im Baum.
 #
 # Wird von build-appimage.sh beim ersten Build des Tages aufgerufen. Der
 # Aufruf ist rein informativ: das Skript endet immer mit 0, damit ein
@@ -213,10 +217,18 @@ def pkgconfig_version(name):
     return r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
 
 
-def check_system_libs(report):
+def check_expat(report):
+    have = define_version(
+        ("src", "util", "expat", "expat.h"),
+        r"^#\s*define\s+XML_MAJOR_VERSION\s+(\d+)",
+        r"^#\s*define\s+XML_MINOR_VERSION\s+(\d+)",
+        r"^#\s*define\s+XML_MICRO_VERSION\s+(\d+)")
     # expat kennzeichnet seine Ausgaben als Tag R_2_8_4.
-    compare(report, "expat (System)", pkgconfig_version("expat"),
+    compare(report, "expat", have,
             latest_tag("libexpat/libexpat", r"^R_(\d+_\d+_\d+)$"))
+
+
+def check_system_libs(report):
     compare(report, "zlib (System)", pkgconfig_version("zlib"),
             latest_release("madler/zlib"))
 
@@ -230,6 +242,7 @@ def main():
     check_minizip(report)
     check_libharu(report)
     check_zziplib(report)
+    check_expat(report)
     check_system_libs(report)
 
     if not report:
