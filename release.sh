@@ -1,10 +1,10 @@
 #!/bin/bash
 # release.sh - Veroeffentlicht ein gebautes AppImage als Release auf der
-#              Forgejo-Instanz forgejo.example.invalid.
+#              Forgejo-Instanz, auf die "git remote origin" zeigt.
 #
 # Die vier Schritte:
-#   1. Tag setzen und pushen                (SSH, Port 2222)
-#   2. Release anlegen                      (REST-API, Port 3053)
+#   1. Tag setzen und pushen                (SSH, ueber origin)
+#   2. Release anlegen                      (REST-API)
 #   3. AppImage als Anhang hochladen        (REST-API)
 #   4. Gegenprobe: zurueckladen, Pruefsumme vergleichen, Programm starten
 #
@@ -24,6 +24,14 @@
 #       --dry-run          alle Pruefungen, aber kein Schreibzugriff
 #   -h, --help             diese Hilfe
 #
+# Instanz:
+#   Host, Eigentuemer und Repository kommen aus der URL von "git remote origin"
+#   -- die steht in .git/config und ist damit nicht Teil des Repositorys. Der
+#   Port der REST-API laesst sich daraus nicht ableiten (er ist ein anderer als
+#   der des SSH-Zugangs); er steht in $FORGEJO_API_PORT, Vorgabe 3053. Alle
+#   vier Werte lassen sich einzeln ueberschreiben: $FORGEJO_HOST,
+#   $FORGEJO_API_PORT, $FORGEJO_OWNER, $FORGEJO_REPO.
+#
 # Anmeldung:
 #   Schritt 1 laeuft ueber den SSH-Schluessel (git remote "origin").
 #   Schritt 2-4 brauchen Benutzer und Geheimnis fuer die REST-API. Das Skript
@@ -38,10 +46,29 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
 # --- Konfiguration -----------------------------------------------------------
-FORGEJO_HOST="forgejo.example.invalid"
-FORGEJO_PORT="3053"
-REPO_OWNER="forgejouser"
-REPO_NAME="Scidc"
+# Die Instanz steht nicht im Skript: sie wird aus "git remote origin" gelesen.
+# Damit traegt das Repository selbst keinen Hostnamen -- wichtig, wenn es
+# gespiegelt wird. Erkannt werden beide Schreibweisen von Forgejo/Gitea:
+#   ssh://git@host:port/eigentuemer/repo.git   und   git@host:eigentuemer/repo.git
+origin_url=$(git config --get remote.origin.url 2>/dev/null || true)
+origin_rest=${origin_url#*://}                 # Schema abtrennen, falls vorhanden
+origin_rest=${origin_rest#*@}                  # Benutzer abtrennen, falls vorhanden
+origin_host=${origin_rest%%[:/]*}              # bis zum ersten ":" oder "/"
+origin_path=${origin_rest#"$origin_host"}      # ":port/eig/repo", ":eig/repo" o. "/eig/repo"
+origin_path=${origin_path#:}                   # Doppelpunkt weg (Port oder scp-Form)
+case $origin_path in [0-9]*/*) origin_path=${origin_path#*/} ;; esac   # war ein Port
+origin_path=${origin_path#/}
+origin_path=${origin_path%.git}
+
+FORGEJO_HOST="${FORGEJO_HOST:-$origin_host}"
+FORGEJO_PORT="${FORGEJO_API_PORT:-3053}"
+REPO_OWNER="${FORGEJO_OWNER:-${origin_path%%/*}}"
+REPO_NAME="${FORGEJO_REPO:-${origin_path##*/}}"
+
+[ -n "$FORGEJO_HOST" ] || { echo "release.sh: kein Host - \"git remote origin\" setzen oder \$FORGEJO_HOST angeben" >&2; exit 1; }
+[ -n "$REPO_OWNER" ] && [ -n "$REPO_NAME" ] && [ "$REPO_OWNER" != "$REPO_NAME" ] || \
+	{ echo "release.sh: Eigentuemer/Repository nicht aus origin ableitbar - \$FORGEJO_OWNER und \$FORGEJO_REPO setzen" >&2; exit 1; }
+
 API="https://${FORGEJO_HOST}:${FORGEJO_PORT}/api/v1/repos/${REPO_OWNER}/${REPO_NAME}"
 # Das Zertifikat der Instanz ist selbstsigniert -> curl braucht -k.
 CURL_OPTS=(-sS -k)
@@ -127,7 +154,7 @@ echo "Text:     ${#NOTES} Zeichen"
 
 # --- Zugangsdaten ------------------------------------------------------------
 # Die Zeile in ~/.git-credentials beginnt mit "http://" und traegt den Port
-# URL-kodiert (%3a3053); gebraucht wird nur der Teil vor dem "@".
+# URL-kodiert; gebraucht wird nur der Teil vor dem "@".
 if [ -n "${FORGEJO_CRED:-}" ]; then
 	CRED="$FORGEJO_CRED"
 elif [ -f "$HOME/.git-credentials" ]; then
