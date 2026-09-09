@@ -8,11 +8,12 @@
 # Das Skript:
 #   1. Liest die aktuelle Version aus Makefile.version
 #   2. Erhöht den Build-Zähler (oder setzt ihn auf den gegebenen Wert)
-#   3. Aktualisiert alle 4 Versionsdateien:
+#   3. Aktualisiert die drei Versionsdateien:
 #      - Makefile.version
 #      - src/tcl/tcl_misc.cpp
 #      - tcl/exec.tcl
-#      - tcl/scidc-beta (wird neu generiert)
+#      (tcl/scidc-beta traegt die Version ebenfalls, wird aber in Schritt 4
+#       von make neu erzeugt -- keine vierte zu bearbeitende Datei)
 #   4. Baut Binary und Bundle neu (make)
 #   5. Baut das AppImage neu (build-appimage.sh)
 

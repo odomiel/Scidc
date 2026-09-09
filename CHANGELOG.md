@@ -3,7 +3,7 @@
 Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr.Monat.Tag + Tages-Build-Zähler).
 
 > **Pflegehinweis:** Bei jedem versionierten Code-Commit (der den Build-Zähler erhöht) hier einen Eintrag
-> mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den 4 Versionsdateien.
+> mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
 ## 26.09.09
