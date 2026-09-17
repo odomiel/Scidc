@@ -67,3 +67,6 @@ Matthew P. Smith
 ** Stockfish (Scidb version)
 Copyright (C) 2008-2018 Marco Costalba, Joona Kiiski, Tord Romstad
 Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
+Built only by "make -C engines"; no engine is part of the AppImage. Engines
+are fetched from their original projects by the download dialog instead.
+See engines/stockfish/Copying.txt for the GNU GPL v3 it is covered by.

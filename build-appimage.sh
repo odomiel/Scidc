@@ -109,6 +109,20 @@ done
 mkdir -p "$SHAREDIR/themes/ttk"
 cp -f tcl/themes/ttk/*.tcl "$SHAREDIR/themes/ttk/"
 
+# Lizenztexte mitliefern. MIT, BSD, zlib, libpng und die FreeType-Lizenz
+# verlangen, dass Copyright- und Erlaubnisvermerk der Binaerweitergabe
+# beiliegen -- ein Link auf das Projekt genuegt dafuer nicht. licenses/ wird
+# von tools/collect-licenses.py aus den copyright-Dateien des Bausystems
+# erzeugt; COPYING und COPYRIGHT kommen fuer Scidc selbst dazu.
+if ! python3 tools/collect-licenses.py --check >/dev/null 2>&1; then
+    echo "  HINWEIS: licenses/ weicht vom Bausystem ab -- einmal"
+    echo "           'python3 tools/collect-licenses.py' laufen lassen."
+fi
+mkdir -p "$SHAREDIR/licenses"
+cp -f licenses/*.txt "$SHAREDIR/licenses/"
+cp -f COPYING "$SHAREDIR/licenses/scidc-COPYING.txt"
+cp -f COPYRIGHT "$SHAREDIR/licenses/scidc-COPYRIGHT.txt"
+
 rm -rf "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/lib"
 

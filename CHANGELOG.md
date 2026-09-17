@@ -6,6 +6,20 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.09.17
+
+- **b1** – Lizenzpflege: **die Lizenztexte der mitgelieferten Bibliotheken liegen jetzt im AppImage, statt nur verlinkt zu sein.** Anlass war eine Durchsicht, ob die Auflagen für das AppImage eingehalten sind. Ergebnis vorweg: auf der Code-Seite ja. Scidc ist durchgängig **GPL-2.0-or-later** – von 1239 Dateien mit Versionsangabe trägt jede die „or later"-Klausel, es gibt keine v2-only-Datei. Alle 24 mitgelieferten Bibliotheken sind damit verträglich; `libstdc++` fällt unter die **GCC Runtime Library Exception 3.1**, die das Mitliefern ausdrücklich erlaubt, `libuuid` ist BSD-3-clause (nicht GPL, wie die Debian-Paketdatei auf den ersten Blick nahelegt). Auch der Fremdcode im Baum passt: **AGG 2.5 ist GPL-2+** – das bindet das Programm echt an die GPL, ist aber kein Verstoß –, zziplib und libhyphenate LGPL, der Rest permissiv. `src/tk/jpeg` ist übrigens kein IJG-libjpeg, sondern ein eigener Decoder.
+
+  **Die Lücke lag woanders.** Der Abhängigkeits-Reiter führte für zehn Komponenten den vollen Lizenztext, für die per `ldd` ins Paket gelegten Systembibliotheken aber nur eine Liste von **Projekt-URLs**. MIT, BSD, zlib, libpng und die FreeType-Lizenz verlangen alle, dass Copyright- und Erlaubnisvermerk der **Binär**weitergabe beiliegen – ein Link erfüllt das nicht. Neu ist deshalb `licenses/`, erzeugt von `tools/collect-licenses.py` und von `build-appimage.sh` nach `usr/share/scidc-beta/licenses/` kopiert: 22 Lizenzdateien plus `scidc-COPYING.txt` und `scidc-COPYRIGHT.txt`, zusammen 244 KB. **Jede der 24 Bibliotheken im Paket ist abgedeckt** – maschinell geprüft, nicht angenommen.
+
+  Quelle sind die `copyright`-Dateien des **Bausystems**, also die Fassungen, die zu genau den ausgelieferten Bibliotheken gehören – nicht das, was die Projekte heute führen. Wo ein Paket DEP-5 benutzt, wird der Lizenzabsatz herausgelöst; wo nicht (die X.Org-Familie und `libstdc++`), wird die `copyright`-Datei vollständig übernommen, denn sie **ist** der Vermerk. expat, zlib und Tcl/Tk kommen aus dem Baum selbst. `build-appimage.sh` ruft bei jedem Bau `--check` auf und warnt, wenn das Bausystem inzwischen andere Fassungen führt.
+
+  **Zwei Richtigstellungen im Abhängigkeits-Reiter:** `libbsd` und `libmd` standen in der Tabelle, werden aber längst nicht mehr ausgeliefert. Und der Schlussabschnitt hält jetzt fest, dass expat und zlib **doppelt** vorkommen – als `libexpat.so.1`/`libz.so.1`, die fontconfig und Tcl/Tk brauchen, und einkompiliert aus `src/util/`. Am fertigen AppImage nachgesehen: die 24 Dateien sind im squashfs, und der Reiter rendert den neuen Text.
+
+  In `COPYRIGHT` ist der Stockfish-Eintrag klargestellt – die Engine wird nur von `make -C engines` gebaut und ist **nicht** Teil des AppImage; Engines kommen über den Bezugsdialog von den Originalprojekten.
+
+  **Offen und ausdrücklich nicht behoben:** die 688 ausgelieferten Bilddateien (Texturen, Flaggen, Figurensätze, Zeiger, Motive) haben **keine dokumentierte Herkunft** – `COPYRIGHT` führt 18 Einträge, alle Code. `tcl/flags/readme` nennt `addgadget.com` und bei vierzehn Flaggen „found in the internet", während der Über-Dialog für dieselbe Kategorie famfamfam angibt; eine der beiden Angaben ist falsch. Die 22 MB Texturen haben gar keine Angabe. Dazu trägt `icons/Read Me.rtf` die GPL-unverträgliche Klausel „free for personal non-commercial use" – das Verzeichnis enthält heute allerdings nur Scidb-Logos und wird von keinem Bauskript angefasst. Aus demselben Grund bleibt `mc::IconDesign` ungerendert: einen Urheber zu erfinden wäre schlimmer als die Lücke.
+
 ## 26.09.09
 
 - **b1** – Vorbereitung der Veröffentlichung: **das Repository trägt keine Angaben mehr zur eigenen Person oder zur eigenen Infrastruktur.** Anlass ist der geplante Push-Mirror nach GitHub – der überträgt Refs wortwörtlich, es gibt danach also keine Stufe mehr, an der sich etwas zurückhalten ließe.

@@ -1,0 +1,41 @@
+Lizenztexte der mitgelieferten Bibliotheken
+===========================================
+
+Dieses Verzeichnis wird von tools/collect-licenses.py erzeugt und von
+build-appimage.sh nach usr/share/scidc-beta/licenses/ ins AppImage kopiert.
+Nicht von Hand pflegen -- der naechste Lauf ueberschreibt Aenderungen.
+
+Warum es das gibt
+-----------------
+build-appimage.sh legt die von ldd gefundenen Bibliotheken mit ins Paket.
+Damit werden sie weiterverbreitet, und MIT, BSD, zlib, libpng sowie die
+FreeType-Lizenz verlangen alle, dass Copyright- und Erlaubnisvermerk der
+Binaerweitergabe beiliegen. Ein Verweis auf die Projektseite erfuellt das
+nicht -- die Texte muessen mit.
+
+Woher die Texte stammen
+-----------------------
+Aus /usr/share/doc/<paket>/copyright des Bausystems, also aus der Fassung,
+die zu genau der ausgelieferten Bibliothek gehoert -- nicht aus dem, was die
+Projekte heute auf ihren Seiten fuehren. Wo ein Paket das DEP-5-Format
+benutzt, wird der passende Lizenzabsatz herausgeloest; wo nicht (die
+X.Org-Bibliotheken, libstdc++), wird die copyright-Datei vollstaendig
+uebernommen, denn sie ist der Vermerk.
+
+expat, zlib und Tcl/Tk kommen aus dem Baum selbst (src/util/expat/COPYING,
+src/util/zlib/zlib.h, src/tk/license.terms).
+
+Nachziehen
+----------
+    python3 tools/collect-licenses.py            # neu erzeugen
+    python3 tools/collect-licenses.py --check    # nur melden, Rueckgabe 1 bei Abweichung
+
+build-appimage.sh ruft die Pruefvariante bei jedem Bau auf und warnt, wenn
+das Bausystem inzwischen andere Fassungen fuehrt. Dann einmal ohne --check
+laufen lassen und die Aenderung mitcommitten.
+
+Nicht abgedeckt
+---------------
+Die Bilddaten (Texturen, Flaggen, Figurensaetze, Zeiger, Motive) haben keine
+dokumentierte Herkunft. Das ist ein offener Punkt aus Scidb, kein Versehen
+dieses Verzeichnisses.
