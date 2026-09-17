@@ -1,0 +1,47 @@
+Scidc-Logo
+==========
+
+Quelle ist scidc-logo.svg (mit Rand) und scidc-logo-cropped.svg (randlos,
+fuer die kleinen Groessen). Alle PNG-Dateien hier und an den drei anderen
+Stellen im Baum werden daraus erzeugt:
+
+    LD_LIBRARY_PATH=deps/tcltk/lib deps/tcltk/bin/wish9.0 tools/render-icons.tcl
+
+Die PNGs nicht von Hand bearbeiten -- der naechste Lauf ueberschreibt sie.
+Tk 9 rastert SVG selbst und schreibt PNG; darum braucht der Baum dafuer
+weder ImageMagick noch Inkscape noch Pillow.
+
+Lizenz
+------
+Das Logo ist eigenes Werk und steht wie das uebrige Programm unter der
+GNU GPL v2 oder spaeter.
+
+Warum es das neue Logo gibt
+---------------------------
+An dieser Stelle lag frueher "Read Me.rtf" mit dem Hinweis, die Symbole
+seien "free for personal non-commercial use". Eine Nicht-kommerziell-Klausel
+laesst sich nicht in ein GPL-Werk aufnehmen und nicht mit einem oeffentlich
+verbreiteten AppImage ausliefern -- unabhaengig davon, ob sich die Notiz
+tatsaechlich auf diese Dateien bezog oder als Ueberbleibsel aus Scidb hier
+liegengeblieben war. Da sich das nicht mehr klaeren liess, ist das Motiv
+ersetzt statt weiterverbreitet.
+
+Wo das Logo ueberall liegt
+--------------------------
+Es ist dieselbe Zeichnung in vier Verzeichnissen; tools/render-icons.tcl
+haelt sie zusammen:
+
+    icons/                     die Sammlung hier
+    freedesktop.org/           Desktop-Eintrag und AppImage-Symbol
+    tcl/images/                Ueber-Dialog und Startbild
+    tcl/help/images/           Hilfeseiten
+
+Die Dateinamen tragen weiterhin "Scidb"/"scidb". Sie sind Schnittstelle zu
+build-appimage.sh, freedesktop.org/Makefile, den Hilfeseiten und dem
+Tcl-Code; ein Umbenennen waere eine eigene Aenderung.
+
+Nicht betroffen
+---------------
+Die Dateityp-Symbole (freedesktop.org/*-ft-*.png) zeigen ein Brettquadrat
+auf einem Blatt, nicht den Springer, und stammen nicht aus der fraglichen
+Sammlung.

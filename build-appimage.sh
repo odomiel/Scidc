@@ -105,6 +105,13 @@ find tcl/help -name "*.html" | while read f; do
     [ -f "$dest" ] && cp "$f" "$dest"
 done
 
+# Bilddaten synchronisieren. SHAREDIR wird nur beim Erstbau befuellt -- ohne
+# diesen Abgleich behaelt ein bestehendes AppDir das alte Logo, waehrend das
+# Desktop-Symbol schon das neue traegt.
+mkdir -p "$SHAREDIR/images" "$SHAREDIR/help/images"
+cp -f tcl/images/*.png "$SHAREDIR/images/"
+cp -f tcl/help/images/* "$SHAREDIR/help/images/" 2>/dev/null || true
+
 # ttk-Themes synchronisieren (wird zur Laufzeit aus share/ geladen, nicht aus dem Bundle)
 mkdir -p "$SHAREDIR/themes/ttk"
 cp -f tcl/themes/ttk/*.tcl "$SHAREDIR/themes/ttk/"

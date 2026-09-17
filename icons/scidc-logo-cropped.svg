@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- ==================================================================
+       Scidc-Logo. Eigenes Werk, Teil von Scidc und unter derselben
+       Lizenz (GNU GPL v2 oder spaeter) wie das uebrige Programm.
+
+       Quelle der ausgelieferten PNG-Dateien: tools/render-icons.tcl
+       rastert diese Datei in allen benoetigten Groessen. Nicht die PNGs
+       bearbeiten -- der naechste Lauf ueberschreibt sie.
+
+       Randlose Fassung fuer die kleinen Groessen, wo jedes Pixel zaehlt.
+       scidc-logo.svg ist die Fassung mit Rand.
+       ================================================================== -->
+
+  <!-- Kachel -->
+  <rect x="0" y="0" width="128" height="128" rx="27" fill="#17497f"/>
+
+  <!-- angedeutete Brettreihe als Standflaeche -->
+  <g fill="#ffffff" fill-opacity="0.16">
+    <rect x="16" y="97" width="24" height="13"/>
+    <rect x="64" y="97" width="24" height="13"/>
+  </g>
+
+  <!-- Sockel -->
+  <path fill="#ffffff" d="M 32 112 L 102 112 L 99 101 L 37 101 Z"/>
+
+  <!-- Springer: Brust, Schnauze, Stirn, Ohren, Maehne -->
+  <path fill="#ffffff" d="
+    M 45 101
+    C 44 86 48 78 57 73
+    C 47 75 37 72 30 66
+    C 26 63 25 59 28 56
+    L 41 47
+    C 49 34 61 26 73 23
+    L 71 10
+    L 83 20
+    L 94 12
+    L 94 31
+    C 99 44 98 59 93 72
+    C 89 83 87 92 88 101
+    Z"/>
+
+  <!-- Auge und Maul -->
+  <circle cx="71" cy="35" r="3.6" fill="#17497f"/>
+  <path d="M 42 58 L 30 61" stroke="#17497f" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+</svg>
