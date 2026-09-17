@@ -161,20 +161,32 @@ are placeholders with no real flag (At Sea, Aboard Aircraft, Unknown, ...) and
 two are organisation emblems (ASEAN, FIDE) rather than sovereign flags. That
 table is the groundwork for a replacement, not a replacement itself.
 
-** tcl/flags/ -- 289 files, 72x72, named by IOC country codes
-tcl/flags/readme says the set was "downloaded from
-http://addgadget.com/clock/", with fourteen more "found in the internet" and
-six drawn by the author (AIR, EAZ, GDR, KOS, UNK, ZZX). No licence is
-stated for the downloaded ones, and addgadget.com no longer exists. Status
-unknown. Installed into share/flags by tcl/Makefile.
+** Replaced (version 26.09.17-b8)
+275 of the 289 files in tcl/flags/ and 153 of the 156 embedded square icons
+in tcl/utils/countries.tcl were redrawn from Wikimedia Commons sources --
+271 public domain or CC0, four with attribution conditions (see below). The
+previous ones came from addgadget.com per tcl/flags/readme, a site that no
+longer exists and stated no licence. tools/flag-mapping.tsv records which
+Commons file each country code now comes from; tools/flag-fetch.sh and
+tools/make-flags.py regenerate them.
 
-** tcl/utils/countries.tcl -- 156 flags from iconfinder.com
-The section after line 4297 names http://www.iconfinder.com as the source.
-That site aggregates icon sets under differing terms, so naming it does not
-by itself say what applies. Status unknown.
+** Still from the old set: 14 files in tcl/flags/
+AIR, ANY, ANZ, ASE, EAR, FID, JMY, NET, SEA, SPC, UNK, ZZG, ZZR, ZZX. These
+have no sovereign flag to replace them with: most are placeholders invented
+for the program (At Sea, Aboard Aircraft, Unknown, Mixed Team), and two are
+organisation emblems -- ASE is the ASEAN emblem, FID the FIDE one, both
+subject to trademark rules rather than flag conventions. tcl/flags/readme
+says six of the placeholders were drawn by the Scidb author. The rest remain
+of unknown origin. ZZX is also the one square icon left unreplaced.
+
+** Flags carrying conditions
+Basque (CC BY-SA 2.5), Saint-Barthelemy (CC BY 2.5) and Oman (OGL-om 1.0,
+used for both the OMN and the duplicate OMA code) are free but require
+attribution, the first also share-alike. They are named here for that reason.
 
 ** tcl/utils/countries.tcl -- 34 flags before line 1101
-No source marker. Status unknown.
+No source marker; these are 16x11 icons in the same format as the famfamfam
+set but outside its section. Status unknown, not replaced.
 
 Resolved
 --------

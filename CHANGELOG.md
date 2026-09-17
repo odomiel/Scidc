@@ -8,6 +8,25 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- **b8** – **Die Flaggen sind ausgetauscht.** 275 der 289 Dateien in `tcl/flags/` und 153 der 156 eingebetteten quadratischen Symbole stammen jetzt aus **gemeinfreien Vorlagen von Wikimedia Commons** — 271 Public Domain oder CC0, vier mit Namensnennung. Die alten kamen laut `tcl/flags/readme` von `addgadget.com`, einer Seite ohne Lizenzangabe, die es nicht mehr gibt.
+
+  **Die 16×11-Flaggen der Oberfläche blieben unangetastet** — sie sind nachweislich der famfamfam-Satz und gemeinfrei. Sie zu ersetzen wäre Selbstzweck gewesen und hätte ihre feine Schattierung gekostet.
+
+  **Der Plakettenstil ist nachgebaut, nicht aufgegeben.** Die alten 72×72er sind runde Glasplaketten mit Glanzverlauf und dunklem Ring — ein schlichtes Rechteck hätte den Bruch sichtbar gemacht. Da weder Pillow noch ImageMagick im Baum sind, habe ich einen kleinen PNG-Codec geschrieben (`tools/png.py`) und die Plakette in `tools/make-flags.py` nachgerechnet: Flagge füllend einpassen, Glanz oben, Abdunklung unten, Ring außen, weiche Kante.
+
+  Vier Dinge, die unterwegs auffielen und ohne Gegenprobe durchgegangen wären:
+
+  - **Tks SVG-Leser kennt `<use>` nicht.** Chinas Flagge verlor dadurch vier ihrer fünf Sterne. Gelöst, indem nicht die SVG selbst gerastert wird, sondern die **von Wikimedia gerenderten PNGs** geholt werden — deren Rasterer macht es richtig.
+  - **Nepals Wimpelform** hat durchsichtige Ecken, die im Kreis schwarz wurden. Flaggen mit nennenswerter Transparenz werden jetzt *eingepasst* statt füllend beschnitten, und Durchsichtiges wird auf Weiß gelegt.
+  - **Wikimedias Vorschaubilder sind 2-Bit-Paletten**, mein Codec kann 8 Bit — Tk normalisiert sie in einem Zwischenschritt.
+  - **Python wartete 30 Sekunden pro Abruf auf IPv6**, bevor es auf IPv4 zurückfiel: 266 Dateien hätten über zwei Stunden gebraucht. Mit `curl -4 --parallel` sind es **0,7 Sekunden**. Das steht so in `tools/flag-fetch.sh`, damit es niemand erneut herausfinden muss.
+
+  **Und die Sync-Falle schlug wieder zu**: `build-appimage.sh` glich `tcl/flags/` nicht ab, das AppImage hätte die alten Flaggen behalten. Ergänzt, wie zuvor für `images/`.
+
+  **Nicht ersetzt: 14 Dateien.** Zwölf sind Platzhalter ohne reale Flagge (`At Sea`, `Aboard Aircraft`, `Unknown`, `Mixed Team` …), zwei sind Verbandszeichen — `ASE` ist das ASEAN-, `FID` das FIDE-Emblem. Beides unterliegt dem Markenrecht, nicht der Gemeinfreiheit von Hoheitszeichen. In `COPYRIGHT` steht das jetzt namentlich, ebenso die vier Flaggen mit Auflagen.
+
+  Am laufenden Programm geprüft: die Symbole aus `::country::icon::16x16/22x22/32x32` herausgeschrieben und angesehen. `tcl/flags/` schrumpft von 2,7 auf 1,9 MB.
+
 - **b7** – **Der Widerspruch bei den Flaggen war keiner.** `tcl/flags/readme` nannte `addgadget.com`, der Über-Dialog famfamfam — beide hatten recht, sie beschreiben **verschiedene Sätze**. Aufgefallen ist es an den Maßen: die Dateien in `tcl/flags/` sind **72×72** und nach IOC-Codes benannt, der famfamfam-Satz dagegen 16×11 nach ISO-Codes. Genau 16×11 haben die **eingebetteten** Flaggen in `tcl/utils/countries.tcl`.
 
   **Nachgewiesen statt vermutet:** famfamfam.com existiert nicht mehr, aber über einen Spiegel ließen sich fünf Flaggen (de, fr, it, jp, us) herunterladen — alle fünf sind **byteweise identisch** mit unseren eingebetteten. Die Lizenz des Satzes lautet: *„These icons are public domain, and as such are free for any use (attribution appreciated but not required)."* Die erbetene Nennung leistet der Über-Dialog mit Mark James bereits.
