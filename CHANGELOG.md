@@ -8,6 +8,14 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- **b5** – **Die letzte eigene Kopie des alten Logos: das Normalschach-Symbol.** In b4 hatte ich fünf `::icon::NNxNN::logo`-Blöcke ersetzt und angenommen, `variant(Normal)` hänge überall als Alias daran. In **22×22 ist es aber eine eigene eingebettete Fassung** — und genau die nutzt `makeToolbarIcon`, das für die Werkzeugleiste die Größen 22, 16 und 32 heranzieht. Im Datenbankmodul blieb deshalb das alte Motiv stehen.
+
+  Statt weiter einzeln zu suchen, habe ich die Struktur **aus dem Code heraus** ausgewertet statt aus den Pixeln: je Größen-Namensraum aufgelistet, was `logo`, `sci` und `variant(Normal)` sind — eigene Kopie oder Alias. Ergebnis: sechs eigene Kopien, alles andere hängt daran. Ein erster Versuch über Bilderkennung (dunkle *und* blaue Anteile) hatte 50 Fehlalarme geliefert — Flaggen und Eröffnungssymbole haben beides auch.
+
+  **`tools/render-icons.tcl` erneuert die eingebetteten Fassungen jetzt mit.** Das war der eigentliche Fehler: ein Werkzeug, das nur die PNG-*Dateien* pflegt, lässt bei einem Logowechsel genau das stehen, was der Benutzer zu sehen bekommt. Der Lauf ist wiederholbar — zweimal hintereinander ausgeführt ändert sich keine Datei mehr —, und er erzeugte die von Hand gepatchte `icons.tcl` byteweise identisch nach.
+
+  **Am laufenden Programm geprüft**, nicht nur an der Quelle: das Symbol aus `::icon::22x22::variant(Normal)` der laufenden Instanz herausgeschrieben und angesehen. Dabei fast in die dokumentierte Falle getappt — eine noch laufende b4-Instanz fing `send Scidc` ab und meldete die alte Version; erst nach dem Beenden aller Instanzen war die Messung gültig.
+
 - **b4** – **Das alte Logo steckte auch base64-eingebettet im Tcl-Code.** Der Tausch in b2/b3 hatte nur die PNG-*Dateien* erfasst; zwei weitere Fundstellen blieben sichtbar — das Startbild und, wie gemeldet, das Symbol neben einer Scid-Datenbank im Willkommensfenster. Die Prüfsummensuche über das entpackte AppImage konnte sie nicht finden, weil es dort gar keine Bilddateien sind.
 
   **`tcl/icons.tcl` führt `::icon::NNxNN::logo` in fünf Größen** (16 bis 64) als eingebettetes PNG. Daran hängen mehr Stellen als der Name vermuten lässt: `set sci $logo` macht es zum Dateisymbol für `.sci`, `set variant(Normal) $logo` zum Symbol der Normalvariante, und `app-db-icons.tcl` setzt `Unspecific(16x16)` bis `(48x48)` darauf — genau das erscheint bei einer Datenbank ohne eigenen Typ, also bei einer Scid-Datei. Alle fünf Blobs sind ersetzt; die Aliasse ziehen automatisch mit.

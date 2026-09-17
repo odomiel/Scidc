@@ -46,6 +46,52 @@ set targets {
     tcl/help/images/scidb-logo.png            padded  128
 }
 
+# --- eingebettete Symbole ----------------------------------------------
+# tcl/icons.tcl traegt das Logo base64-eingebettet, nicht als Datei: fuenf
+# Groessen als ::icon::NNxNN::logo und zusaetzlich eine eigene Fassung als
+# ::icon::22x22::variant(Normal) -- das Symbol fuer Normalschach im
+# Datenbankmodul. Daran haengen per Alias auch "sci" (Dateisymbol fuer
+# .sci), variant(Normal) in 16x16/32x32 und Unspecific(...) in
+# app-db-icons.tcl, also das Symbol einer Datenbank ohne eigenen Typ.
+# Wer das Logo aendert und nur die PNG-Dateien erneuert, sieht in der
+# Oberflaeche weiterhin das alte -- deshalb macht dieser Lauf beides.
+proc embedIcons {} {
+    set file tcl/icons.tcl
+    if {![file readable $file]} { puts stderr "  FEHLT: $file"; exit 1 }
+    set fd [open $file r]; set lines [split [read $fd] \n]; close $fd
+
+    set out {} ; set ns "" ; set n 0 ; set skip 0
+    foreach line $lines {
+        if {$skip} {
+            if {[string match "\t\}\]*" $line]} { set skip 0 ; lappend out $line }
+            continue
+        }
+        if {[regexp {^namespace eval (\d+x\d+) \{} $line -> found]} { set ns $found }
+        if {[regexp {^\tset (logo|variant\(Normal\)) \[image create photo -data \{$} $line -> name]
+            && [string length $ns]} {
+            if {$name eq "variant(Normal)" && $ns ne "22x22"} { lappend out $line ; continue }
+            set size [lindex [split $ns x] 0]
+            set img [image create photo -file icons/scidc-logo-cropped.svg \
+                       -format [list svg -scale [expr {$size/128.0}]]]
+            set tmp .icon-tmp.png
+            $img write $tmp -format png
+            image delete $img
+            set fh [open $tmp rb] ; set png [read $fh] ; close $fh
+            file delete $tmp
+            lappend out $line
+            foreach chunk [split [binary encode base64 -maxlen 72 $png] \n] {
+                if {[string length $chunk]} { lappend out "\t\t$chunk" }
+            }
+            set skip 1 ; incr n
+            puts [format "  %-42s %3dx%-3d %s" "tcl/icons.tcl" $size $size "::icon::${ns}::${name}"]
+            continue
+        }
+        lappend out $line
+    }
+    set fd [open $file w] ; puts -nonewline $fd [join $out \n] ; close $fd
+    puts "  $n eingebettete Symbole erneuert."
+}
+
 # --- Startbild ---------------------------------------------------------
 # tcl/splash.tcl traegt das Bild base64-eingebettet. Frueher war das ein
 # JPEG; stock-wish kann JPEG nicht lesen (der Decoder steckt im geforkten
@@ -97,6 +143,7 @@ foreach {target which size} $targets {
     incr count
 }
 
+embedIcons
 renderSplash
 puts "  $count Dateien erzeugt, dazu das Startbild."
 exit
