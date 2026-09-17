@@ -6,6 +6,20 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.09.18
+
+- **b1** – **41 Texturen entfernt (67 Dateien, 3,8 MB)** — und zwar die, die nur über den Texturbrowser erreichbar waren: von keinem Brett-Thema genannt und in keiner Paarung in `preferences.dat`. Damit gehen genau die Dateien mit der schwächsten Herkunft: die Flickr-Datei, die beiden hash-benannten, die „thumbnail" heißt, und drei der CGTextures-Dateien. **Kein Thema ändert sich dadurch.** Das AppImage schrumpft von 35 auf **31,9 MB**.
+
+  **Eine Korrektur vorweg, weil ich zuerst falsch lag:** ich hatte berichtet, 46 Texturen seien „nirgends referenziert" und damit tote Fracht. Das war falsch — `tcl/board-texture.tcl:401` durchsucht das Verzeichnis sehr wohl (`glob -directory $dir`), und meine Suche nach `glob.*texture` fand das nicht, weil die Variable schlicht `$dir` heißt. Außerdem hatte ich 24 Themendateien unter `tcl/themes/piece/` übersehen. **Tote Texturen gibt es nicht** — alle sind dem Benutzer zugänglich, und Löschen ist eine Produktentscheidung, keine Aufräumarbeit. Entfernt ist deshalb nur, was keine vorkonfigurierte Ansicht kostet.
+
+  **Was wir jetzt über die Texturen wissen**, steht in `COPYRIGHT`: die Dateinamen weisen auf eine im Netz zusammengetragene Sammlung — CGTextures (`WoodFine0001_S.jpg`, deren `_S`-Kleinformat, 13 Dateien), Flickr (`2274499870_9617a0512f_b.jpg`), Inhaltshashes, Stockfoto-Vorschauen (`_std`), Produktcodes von Boden- und Steinhändlern. Von 151 JPEGs tragen 58 Adobe-Blöcke, 41 IPTC und 25 XMP — aber **kein einziges gefülltes Urheber- oder Copyright-Feld**, nur Werkzeugspuren.
+
+  **`build-appimage.sh` gleicht Texturen jetzt mit Löschen ab.** Bloßes Kopieren hätte die entfernten Dateien im Paket stehen lassen, und weil der Browser das Verzeichnis durchsucht, wären sie weiter sichtbar gewesen — dieselbe Falle wie bei Logo und Flaggen, nur diesmal andersherum.
+
+  Nebenbei aufgefallen: `preferences.dat` verweist auf `OKP810.png`, eine Datei, die **nie** im Repository war. Ein Verweis ins Leere aus dem Scidb-Erbe, nicht von dieser Änderung verursacht.
+
+  Am laufenden Programm geprüft: der Browser listet 78 + 84 + 58 Texturen, die entfernte `patterncooler-01.png` ist weg, die von `Kitsch.dat` benötigte `patterncooler-25.png` ist da, keine Fehler beim Start.
+
 ## 26.09.17
 
 - **b8** – **Die Flaggen sind ausgetauscht.** 275 der 289 Dateien in `tcl/flags/` und 153 der 156 eingebetteten quadratischen Symbole stammen jetzt aus **gemeinfreien Vorlagen von Wikimedia Commons** — 271 Public Domain oder CC0, vier mit Namensnennung. Die alten kamen laut `tcl/flags/readme` von `addgadget.com`, einer Seite ohne Lizenzangabe, die es nicht mehr gibt.

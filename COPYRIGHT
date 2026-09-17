@@ -131,12 +131,34 @@ James, so the appreciated attribution is given.
 
 Not documented
 --------------
-** Textures (tcl/textures/, 287 files, 22 MB)
-No statement of origin anywhere in the tree. File names such as
-WoodFine0006_Green.png or Melamine-wood-006.png follow the naming schemes
-of commercial texture libraries, whose terms typically forbid redistributing
-the raw files. This is the largest single block of redistributed image data
+** Textures (tcl/textures/, 220 files, 19 MB)
+No statement of origin anywhere in the tree, and the file names point to a
+collection gathered from the web rather than a single licensed source:
+
+    WoodFine0001_S.jpg, MarbleBeige0017_1_S.jpg   the naming scheme of
+        CGTextures / textures.com, "_S" being their small size (13 files).
+        Their terms forbid redistributing the raw files.
+    2274499870_9617a0512f_b.jpg                   a Flickr file name
+        (photo id, secret, size suffix)
+    24f5b46cc7ca935416ef41396840c3a2.jpg          content hash, typical of
+        image aggregators
+    Diamond_Ebony_Marble.15194542_std.jpg         "_std" is the preview size
+        of stock photo sites
+    Green_Maple_363.jpg, E-Stone-203.jpg          product codes of flooring
+        and stone suppliers
+    CeramicTilesPatern_thumbnail.jpg              named "thumbnail" outright
+
+58 of the files carry Adobe metadata blocks, 41 IPTC and 25 XMP, but not one
+has a filled copyright or author field -- only tool traces ("Adobe Photoshop
+CS2 Windows"). This remains the largest block of redistributed image data
 and the one with the least information.
+
+In version 26.09.18-b1, 41 textures (67 files, 3.8 MB) were removed: those
+reachable only through the texture browser, named by no board theme and no
+pairing in preferences.dat. That took out the Flickr, hash-named and
+thumbnail files and three of the CGTextures ones without changing any theme.
+The rest stay because removing them would change how the shipped board
+themes look.
 
 ** User interface icons (tcl/icons.tcl and others, ~1300 images)
 No designer is named. The About dialog defines a heading for icon design

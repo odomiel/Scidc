@@ -113,6 +113,16 @@ cp -f tcl/images/*.png "$SHAREDIR/images/"
 cp -f tcl/help/images/* "$SHAREDIR/help/images/" 2>/dev/null || true
 cp -f tcl/flags/*.png "$SHAREDIR/flags/"
 
+# Texturen abgleichen, und zwar mit Loeschen: ein blosses Kopieren laesst
+# entfernte Dateien im Paket stehen, und der Texturbrowser listet alles, was
+# im Verzeichnis liegt (board-texture.tcl, glob) -- sie waeren also weiter
+# sichtbar.
+if [ -d "$SHAREDIR/textures" ]; then
+    rm -rf "$SHAREDIR/textures"
+fi
+mkdir -p "$SHAREDIR/textures"
+cp -r tcl/textures/. "$SHAREDIR/textures/"
+
 # ttk-Themes synchronisieren (wird zur Laufzeit aus share/ geladen, nicht aus dem Bundle)
 mkdir -p "$SHAREDIR/themes/ttk"
 cp -f tcl/themes/ttk/*.tcl "$SHAREDIR/themes/ttk/"
