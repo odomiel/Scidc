@@ -8,6 +8,8 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- *(ohne Versionserhöhung)* `release.sh`: **Wettlauf mit dem Mirror behoben.** Beim Veröffentlichen von b6 meldete Schritt 5 „Mirror-Abgleich nicht anstossbar (HTTP 500)". Ursache: seit der Mirror auf `sync_on_commit` steht, schiebt Forgejo den Tag schon beim Push aus Schritt 1 nach GitHub. Der danach zusätzlich angestoßene Abgleich versuchte denselben Tag ein zweites Mal — GitHub wies ihn ab („reference already exists"), und Forgejo vermerkte einen **fehlgeschlagenen Abgleich**. Für die Veröffentlichung folgenlos, aber der Fehlereintrag hätte später ein echtes Problem verdeckt. Schritt 5 sieht jetzt erst nach, ob der Tag drüben schon da ist, und stößt nur dann einen Abgleich an, wenn nicht.
+
 - **b6** – **`COPYRIGHT` dokumentiert jetzt auch die Bilddaten** – und zwar einschließlich dessen, was *nicht* bekannt ist. Die Datei führte bislang 18 Einträge, allesamt Code, während rund 700 Bilddateien und 1306 base64-eingebettete Bilder ohne jede Angabe mitgingen. Der neue Abschnitt ist ein Statusbericht, keine Unbedenklichkeitserklärung.
 
   Beim Zusammentragen stellte sich heraus, dass **die Lage deutlich besser ist als der erste Befund vermuten ließ** – ich hatte die vorhandene Dokumentation unterschätzt. Die 35 Figurensätze tragen alle einen GPL-Kopf von Gregor Cramer, und 20 davon nennen die Schriftvorlage, der sie folgen (Marroquin, Bentzen, Burnett, Brown, Leschemelle, Scott, Poisson). Der Über-Dialog würdigt Brett-Designs, Flaggen, Figurensätze und Schriften mit Namen und Quell-URL. Schriftdateien werden gar keine ausgeliefert.

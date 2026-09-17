@@ -369,22 +369,32 @@ fi
 if [ "$GITHUB" = "yes" ]; then
 	step "Schritt 5/$STEPS: GitHub-Release fuer $TAG ($GH_SLUG)"
 
-	# Mirror-Abgleich anstossen, sonst dauert es bis zum naechsten Intervall.
-	RESP=$(api POST "/push_mirrors-sync")
-	case "$(http_code "$RESP")" in
-		200|202|204) echo "Mirror-Abgleich angestossen." ;;
-		*)           echo "Mirror-Abgleich nicht anstossbar (HTTP $(http_code "$RESP")) - warte auf den Zeitplan." ;;
-	esac
-
-	echo -n "Warte, bis der Tag auf GitHub ist "
+	# Erst nachsehen, ob der Tag schon drueben ist: steht der Mirror auf
+	# "sync_on_commit", hat Schritt 1 ihn bereits mitgeschickt. Ein dann noch
+	# angestossener Abgleich versucht denselben Tag ein zweites Mal zu pushen,
+	# GitHub weist ihn ab ("reference already exists"), und Forgejo vermerkt
+	# einen fehlgeschlagenen Abgleich -- ein Fehlereintrag, der spaeter ein
+	# echtes Problem verdecken wuerde.
 	GH_TAG_OK=false
-	for _ in $(seq 1 60); do
-		if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
-			GH_TAG_OK=true; break
-		fi
-		echo -n "."; sleep 5
-	done
-	echo
+	if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
+		GH_TAG_OK=true
+		echo "Tag ist bereits auf GitHub - der Mirror war schneller."
+	else
+		RESP=$(api POST "/push_mirrors-sync")
+		case "$(http_code "$RESP")" in
+			200|202|204) echo "Mirror-Abgleich angestossen." ;;
+			*)           echo "Mirror-Abgleich nicht anstossbar (HTTP $(http_code "$RESP")) - warte auf den Zeitplan." ;;
+		esac
+
+		echo -n "Warte, bis der Tag auf GitHub ist "
+		for _ in $(seq 1 60); do
+			if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
+				GH_TAG_OK=true; break
+			fi
+			echo -n "."; sleep 5
+		done
+		echo
+	fi
 	$GH_TAG_OK || fail "Tag $TAG ist nach 5 Minuten nicht auf GitHub - Mirror-Protokoll in den Forgejo-Einstellungen pruefen"
 	echo "Tag ist da."
 
