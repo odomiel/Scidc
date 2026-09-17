@@ -1,0 +1,320 @@
+# Zuordnung der Laendercodes auf Flaggendateien bei Wikimedia Commons
+#
+# Erzeugt fuer die Klaerung der Bildlizenzen (siehe COPYRIGHT, Abschnitt
+# "IMAGES AND OTHER NON-CODE ASSETS"). Die Codes und Namen stammen aus der
+# Tabelle "set region(...)" in tcl/utils/countries.tcl -- das ist die
+# massgebliche Liste des Programms, nicht eine von aussen geratene.
+#
+# Spalten (Tabulator-getrennt):
+#   IOC      Laendercode, wie ihn Scidc benutzt
+#   Name     englischer Name aus countries.tcl
+#   ISO      ISO-3166-alpha-2 laut countries.tcl, "--" wenn keiner
+#   Datei    Dateiname auf commons.wikimedia.org (ohne "File:")
+#   Lizenz   wie Commons sie fuehrt
+#   Status   frei     = gemeinfrei oder CC0, ohne Auflagen
+#            auflage  = frei, aber mit Namensnennung bzw. Share-alike
+#            eigenbau = keine echte Flagge; muss gezeichnet werden
+#            emblem   = Verbandszeichen (ASEAN, FIDE), kein Hoheitszeichen --
+#                       markenrechtlich eigene Regeln, nicht ueber Commons loesbar
+#
+# Status der Pruefung: jede Zeile mit Datei wurde einzeln gegen die
+# Commons-API abgefragt; die Lizenz ist deren Angabe, nicht geraten.
+# Die Namen der 13 zuletzt aufgeloesten Eintraege mussten von Hand gesetzt
+# werden, weil "Flag of <Name>.svg" dort anders heisst (Aaland mit Umlaut,
+# Guinea-Bissau mit Bindestrich, East Timor statt Timor Leste).
+#
+# Noch nicht geleistet: ob die gefundene Flagge inhaltlich die richtige ist
+# (Reunion und die US-Aussengebiete fuehren die Flagge des Mutterlandes,
+# Svalbard und Bouvet die norwegische). Das ist Absicht und vermerkt, aber
+# vor einem Austausch zu pruefen.
+#
+# IOC	Name	ISO	Datei	Lizenz	Status
+AFG	Afghanistan	af	Flag of Afghanistan.svg	Public domain	frei
+AHO	Netherlands_Antilles	an	Flag of Netherlands Antilles.svg	Public domain	frei
+AIA	Anguilla	ai	Flag of Anguilla.svg	Public domain	frei
+AIR	Aboard_Aircraft	--			eigenbau
+ALA	Aaland_Islands	ax	Flag of Åland.svg	Public domain	frei
+ALB	Albania	al	Flag of Albania.svg	Public domain	frei
+ALG	Algeria	dz	Flag of Algeria.svg	Public domain	frei
+AND	Andorra	ad	Flag of Andorra.svg	Public domain	frei
+ANG	Angola	ao	Flag of Angola.svg	Public domain	frei
+ANT	Antigua	ag	Flag of Antigua and Barbuda.svg	Public domain	frei
+ANY	Platzhalter_beliebig	--			eigenbau
+ANZ	Australasia	--			eigenbau
+ARG	Argentina	ar	Flag of Argentina.svg	Public domain	frei
+ARM	Armenia	am	Flag of Armenia.svg	Public domain	frei
+ARU	Aruba	aw	Flag of Aruba.svg	Public domain	frei
+ASA	American_Samoa	as	Flag of American Samoa.svg	Public domain	frei
+ASE	ASEAN-Emblem	--			emblem
+ATA	Antarctica	aq	Flag of Antarctica.svg	Public domain	frei
+ATF	French_Southern_Territories	tf	Flag of the French Southern and Antarctic Lands.svg	Public domain	frei
+AUS	Australia	au	Flag of Australia.svg	Public domain	frei
+AUT	Austria	at	Flag of Austria.svg	Public domain	frei
+AZE	Azerbaijan	az	Flag of Azerbaijan.svg	Public domain	frei
+BAH	Bahamas	bs	Flag of Bahamas.svg	Public domain	frei
+BAN	Bangladesh	bd	Flag of Bangladesh.svg	Public domain	frei
+BAR	Barbados	bb	Flag of Barbados.svg	Public domain	frei
+BAS	Basque	--	Flag of Basque.svg	CC BY-SA 2.5	auflage
+BDI	Burundi	bi	Flag of Burundi.svg	Public domain	frei
+BEL	Belgium	be	Flag of Belgium.svg	Public domain	frei
+BEN	Benin	bj	Flag of Benin.svg	Public domain	frei
+BER	Bermuda	bm	Flag of Bermuda.svg	Public domain	frei
+BES	Caribbean_Netherlands	--	Flag of the Netherlands.svg	Public domain	frei
+BHU	Bhutan	bt	Flag of Bhutan.svg	Public domain	frei
+BIH	Bosnia_and_Herzegovina	ba	Flag of Bosnia and Herzegovina.svg	Public domain	frei
+BIZ	Belize	bz	Flag of Belize.svg	Public domain	frei
+BLM	Saint_Barthelemy	--	Flag of Saint Barthelemy (local).svg	CC BY 2.5	auflage
+BLR	Belarus	by	Flag of Belarus.svg	Public domain	frei
+BOL	Bolivia	bo	Flag of Bolivia.svg	Public domain	frei
+BOT	Botswana	bw	Flag of Botswana.svg	Public domain	frei
+BRA	Brazil	br	Flag of Brazil.svg	Public domain	frei
+BRN	Bahrain	bh	Flag of Bahrain.svg	Public domain	frei
+BRU	Brunei	bn	Flag of Brunei.svg	Public domain	frei
+BUL	Bulgaria	bg	Flag of Bulgaria.svg	Public domain	frei
+BUR	Burkina_Faso	bf	Flag of Burkina Faso.svg	Public domain	frei
+BVT	Bouvet_Islands	bv	Flag of Norway.svg	Public domain	frei
+BWI	West_Indies_Federation	--	Flag of the West Indies Federation.svg	Public domain	frei
+CAF	Central_African_Republic	cf	Flag of Central African Republic.svg	Public domain	frei
+CAM	Cambodia	kh	Flag of Cambodia.svg	Public domain	frei
+CAN	Canada	ca	Flag of Canada.svg	Public domain	frei
+CAT	Catalonia	--	Flag of Catalonia.svg	Public domain	frei
+CAY	Cayman_Islands	ky	Flag of Cayman Islands.svg	Public domain	frei
+CCK	Cocos_Islands	cc	Flag of the Cocos (Keeling) Islands.svg	Public domain	frei
+CGO	Congo	cg	Flag of Congo.svg	Public domain	frei
+CHA	Chad	td	Flag of Chad.svg	Public domain	frei
+CHI	Chile	cl	Flag of Chile.svg	Public domain	frei
+CHN	China	cn	Flag of China.svg	Public domain	frei
+CIV	Ivory_Coast	ci	Flag of Ivory Coast.svg	Public domain	frei
+CMR	Cameroon	cm	Flag of Cameroon.svg	Public domain	frei
+COD	DR_Congo	cd	Flag of the Democratic Republic of the Congo.svg	Public domain	frei
+COK	Cook_Islands	ck	Flag of Cook Islands.svg	Public domain	frei
+COL	Colombia	co	Flag of Colombia.svg	Public domain	frei
+COM	Comoros	km	Flag of Comoros.svg	Public domain	frei
+CPV	Cape_Verde	cv	Flag of Cape Verde.svg	Public domain	frei
+CRC	Costa_Rica	cr	Flag of Costa Rica.svg	Public domain	frei
+CRO	Croatia	hr	Flag of Croatia.svg	Public domain	frei
+CUB	Cuba	cu	Flag of Cuba.svg	Public domain	frei
+CUW	Curacao	--	Flag of Curaçao.svg	Public domain	frei
+CXR	Christmas_Island	cx	Flag of Christmas Island.svg	Public domain	frei
+CYI	Cayman_Islands	--	Flag of the Cayman Islands.svg	Public domain	frei
+CYP	Cyprus	cy	Flag of Cyprus.svg	Public domain	frei
+CZE	Czech_Republic	cz	Flag of Czech Republic.svg	Public domain	frei
+DEN	Denmark	dk	Flag of Denmark.svg	Public domain	frei
+DJI	Djibouti	dj	Flag of Djibouti.svg	Public domain	frei
+DMA	Dominica	dm	Flag of Dominica.svg	Public domain	frei
+DOM	Dominican_Republic	do	Flag of Dominican Republic.svg	Public domain	frei
+EAR	Platzhalter_Erde	--			eigenbau
+EAZ	Zanzibar	--	Flag of Zanzibar.svg	Public domain	frei
+ECU	Ecuador	ec	Flag of Ecuador.svg	Public domain	frei
+EGY	Egypt	eg	Flag of Egypt.svg	Public domain	frei
+ENG	England	--	Flag of England.svg	Public domain	frei
+ERI	Eritrea	er	Flag of Eritrea.svg	Public domain	frei
+ESA	El_Salvador	sv	Flag of El Salvador.svg	Public domain	frei
+ESH	Western_Sahara	eh	Flag of Western Sahara.svg	Public domain	frei
+ESP	Spain	es	Flag of Spain.svg	Public domain	frei
+EST	Estonia	ee	Flag of Estonia.svg	Public domain	frei
+ETH	Ethiopia	et	Flag of Ethiopia.svg	Public domain	frei
+EUR	European_Union	--	Flag of Europe.svg	Public domain	frei
+FAI	Faroe_Islands	fo	Flag of Faroe Islands.svg	Public domain	frei
+FID	FIDE-Emblem	--			emblem
+FIJ	Fiji	fj	Flag of Fiji.svg	Public domain	frei
+FIN	Finland	fi	Flag of Finland.svg	Public domain	frei
+FLK	Falkland_Islands	fk	Flag of Falkland Islands.svg	Public domain	frei
+FRA	France	fr	Flag of France.svg	Public domain	frei
+FRG	West_Germany	--	Flag of West Germany.svg	Public domain	frei
+FSM	Micronesia	fm	Flag of Micronesia.svg	Public domain	frei
+GAB	Gabon	ga	Flag of Gabon.svg	Public domain	frei
+GAM	Gambia	gm	Flag of Gambia.svg	Public domain	frei
+GBR	Great_Britain	gb	Flag of Great Britain.svg	Public domain	frei
+GBS	Guinea_Bissau	gw	Flag of Guinea-Bissau.svg	Public domain	frei
+GBZ	Gibraltar	gi	Flag of Gibraltar.svg	Public domain	frei
+GDR	East_Germany	--	Flag of East Germany.svg	Public domain	frei
+GEO	Georgia	ge	Flag of Georgia.svg	Public domain	frei
+GEQ	Equatorial_Guinea	gq	Flag of Equatorial Guinea.svg	Public domain	frei
+GER	Germany	de	Flag of Germany.svg	Public domain	frei
+GGY	Guernsey	gg	Flag of Guernsey.svg	CC0	frei
+GHA	Ghana	gh	Flag of Ghana.svg	Public domain	frei
+GLP	Guadeloupe	gp	Flag of Guadeloupe.svg	Public domain	frei
+GRE	Greece	gr	Flag of Greece.svg	Public domain	frei
+GRL	Greenland	gl	Flag of Greenland.svg	Public domain	frei
+GRN	Grenada	gd	Flag of Grenada.svg	Public domain	frei
+GUA	Guatemala	gt	Flag of Guatemala.svg	Public domain	frei
+GUF	French_Guiana	gf	Flag of French Guiana.svg	Public domain	frei
+GUI	Guinea	gn	Flag of Guinea.svg	Public domain	frei
+GUM	Guam	gu	Flag of Guam.svg	Public domain	frei
+GUY	Guyana	gy	Flag of Guyana.svg	Public domain	frei
+HAI	Haiti	ht	Flag of Haiti.svg	Public domain	frei
+HKG	Hong_Kong	hk	Flag of Hong Kong.svg	Public domain	frei
+HMD	Heard_Island_and_McDonald_Islands	hm	Flag of Heard Island and McDonald Islands.svg	Public domain	frei
+HON	Honduras	hn	Flag of Honduras.svg	Public domain	frei
+HUN	Hungary	hu	Flag of Hungary.svg	Public domain	frei
+IMN	Isle_of_Man	im	Flag of Isle of Man.svg	CC0	frei
+INA	Indonesia	id	Flag of Indonesia.svg	Public domain	frei
+IND	India	in	Flag of India.svg	Public domain	frei
+IOT	British_Indian_Ocean_Territory	io	Flag of British Indian Ocean Territory.svg	Public domain	frei
+IRI	Iran	ir	Flag of Iran.svg	Public domain	frei
+IRL	Ireland	ie	Flag of Ireland.svg	Public domain	frei
+IRQ	Iraq	iq	Flag of Iraq.svg	Public domain	frei
+ISL	Iceland	is	Flag of Iceland.svg	Public domain	frei
+ISR	Israel	il	Flag of Israel.svg	Public domain	frei
+ISV	US_Virgin_Islands	--	Flag of the United States Virgin Islands.svg	Public domain	frei
+ITA	Italy	it	Flag of Italy.svg	Public domain	frei
+IVB	British_Virgin_Islands	vg	Flag of British Virgin Islands.svg	Public domain	frei
+JAM	Jamaica	jm	Flag of Jamaica.svg	Public domain	frei
+JEY	Jersey	je	Flag of Jersey.svg	Public domain	frei
+JMY	unbestimmt	--			eigenbau
+JOR	Jordan	jo	Flag of Jordan.svg	Public domain	frei
+JPN	Japan	jp	Flag of Japan.svg	Public domain	frei
+KAZ	Kazakhstan	kz	Flag of Kazakhstan.svg	Public domain	frei
+KEN	Kenya	ke	Flag of Kenya.svg	Public domain	frei
+KGZ	Kyrgyzstan	kg	Flag of Kyrgyzstan.svg	Public domain	frei
+KIR	Kiribati	ki	Flag of Kiribati.svg	Public domain	frei
+KOR	South_Korea	kr	Flag of South Korea.svg	Public domain	frei
+KOS	Kosovo	--	Flag of Kosovo.svg	Public domain	frei
+KSA	Saudi_Arabia	sa	Flag of Saudi Arabia.svg	Public domain	frei
+KUW	Kuwait	kw	Flag of Kuwait.svg	Public domain	frei
+LAO	Laos	la	Flag of Laos.svg	Public domain	frei
+LAT	Latvia	lv	Flag of Latvia.svg	Public domain	frei
+LBA	Libya	ly	Flag of Libya.svg	Public domain	frei
+LBR	Liberia	lr	Flag of Liberia.svg	Public domain	frei
+LCA	Saint_Lucia	lc	Flag of Saint Lucia.svg	Public domain	frei
+LES	Lesotho	ls	Flag of Lesotho.svg	Public domain	frei
+LIB	Lebanon	lb	Flag of Lebanon.svg	Public domain	frei
+LIE	Liechtenstein	li	Flag of Liechtenstein.svg	Public domain	frei
+LTU	Lithuania	lt	Flag of Lithuania.svg	Public domain	frei
+LUX	Luxembourg	lu	Flag of Luxembourg.svg	Public domain	frei
+MAC	Macao	mo	Flag of Macao.svg	Public domain	frei
+MAD	Madagascar	mg	Flag of Madagascar.svg	Public domain	frei
+MAF	Saint_Martin	--	Flag of France.svg	Public domain	frei
+MAR	Morocco	ma	Flag of Morocco.svg	Public domain	frei
+MAS	Malaysia	my	Flag of Malaysia.svg	Public domain	frei
+MAW	Malawi	mw	Flag of Malawi.svg	Public domain	frei
+MDA	Moldova	md	Flag of Moldova.svg	Public domain	frei
+MDV	Maldives	mv	Flag of Maldives.svg	Public domain	frei
+MEX	Mexico	mx	Flag of Mexico.svg	Public domain	frei
+MGL	Mongolia	mn	Flag of Mongolia.svg	Public domain	frei
+MHL	Marshall_Islands	mh	Flag of Marshall Islands.svg	Public domain	frei
+MKD	Macedonia	mk	Flag of Macedonia.svg	Public domain	frei
+MLI	Mali	ml	Flag of Mali.svg	Public domain	frei
+MLT	Malta	mt	Flag of Malta.svg	Public domain	frei
+MNC	Monaco	mc	Flag of Monaco.svg	Public domain	frei
+MNE	Montenegro	me	Flag of Montenegro.svg	Public domain	frei
+MNP	Northern_Mariana_Islands	mp	Flag of Northern Mariana Islands.svg	Public domain	frei
+MON	Monaco	--	Flag of Monaco.svg	Public domain	frei
+MOZ	Mozambique	mz	Flag of Mozambique.svg	Public domain	frei
+MRI	Mauritius	mu	Flag of Mauritius.svg	Public domain	frei
+MSR	Montserrat	ms	Flag of Montserrat.svg	Public domain	frei
+MTN	Mauritania	mr	Flag of Mauritania.svg	Public domain	frei
+MTQ	Martinique	mq	Flag of Martinique.svg	Public domain	frei
+MYA	Myanmar	mm	Flag of Myanmar.svg	Public domain	frei
+MYT	Mayotte	yt	Flag of Mayotte.svg	Public domain	frei
+NAM	Namibia	na	Flag of Namibia.svg	Public domain	frei
+NCA	Nicaragua	ni	Flag of Nicaragua.svg	Public domain	frei
+NCL	New_Caledonia	nc	Flag of New Caledonia.svg	Public domain	frei
+NED	Netherlands	nl	Flag of Netherlands.svg	Public domain	frei
+NEP	Nepal	np	Flag of Nepal.svg	Public domain	frei
+NET	The_Internet	--			eigenbau
+NFK	Norfolk_Island	nf	Flag of Norfolk Island.svg	CC0	frei
+NGR	Nigeria	ng	Flag of Nigeria.svg	Public domain	frei
+NIG	Niger	ne	Flag of Niger.svg	Public domain	frei
+NIR	Northern_Ireland	--	Flag of Northern Ireland.svg	Public domain	frei
+NIU	Niue	nu	Flag of Niue.svg	Public domain	frei
+NOR	Norway	no	Flag of Norway.svg	Public domain	frei
+NRD	Nordic_Council	--	Flag of the Nordic Council.svg	Public domain	frei
+NRU	Nauru	nr	Flag of Nauru.svg	Public domain	frei
+NZL	New_Zealand	nz	Flag of New Zealand.svg	Public domain	frei
+OMA	Oman_(Dublette_zu_OMN)	--	Flag of Oman.svg	OGL-om 1.0	auflage
+OMN	Oman	om	Flag of Oman.svg	OGL-om 1.0	auflage
+PAK	Pakistan	pk	Flag of Pakistan.svg	Public domain	frei
+PAN	Panama	pa	Flag of Panama.svg	Public domain	frei
+PAR	Paraguay	py	Flag of Paraguay.svg	Public domain	frei
+PCN	Pitcairn_Islands	pn	Flag of Pitcairn Islands.svg	Public domain	frei
+PER	Peru	pe	Flag of Peru.svg	Public domain	frei
+PHI	Philippines	ph	Flag of Philippines.svg	Public domain	frei
+PLE	Palestine	ps	Flag of Palestine.svg	Public domain	frei
+PLW	Palau	pw	Flag of Palau.svg	Public domain	frei
+PNG	Papua_New_Guinea	pg	Flag of Papua New Guinea.svg	Public domain	frei
+POL	Poland	pl	Flag of Poland.svg	Public domain	frei
+POR	Portugal	pt	Flag of Portugal.svg	Public domain	frei
+PRK	North_Korea	kp	Flag of North Korea.svg	Public domain	frei
+PUR	Puerto_Rico	pr	Flag of Puerto Rico.svg	Public domain	frei
+PYF	French_Polynesia	pf	Flag of French Polynesia.svg	CC0	frei
+QAT	Qatar	qa	Flag of Qatar.svg	Public domain	frei
+REU	Reunion	re	Flag of France.svg	Public domain	frei
+ROU	Romania	ro	Flag of Romania.svg	Public domain	frei
+RSA	South_Africa	za	Flag of South Africa.svg	Public domain	frei
+RUS	Russia	ru	Flag of Russia.svg	Public domain	frei
+RWA	Rwanda	rw	Flag of Rwanda.svg	Public domain	frei
+SAM	Samoa	ws	Flag of Samoa.svg	Public domain	frei
+SCG	Serbia_and_Montenegro	cs	Flag of Serbia and Montenegro.svg	Public domain	frei
+SCO	Scotland	--	Flag of Scotland.svg	Public domain	frei
+SEA	At_Sea	--			eigenbau
+SEN	Senegal	sn	Flag of Senegal.svg	Public domain	frei
+SEY	Seychelles	sc	Flag of Seychelles.svg	Public domain	frei
+SGS	South_Georgia_and_South_Sandwich_Islands	gs	Flag of South Georgia and the South Sandwich Islands.svg	CC0	frei
+SHN	Saint_Helena	sh	Flag of Saint Helena.svg	Public domain	frei
+SIN	Singapore	sg	Flag of Singapore.svg	Public domain	frei
+SJM	Jan_Mayen_and_Svalbard	sj	Flag of Norway.svg	Public domain	frei
+SKN	Saint_Kitts_and_Nevis	kn	Flag of Saint Kitts and Nevis.svg	Public domain	frei
+SLE	Sierra_Leone	sl	Flag of Sierra Leone.svg	Public domain	frei
+SLO	Slovenia	si	Flag of Slovenia.svg	Public domain	frei
+SMR	San_Marino	sm	Flag of San Marino.svg	Public domain	frei
+SOL	Solomon_Islands	sb	Flag of Solomon Islands.svg	Public domain	frei
+SOM	Somalia	so	Flag of Somalia.svg	Public domain	frei
+SPC	Aboard_Spacecraft	--			eigenbau
+SPM	Saint_Pierre_and_Miquelon	pm	Flag of Saint Pierre and Miquelon.svg	Public domain	frei
+SRB	Serbia	rs	Flag of Serbia.svg	Public domain	frei
+SRI	Sri_Lanka	lk	Flag of Sri Lanka.svg	Public domain	frei
+SSD	South_Sudan	--	Flag of South Sudan.svg	Public domain	frei
+STP	Sao_Tome_and_Principe	st	Flag of Sao Tome and Principe.svg	Public domain	frei
+SUD	Sudan	sd	Flag of Sudan.svg	Public domain	frei
+SUI	Switzerland	ch	Flag of Switzerland.svg	Public domain	frei
+SUR	Suriname	sr	Flag of Suriname.svg	Public domain	frei
+SVB	Svalbard	--	Flag of Norway.svg	Public domain	frei
+SVK	Slovakia	sk	Flag of Slovakia.svg	Public domain	frei
+SWE	Sweden	se	Flag of Sweden.svg	Public domain	frei
+SWZ	Swaziland	sz	Flag of Swaziland.svg	Public domain	frei
+SXM	Sint_Maarten	--	Flag of Sint Maarten.svg	Public domain	frei
+SYR	Syria	sy	Flag of Syria.svg	Public domain	frei
+TAN	Tanzania	tz	Flag of Tanzania.svg	Public domain	frei
+TCA	Turks_and_Caicos_Islands	tc	Flag of Turks and Caicos Islands.svg	Public domain	frei
+TCH	Czechoslovakia	--	Flag of Czechoslovakia.svg	Public domain	frei
+TGA	Tonga	to	Flag of Tonga.svg	Public domain	frei
+THA	Thailand	th	Flag of Thailand.svg	Public domain	frei
+TIB	Tibet	cn	Flag of Tibet.svg	Public domain	frei
+TJK	Tajikistan	tj	Flag of Tajikistan.svg	Public domain	frei
+TKL	Tokelau	tk	Flag of Tokelau.svg	Public domain	frei
+TKM	Turkmenistan	tm	Flag of Turkmenistan.svg	Public domain	frei
+TLS	Timor_Leste	tl	Flag of East Timor.svg	Public domain	frei
+TOG	Togo	tg	Flag of Togo.svg	Public domain	frei
+TPE	Chinese_Taipei	tw	Flag of Chinese Taipei for Olympic games.svg	Public domain	frei
+TRI	Trinidad_and_Tobago	tt	Flag of Trinidad and Tobago.svg	Public domain	frei
+TTO	Trinidad_and_Tobago	--	Flag of Trinidad and Tobago.svg	Public domain	frei
+TUN	Tunisia	tn	Flag of Tunisia.svg	Public domain	frei
+TUR	Turkey	tr	Flag of Turkey.svg	Public domain	frei
+TUV	Tuvalu	tv	Flag of Tuvalu.svg	Public domain	frei
+UAE	United_Arab_Emirates	ae	Flag of United Arab Emirates.svg	Public domain	frei
+UGA	Uganda	ug	Flag of Uganda.svg	Public domain	frei
+UKR	Ukraine	ua	Flag of Ukraine.svg	Public domain	frei
+UMI	United_States_Minor_Outlying_Islands	um	Flag of the United States.svg	Public domain	frei
+UNK	Unknown	--			eigenbau
+URS	Soviet_Union	su	Flag of Soviet Union.svg	Public domain	frei
+URU	Uruguay	uy	Flag of Uruguay.svg	Public domain	frei
+USA	United_States_of_America	us	Flag of United States of America.svg	Public domain	frei
+UZB	Uzbekistan	uz	Flag of Uzbekistan.svg	Public domain	frei
+VAN	Vanuatu	vu	Flag of Vanuatu.svg	Public domain	frei
+VAT	Vatican	va	Flag of Vatican.svg	Public domain	frei
+VEN	Venezuela	ve	Flag of Venezuela.svg	Public domain	frei
+VIE	Vietnam	vn	Flag of Vietnam.svg	Public domain	frei
+VIN	Saint_Vincent_and_the_Grenadines	vc	Flag of Saint Vincent and the Grenadines.svg	Public domain	frei
+VUS	US_Virgin_Islands	vi	Flag of the US Virgin Islands.svg	Public domain	frei
+WLF	Wallis_and_Futuna	wf	Flag of Wallis and Futuna.svg	Public domain	frei
+WLS	Wales	--	Flag of Wales.svg	Public domain	frei
+YEM	Yemen	ye	Flag of Yemen.svg	Public domain	frei
+YUG	Yugoslavia	yu	Flag of Yugoslavia.svg	Public domain	frei
+ZAM	Zambia	zm	Flag of Zambia.svg	Public domain	frei
+ZAN	Zanzibar	--	Flag of Zanzibar.svg	Public domain	frei
+ZIM	Zimbabwe	zw	Flag of Zimbabwe.svg	Public domain	frei
+ZZG	unbestimmt	--			eigenbau
+ZZR	unbestimmt	--			eigenbau
+ZZX	Mixed_Team	--			eigenbau

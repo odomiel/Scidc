@@ -154,6 +154,13 @@ Country flags -- the rest
 What looked like a contradiction turned out to be two different sets. Both
 statements were right, about different files.
 
+tools/flag-mapping.tsv maps all 289 country codes the program uses onto flag
+files at Wikimedia Commons, with the licence Commons states for each. 271 are
+public domain or CC0, four carry attribution or share-alike conditions, twelve
+are placeholders with no real flag (At Sea, Aboard Aircraft, Unknown, ...) and
+two are organisation emblems (ASEAN, FIDE) rather than sovereign flags. That
+table is the groundwork for a replacement, not a replacement itself.
+
 ** tcl/flags/ -- 289 files, 72x72, named by IOC country codes
 tcl/flags/readme says the set was "downloaded from
 http://addgadget.com/clock/", with fourteen more "found in the internet" and
