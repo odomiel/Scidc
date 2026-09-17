@@ -369,16 +369,24 @@ fi
 if [ "$GITHUB" = "yes" ]; then
 	step "Schritt 5/$STEPS: GitHub-Release fuer $TAG ($GH_SLUG)"
 
-	# Erst nachsehen, ob der Tag schon drueben ist: steht der Mirror auf
-	# "sync_on_commit", hat Schritt 1 ihn bereits mitgeschickt. Ein dann noch
-	# angestossener Abgleich versucht denselben Tag ein zweites Mal zu pushen,
-	# GitHub weist ihn ab ("reference already exists"), und Forgejo vermerkt
-	# einen fehlgeschlagenen Abgleich -- ein Fehlereintrag, der spaeter ein
-	# echtes Problem verdecken wuerde.
+	# Steht der Mirror auf "sync_on_commit", hat Schritt 1 den Tag bereits
+	# mitgeschickt -- aber asynchron. Wer sofort nachsieht und ihn nicht
+	# findet, stoesst einen zweiten Abgleich an; der versucht denselben Tag
+	# erneut zu pushen, GitHub weist ihn ab ("reference already exists"), und
+	# Forgejo vermerkt einen fehlgeschlagenen Abgleich. Der Eintrag wuerde
+	# spaeter ein echtes Problem verdecken. Also erst eine Frist abwarten und
+	# nur anstossen, wenn der Mirror sie verstreichen laesst.
 	GH_TAG_OK=false
-	if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
-		GH_TAG_OK=true
-		echo "Tag ist bereits auf GitHub - der Mirror war schneller."
+	echo -n "Warte auf den Mirror "
+	for _ in $(seq 1 8); do
+		if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
+			GH_TAG_OK=true; break
+		fi
+		echo -n "."; sleep 5
+	done
+	echo
+	if $GH_TAG_OK; then
+		echo "Tag ist auf GitHub - der Mirror hat ihn selbst uebertragen."
 	else
 		RESP=$(api POST "/push_mirrors-sync")
 		case "$(http_code "$RESP")" in
@@ -387,7 +395,7 @@ if [ "$GITHUB" = "yes" ]; then
 		esac
 
 		echo -n "Warte, bis der Tag auf GitHub ist "
-		for _ in $(seq 1 60); do
+		for _ in $(seq 1 52); do
 			if [ "$(http_code "$(gh_api GET "/repos/$GH_SLUG/git/ref/tags/$TAG")")" = "200" ]; then
 				GH_TAG_OK=true; break
 			fi

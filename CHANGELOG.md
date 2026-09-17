@@ -8,6 +8,8 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.18
 
+- *(ohne Versionserhöhung)* `release.sh`: **Wettlauf mit dem Mirror endgültig entschärft.** Die Korrektur aus 26.09.17 sah nach, ob der Tag schon auf GitHub ist — aber `sync_on_commit` arbeitet **asynchron**, und beim Release von b1 war er noch unterwegs. Also wurde doch ein zweiter Abgleich angestoßen, GitHub wies den Tag ab („reference already exists"), und der Mirror trug wieder einen Fehler ein. Schritt 5 wartet jetzt bis zu 40 Sekunden auf den Mirror und stößt nur an, wenn er diese Frist verstreichen lässt.
+
 - **b1** – **41 Texturen entfernt (67 Dateien, 3,8 MB)** — und zwar die, die nur über den Texturbrowser erreichbar waren: von keinem Brett-Thema genannt und in keiner Paarung in `preferences.dat`. Damit gehen genau die Dateien mit der schwächsten Herkunft: die Flickr-Datei, die beiden hash-benannten, die „thumbnail" heißt, und drei der CGTextures-Dateien. **Kein Thema ändert sich dadurch.** Das AppImage schrumpft von 35 auf **31,9 MB**.
 
   **Eine Korrektur vorweg, weil ich zuerst falsch lag:** ich hatte berichtet, 46 Texturen seien „nirgends referenziert" und damit tote Fracht. Das war falsch — `tcl/board-texture.tcl:401` durchsucht das Verzeichnis sehr wohl (`glob -directory $dir`), und meine Suche nach `glob.*texture` fand das nicht, weil die Variable schlicht `$dir` heißt. Außerdem hatte ich 24 Themendateien unter `tcl/themes/piece/` übersehen. **Tote Texturen gibt es nicht** — alle sind dem Benutzer zugänglich, und Löschen ist eine Produktentscheidung, keine Aufräumarbeit. Entfernt ist deshalb nur, was keine vorkonfigurierte Ansicht kostet.
