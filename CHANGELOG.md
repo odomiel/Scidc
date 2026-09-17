@@ -8,6 +8,16 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- **b4** – **Das alte Logo steckte auch base64-eingebettet im Tcl-Code.** Der Tausch in b2/b3 hatte nur die PNG-*Dateien* erfasst; zwei weitere Fundstellen blieben sichtbar — das Startbild und, wie gemeldet, das Symbol neben einer Scid-Datenbank im Willkommensfenster. Die Prüfsummensuche über das entpackte AppImage konnte sie nicht finden, weil es dort gar keine Bilddateien sind.
+
+  **`tcl/icons.tcl` führt `::icon::NNxNN::logo` in fünf Größen** (16 bis 64) als eingebettetes PNG. Daran hängen mehr Stellen als der Name vermuten lässt: `set sci $logo` macht es zum Dateisymbol für `.sci`, `set variant(Normal) $logo` zum Symbol der Normalvariante, und `app-db-icons.tcl` setzt `Unspecific(16x16)` bis `(48x48)` darauf — genau das erscheint bei einer Datenbank ohne eigenen Typ, also bei einer Scid-Datei. Alle fünf Blobs sind ersetzt; die Aliasse ziehen automatisch mit.
+
+  **Das Startbild ist neu gezeichnet statt geflickt.** Es lag als 570×428-JPEG in `tcl/splash.tcl` — mit dem alten Logo in der Ecke, aber auch Hintergrund, Kurven und Schriftzug sind Scidb-Artwork mit derselben ungeklärten Herkunft wie die übrigen Bilddaten. Ein Übermalen nur des Logos hätte den Rest stehen lassen. Neu ist `icons/scidc-splash.svg`: blauer Verlauf, drei ruhige Bögen, der Springer und der Schriftzug „Scidc". **Der Schriftzug ist als Strichpfade gezeichnet**, weil der SVG-Rasterer von Tk (nanosvg) keine Schrift darstellt.
+
+  `tools/render-icons.tcl` erzeugt jetzt auch das Startbild und bettet es ein — als **PNG statt JPEG**, denn stock-`wish` kann JPEG nicht lesen; der Decoder steckt im geforkten Tk des Programms. Nebenbei schrumpft `tcl/splash.tcl` dadurch von 60 auf 28 KB.
+
+  **Nachgemessen:** die sechs alten Bilddaten aus dem letzten Commit — fünf Logo-Größen und das Startbild — sind im ausgelieferten Bundle nicht mehr auffindbar, die neuen sind es. Geprüft wurde gegen die tatsächlichen Blobs aus `git show HEAD:`, nicht gegen Base64-Anfänge: `iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHe` kodiert lediglich „PNG, 64×64, RGBA" und passt auf jedes solche Bild — ein Fehlalarm, der die Suche beinahe entwertet hätte.
+
 - **b3** – Logo überarbeitet: **der Springer ist jetzt eine Figur, kein Tierkopf.** Die erste Fassung zeigte nur einen Kopf und wirkte dadurch organisch statt geschnitzt. Neu sind die Merkmale, die ein Schachstück ausmachen: ein **gestufter Sockel** aus unterer Platte und Ring darüber, darauf Hals und Kopf. Auge und Maul bleiben.
 
   Die Rücklinie bleibt bewusst **glatt und ohne Mähnenkerben**. Eine facettierte Fassung mit gestufter Mähne sah groß am ehesten nach Holzschnitzerei aus, sägte bei 16 Pixeln aber sichtbar aus und machte die Silhouette unruhig — bei einem Symbol, das überwiegend klein erscheint, gewinnt die ruhige Form. Geprüft wurde an vergrößerten Rastern in 16, 22, 24 und 32 Pixeln, nicht nach Augenmaß am 128er.

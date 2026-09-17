@@ -46,6 +46,41 @@ set targets {
     tcl/help/images/scidb-logo.png            padded  128
 }
 
+# --- Startbild ---------------------------------------------------------
+# tcl/splash.tcl traegt das Bild base64-eingebettet. Frueher war das ein
+# JPEG; stock-wish kann JPEG nicht lesen (der Decoder steckt im geforkten
+# Tk des Programms), PNG dagegen schon -- deshalb hier PNG.
+proc renderSplash {} {
+    set svg icons/scidc-splash.svg
+    set tcl tcl/splash.tcl
+    if {![file readable $svg] || ![file readable $tcl]} {
+        puts stderr "  FEHLT: $svg oder $tcl"; exit 1
+    }
+    set img [image create photo -file $svg -format {svg -scale 1.0}]
+    set tmp [file join [file dirname $tcl] .splash-tmp.png]
+    $img write $tmp -format png
+    image delete $img
+
+    set f [open $tmp rb]; set png [read $f]; close $f
+    file delete $tmp
+    set b64 [binary encode base64 -maxlen 66 $png]
+
+    set f [open $tcl r]; set text [read $f]; close $f
+    set marker "set Picture \[image create photo -data \{"
+    set i [string first $marker $text]
+    if {$i < 0} { puts stderr "  Startbild-Block in $tcl nicht gefunden"; exit 1 }
+    set open [expr {$i + [string length $marker]}]
+    set close [string first "\n\}\]" $text $open]
+    if {$close < 0} { puts stderr "  Ende des Startbild-Blocks nicht gefunden"; exit 1 }
+
+    set body ""
+    foreach line [split $b64 \n] { append body "\t$line\n" }
+    set text [string replace $text $open [expr {$close}] "\n$body"]
+
+    set f [open $tcl w]; puts -nonewline $f $text; close $f
+    puts [format "  %-42s %3dx%-3d %s" $tcl 570 428 "Startbild eingebettet"]
+}
+
 set count 0
 foreach {target which size} $targets {
     set svg [expr {$which eq "cropped" ? $cropped : $padded}]
@@ -62,5 +97,6 @@ foreach {target which size} $targets {
     incr count
 }
 
-puts "  $count Dateien erzeugt."
+renderSplash
+puts "  $count Dateien erzeugt, dazu das Startbild."
 exit
