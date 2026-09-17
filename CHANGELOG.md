@@ -8,6 +8,16 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- **b6** – **`COPYRIGHT` dokumentiert jetzt auch die Bilddaten** – und zwar einschließlich dessen, was *nicht* bekannt ist. Die Datei führte bislang 18 Einträge, allesamt Code, während rund 700 Bilddateien und 1306 base64-eingebettete Bilder ohne jede Angabe mitgingen. Der neue Abschnitt ist ein Statusbericht, keine Unbedenklichkeitserklärung.
+
+  Beim Zusammentragen stellte sich heraus, dass **die Lage deutlich besser ist als der erste Befund vermuten ließ** – ich hatte die vorhandene Dokumentation unterschätzt. Die 35 Figurensätze tragen alle einen GPL-Kopf von Gregor Cramer, und 20 davon nennen die Schriftvorlage, der sie folgen (Marroquin, Bentzen, Burnett, Brown, Leschemelle, Scott, Poisson). Der Über-Dialog würdigt Brett-Designs, Flaggen, Figurensätze und Schriften mit Namen und Quell-URL. Schriftdateien werden gar keine ausgeliefert.
+
+  **Wirklich undokumentiert sind vier Blöcke:** die Texturen (287 Dateien, 22 MB – der größte und am schlechtesten belegte Posten), die rund 1300 Oberflächensymbole (kein Gestalter genannt; die Überschrift „Icon design" ist definiert, wird aber nie gerendert), die dekorativen „Motive"-Bilder und die Mauszeiger. Dazu der ungelöste Widerspruch bei den Flaggen: `tcl/flags/readme` nennt `addgadget.com` plus vierzehn „found in the internet" und sechs selbst erstellte, der Dialog dagegen famfamfam – **eine der beiden Angaben ist falsch**, und die Flaggen liegen doppelt vor (Dateien *und* eingebettet in `countries.tcl`).
+
+  Festgehalten ist außerdem, **wo die Bilddaten überhaupt liegen**: sieben Verzeichnisse als Dateien, dazu 1306 eingebettete in 47 Tcl-Dateien, die in keinem Dateisuchlauf auftauchen – genau der Grund, warum der Logotausch dreimal nachfassen musste. Alle Zahlen im Text sind nachgezählt, nicht geschätzt.
+
+  Die Datei wird als `usr/share/scidc-beta/licenses/scidc-COPYRIGHT.txt` mit ausgeliefert, der Statusbericht liegt also im AppImage.
+
 - **b5** – **Die letzte eigene Kopie des alten Logos: das Normalschach-Symbol.** In b4 hatte ich fünf `::icon::NNxNN::logo`-Blöcke ersetzt und angenommen, `variant(Normal)` hänge überall als Alias daran. In **22×22 ist es aber eine eigene eingebettete Fassung** — und genau die nutzt `makeToolbarIcon`, das für die Werkzeugleiste die Größen 22, 16 und 32 heranzieht. Im Datenbankmodul blieb deshalb das alte Motiv stehen.
 
   Statt weiter einzeln zu suchen, habe ich die Struktur **aus dem Code heraus** ausgewertet statt aus den Pixeln: je Größen-Namensraum aufgelistet, was `logo`, `sci` und `variant(Normal)` sind — eigene Kopie oder Alias. Ergebnis: sechs eigene Kopien, alles andere hängt daran. Ein erster Versuch über Bilderkennung (dunkle *und* blaue Anteile) hatte 50 Fehlalarme geliefert — Flaggen und Eröffnungssymbole haben beides auch.
