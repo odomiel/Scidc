@@ -2933,7 +2933,7 @@ proc CheckFields {top title fields} {
 				if {![$top.$field valid?]} {
 					set msg [format $mc::Field [set [${top}.${field}-l cget -textvar]]]
 					append msg [format $mc::InvalidEntry $Priv($field)]
-					set msg [MakeMessage $top $tagName $mc::InvalidEventDate $field]
+					set msg [MakeMessage $top $tagName $msg $field]
 					::dialog::error -parent $top -message $msg -title $title
 					$top.$field selection clear
 					$top.$field selection range 0 end
@@ -2986,7 +2986,7 @@ proc CheckFields {top title fields} {
 					if {![$top.$field valid?]} {
 						set msg [format $mc::Field [set [${top}.${field}-l cget -textvar]]]
 						append msg [format $mc::InvalidEntry $value]
-						set msg [MakeMessage $top $tagName $mc::InvalidEventDate $field]
+						set msg [MakeMessage $top $tagName $msg $field]
 						::dialog::error -parent $top -message $msg -title $title
 						$top.$field selection clear
 						$top.$field selection range 0 end
