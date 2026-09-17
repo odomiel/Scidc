@@ -9,37 +9,44 @@
 
        Randlose Fassung fuer die kleinen Groessen, wo jedes Pixel zaehlt.
        scidc-logo.svg ist die Fassung mit Rand.
+
+       Gestalterisch: ein Springer als *Figur*, nicht als Tierkopf --
+       gestufter Sockel, Halsring darueber, darauf Hals und Kopf. Die
+       Ruecklinie bleibt bewusst glatt und ohne Maehnenkerben: Kerben
+       saegen bei 16 Pixeln aus und machen die Silhouette unruhig.
        ================================================================== -->
 
   <!-- Kachel -->
   <rect x="0" y="0" width="128" height="128" rx="27" fill="#17497f"/>
 
-  <!-- angedeutete Brettreihe als Standflaeche -->
+  <!-- angedeutete Brettreihe hinter dem Sockel -->
   <g fill="#ffffff" fill-opacity="0.16">
-    <rect x="16" y="97" width="24" height="13"/>
-    <rect x="64" y="97" width="24" height="13"/>
+    <rect x="14" y="100" width="24" height="16"/>
+    <rect x="62" y="100" width="24" height="16"/>
   </g>
 
-  <!-- Sockel -->
-  <path fill="#ffffff" d="M 32 112 L 102 112 L 99 101 L 37 101 Z"/>
+  <!-- Sockel: untere Platte -->
+  <path fill="#ffffff" d="M 24 116 L 104 116 L 100 105 L 28 105 Z"/>
+  <!-- Sockel: Ring darueber -->
+  <path fill="#ffffff" d="M 34 105 L 94 105 L 90 96 L 38 96 Z"/>
 
-  <!-- Springer: Brust, Schnauze, Stirn, Ohren, Maehne -->
+  <!-- Figur: Brust, Kehle, Schnauze, Stirn, Ohren, Ruecken -->
   <path fill="#ffffff" d="
-    M 45 101
-    C 44 86 48 78 57 73
-    C 47 75 37 72 30 66
-    C 26 63 25 59 28 56
-    L 41 47
-    C 49 34 61 26 73 23
-    L 71 10
-    L 83 20
-    L 94 12
-    L 94 31
-    C 99 44 98 59 93 72
-    C 89 83 87 92 88 101
+    M 44 96
+    C 42 82 45 71 52 65
+    C 43 66 34 63 27 57
+    C 23 54 23 49 28 46
+    L 42 38
+    C 48 29 56 23 65 20
+    L 64 8
+    L 75 18
+    L 84 7
+    L 89 25
+    C 96 36 98 50 95 64
+    C 92 78 89 88 90 96
     Z"/>
 
   <!-- Auge und Maul -->
-  <circle cx="71" cy="35" r="3.6" fill="#17497f"/>
-  <path d="M 42 58 L 30 61" stroke="#17497f" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="69" cy="32" r="3.8" fill="#17497f"/>
+  <path d="M 36 52 L 27 53" stroke="#17497f" stroke-width="5" stroke-linecap="round" fill="none"/>
 </svg>
