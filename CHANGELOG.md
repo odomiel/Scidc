@@ -8,6 +8,14 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.17
 
+- **b7** – **Der Widerspruch bei den Flaggen war keiner.** `tcl/flags/readme` nannte `addgadget.com`, der Über-Dialog famfamfam — beide hatten recht, sie beschreiben **verschiedene Sätze**. Aufgefallen ist es an den Maßen: die Dateien in `tcl/flags/` sind **72×72** und nach IOC-Codes benannt, der famfamfam-Satz dagegen 16×11 nach ISO-Codes. Genau 16×11 haben die **eingebetteten** Flaggen in `tcl/utils/countries.tcl`.
+
+  **Nachgewiesen statt vermutet:** famfamfam.com existiert nicht mehr, aber über einen Spiegel ließen sich fünf Flaggen (de, fr, it, jp, us) herunterladen — alle fünf sind **byteweise identisch** mit unseren eingebetteten. Die Lizenz des Satzes lautet: *„These icons are public domain, and as such are free for any use (attribution appreciated but not required)."* Die erbetene Nennung leistet der Über-Dialog mit Mark James bereits.
+
+  Dabei kam eine **dritte** Quelle zum Vorschein, die ich vorher übersehen hatte: `countries.tcl` ist durch Kommentarmarken in Abschnitte geteilt — 34 Flaggen ohne Quellenangabe, **248 von famfamfam**, und **156 von iconfinder.com**. Letzteres ist eine Sammelseite mit unterschiedlichen Bedingungen je Satz; die Nennung allein sagt also nichts über die Lizenz.
+
+  Stand danach: von den Flaggen sind **248 geklärt** (gemeinfrei, belegt), 156 + 34 eingebettete und die 289 Dateien aus `tcl/flags/` bleiben offen. `COPYRIGHT` führt das jetzt so auf, samt der Feststellung, dass `addgadget.com` nicht mehr existiert.
+
 - *(ohne Versionserhöhung)* `release.sh`: **Wettlauf mit dem Mirror behoben.** Beim Veröffentlichen von b6 meldete Schritt 5 „Mirror-Abgleich nicht anstossbar (HTTP 500)". Ursache: seit der Mirror auf `sync_on_commit` steht, schiebt Forgejo den Tag schon beim Push aus Schritt 1 nach GitHub. Der danach zusätzlich angestoßene Abgleich versuchte denselben Tag ein zweites Mal — GitHub wies ihn ab („reference already exists"), und Forgejo vermerkte einen **fehlgeschlagenen Abgleich**. Für die Veröffentlichung folgenlos, aber der Fehlereintrag hätte später ein echtes Problem verdeckt. Schritt 5 sieht jetzt erst nach, ob der Tag drüben schon da ist, und stößt nur dann einen Abgleich an, wenn nicht.
 
 - **b6** – **`COPYRIGHT` dokumentiert jetzt auch die Bilddaten** – und zwar einschließlich dessen, was *nicht* bekannt ist. Die Datei führte bislang 18 Einträge, allesamt Code, während rund 700 Bilddateien und 1306 base64-eingebettete Bilder ohne jede Angabe mitgingen. Der neue Abschnitt ist ein Statusbericht, keine Unbedenklichkeitserklärung.

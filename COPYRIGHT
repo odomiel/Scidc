@@ -121,9 +121,13 @@ Poisson). The remaining 15 name no source.
 ** Board themes
 Credited in the About dialog to Jose Carlos Martins and Gregor Cramer.
 
-** Country flags
-Credited in the About dialog to Mark James (famfamfam.com, public domain)
-and Gregor Cramer. See the contradiction noted below.
+** Country flags -- user interface set, 248 of them
+Embedded in tcl/utils/countries.tcl between the markers at line 1101 and
+line 4297, which name famfamfam.com as the source. Verified: five of them
+(de, fr, it, jp, us) are byte-for-byte identical to the famfamfam set. That
+set states: "These icons are public domain, and as such are free for any use
+(attribution appreciated but not required)." The About dialog credits Mark
+James, so the appreciated attribution is given.
 
 Not documented
 --------------
@@ -145,16 +149,25 @@ and "Adobe ImageReady".
 ** Mouse cursors (tcl/cursor/)
 No statement of origin.
 
-Contradiction to resolve
-------------------------
-tcl/flags/readme says the flags were "downloaded from
-http://addgadget.com/clock/", with fourteen more "found in the internet"
-and six drawn by the author. The About dialog credits the same category to
-Mark James / famfamfam, whose flag set is public domain. One of the two is
-wrong. If it is famfamfam, the flags are clear; if it is addgadget, their
-status is unknown. The flags exist twice over -- as files in tcl/flags/ and
-embedded in tcl/utils/countries.tcl -- so a replacement would have to touch
-both.
+Country flags -- the rest
+-------------------------
+What looked like a contradiction turned out to be two different sets. Both
+statements were right, about different files.
+
+** tcl/flags/ -- 289 files, 72x72, named by IOC country codes
+tcl/flags/readme says the set was "downloaded from
+http://addgadget.com/clock/", with fourteen more "found in the internet" and
+six drawn by the author (AIR, EAZ, GDR, KOS, UNK, ZZX). No licence is
+stated for the downloaded ones, and addgadget.com no longer exists. Status
+unknown. Installed into share/flags by tcl/Makefile.
+
+** tcl/utils/countries.tcl -- 156 flags from iconfinder.com
+The section after line 4297 names http://www.iconfinder.com as the source.
+That site aggregates icon sets under differing terms, so naming it does not
+by itself say what applies. Status unknown.
+
+** tcl/utils/countries.tcl -- 34 flags before line 1101
+No source marker. Status unknown.
 
 Resolved
 --------
