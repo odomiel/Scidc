@@ -724,24 +724,62 @@ Codec::doOpenProgressive(mstl::string const& rootname, mstl::string const& encod
 	mstl::string gameFilename(rootname + m_extGame);
 	mstl::string namebaseFilename(rootname + m_extNamebase);
 
-	mstl::fstream namebaseStream;
-
 	m_progressiveStream.reset(new mstl::fstream);
 	m_gameStream.set_unbuffered();
 
-	openFile(m_gameStream, gameFilename, Readonly);
-	openFile(*m_progressiveStream, indexFilename, MagicIndexFile, Readonly);
-	openFile(namebaseStream, namebaseFilename, MagicNamebase, Readonly);
+	unsigned				numGames;
+	::util::Progress	progress;
 
-	unsigned numGames;
+	if (m_isVersion5)
+	{
+		// si5 fuehrt weder Magic in Index- und Namensdatei noch einen
+		// Index-Kopf, und seine Namensbasis hat ein eigenes Format. Von den
+		// vier Oeffnungswegen war dieser der einzige, der beim Nachruesten
+		// von si5 keinen eigenen Zweig bekam. Ein Import aus einer
+		// .si5-Datei scheiterte deshalb schon hier, und weil der Aufrufer
+		// (tcl_database.cpp, cmdImport) mit catch(...) abfaengt, blieb davon
+		// nur "cannot open file" uebrig.
+		openFile(m_gameStream, gameFilename, Readonly);
+		openFile(*m_progressiveStream, indexFilename, Readonly);
+		readNamebasesSi5(namebaseFilename, progress);
 
-	readIndexHeader(*m_progressiveStream, &numGames);
-	m_roundLookup.resize(numGames);
+		// Ohne Kopf ergibt sich die Partienzahl aus der Dateigroesse --
+		// dieselbe Rechnung wie in decodeIndex().
+		long fileSize = m_progressiveStream->size();
+		numGames = fileSize > 0 ? unsigned(fileSize/m_indexEntrySize) : 0;
 
-	::util::Progress progress;
-	readNamebases(namebaseStream, progress);
-	namebaseStream.close();
-	m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
+		// Was sonst der Index-Kopf liefert, wird hier gesetzt (wie readIndex).
+		setVariant(variant::Normal);
+		setType(type::Unspecific);
+		m_roundLookup.resize(numGames);
+
+		// Im progressiven Betrieb haelt die Info-Liste genau *einen* Eintrag,
+		// den readIndexProgressive fuer jede Partie neu beschreibt (der
+		// Aufrufer in Database::exportGames arbeitet dann mit infoIndex 0).
+		// readIndexHeader erledigt das sonst mit
+		// "infoList.resize(retNumGames ? 1 : numGames)"; ohne Kopf muss es
+		// hier stehen, sonst bleibt die Liste leer und gameInfo(0) bricht mit
+		// "index < gameInfoList().size()" ab.
+		gameInfoList().resize(1);
+
+		m_gameData.reset(new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength));
+	}
+	else
+	{
+		mstl::fstream namebaseStream;
+
+		openFile(m_gameStream, gameFilename, Readonly);
+		openFile(*m_progressiveStream, indexFilename, MagicIndexFile, Readonly);
+		openFile(namebaseStream, namebaseFilename, MagicNamebase, Readonly);
+
+		readIndexHeader(*m_progressiveStream, &numGames);
+		m_roundLookup.resize(numGames);
+
+		readNamebases(namebaseStream, progress);
+		namebaseStream.close();
+		m_gameData.reset(
+			new BlockFile(&m_gameStream, m_blockSize, BlockFile::RequireLength, m_magicGameFile));
+	}
 
 	return numGames;
 }
@@ -1304,7 +1342,11 @@ Codec::readIndexProgressive(unsigned index)
 
 	char buf[MaxIndexEntrySize];
 
-	if (!m_progressiveStream->seekg(index*m_indexEntrySize + m_headerSize + 8, mstl::ios_base::beg))
+	// si5 hat keinen Index-Kopf, der Versatz entfaellt dort. writeIndexEntry
+	// und updateIndex rechnen bereits so; hier fehlte es.
+	unsigned offset = index*m_indexEntrySize + (m_isVersion5 ? 0u : m_headerSize + 8u);
+
+	if (!m_progressiveStream->seekg(offset, mstl::ios_base::beg))
 		IO_RAISE(Index, Corrupted, "seek failed");
 
 	if (__builtin_expect(!m_progressiveStream->read(buf, m_indexEntrySize), 0))

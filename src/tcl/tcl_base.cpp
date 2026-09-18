@@ -42,6 +42,8 @@
 #include <tcl.h>
 
 #include <stdarg.h>
+#include <cstdio>
+#include <cstring>
 #include <cstdlib>
 #include <setjmp.h>
 #include <cctype>
@@ -534,8 +536,40 @@ tcl::usage(	char const* cmd, char const* subcmd, char const* subsubcmd,
 void
 tcl::appendResult(char const* format, ...)
 {
-	va_list args;
+	// Tcl_ObjPrintf() ist variadisch und nimmt keine va_list entgegen. Der
+	// frueher hier stehende Aufruf Tcl_ObjPrintf(format, args) reichte
+	// deshalb die va_list-Struktur selbst als erstes Formatargument weiter:
+	// jedes "%s" las daraus das gp_offset-Feld als Zeichenkette, also ein
+	// einzelnes Byte 0x08. Aus "unsupported extension '%s'" wurde dadurch
+	// "unsupported extension '\b'" -- die Meldung nannte nie den Wert, um
+	// den es ging. Das betraf jede formatierte Meldung der Bruecke.
+	//
+	// Es gibt keine oeffentliche va_list-Fassung von Tcl_ObjPrintf, also
+	// wird selbst formatiert und das Ergebnis als fertige Zeichenkette
+	// uebergeben. Der Stapelpuffer deckt alle vorkommenden Meldungen ab;
+	// laengere weichen auf den Heap aus, statt abgeschnitten zu werden.
+	char		stackBuf[512];
+	char*		buf = stackBuf;
+	va_list	args;
+	va_list	copy;
+
 	va_start(args, format);
+	va_copy(copy, args);
+	int len = ::vsnprintf(stackBuf, sizeof(stackBuf), format, copy);
+	va_end(copy);
+
+	if (len < 0)			// Formatfehler: lieber die rohe Vorlage als nichts
+	{
+		buf = const_cast<char*>(format);
+		len = ::strlen(format);
+	}
+	else if (len >= int(sizeof(stackBuf)))
+	{
+		buf = new char[len + 1];
+		::vsnprintf(buf, len + 1, format, args);
+	}
+
+	va_end(args);
 
 	Tcl_Obj* current = Tcl_GetObjResult(interp());
 	if (current == nullptr)
@@ -543,13 +577,15 @@ tcl::appendResult(char const* format, ...)
 	else
 		tcl::incrRef(current);
 
-	Tcl_Obj* newPart = Tcl_ObjPrintf(format, args);
-	va_end(args);
+	Tcl_Obj* newPart = Tcl_NewStringObj(buf, len);
 
 	Tcl_Obj* combined = Tcl_DuplicateObj(current);
 	Tcl_AppendObjToObj(combined, newPart);
 	tcl::setResult(combined);
 	tcl::decrRef(current);
+
+	if (buf != stackBuf && buf != format)
+		delete [] buf;
 }
 
 

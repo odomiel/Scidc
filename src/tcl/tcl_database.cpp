@@ -1024,13 +1024,20 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	char const*		option		= stringFromObj(objc, objv, objc - 2);
 	bool				includeIllegalGames = false;
 
-	if (*option == '-')
+	// Zwei Fehler steckten hier: die Schleife war ein "if", wertete also nur
+	// das *letzte* Optionspaar aus -- Tcl uebergibt aber stets beide
+	// (-encoding ... -illegal ...), womit -encoding wirkungslos blieb. Und
+	// dem zweiten "if" fehlte das "else": bei -encoding schlug die
+	// -illegal-Pruefung fehl und der else-Zweig meldete "unexpected option
+	// '-encoding'". Allein die Reihenfolge in import.tcl verdeckte das.
+	// Die Schranke objc >= 9 haelt die sieben Pflichtargumente frei.
+	while (objc >= 9 && *option == '-')
 	{
 		if (::strcmp(option, "-encoding") == 0)
 		{
 			encoding = stringFromObj(objc, objv, objc - 1);
 		}
-		if (::strcmp(option, "-illegal") == 0)
+		else if (::strcmp(option, "-illegal") == 0)
 		{
 			includeIllegalGames = boolFromObj(objc, objv, objc - 1);
 		}
@@ -1041,6 +1048,7 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 		}
 
 		objc -= 2;
+		option = stringFromObj(objc, objv, objc - 2);
 	}
 
 	if (objc < 7)
@@ -1055,7 +1063,9 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 	Progress			progress(objv[5], objv[6]);
 	unsigned			count = 0;
 
-	if (ext == "sci" || ext == "si3" || ext == "si4")
+	// si5 fehlte hier: ein Import aus einer .si5-Datei fiel bis zum
+	// "unsupported extension"-Zweig durch, obwohl SI5 lesbar ist.
+	if (ext == "sci" || ext == "si3" || ext == "si4" || ext == "si5")
 	{
 		unsigned accepted[variant::NumberOfVariants];
 		unsigned rejected[variant::NumberOfVariants];
@@ -1065,7 +1075,26 @@ cmdImport(ClientData, Tcl_Interp* ti, int objc, Tcl_Obj* const objv[])
 
 		tcl::Log log(objv[3], objv[4]);
 		unsigned illegalRejected = 0;
-		unsigned* illegalPtr = includeIllegalGames ? nullptr : &illegalRejected;
+
+		// Ohne Zaehler exportiert Database::exportGames *alles*, auch Partien
+		// mit illegalen Zuegen -- genau das meint "-illegal 1". Die
+		// Scid-Formate koennen illegale Zuege aber gar nicht darstellen,
+		// weshalb Database::importGames/copyGames fuer ein Scid-Ziel den
+		// Zaehler zur Vorbedingung machen. Wurde er dort weggelassen, brach
+		// der Import mit "precondition violation: illegalRejected ||
+		// !isScidFormat(format())" ab. Bei einem Scid-Ziel wird der Wunsch
+		// also uebergangen: aussortieren und zaehlen ist die einzig
+		// moegliche Behandlung.
+		// Im Zweifel wird der Zaehler uebergeben: ist das Ziel (noch) nicht
+		// geoeffnet, faellt der Import ohnehin weiter unten mit einer
+		// sprechenden Meldung aus, und ein vorgezogener Zugriff auf
+		// multiBase(dst) wuerde sie durch einen leeren Fehler ersetzen.
+		bool dropCounter = false;
+
+		if (includeIllegalGames && scidb->contains(dst))
+			dropCounter = !format::isScidFormat(scidb->multiBase(dst).sourceFormat());
+
+		unsigned* illegalPtr = dropCounter ? nullptr : &illegalRejected;
 
 		if (scidb->contains(src))
 		{
