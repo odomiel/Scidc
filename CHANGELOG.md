@@ -8,6 +8,18 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.18
 
+- **b4** – **AppImage meldet jetzt selbst, wo es Aktualisierungen gibt.** Gear Lever fand keine – aus drei voneinander unabhängigen Gründen, alle am installierten Paket und an der GitHub-Schnittstelle nachgemessen:
+
+  1. Der ELF-Abschnitt **`.upd_info` war leer**. Gear Lever liest ausschließlich diesen Abschnitt oder eine von Hand eingetragene Quelle (`UpdateManagerChecker.check_app_embedded_url` ruft dafür `readelf --string-dump=.upd_info` auf). Am Dateinamen oder an der Dateigröße erkennt es nichts. Ohne den Abschnitt gibt es schlicht keine Quelle.
+  2. **`/releases/latest` antwortet mit „Not Found"**, weil hier jedes Release als Vorabversion veröffentlicht wird – es sind Betas. Genau diese Adresse fragt ein Verwalter beim Standardfeld `latest` ab, und sie lässt Vorabversionen aus. Deshalb steht im eingebetteten Text **`latest-pre`** statt `latest`: dann listet Gear Lever alle Releases auf und nimmt die neueste (`GithubUpdater.does_allow_prereleases`). Das ist eine Erweiterung von Gear Lever, keine AppImage-Spezifikation – verloren geht dadurch nichts, denn mit durchweg als Vorabversion markierten Releases fände auch das spezifikationstreue `latest` nichts.
+  3. Es gab **keinen `.zsync`-Anhang**. Der eingebettete Suchausdruck endet darauf, der Verwalter sucht in den Anhängen danach, streicht die Endung und lädt das so benannte AppImage. Ohne diesen Anhang findet er nichts – auch wenn das AppImage selbst im Release liegt.
+
+  `build-appimage.sh` ruft `appimagetool` nun mit `-u` auf; `zsyncmake` dafür liegt im appimagetool-Bundle und muss nicht im System stehen. Über `APPIMAGE_UPDATE_INFO` lässt sich der Text überschreiben, mit leerem Wert das Einbetten abschalten. `release.sh` lädt die erzeugte `.zsync` als zweiten Anhang hoch – auf **beiden** Seiten, mit derselben `--force`-Behandlung wie beim AppImage; fehlt sie (ältere Stände), läuft das Skript weiter und meldet es.
+
+  **Was das für bereits installierte Kopien heißt:** Gear Lever liest `.upd_info` aus der *installierten* Datei. Ein vor b4 installierter Stand bleibt deshalb ohne Quelle – er muss einmal von Hand durch b4 ersetzt werden (oder die Quelle einmalig in Gear Levers Update-Einstellungen eingetragen: Github, `odomiel/Scidc`, Muster `Scidc-*-x86_64.AppImage`, Haken bei den Vorabversionen). Ab b4 geht es von allein.
+
+  **Nebenbei geklärt:** b2 und b3 waren auf das Byte gleich groß (33 408 192). Das ist kein Fehler und war auch nicht der Grund für die ausbleibende Aktualisierung – squashfs füllt das Abbild auf ein Vielfaches von 4 KiB auf, und beide Stände lagen im selben Block (Nutzdaten 33 210 934 gegenüber 33 211 922 Bytes).
+
 - **b3** – **Import in eine Scid-Datenbank war auf zwei Wegen unmöglich** – aus den beiden Protokollen in `fehler/`. Beide Male ging es um dieselbe Zieldatei `persDatenbank_02042023.si5`.
 
   **`.sci` → `.si5` brach hart ab:** `precondition violation: illegalRejected || !isScidFormat(format())` (`db_database.cpp:1696`). `import.tcl` setzt `-illegal 1` (mit einem `# TODO`, das Ankreuzfeld gibt es nie gegeben), und `cmdImport` machte daraus `illegalPtr = nullptr`. Ohne Zähler exportiert `Database::exportGames` aber *alles*, auch Partien mit illegalen Zügen – und genau die können die Scid-Formate nicht darstellen, weshalb `importGames`/`copyGames` für ein Scid-Ziel den Zähler zur Vorbedingung machen. Bei einem Scid-Ziel wird der Wunsch jetzt übergangen: aussortieren und zählen ist dort die einzig mögliche Behandlung. Steht das Ziel noch nicht offen, wird der Zähler vorsichtshalber ebenfalls übergeben.

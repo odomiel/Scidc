@@ -11,6 +11,8 @@ src/cbh2si4
 build.log
 Scidb-x86_64.AppImage
 Scidc-*.AppImage
+# von "appimagetool -u" neben dem AppImage erzeugt (Anker der Update-Pruefung)
+Scidc-*.AppImage.zsync
 appimagetool-x86_64.AppImage
 AppDir/
 

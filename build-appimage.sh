@@ -259,7 +259,30 @@ else
     OUTNAME="Scidc-${ARCH}.AppImage"
 fi
 
-ARCH="$ARCH" "$TOOL" "$APPDIR" "$OUTNAME"
+# Update-Information einbetten (ELF-Abschnitt .upd_info). Ohne sie findet ein
+# AppImage-Verwalter wie Gear Lever keine Aktualisierung: er liest ausschliess-
+# lich diesen Abschnitt oder eine von Hand eingetragene Quelle -- am Dateinamen
+# oder an der Groesse erkennt er nichts.
+#
+# Das Feld "latest-pre" statt "latest" ist Absicht. Die AppImage-Spezifikation
+# kennt nur "latest", und danach fragt ein Verwalter die GitHub-Schnittstelle
+# /releases/latest -- die Vorabversionen *auslaesst*. Da hier jedes Release als
+# Vorabversion veroeffentlicht wird (es sind Betas), antwortet sie mit "Not
+# Found". "latest-pre" laesst Gear Lever stattdessen alle Releases auflisten
+# und die neueste nehmen.
+#
+# Die Adresse ist die des oeffentlichen Spiegels und muss im Paket stehen,
+# sonst weiss es nicht, wo es nachsehen soll. Ueberschreibbar, und mit
+# APPIMAGE_UPDATE_INFO="" laesst sich das Einbetten ganz abschalten.
+UPDATE_INFO="${APPIMAGE_UPDATE_INFO-gh-releases-zsync|odomiel|Scidc|latest-pre|Scidc-*-x86_64.AppImage.zsync}"
+
+if [ -n "$UPDATE_INFO" ]; then
+    # appimagetool erzeugt dabei zusaetzlich "$OUTNAME.zsync"; zsyncmake dafuer
+    # liegt im appimagetool-Bundle (usr/bin), muss also nicht im PATH stehen.
+    ARCH="$ARCH" "$TOOL" -u "$UPDATE_INFO" "$APPDIR" "$OUTNAME"
+else
+    ARCH="$ARCH" "$TOOL" "$APPDIR" "$OUTNAME"
+fi
 
 echo ""
 echo "=== Fertig! ==="

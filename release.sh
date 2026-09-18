@@ -130,6 +130,14 @@ SPACED="${FULL//-/ }"               # 26.08.02 b8 Beta
 BUILD="${BASE##*-}"                 # b8
 DATE="${BASE%-*}"                   # 26.08.02
 APPIMAGE="Scidc-${FULL}-x86_64.AppImage"
+# Die zsync-Datei erzeugt build-appimage.sh zusammen mit dem AppImage (via
+# "appimagetool -u"). Sie ist der Anker der Aktualisierungspruefung: der im
+# AppImage eingebettete Suchausdruck endet auf ".zsync", und ein Verwalter wie
+# Gear Lever sucht in den Anhaengen des Releases genau danach, streicht die
+# Endung und laedt das so benannte AppImage. Fehlt sie im Release, findet er
+# nichts -- auch wenn das AppImage selbst da ist. Optional: aeltere Staende
+# haben sie nicht, und ohne sie soll das Skript trotzdem durchlaufen.
+ZSYNC="${APPIMAGE}.zsync"
 if [ "$FULL" = "$BASE" ]; then RELEASE_NAME="Scidc $TAG"; else RELEASE_NAME="Scidc $TAG Beta"; fi
 
 echo "Version:  $FULL"
@@ -330,6 +338,24 @@ ASSET_ID=$(http_body "$RESP" | jq -r '.id')
 ASSET_URL=$(http_body "$RESP" | jq -r '.browser_download_url')
 echo "Hochgeladen (Anhang-ID $ASSET_ID)."
 
+if [ -f "$ZSYNC" ]; then
+	OLD_ID=$(api GET "/releases/$RELEASE_ID/assets" | http_body | \
+	         jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
+	if [ -n "$OLD_ID" ] && $FORCE; then
+		api DELETE "/releases/$RELEASE_ID/assets/$OLD_ID" >/dev/null
+		OLD_ID=""
+	fi
+	if [ -n "$OLD_ID" ]; then
+		fail "Anhang $ZSYNC existiert bereits (ID $OLD_ID) - mit --force ersetzen"
+	fi
+	RESP=$(api POST "/releases/$RELEASE_ID/assets?name=$ZSYNC" -F "attachment=@$ZSYNC")
+	[ "$(http_code "$RESP")" = "201" ] \
+		|| fail "Anhang $ZSYNC nicht hochgeladen (HTTP $(http_code "$RESP")): $(http_body "$RESP")"
+	echo "Hochgeladen (Anhang-ID $(http_body "$RESP" | jq -r '.id'), $ZSYNC)."
+else
+	echo "HINWEIS: $ZSYNC fehlt - Aktualisierungspruefung der Verwalter greift nicht."
+fi
+
 # --- Schritt 4: Gegenprobe ---------------------------------------------------
 # Ein Upload, der ankommt, sagt fuer sich genommen noch nicht, dass das
 # Richtige angekommen ist. Also zurueckladen, Pruefsumme vergleichen und die
@@ -440,6 +466,26 @@ if [ "$GITHUB" = "yes" ]; then
 	[ "$(http_code "$RESP")" = "201" ] || fail "Anhang nicht hochgeladen (HTTP $(http_code "$RESP")): $(http_body "$RESP")"
 	GH_ASSET_ID=$(http_body "$RESP" | jq -r '.id')
 	echo "Hochgeladen (Anhang-ID $GH_ASSET_ID)."
+
+	if [ -f "$ZSYNC" ]; then
+		GH_OLD_ID=$(gh_api GET "/repos/$GH_SLUG/releases/$GH_RELEASE_ID/assets" | http_body | \
+		            jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
+		if [ -n "$GH_OLD_ID" ] && $FORCE; then
+			gh_api DELETE "/repos/$GH_SLUG/releases/assets/$GH_OLD_ID" >/dev/null
+			GH_OLD_ID=""
+		fi
+		if [ -n "$GH_OLD_ID" ]; then
+			fail "Anhang $ZSYNC existiert auf GitHub bereits (ID $GH_OLD_ID) - mit --force ersetzen"
+		fi
+		RESP=$(curl -sS --config <(printf 'header = "Authorization: Bearer %s"\n' "$GH_TOKEN") \
+		            -H 'Accept: application/vnd.github+json' \
+		            -H 'Content-Type: application/octet-stream' \
+		            -X POST -w '\n%{http_code}' --data-binary "@$ZSYNC" \
+		            "https://uploads.github.com/repos/$GH_SLUG/releases/$GH_RELEASE_ID/assets?name=$ZSYNC")
+		[ "$(http_code "$RESP")" = "201" ] \
+			|| fail "Anhang $ZSYNC nicht hochgeladen (HTTP $(http_code "$RESP")): $(http_body "$RESP")"
+		echo "Hochgeladen (Anhang-ID $(http_body "$RESP" | jq -r '.id'), $ZSYNC)."
+	fi
 
 	# Gegenprobe wie bei Forgejo: zurueckladen und die Pruefsumme vergleichen.
 	# Der Programmstart aus Schritt 4 wird nicht wiederholt -- es ist dieselbe
