@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.09.18 b4 Beta"
+	set version "26.09.18 b5 Beta"
 }
 
 
@@ -49550,7 +49550,15 @@ proc ConfigureColumn {table id args} {
 		}
 	}
 
-	if {$opts(-minwidth) == $opts(-maxwidth)} { set resizable no } else { set resizable yes }
+	#
+	#
+	if {$opts(-maxwidth) > 0 && $opts(-minwidth) == $opts(-maxwidth)} {
+		set resizable no
+	} elseif {$opts(-minwidth) == 0 && $opts(-maxwidth) == 0 && [string match {*px} $opts(-width)]} {
+		set resizable no
+	} else {
+		set resizable yes
+	}
 	if {$opts(-maxwidth) <= 0} { set maxwidth {} } else { set maxwidth $opts(-maxwidth) }
 	set opts(-pixels) [string match {*px} $opts(-width)]
 	if {$opts(-pixels)} {

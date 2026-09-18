@@ -8,6 +8,18 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.18
 
+- **b5** – **Elo-Spalten in der Partienliste ließen sich nicht verbreitern** – und mit ihnen fünf weitere. `tcl/widgets/table.tcl` entschied über die Ziehbarkeit einer Spalte mit einer Zeile:
+
+  ```tcl
+  if {$opts(-minwidth) == $opts(-maxwidth)} { set resizable no } else { set resizable yes }
+  ```
+
+  Das Paar `(0, 0)` heißt in den Spaltentabellen aber **„keine Schranken"**, nicht „feste Breite" – die Zeile direkt darunter liest `maxwidth <= 0` ausdrücklich als unbegrenzt. So deklarierte Spalten wurden trotzdem als fest eingestuft, bekamen `-resize no`, und ein Zweig weiter unten zog zusätzlich `minwidth` auf die Breite hoch: sie waren exakt festgenagelt. Am laufenden Programm gemessen hatte `whiteRating1` `-resize 0` bei `-width 42` und `-minwidth 48`.
+
+  Betroffen waren in `gametable.tcl` alle ohne Grenzen deklarierten **Textspalten**: beide Elo-Spalten je Farbe, die Wertungsart, Titel, FIDE-ID, IDN und Stellung. Fest bleibt eine Spalte jetzt nur noch, wenn eine echte Obergrenze angegeben ist und mit der Untergrenze zusammenfällt (`result` mit 5/5), oder wenn die Breite in **Pixeln** steht und keine Schranken gesetzt sind – das sind durchweg die Symbolspalten (14px/18px/30px: Geschlecht, Typ, Kennzeichen, Beendigungsart …), bei denen eine Breitenänderung nichts zu zeigen hätte.
+
+  **Geprüft am laufenden Programm**, vorher/nachher über `column cget`: die sechs Textspalten stehen nun auf `-resize 1` mit `-minwidth 0`, und `whiteRating1` nimmt eine Breite von 30 an, die die frühere Untergrenze von 48 hochgeklemmt hätte. `result`, `whiteType`, `whiteSex` und `deleted` behalten `-resize 0`; `flags`, `number`, `whiteCountry` und `white` sind unverändert ziehbar. Die Spielerliste zeigt weiterhin 9 von 12 Spalten ziehbar. **Nicht geprüft:** ein tatsächlicher Mausvorgang an der Spaltenkante – nachgewiesen ist der Optionszustand, den TkTreeCtrl für den Ziehgriff auswertet.
+
 - *(ohne Versionserhöhung)* `release.sh`: der neue zsync-Upload rief `http_body` als Pipe auf statt mit Argument (`http_body() { sed '$d' <<<"$1"; }`) – der erste Lauf brach nach dem AppImage-Anhang mit „`$1` ist nicht gesetzt" ab. Beide Stellen holen die Antwort jetzt wie der übrige Code erst in `RESP`. Das Release **b4** wurde danach mit `--force` vervollständigt.
 
 - **b4** – **AppImage meldet jetzt selbst, wo es Aktualisierungen gibt.** Gear Lever fand keine – aus drei voneinander unabhängigen Gründen, alle am installierten Paket und an der GitHub-Schnittstelle nachgemessen:

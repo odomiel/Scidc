@@ -1247,7 +1247,30 @@ proc ConfigureColumn {table id args} {
 		}
 	}
 
-	if {$opts(-minwidth) == $opts(-maxwidth)} { set resizable no } else { set resizable yes }
+	# Ob der Benutzer die Spaltenkante ziehen darf.
+	#
+	# Frueher stand hier schlicht "minwidth == maxwidth -> nicht ziehbar".
+	# Das Paar (0, 0) heisst aber "keine Schranken", nicht "feste Breite" --
+	# die Zeile direkt darunter liest maxwidth <= 0 ausdruecklich als
+	# unbegrenzt. Damit waren in der Partienliste alle Spalten eingefroren,
+	# die ohne Grenzen deklariert sind: beide Elo-Spalten, die Wertungsart,
+	# Titel, FIDE-ID, IDN und Stellung. Zusaetzlich zog der Zweig weiter
+	# unten minwidth auf die Breite hoch, sodass sie exakt festgenagelt waren.
+	#
+	# Fest ist eine Spalte in zwei Faellen:
+	#   - eine echte Obergrenze ist angegeben und faellt mit der Untergrenze
+	#     zusammen (z.B. result mit 5/5),
+	#   - die Breite steht in Pixeln und es gibt keine Schranken. Das sind
+	#     durchweg die Symbolspalten (14px/18px/30px: Geschlecht, Typ,
+	#     Kennzeichen, Beendigungsart ...), bei denen eine Breitenaenderung
+	#     nichts zu zeigen haette.
+	if {$opts(-maxwidth) > 0 && $opts(-minwidth) == $opts(-maxwidth)} {
+		set resizable no
+	} elseif {$opts(-minwidth) == 0 && $opts(-maxwidth) == 0 && [string match {*px} $opts(-width)]} {
+		set resizable no
+	} else {
+		set resizable yes
+	}
 	if {$opts(-maxwidth) <= 0} { set maxwidth {} } else { set maxwidth $opts(-maxwidth) }
 	set opts(-pixels) [string match {*px} $opts(-width)]
 	if {$opts(-pixels)} {
