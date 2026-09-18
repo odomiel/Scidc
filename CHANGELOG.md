@@ -8,6 +8,8 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.18
 
+- *(ohne Versionserhöhung)* `release.sh`: der neue zsync-Upload rief `http_body` als Pipe auf statt mit Argument (`http_body() { sed '$d' <<<"$1"; }`) – der erste Lauf brach nach dem AppImage-Anhang mit „`$1` ist nicht gesetzt" ab. Beide Stellen holen die Antwort jetzt wie der übrige Code erst in `RESP`. Das Release **b4** wurde danach mit `--force` vervollständigt.
+
 - **b4** – **AppImage meldet jetzt selbst, wo es Aktualisierungen gibt.** Gear Lever fand keine – aus drei voneinander unabhängigen Gründen, alle am installierten Paket und an der GitHub-Schnittstelle nachgemessen:
 
   1. Der ELF-Abschnitt **`.upd_info` war leer**. Gear Lever liest ausschließlich diesen Abschnitt oder eine von Hand eingetragene Quelle (`UpdateManagerChecker.check_app_embedded_url` ruft dafür `readelf --string-dump=.upd_info` auf). Am Dateinamen oder an der Dateigröße erkennt es nichts. Ohne den Abschnitt gibt es schlicht keine Quelle.

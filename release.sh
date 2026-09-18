@@ -339,8 +339,8 @@ ASSET_URL=$(http_body "$RESP" | jq -r '.browser_download_url')
 echo "Hochgeladen (Anhang-ID $ASSET_ID)."
 
 if [ -f "$ZSYNC" ]; then
-	OLD_ID=$(api GET "/releases/$RELEASE_ID/assets" | http_body | \
-	         jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
+	RESP=$(api GET "/releases/$RELEASE_ID/assets")
+	OLD_ID=$(http_body "$RESP" | jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
 	if [ -n "$OLD_ID" ] && $FORCE; then
 		api DELETE "/releases/$RELEASE_ID/assets/$OLD_ID" >/dev/null
 		OLD_ID=""
@@ -468,8 +468,8 @@ if [ "$GITHUB" = "yes" ]; then
 	echo "Hochgeladen (Anhang-ID $GH_ASSET_ID)."
 
 	if [ -f "$ZSYNC" ]; then
-		GH_OLD_ID=$(gh_api GET "/repos/$GH_SLUG/releases/$GH_RELEASE_ID/assets" | http_body | \
-		            jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
+		RESP=$(gh_api GET "/repos/$GH_SLUG/releases/$GH_RELEASE_ID/assets")
+		GH_OLD_ID=$(http_body "$RESP" | jq -r --arg n "$ZSYNC" '.[] | select(.name==$n) | .id' | head -1)
 		if [ -n "$GH_OLD_ID" ] && $FORCE; then
 			gh_api DELETE "/repos/$GH_SLUG/releases/assets/$GH_OLD_ID" >/dev/null
 			GH_OLD_ID=""
