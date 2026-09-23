@@ -394,6 +394,10 @@ Decoder::decodeMainline(ByteStream& moves, uint16_t* line, unsigned length, Boar
 void
 Decoder::prepareDecoding(ByteStream& moveArea, ByteStream* textArea)
 {
+	// The fixed 14-byte game header must be present before it is parsed.
+	if (m_strm.size() < 14)
+		throwCorruptData();
+
 	Byte* buf = m_strm.base();
 
 	unsigned moveAreaLength	= (buf[2] << 8) + buf[3];

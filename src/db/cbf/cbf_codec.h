@@ -108,13 +108,14 @@ public:
 
 private:
 
-	typedef mstl::vector<unsigned> RecordLengths;
+	typedef mstl::vector<unsigned> GameOffsets;
 
 	void preloadIndexData(mstl::string const& indexFilename, util::Progress& progress);
 	void preloadIndexData(unsigned offset);
 	void readIndexData(mstl::string const& indexFilename, util::Progress& progress);
 	void decodeIndexData(GameInfo& info, unsigned offset, NamebaseSite* site);
-	void prepareDecoding(GameInfo const& info, unsigned gameIndex, util::ByteStream& strm);
+	unsigned recordLength(unsigned offset) const;
+	void prepareDecoding(GameInfo const& info, util::ByteStream& strm, Byte* buf, unsigned bufSize);
 
 	void Report(char const* charset) override;
 
@@ -125,7 +126,7 @@ private:
 	mstl::fstream		m_gameStream;
 	mstl::string		m_encoding;
 	unsigned				m_numGames;
-	RecordLengths		m_recordLengths;
+	GameOffsets			m_gameOffsets;	// sorted
 	Byte					m_buffer[8192];
 };
 

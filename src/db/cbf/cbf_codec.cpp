@@ -40,6 +40,7 @@
 #include "sys_file.h"
 
 #include "m_vector.h"
+#include "m_algorithm.h"
 #include "m_utility.h"
 
 #include <cctype>
@@ -51,6 +52,20 @@ using namespace util;
 
 
 static db::tag::TagSet m_infoTags;
+
+// Largest record the 16-bit length fields of a game header can describe:
+// header (14) + players/source (2*63) + moves/text (2*0xffff) + board (33).
+static unsigned const MaxRecordLength = 14 + 2*63 + 2*0xffff + 33;
+
+
+static int
+compareOffsets(void const* lhs, void const* rhs)
+{
+	unsigned a = *static_cast<unsigned const*>(lhs);
+	unsigned b = *static_cast<unsigned const*>(rhs);
+
+	return a < b ? -1 : (a > b ? 1 : 0);
+}
 
 
 static void
@@ -516,10 +531,8 @@ Codec::readIndexData(mstl::string const& indexFilename, util::Progress& progress
 		GameInfoList&	infoList	= gameInfoList();
 		NamebaseSite*	site		= namebases()(Namebase::Site).insertSite("?");
 
-		m_recordLengths.resize(m_numGames);
+		m_gameOffsets.resize(m_numGames);
 		infoList.reserve(m_numGames);
-
-		unsigned prevOffset = 0;
 
 		for (unsigned i = 0; i < m_numGames; ++i)
 		{
@@ -534,14 +547,12 @@ Codec::readIndexData(mstl::string const& indexFilename, util::Progress& progress
 
 			unsigned offset = ByteStream::uint32(record) - (i + 2);
 			decodeIndexData(infoList.push_back(), offset, site);
-
-			if (i > 0)
-				m_recordLengths[i - 1] = offset - prevOffset;
-
-			prevOffset = offset;
+			m_gameOffsets[i] = offset;
 		}
 
-		m_recordLengths[m_numGames - 1] = m_gameStream.size() - prevOffset;
+		// The offsets come from the (untrusted) index file and need not be ascending,
+		// so record lengths are derived from the sorted offsets in recordLength().
+		::qsort(m_gameOffsets.begin(), m_gameOffsets.size(), sizeof(unsigned), ::compareOffsets);
 	}
 
 	strm.close();
@@ -726,19 +737,41 @@ Codec::decodeIndexData(GameInfo& info, unsigned offset, NamebaseSite* site)
 }
 
 
-void
-Codec::prepareDecoding(GameInfo const& info, unsigned gameIndex, ByteStream& strm)
+unsigned
+Codec::recordLength(unsigned offset) const
 {
-	strm.setup(m_buffer, sizeof(m_buffer));
-	strm.reserve(m_recordLengths[gameIndex]);
-	strm.provide(m_recordLengths[gameIndex]);
+	GameOffsets::const_iterator i =
+		mstl::upper_bound(m_gameOffsets.begin(), m_gameOffsets.end(), offset);
+
+	int64_t end = i == m_gameOffsets.end() ? m_gameStream.size() : int64_t(*i);
+
+	if (end <= int64_t(offset))
+		return 0;
+
+	// Records longer than a header can describe only occur with trailing garbage;
+	// the decoder bounds all accesses by the header fields anyway.
+	return unsigned(mstl::min(end - int64_t(offset), int64_t(MaxRecordLength)));
+}
+
+
+void
+Codec::prepareDecoding(GameInfo const& info, ByteStream& strm, Byte* buf, unsigned bufSize)
+{
+	unsigned length = recordLength(info.gameOffset());
+
+	if (length < 14)
+		IO_RAISE(Game, Corrupted, "unexpected end of file");
+
+	strm.setup(buf, bufSize);
+	strm.reserve(length);
+	strm.provide(length);
 
 	Byte* hdr = strm.base();
 
 	if (!m_gameStream.seek_and_read(	info.gameOffset(),
 												mstl::ios_base::beg,
 												hdr,
-												m_recordLengths[gameIndex]))
+												length))
 	{
 		IO_RAISE(Game, Corrupted, "unexpected end of file");
 	}
@@ -756,32 +789,36 @@ Codec::prepareDecoding(GameInfo const& info, unsigned gameIndex, ByteStream& str
 
 unsigned
 Codec::doDecoding(::util::BlockFileReader* reader, // not used
-						GameInfo const&,
+						GameInfo const& info,
 						uint16_t* line,
 						unsigned length,
 						Board& startBoard,
 						bool useStartBoard)
 {
+	// Called from the move list thread concurrently to the main thread,
+	// so we must not use m_buffer here.
+	Byte buf[8192];
 	ByteStream bstrm;
+	prepareDecoding(info, bstrm, buf, sizeof(buf));
 	return Decoder(bstrm, *m_codec).doDecoding(line, length, startBoard, useStartBoard);
 }
 
 
 void
-Codec::doDecoding(GameData& data, GameInfo& info, unsigned gameIndex, mstl::string*)
+Codec::doDecoding(GameData& data, GameInfo& info, unsigned, mstl::string*)
 {
 	ByteStream bstrm;
-	prepareDecoding(info, gameIndex, bstrm);
+	prepareDecoding(info, bstrm, m_buffer, sizeof(m_buffer));
 	Decoder decoder(bstrm, *m_codec);
 	decoder.doDecoding(data);
 }
 
 
 save::State
-Codec::doDecoding(Consumer& consumer, TagSet& tags, GameInfo const& info, unsigned gameIndex)
+Codec::doDecoding(Consumer& consumer, TagSet& tags, GameInfo const& info, unsigned)
 {
 	ByteStream bstrm;
-	prepareDecoding(info, gameIndex, bstrm);
+	prepareDecoding(info, bstrm, m_buffer, sizeof(m_buffer));
 	Decoder decoder(bstrm, *m_codec);
 	return decoder.doDecoding(consumer, tags);
 }
