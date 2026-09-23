@@ -485,7 +485,7 @@ Codec::preloadIndexData(unsigned offset)
 		IO_RAISE(Game, Corrupted, "unexpected end of file");
 
 	::xorBuffer(hdr, sizeof(hdr), 101);
-	buf[11] ^= 0x0e + (buf[4] & 0x3f) + (buf[5] & 0x3f);
+	hdr[11] ^= 0x0e + (hdr[4] & 0x3f) + (hdr[5] & 0x3f);
 
 	Byte crc1 = hdr[0]*0x25 + hdr[5] + hdr[9];
 	Byte crc2 = hdr[3]*0x1ec1*(hdr[8] + 1)*hdr[0];
@@ -578,7 +578,7 @@ Codec::decodeIndexData(GameInfo& info, unsigned offset, NamebaseSite* site)
 		IO_RAISE(Game, Corrupted, "unexpected end of file");
 
 	::xorBuffer(hdr, sizeof(hdr), 101);
-	buf[11] ^= 0x0e + (buf[4] & 0x3f) + (buf[5] & 0x3f);
+	hdr[11] ^= 0x0e + (hdr[4] & 0x3f) + (hdr[5] & 0x3f);
 
 	Byte crc1 = hdr[0]*0x25 + hdr[5] + hdr[9];
 	Byte crc2 = hdr[3]*0x1ec1*(hdr[8] + 1)*hdr[0];
