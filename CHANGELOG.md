@@ -6,6 +6,53 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.09.25
+
+- **b1** – **DWZ-Quelle im Spielerlexikon war tot.** `update-dwz-players.py` lud von
+  `dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip`. Der Host antwortet zwar noch, der
+  Export-Pfad liefert aber **404** – der Fehler sah deshalb nach einer Netzstörung aus, nicht nach
+  einer verschobenen Datei. Ersetzt durch die offizielle Adresse, die die Download-Seite des
+  **Deutschen Schachbundes** selbst verlinkt:
+
+  ```
+  https://www.schachbund.de/files/wertungsportal/downloads/export/csv/LV-0-csv.zip
+  ```
+
+  Sie wird täglich um 04:15 neu erzeugt (das geladene Archiv trug genau diesen Zeitstempel), liegt
+  ohne Weiterleitung direkt auf `schachbund.de` und enthält dieselben drei CSV-Dateien plus eine
+  `README.txt` mit der Formatbeschreibung.
+
+  **Zwei Dinge mussten mit:**
+
+  1. **Drei Spalten heißen anders** – `VKZ` → `ZPS`, `Mgl-Nr` → `Mitgliedsnummer`,
+     `Spielername` → `Name,Vorname` (die Kopfzeile enthält das Komma selbst und ist deshalb
+     gequotet). Das Skript löst die Namen jetzt über eine Aliastabelle auf und akzeptiert beide
+     Schreibweisen, damit ein erneuter Wechsel es nicht wieder bricht; fehlt eine Spalte, nennt die
+     Fehlermeldung die tatsächlich vorhandenen.
+  2. **Die Kodierung ist windows-1252, nicht Latin-1.** Die Datei nutzt den cp1252-exklusiven
+     Bereich 0x80–0x9F tatsächlich – 22 Bytes, überwiegend `š`/`Š` und das typografische Apostroph.
+     Als Latin-1 gelesen wurden daraus **Steuerzeichen mitten im Namen**: `Timošenko` wurde zu
+     `Timo<9A>enko`, `Šakota` zu `<8A>akota`. Gelesen wird jetzt cp1252; geschrieben weiterhin
+     Latin-1, weil `Player::parseDwzRating` (`db_player.cpp:2508`) einen
+     `sys::utf8::Codec::latin1()` davorhängt. Die 27 Zeichen, die Latin-1 nicht kennt, werden über
+     eine Tabelle sinnvoll ersetzt (`š`→`s`, `’`→`'`, …) statt zu `?` zu verfallen.
+
+  Mitgezogen: der Bestätigungstext des Dialogs nannte `dwz.svw.info` (jetzt `schachbund.de`), und
+  die Quellenliste im Aktualisierungsfenster zeigte die tote URL.
+
+  **Geprüft mit echtem Download:** 73 987 Spieler in 0,6 s – die vorhandene Liste von Juni hatte
+  73 943 Zeilen, es ist also dieselbe Datenbasis. Die Ausgabe erfüllt jede Bedingung von
+  `parseDwzRating`: keine Zeile kürzer als 33, Position 28 stets eine Ziffer, Position 0 stets
+  `0-9`/`A-L`, **null Steuerzeichen**, gültiges Latin-1. `::scidc::app::load dwz` liest sie ohne
+  Ausnahme ein. Die FIDE-Quelle wurde bei der Gelegenheit mitgeprüft und ist unverändert
+  erreichbar (50 MB, HTTP 200) – wichtig, weil `UpdatePlayerData` bei einem fehlenden Skript den
+  **gesamten** Update abbricht, auch FIDE.
+
+  **Kein Fehler, nur zur Klarstellung:** der Filter `A`–`L` auf das erste Zeichen der ZPS
+  (im Skript *und* in `db_player.cpp`) schließt 226 Einträge mit Landesverband `M` aus. Das ist
+  „Die Schwalbe", die Vereinigung für Schachkomposition – keine Spielgemeinschaft, und ihr
+  Ausschluss aus einer DWZ-Spielerliste ist richtig.
+
 ## 26.09.18
 
 - **b5** – **Elo-Spalten in der Partienliste ließen sich nicht verbreitern** – und mit ihnen fünf weitere. `tcl/widgets/table.tcl` entschied über die Ziehbarkeit einer Spalte mit einer Zeile:

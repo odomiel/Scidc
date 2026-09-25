@@ -45,7 +45,7 @@ set HelpPatternMatching	"Help: Pattern Matching"
 
 set UpdateList		"Update Player Lists"
 set Downloading		"Downloading..."
-set UpdateConfirm	"Download current player lists from ratings.fide.com (~50 MB) and dwz.svw.info and update the player dictionary?"
+set UpdateConfirm	"Download current player lists from ratings.fide.com (~50 MB) and schachbund.de and update the player dictionary?"
 set UpdateSuccess	"Player lists updated successfully."
 set UpdateFailed	"Update failed:\n%s"
 set PythonNotFound	"Python 3 is required for this function but was not found.\nPlease install Python 3."
@@ -1379,7 +1379,7 @@ proc ShowDataSources {dlg} {
 		[list [format $::load::mc::RatingList FIDE] $fide_path \
 			"https://ratings.fide.com/download/players_list_xml.zip"] \
 		[list [format $::load::mc::RatingList DWZ] $dwz_path \
-			"https://dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip"] \
+			"https://www.schachbund.de/files/wertungsportal/downloads/export/csv/LV-0-csv.zip"] \
 	]
 
 	set gridrow 1
