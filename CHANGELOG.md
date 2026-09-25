@@ -8,6 +8,20 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.25
 
+- **b2** – **FIDE-Schnellschachwertung wird jetzt mit übernommen** – und dabei ein Altfehler behoben, der jede siebte Zeile unbrauchbar machte.
+
+  Bisher las `update-fide-players.py` aus der FIDE-XML **nur `<rating>`** (Standard). `<rapid_rating>` und `<blitz_rating>` kamen im Skript kein einziges Mal vor, und ein `if rating <= 0: continue` verwarf jeden Spieler ohne Standardwertung **vollständig**. Gemessen an der heutigen Liste: von 1 922 983 Einträgen haben 566 829 eine Standardwertung, 473 538 eine Rapid- und 314 680 eine Blitzwertung; 219 156 Spieler haben Rapid oder Blitz, aber keinen Standardwert – die waren im Lexikon nicht auffindbar.
+
+  **Rapid ist jetzt dabei, Blitz bewusst nicht.** `rating::Rapid` existiert in `db_common.h`, `Player` hat dafür ein eigenes Fach, und Sortierung wie Filter sind in `db_selector.cpp` längst verdrahtet – gefüllt wurde es bisher nur aus PGN-Tags (`WhiteRapid`/`BlackRapid`), von keiner Wertungsliste. Für Blitz gibt es **keinen** `rating::Type`, und die ersten sieben Werte des Enums stimmen mit Scids Nummerierung überein; das wäre eine Formatänderung, keine Zeile.
+
+  Umgesetzt: zwei Spalten **hinten angehängt** (`[73:78]` Rapid, `[78:84]` Rapid-Partien), damit die ersten 72 Spalten ihre Bedeutung behalten und eine ältere Liste weiter lesbar bleibt. `parseFideRating` liest ab Spalte 73 nur, wenn die Zeile lang genug ist, und legt den Wert über `setLatestRating(rating::Rapid, …)` ab. Die Mindestwertung prüft nun den **besseren** der beiden Werte, sonst fielen Rapid-only-Spieler direkt wieder heraus.
+
+  **Dabei gefunden: 9-stellige FIDE-IDs zerschossen das Format.** Das ID-Feld war als `f"{fideid:8d}  "` geschrieben – 8 Ziffern plus zwei Leerzeichen. FIDE vergibt längst 9-stellige IDs (`5xxxxxxxx`); bei denen lief die ID über und schob **jede** folgende Spalte um eins nach rechts. Der Parser las die Wertung dann an der falschen Stelle, fand dort ein Leerzeichen und verwarf den Spieler über die Mindestwertung. Betroffen waren **104 962 von 743 045 Zeilen (14 %)** – ein stiller Datenverlust, der nichts mit dieser Änderung zu tun hat, sie aber für jeden siebten Spieler wirkungslos gemacht hätte. Das Feld ist jetzt auf 10 Zeichen aufgefüllt statt auf 8 gerechnet; der Name beginnt damit unabhängig von der ID-Länge bei Spalte 10.
+
+  **Geprüft mit echtem Download:** 743 045 Spieler (vorher 566 829), davon **566 829 mit Standard und 473 538 mit Rapid** – beides deckt sich aufs Stück mit der Zählung direkt aus der XML. **Null fehlausgerichtete Zeilen** (vorher 104 962). Am laufenden Programm über `::scidc::player::info … -ratings {Elo Rapid}` gegengeprüft: `Nepomniachtchi, Ian` liefert `Elo=2719 Rapid=2729` wie in der Datei; `Adarlo, Michael` (nur Rapid) ist mit `Elo=0 Rapid=2230` jetzt überhaupt erst vorhanden; `Absalon, Adam` (9-stellige ID) liefert `2003 / 1989` statt wie bisher verworfen zu werden. Das Lexikon zählt 780 912 Einträge, keine Ausnahme beim Laden.
+
+  Das Archiv wächst dadurch von 11,6 auf 16,7 MB. Im Spielerlexikon lässt sich die zweite Wertungsspalte (`rating2:type`, Vorgabe DWZ) auf `Rapid` stellen.
+
 - **b1** – **DWZ-Quelle im Spielerlexikon war tot.** `update-dwz-players.py` lud von
   `dwz.svw.info/services/files/export/csv/LV-0-csv_v2.zip`. Der Host antwortet zwar noch, der
   Export-Pfad liefert aber **404** – der Fehler sah deshalb nach einer Netzstörung aus, nicht nach

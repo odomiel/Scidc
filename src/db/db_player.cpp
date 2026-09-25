@@ -2217,6 +2217,14 @@ Player::parseSpellcheckFile(mstl::istream& stream)
 // Games:		 59 - 62 (  3 chars)
 // Born:			 64 - 57 (  4 chars)
 // Flag:			 70 - 71 (0-2 chars)
+// Rapid:		 73 - 77 (  5 chars, optional)
+// RapidGames:	 78 - 83 (  6 chars, optional, not read)
+//
+// Die Rapid-Spalten haengen bewusst hinten an: die ersten 72 Spalten behalten
+// ihre Bedeutung, eine aeltere Liste ohne sie bleibt also lesbar. Deshalb wird
+// ab Spalte 73 nur gelesen, wenn die Zeile lang genug ist.
+// Blitz fehlt absichtlich -- db_common.h kennt dafuer keinen rating::Type, und
+// die ersten sieben Werte des Enums stimmen mit Scids Nummerierung ueberein.
 void
 Player::parseFideRating(mstl::istream& stream)
 {
@@ -2240,6 +2248,13 @@ Player::parseFideRating(mstl::istream& stream)
 			char const* s = line.c_str();
 
 			unsigned rating = ::isdigit(line[53]) ? ::strtoul(s + 53, nullptr, 10) : 0;
+			unsigned rapid  = (line.size() > 73 && ::isdigit(line[73]))
+									? ::strtoul(s + 73, nullptr, 10)
+									: 0;
+			// Wer keine Standardwertung hat, aber eine Schnellschachwertung,
+			// soll trotzdem aufgenommen werden -- sonst faellt er wie bisher
+			// durch die Mindestwertung heraus.
+			unsigned best   = mstl::max(rating, rapid);
 
 			char const* t = s + 10;
 			char const* e = s + 42;
@@ -2302,7 +2317,7 @@ Player::parseFideRating(mstl::istream& stream)
 					{
 						if (!containsPlayer(name, country::Unknown, sex::Unspecified))
 						{
-							if (rating < m_minELO)
+							if (best < m_minELO)
 								continue;
 							insertAlias(name, player);
 						}
@@ -2311,7 +2326,7 @@ Player::parseFideRating(mstl::istream& stream)
 
 				if (player == 0)
 				{
-					if (rating < m_minELO)
+					if (best < m_minELO)
 						continue;
 
 					standardizeNames(name);
@@ -2382,6 +2397,14 @@ Player::parseFideRating(mstl::istream& stream)
 
 					if (rating > unsigned(mstl::abs(player->highestElo())))
 						player->setHighestElo(rating);
+				}
+
+				if (0 < rapid && rating::isValid(rapid))
+				{
+					player->setLatestRating(rating::Rapid, rapid);
+
+					if (rapid > unsigned(mstl::abs(player->highestRating(rating::Rapid))))
+						player->setHighestRating(rating::Rapid, rapid);
 				}
 			}
 		}

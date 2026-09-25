@@ -18,6 +18,17 @@ Column layout of each output line (0-indexed, C++ parser positions):
   [68:70]  two spaces
   [70]     Sex: 'w' = female, ' ' = male
   [71]     Activity: 'i' = inactive, ' ' = active
+  [72]     separator space
+  [73:78]  Rapid rating, left-justified in 5 chars (blank if none)
+  [78:84]  Rapid games, right-justified in 6 chars (filler, not read)
+
+The rapid columns are APPENDED behind the historical layout on purpose: the
+first 72 columns keep their meaning, so a list written by an older version
+still parses, and parseFideRating() only looks at 73+ when the line is long
+enough. FIDE's XML also carries blitz_rating, which is deliberately not
+written here -- db_common.h has no rating type for blitz, and its enum's first
+seven values coincide with Scid's numbering, so adding one is a format change
+rather than a one-liner.
 """
 
 import sys
@@ -50,18 +61,34 @@ def best_title(elem):
     return ""
 
 
-def make_line(fideid, name, title, federation, rating, games, birth, female, inactive):
-    id_part   = f"{fideid:8d}  "
+def make_line(fideid, name, title, federation, rating, games, birth, female,
+              inactive, rapid=0, rapid_games=0):
+    # Das Feld ist 10 Zeichen breit, nicht "8 Ziffern + 2 Leerzeichen": FIDE
+    # vergibt inzwischen 9-stellige IDs (5xxxxxxxx), und mit "{:8d}  " lief
+    # die ID ueber und schob jede folgende Spalte um eins nach rechts. Der
+    # Parser las die Wertung dann an der falschen Stelle, sah dort ein
+    # Leerzeichen und verwarf den Spieler ueber die Mindestwertung -- zuletzt
+    # 104962 von 743045 Eintraegen. Links buendig aufgefuellt bleibt der Name
+    # bei Spalte 10, egal wie lang die ID ist; strtoul() liest sie ohnehin ab
+    # Position 0 bis zur ersten Nicht-Ziffer.
+    id_part   = f"{fideid:8d}".ljust(10)[:10]
     name_part = f"{name:<33.33s}"
     title_part = f"{title:<4.4s}"
     fed_part  = f"{federation:<3.3s}"
-    rat_part  = f"{rating:<5d}"
+    # A missing rating must be blanks, not "0": the parser decides by
+    # isdigit() at the first column of the field. Since players without a
+    # standard rating are kept now (for their rapid rating), this case is
+    # reachable -- before it was not.
+    rat_part  = f"{rating:<5d}" if rating else "     "
     gam_part  = f"{games:6d}"
     bir_part  = f"{birth:4d}" if birth else "    "
     sex_part  = "w" if female else " "
     flg_part  = "i" if inactive else " "
+    rap_part  = f"{rapid:<5d}" if rapid else "     "
+    rgm_part  = f"{rapid_games:6d}"
     return (id_part + name_part + " " + title_part + fed_part + "  "
-            + rat_part + gam_part + bir_part + "  " + sex_part + flg_part)
+            + rat_part + gam_part + bir_part + "  " + sex_part + flg_part
+            + " " + rap_part + rgm_part)
 
 
 def download_to_file(url, path):
@@ -95,13 +122,15 @@ def download_to_file(url, path):
 
 def convert_streaming(xml_fobj, out_zip_path):
     """Parse XML with iterparse so only one <player> element lives in RAM at a time."""
-    header   = "ID number Name                              TitlFed  Rating GamesBorn  Flag\n"
+    header   = ("ID number Name                              TitlFed  Rating GamesBorn  Flag"
+                " Rapid RGames\n")
     month_tag = datetime.now().strftime("%b%y").lower()
     txt_name  = f"players_{month_tag}.txt"
 
     lines    = [header]
     root_elem = None
     count    = 0
+    rapid_count = 0
 
     for event, elem in ET.iterparse(xml_fobj, events=("start", "end")):
         if event == "start" and root_elem is None:
@@ -125,17 +154,23 @@ def convert_streaming(xml_fobj, out_zip_path):
             title    = best_title(elem)
             rating   = int(elem.findtext("rating") or 0)
             games    = int(elem.findtext("games") or 0)
+            rapid    = int(elem.findtext("rapid_rating") or 0)
+            rapid_g  = int(elem.findtext("rapid_games") or 0)
             birthday = int(elem.findtext("birthday") or 0)
             flag     = (elem.findtext("flag") or "").strip().lower()
 
-            if rating <= 0:
+            # Previously this dropped everyone without a standard rating,
+            # which cost ~219k players who do hold a rapid rating.
+            if rating <= 0 and rapid <= 0:
                 elem.clear()
                 continue
             lines.append(make_line(
                 fideid, name, title, country, rating, games,
-                birthday, sex == "F", "i" in flag
+                birthday, sex == "F", "i" in flag, rapid, rapid_g
             ) + "\n")
             count += 1
+            if rapid > 0:
+                rapid_count += 1
         except (ValueError, TypeError, AttributeError):
             pass
 
@@ -143,7 +178,8 @@ def convert_streaming(xml_fobj, out_zip_path):
         if root_elem is not None:
             del root_elem[:]  # drop completed children from root, keep root itself
 
-    print(f"Converting {count} players...", flush=True)
+    print(f"Converting {count} players ({rapid_count} with a rapid rating)...",
+          flush=True)
     txt_bytes = "".join(lines).encode("utf-8")
     tmp_path  = out_zip_path + ".tmp"
     with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED) as zf:
