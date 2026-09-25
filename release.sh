@@ -26,7 +26,19 @@
 #       --github           Schritt 5 erzwingen (Abbruch, wenn kein Token da ist)
 #       --no-github        Schritt 5 auslassen
 #       --dry-run          alle Pruefungen, aber kein Schreibzugriff
+#       --insecure         TLS-Zertifikat der Instanz nicht pruefen
 #   -h, --help             diese Hilfe
+#
+# TLS:
+#   Das Zertifikat der Instanz ist selbstsigniert. Frueher lief jeder Aufruf
+#   mit "curl -k", die Pruefung war also immer aus. Jetzt wird geprueft, und
+#   das Zertifikat traegt man einmalig ein:
+#       mkdir -p ~/.config/scidc
+#       openssl s_client -connect <host>:<port> -showcerts </dev/null \
+#         2>/dev/null | openssl x509 > ~/.config/scidc/forgejo-ca.pem
+#   Diese Datei wird ohne weiteres Zutun gefunden; ein anderer Ort geht ueber
+#   $FORGEJO_CAFILE. Wer das nicht will, ruft mit --insecure auf -- dann steht
+#   es wenigstens in der Befehlszeile statt unsichtbar im Skript.
 #
 # Instanz:
 #   Host, Eigentuemer und Repository kommen aus der URL von "git remote origin"
@@ -85,13 +97,22 @@ REPO_NAME="${FORGEJO_REPO:-${origin_path##*/}}"
 	{ echo "release.sh: Eigentuemer/Repository nicht aus origin ableitbar - \$FORGEJO_OWNER und \$FORGEJO_REPO setzen" >&2; exit 1; }
 
 API="https://${FORGEJO_HOST}:${FORGEJO_PORT}/api/v1/repos/${REPO_OWNER}/${REPO_NAME}"
-# Das Zertifikat der Instanz ist selbstsigniert -> curl braucht -k.
-CURL_OPTS=(-sS -k)
+# Die TLS-Pruefung wird weiter unten gesetzt, nachdem die Optionen gelesen
+# sind. Hier stand frueher fest "-sS -k": die Zertifikatspruefung war damit bei
+# *jedem* Aufruf abgeschaltet, auch beim Hochladen des Anhangs. Das Zertifikat
+# der Instanz ist zwar selbstsigniert, aber "gar nicht pruefen" ist dafuer die
+# grobe Loesung -- das Zertifikat als vertrauenswuerdig einzutragen ist die
+# genaue.
+CURL_OPTS=(-sS)
 
 # --- Argumente ---------------------------------------------------------------
 VERSION=""; NOTES=""; NOTES_FILE=""
 PRERELEASE=true; DRAFT=false; FORCE=false; RUN_CHECK=true; DRY_RUN=false
 GITHUB=auto   # auto | yes | no
+INSECURE=false
+# Ohne gesetzte Variable wird hier nachgesehen; die Datei anzulegen genuegt,
+# es muss nichts exportiert werden.
+CAFILE="${FORGEJO_CAFILE:-$HOME/.config/scidc/forgejo-ca.pem}"
 
 usage() { sed -n '2,/^set -euo/p' "$0" | sed 's/^# \{0,1\}//;$d'; }
 
@@ -106,6 +127,7 @@ while [ $# -gt 0 ]; do
 		--github)        GITHUB=yes; shift ;;
 		--no-github)     GITHUB=no; shift ;;
 		--dry-run)       DRY_RUN=true; shift ;;
+		--insecure)      INSECURE=true; shift ;;
 		-h|--help)       usage; exit 0 ;;
 		-*)              echo "Unbekannte Option: $1" >&2; exit 2 ;;
 		*)               VERSION="$1"; shift ;;
@@ -114,6 +136,19 @@ done
 
 fail() { echo "FEHLER: $*" >&2; exit 1; }
 step() { echo; echo "=== $* ==="; }
+
+# --- TLS gegenueber der Instanz ----------------------------------------------
+# Drei Faelle, in dieser Reihenfolge:
+#   --insecure          -> Pruefung aus, ausdruecklich gewollt
+#   Zertifikatsdatei da -> dagegen pruefen (der empfohlene Weg)
+#   sonst               -> normal pruefen; bei einem selbstsignierten
+#                          Zertifikat scheitert das, und zwar mit einer
+#                          Meldung, die sagt was zu tun ist (siehe unten).
+if $INSECURE; then
+	CURL_OPTS+=(-k)
+elif [ -f "$CAFILE" ]; then
+	CURL_OPTS+=(--cacert "$CAFILE")
+fi
 
 # --- Version bestimmen und gegenpruefen --------------------------------------
 # Makefile.version schreibt die Version mit Bindestrichen (26.08.02-b8-Beta),
@@ -201,8 +236,32 @@ http_code() { tail -n1 <<<"$1"; }
 http_body() { sed '$d' <<<"$1"; }
 
 # Zugang einmal pruefen, bevor irgendetwas geschrieben wird.
-RESP=$(api GET "")
-[ "$(http_code "$RESP")" = "200" ] || fail "API nicht erreichbar oder Anmeldung abgelehnt (HTTP $(http_code "$RESP"))"
+# "|| true", weil "set -e" sonst schon am Rueckgabewert von curl abbricht --
+# und zwar bevor die erklaerende Meldung unten ueberhaupt erreicht wird. curl
+# schreibt in diesem Fall "000" als Statuscode, genau darauf wird geprueft.
+RESP=$(api GET "" || true)
+CODE=$(http_code "$RESP")
+
+# HTTP 000 heisst: curl kam gar nicht bis zu einer Antwort. Bei dieser Instanz
+# ist das fast immer das selbstsignierte Zertifikat -- eine Meldung ueber eine
+# "nicht erreichbare API" wuerde in die falsche Richtung schicken.
+if [ "$CODE" = "000" ] && ! $INSECURE && [ ! -f "$CAFILE" ]; then
+	echo "FEHLER: TLS-Verbindung zur Instanz fehlgeschlagen." >&2
+	echo >&2
+	echo "Das Zertifikat ist selbstsigniert. Zwei Wege:" >&2
+	echo >&2
+	echo "  1. Zertifikat eintragen (empfohlen, einmalig):" >&2
+	echo "       mkdir -p \"\$(dirname \"$CAFILE\")\"" >&2
+	echo "       openssl s_client -connect ${FORGEJO_HOST}:${FORGEJO_PORT} -showcerts \\" >&2
+	echo "         </dev/null 2>/dev/null | openssl x509 > \"$CAFILE\"" >&2
+	echo "     Danach wird die Datei von selbst gefunden - nichts zu exportieren." >&2
+	echo "     Ein anderer Ort geht ueber \$FORGEJO_CAFILE." >&2
+	echo >&2
+	echo "  2. Pruefung bewusst abschalten:  bash release.sh --insecure" >&2
+	exit 1
+fi
+
+[ "$CODE" = "200" ] || fail "API nicht erreichbar oder Anmeldung abgelehnt (HTTP $CODE)"
 
 # --- GitHub: Token und Ziel ---------------------------------------------------
 # Beides wird aufgeloest, bevor der erste Schreibzugriff passiert, damit ein

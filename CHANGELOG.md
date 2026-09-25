@@ -8,6 +8,14 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.09.25
 
+- *(ohne Versionserhöhung)* **TLS-Prüfung in `release.sh`, `tools/forgejo_release.py` entfernt.**
+
+  `release.sh` lief mit fest verdrahtetem `curl -sS -k` – die Zertifikatsprüfung war bei *jedem* Aufruf aus, auch beim Hochladen des Anhangs. Jetzt wird geprüft: liegt `~/.config/scidc/forgejo-ca.pem` (oder `$FORGEJO_CAFILE`), wird dagegen geprüft; `--insecure` schaltet es bewusst ab. Schlägt die Verbindung ohne beides fehl, erklärt die Meldung den Fall und nennt die zwei Wege, statt „API nicht erreichbar" zu melden und damit in die falsche Richtung zu schicken. Dafür musste das `curl`-Ergebnis mit `|| true` abgefangen werden – `set -euo pipefail` brach sonst schon am Rückgabewert ab, bevor die Erklärung erreicht wurde.
+
+  **`tools/forgejo_release.py` ist wieder raus.** Es führte Host, Port und Eigentümer der Forgejo-Instanz als Vorgabewerte im Klartext (`API_HOST`, `OWNER`) – in einer git-getrackten Datei, die der Push-Mirror seit dem 23.09. öffentlich auf GitHub führt. Genau das schließt die Projektregel aus; `release.sh` leitet die Werte deshalb aus `git remote origin` ab, das in `.git/config` bleibt. Unabhängig davon deckte es nur zwei der fünf Schritte ab: kein Tag, **kein `.zsync`-Anhang** (womit die Update-Erkennung der Verwalter ins Leere liefe), keine Gegenprobe und kein GitHub-Release. Seine TLS-Behandlung war der bessere Teil – die ist jetzt in `release.sh`.
+
+  Die zwei Tage öffentlicher Instanzdaten bleiben in der Historie; ein erneutes Umschreiben wurde bewusst nicht gemacht.
+
 - **b2** – **FIDE-Schnellschachwertung wird jetzt mit übernommen** – und dabei ein Altfehler behoben, der jede siebte Zeile unbrauchbar machte.
 
   Bisher las `update-fide-players.py` aus der FIDE-XML **nur `<rating>`** (Standard). `<rapid_rating>` und `<blitz_rating>` kamen im Skript kein einziges Mal vor, und ein `if rating <= 0: continue` verwarf jeden Spieler ohne Standardwertung **vollständig**. Gemessen an der heutigen Liste: von 1 922 983 Einträgen haben 566 829 eine Standardwertung, 473 538 eine Rapid- und 314 680 eine Blitzwertung; 219 156 Spieler haben Rapid oder Blitz, aber keinen Standardwert – die waren im Lexikon nicht auffindbar.
