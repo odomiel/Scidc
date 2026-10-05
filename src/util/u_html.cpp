@@ -562,7 +562,11 @@ Search::htmlContent(void* cbData, XML_Char const* s, int len)
 
 		unsigned skip = pos + self->m_length;
 
-		self->addPosition(XML_GetCurrentByteIndex(self->m_parser) + offs + pos);
+		// Die 64-Bit-Fassung ist seit expat 2.9.0 die nicht ueberlaufende;
+		// addPosition nimmt unsigned, also hier ausdruecklich verengen --
+		// -Werror=narrowing liesse es sonst nicht durch.
+		self->addPosition(
+			unsigned(XML_GetCurrentByteIndex64(self->m_parser) + offs + pos));
 
 		offs += skip;
 		len -= skip;

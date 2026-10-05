@@ -2,7 +2,7 @@
 # Makefile for Scidc for Unix operating systems
 # ======================================================================
 #
-# Uebersetzt expat 2.8.4 zu libexpat.a. Alle Schalter stehen in
+# Uebersetzt expat 2.9.0 zu libexpat.a. Alle Schalter stehen in
 # expat_config.h -- hier werden bewusst keine -D... gesetzt, damit es
 # nur eine Stelle gibt, an der der Funktionsumfang festgelegt ist.
 #
@@ -19,10 +19,14 @@ include ../../../Makefile.in
 OPTIMIZE	= -O2
 CFLAGS	+= $(OPTIMIZE) $(SYS_CFLAGS)
 
+# xcs.o ist seit 2.9.0 dabei: dort wurde aus dem nur eingebundenen xcsinc.c
+# eine eigene Uebersetzungseinheit xcs.c (siehe libexpat_la_SOURCES in expats
+# Makefile.am). Ohne diesen Eintrag fehlen beim Binden die XCS-Symbole.
 LIBOBJS =\
 	xmlparse.o \
 	xmltok.o \
 	xmlrole.o \
+	xcs.o \
 	random_getrandom.o \
 	random_dev_urandom.o \
 
@@ -51,7 +55,8 @@ depend:
 
 xmlparse.o:          expat_config.h expat.h expat_external.h internal.h \
                      siphash.h ascii.h asciitab.h xmltok.h xmlrole.h \
-                     xcsinc.c
+                     hash_table.h xcs.h
+xcs.o:               expat_config.h expat_external.h internal.h xcs.h
 xmltok.o:            expat_config.h expat_external.h internal.h ascii.h \
                      asciitab.h iasciitab.h latin1tab.h nametab.h utf8tab.h \
                      xmltok.h xmltok_impl.h xmltok_impl.c xmltok_ns.c

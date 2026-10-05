@@ -6,6 +6,28 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.10.05
+
+- **b1** – **expat auf 2.9.0 gezogen (drei CVEs) und den einen offenen XML-Pfad geschlossen.**
+
+  Die Abhängigkeitsprüfung meldete expat 2.8.4 → 2.9.0. Die Meldung verschwieg, dass auch **2.8.5** dazwischenliegt, und damit das Wesentliche: zwischen Baumstand und 2.9.0 liegen **drei CVEs**. Aus dem Original-Changelog, nicht aus einer Zusammenfassung:
+
+  | CVE | aus | betrifft Scidc |
+  |---|---|---|
+  | **CVE-2026-93990** – fehlerhaftes UTF-16 wird durchgereicht statt abgewiesen, **CVSS 9.8** | 2.8.5 | nur über den SVG-Pfad, siehe unten |
+  | CVE-2026-102633 – Integer-Überlauf in `expat_realloc` **auf 32 Bit** | 2.9.0 | nein, das AppImage ist x86_64 |
+  | CVE-2026-77214 – `len`-Prüfung in `XML_ParseBuffer` | 2.9.0 | nein, der Baum ruft `XML_ParseBuffer` nirgends auf |
+
+  **Der Austausch war nicht nur ein Kopiervorgang.** 2.9.0 ändert die Dateiliste von `lib/`: `hash_table.h` ist neu, und aus dem bloß eingebundenen `xcsinc.c` wurde eine **eigene Übersetzungseinheit** `xcs.c` (+ `xcs.h`) – sie steht in expats `libexpat_la_SOURCES`. Ohne `xcs.o` in `LIBOBJS` fehlten beim Binden die XCS-Symbole. Die von Hand gepflegte `expat_config.h` blieb unberührt; die dort entfallenen Schalter `XML_ATTR_INFO` und `XML_MIN_SIZE` waren nie gesetzt. Von den in 2.9.0 entfernten bzw. veralteten Funktionen benutzt der Baum nur zwei, beide bloß veraltet: `XML_GetCurrentByteIndex` (`u_html.cpp`) und `XML_GetCurrentLineNumber` (`svg_parser.cpp`) – auf die nicht überlaufenden `…64`-Fassungen umgestellt, bei `u_html.cpp` mit ausdrücklicher Verengung, weil `addPosition` `unsigned` nimmt und `-Werror=narrowing` scharf steht.
+
+  **`svg_parser.cpp:341` erzwingt jetzt die Kodierung.** Von den vier expat-Nutzern war es der einzige mit `XML_ParserCreate(NULL)` – damit erkennt expat die Kodierung aus BOM oder Deklaration und betritt auch den UTF-16-Decoder, also genau den Pfad von CVE-2026-93990. Die übrigen drei (`u_html.cpp`, `db_comment.cpp` ×2, `tcl_misc.cpp`) übergaben längst eine Kodierung. Erreichbar war das nur schmal: das zur Laufzeit geparste SVG kommt aus fest eingebauten Tcl-Vorlagen (`board-piece.tcl`, `board-stuff.tcl`), in die nur Farben eingesetzt werden, und **keine der 35 ausgelieferten `.dat`** enthält einen `svg_`-Block. Ein fremder Figurensatz in `~/.scidc-beta/themes/` darf aber einen mitbringen (`board-pieceset.tcl`). Die Vorgabe kostet nichts und nimmt den Pfad heraus.
+
+  **Geprüft.** Tarball gegen das `digest`-Feld der API (`sha256:1e637186…`), Dateiliste identisch zu `lib/` ohne die vier Fremdbausystem-Dateien. Im Binary steht `expat_2.9.0`, `XML_GetAttributeInfo` fehlt in `libexpat.a` (2.9.0 hat es entfernt), beide `…64`-Funktionen sind gebunden. Bau ohne Warnung. Alle **vier** expat-Nutzer am laufenden Programm durchgespielt: Start ohne Ausnahme (dabei läuft der SVG-Parser für das Brett), `::scidc::misc::xml tokenize` mit Umlaut und Entität, `::scidc::misc::html search` mit vier nachgerechnet byte-exakten Trefferpositionen (57/71/93/116 bei 155 Zeichen – das belegt die Verengung), und ein Kommentar-Rundlauf durch die Datenbank: Umlaut (`&#x00f6;`), Gedankenstrich (`&#x2014;`), `&` und maskierte spitze Klammern kommen unverfälscht zurück.
+
+  **Tcl/Tk bleibt auf 9.0.4.** Die Prüfung meldet 9.1.0, aber das ist kein Patch, sondern ein Reihenwechsel – erschienen am 30.09., laut Ankündigung „the first stable release of Tcl 9.1". `src/tk/` übersetzt gegen **interne** Tk-Header, und genau die ändern sich über eine Feature-Reihe. Das gehört in eine eigene Sitzung mit `migration.txt`, nicht in die Abhängigkeitspflege. 9.0.4 ist der neueste Stand der 9.0-Reihe.
+
+  Unverändert aktuell: zlib 1.3.2, minizip-ng 4.2.2, libharu, zziplib 0.13.80 und alle sechs Engines.
+
 ## 26.09.25
 
 - *(ohne Versionserhöhung)* **TLS-Prüfung in `release.sh`, `tools/forgejo_release.py` entfernt.**

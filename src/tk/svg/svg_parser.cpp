@@ -338,7 +338,20 @@ parser::parser(path_renderer& path)
 void
 parser::parse(char const* svg_data, unsigned len)
 {
-	::XML_Parser p = ::XML_ParserCreate(NULL);
+	// Kodierung festnageln, statt expat raten zu lassen. Mit NULL erkennt
+	// expat sie aus BOM oder XML-Deklaration und betritt damit auch den
+	// UTF-16-Decoder -- den die uebrigen drei expat-Nutzer dieses Baums
+	// (u_html.cpp, db_comment.cpp, tcl_misc.cpp) von vornherein ausschliessen,
+	// indem sie eine Kodierung uebergeben. CVE-2026-93990 (expat < 2.8.5,
+	// CVSS 9.8) betraf genau diesen Pfad: fehlerhaftes UTF-16 wurde an die
+	// Anwendung durchgereicht statt abgewiesen.
+	//
+	// Was hier geparst wird, kommt aus fest eingebauten Tcl-Vorlagen
+	// (board-piece.tcl, board-stuff.tcl), in die nur Farben eingesetzt werden
+	// -- also ASCII. Ein Figurensatz in ~/.scidc-beta/themes/ darf aber einen
+	// eigenen svg_-Block mitbringen (board-pieceset.tcl), und der kommt dann
+	// von ausserhalb. Die Vorgabe kostet nichts und nimmt den Pfad heraus.
+	::XML_Parser p = ::XML_ParserCreate("UTF-8");
 
 	if (p == 0)
 		SVG_RAISE("couldn't allocate memory for parser");
@@ -351,7 +364,7 @@ parser::parse(char const* svg_data, unsigned len)
 	{
 		exception exc(	"%s at line %u\n",
 									::XML_ErrorString(::XML_GetErrorCode(p)),
-									unsigned(::XML_GetCurrentLineNumber(p)));
+									unsigned(::XML_GetCurrentLineNumber64(p)));
 		::XML_ParserFree(p);
 		M_THROW(exc);
 	}
