@@ -240,7 +240,7 @@
 ### progress ###########################################################
 ::progress::mc::Progress			"Állapot"
 
-;# Nem biztos, hogy a lista az "index" jó fordítása
+# Nem biztos, hogy a lista az "index" jó fordítása
 ::progress::mc::Message(preload-namebase)	"Játékos adatbázis olvasásának előkészítése"
 ::progress::mc::Message(preload-tournament)	"Verseny lista előkészítése"
 ::progress::mc::Message(preload-player)		"Játékos lista előkészítése"
@@ -966,10 +966,10 @@
 ::board::options::mc::YouCannotReverse		"Ez a művelet nem viszafordítható. '%s'fájl fizikailag törlésre kerül."
 
 ::board::options::mc::CannotUsePieceWorkingSet "Nem hozható létre új téma a kiválasztott %s figura stílussal."
-::board::options::mc::CannotUsePieceWorkingSet "Először el kell mentened az új figurastílust vagy egy másik figura stílust kell választanod."
+::board::options::mc::ChooseAnotherPieceStyle "Először el kell mentened az új figurastílust vagy egy másik figura stílust kell választanod."
 
 ::board::options::mc::CannotUseSquareWorkingSet "Nem hozható létre új téma a kiválasztott %s mező stílussal."
-::board::options::mc::CannotUseSquareWorkingSet "Először el kell mentened az új mező stílust vagy egy másik mező stílust kell választanod."
+::board::options::mc::ChooseAnotherSquareStyle "Először el kell mentened az új mező stílust vagy egy másik mező stílust kell választanod."
 
 ### board::piece #######################################################
 ::board::piece::mc::Start						"Start"
@@ -1982,7 +1982,7 @@
 ::export::mc::Option(pgn,include_marks)			"Export marks (megjegyzésként)"
 ::export::mc::Option(pgn,use_scidb_import_format)	"Scidb Import Formátum használata"
 ::export::mc::Option(pgn,use_chessbase_format)		"ChessBase formátum használata"
-::export::mc::Option(pgn,use_strict_pgn_standard	"Use PGN standard" ;# NEW
+::export::mc::Option(pgn,use_strict_pgn_standard)	"Use PGN standard" ;# NEW
 ::export::mc::Option(pgn,include_ply_count_tag)		"'PlyCount' cimke írása"
 ::export::mc::Option(pgn,include_termination_tag)	"'Termination' cimke írása"
 ::export::mc::Option(pgn,include_mode_tag)		"'Mode' cimke írása"
@@ -2224,7 +2224,6 @@
 ::terminationbox::mc::Reason(TimeForfeit,both)		"Both players forfeits on time" ;# NEW
 ::terminationbox::mc::Reason(TimeForfeit,remis)		"%causer ran out of time and %opponent cannot win" ;# NEW
 ::terminationbox::mc::Reason(NoOpponent)		"Point given for game with no opponent" ;# NEW
-::terminationbox::mc::Reason(Unterminated)		"No finalizado" ;# NEW
 ::terminationbox::mc::Reason(Unterminated)		"Unterminated" ;# NEW
 
 ::terminationbox::mc::Termination(checkmate)		"%s is checkmate" ;# NEW

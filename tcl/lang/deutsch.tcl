@@ -1529,7 +1529,7 @@
 ::playerdict::mc::FileSize			"Größe"
 ::playerdict::mc::FileDate			"Zuletzt geändert"
 ::playerdict::mc::FileNotFound		"nicht gefunden"
-set ::playerdict::mc::WebSource			"Webquelle"
+::playerdict::mc::WebSource			"Webquelle"
 
 ### player-card ########################################################
 ::playercard::mc::PlayerCard					"Spielerkarteikarte"

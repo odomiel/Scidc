@@ -961,10 +961,10 @@
 ::board::options::mc::YouCannotReverse		"No puede revertir esta acción. El archivo '%s' será removido físicamente."
 
 ::board::options::mc::CannotUsePieceWorkingSet "No se puede crear un nuevo tema con el estilo de piezas %s elegido."
-::board::options::mc::CannotUsePieceWorkingSet "Primero debe guardar el nuevo estilo de pieza, o elegir otro."
+::board::options::mc::ChooseAnotherPieceStyle "Primero debe guardar el nuevo estilo de pieza, o elegir otro."
 
 ::board::options::mc::CannotUseSquareWorkingSet "No se puede crear un nuevo tema con el estilo de casillas %s elegido."
-::board::options::mc::CannotUseSquareWorkingSet "Primero debe guardar el nuevo estilo de casillas, o elegir otro."
+::board::options::mc::ChooseAnotherSquareStyle "Primero debe guardar el nuevo estilo de casillas, o elegir otro."
 
 ### board::piece #######################################################
 ::board::piece::mc::Start						"Iniciar"
@@ -1587,7 +1587,6 @@
 ::gamebar::mc::Tip(Antichess)					"There is no check, no castling, the king\nis captured like an ordinary piece." ;# NEW
 ::gamebar::mc::Tip(Suicide)					"In case of stalemate the side with fewer\npieces will win (according to FICS rules)." ;# NEW
 ::gamebar::mc::Tip(Giveaway)					"In case of stalemate the side which is\nstalemate wins (according to international rules)." ;# NEW
- ;# NEW
 ::gamebar::mc::Tip(Losers)						"The king is like in normal chess, and you can also\nwin by getting checkmated or stalemated." ;# NEW
 
 ### merge ##############################################################
@@ -1975,7 +1974,7 @@
 ::export::mc::Option(pgn,include_marks)							"Exportar marcadores (como comentarios)"
 ::export::mc::Option(pgn,use_scidb_import_format)				"Usar el formato de importación de Scidb"
 ::export::mc::Option(pgn,use_chessbase_format)					"Usar formato ChessBase"
-::export::mc::Option(pgn,use_strict_pgn_standard				"Use PGN standard" ;# NEW
+::export::mc::Option(pgn,use_strict_pgn_standard)				"Use PGN standard" ;# NEW
 ::export::mc::Option(pgn,include_ply_count_tag)					"Escribir la etiqueta 'PlyCount'"
 ::export::mc::Option(pgn,include_termination_tag)				"Escribir etiqueta 'Termination'"
 ::export::mc::Option(pgn,include_mode_tag)						"Escribir etiqueta 'Mode'"

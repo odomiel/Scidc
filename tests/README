@@ -1,0 +1,45 @@
+Pruefreihe -- Lage 1: Text
+==========================
+
+Aufruf aus dem Wurzelverzeichnis:
+
+    python3 -m unittest discover -s tests -t .        # alles
+    python3 -m unittest tests.test_sprachen           # eine Datei
+    python3 -m unittest tests.test_sprachen.TestZeilen.test_kein_schluessel_steht_zweimal_in_einer_datei
+
+Es gibt kein pytest und keinen Linter im Repo -- geprueft wird mit
+unittest, wie im Verteilerly-Projekt, von dem der Aufbau uebernommen ist.
+Die ganze Reihe braucht unter einer Sekunde.
+
+Was geprueft wird
+-----------------
+test_version.py   Die Version an ihren drei Stellen, das Schema, das
+                  erzeugte Bundle und der CHANGELOG-Eintrag dazu.
+test_sprachen.py  Die sechs Sprachdateien: Kodierung gegen die
+                  Deklaration in localization.tcl, Zeilenformat,
+                  doppelte Schluessel, Namensraeume.
+test_hilfe.py     Inhaltsverzeichnisse, Rueckfall auf en/de, die
+                  gemischten Kodierungen von .txt und .html.
+test_spiegel.py   Waechter fuer den oeffentlichen Push-Spiegel: kein
+                  Hostname, keine private Adresse, keine
+                  Sitzungskennung, keine fremde Mailadresse im Commit.
+test_bestand.py   Lizenztexte und die Versionen der aus dem Baum
+                  gebauten Bibliotheken.
+test_abbild.py    Update-Information und zsync, die Abgleichpfade von
+                  build-appimage.sh, AppRun, release.sh.
+
+Was sie nicht prueft
+--------------------
+Kein Verhalten des laufenden Programms. Die DB-Schicht laesst sich
+gegen libdb.a pruefen (ein eigenes main, dieselbe Linkregel wie
+cbh2si4), die Oberflaeche ueber "send Scidc" oder Xvfb -- beides ist
+nicht Teil dieser Lage.
+
+Grundsaetze
+-----------
+* Die Reihe laeuft in einem frischen Klon. Was ein gebautes Erzeugnis
+  braucht (AppImage, Bundle, AppDir), wird uebersprungen, nicht als
+  Fehler gemeldet.
+* Sie schreibt nichts und geht nicht ins Netz.
+* Bekannte Ausnahmen stehen als benannte Menge im Kopf der jeweiligen
+  Datei, mit dem Grund daneben -- nicht als weggelassene Pruefung.

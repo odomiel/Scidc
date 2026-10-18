@@ -964,10 +964,10 @@
 ::board::options::mc::YouCannotReverse		"Du kan inte ta tillbaka den här handlingen. Filen '%s' kommer fysiskt raderas."
 
 ::board::options::mc::CannotUsePieceWorkingSet "Kan inte skapa nytt tema med %s markerad för pjässtil."
-::board::options::mc::CannotUsePieceWorkingSet "Först måste du spara den nya pjässtilen, eller välja en annan pjässtil."
+::board::options::mc::ChooseAnotherPieceStyle "Först måste du spara den nya pjässtilen, eller välja en annan pjässtil."
 
 ::board::options::mc::CannotUseSquareWorkingSet "Kan inte skapa nytt tema med %s markerad för brädstil."
-::board::options::mc::CannotUseSquareWorkingSet "Först måste du spara den nya brädstilen, eller välja en annan brädstil."
+::board::options::mc::ChooseAnotherSquareStyle "Först måste du spara den nya brädstilen, eller välja en annan brädstil."
 
 ### board::piece #######################################################
 ::board::piece::mc::Start						"Start"
@@ -1593,7 +1593,6 @@
 ::gamebar::mc::Tip(Antichess)					"Det finns ingen schack, ingen rockad, kungen\ntas som en vanlig pjäs."
 ::gamebar::mc::Tip(Suicide)					"Om patt kommer spelaren med färre\npjäser att vinna (enligt FICS regler)."
 ::gamebar::mc::Tip(Giveaway)					"Om patt kommer spelaren som är\npatt att vinna (enligt internationella regler)."
- ;# NEW
 ::gamebar::mc::Tip(Losers)						"Kungen är som i normalt schack, och du kan även\nvinna genom att bli mattad eller pattad."
 
 ### merge ##############################################################
@@ -1756,7 +1755,7 @@
 
 ### import #############################################################
 ::import::mc::ImportingFile(pgn)					"Importerar PGN-fil"
-::import::mc::ImportingFile(pgn)					"Importerar databasen"
+::import::mc::ImportingFile(db)					"Importerar databasen"
 ::import::mc::Line									"Rad"
 ::import::mc::Column									"Spalt"
 ::import::mc::GameNumber							"Parti"
@@ -1981,7 +1980,7 @@
 ::export::mc::Option(pgn,include_marks)							"Exportera markeringar (som kommentarer)"
 ::export::mc::Option(pgn,use_scidb_import_format)				"Använd Scidb-importformat"
 ::export::mc::Option(pgn,use_chessbase_format)					"Använd ChessBase-format"
-::export::mc::Option(pgn,use_strict_pgn_standard				"Use PGN standard" ;# NEW
+::export::mc::Option(pgn,use_strict_pgn_standard)				"Use PGN standard" ;# NEW
 ::export::mc::Option(pgn,include_ply_count_tag)					"Skriv tag 'PlyCount'"
 ::export::mc::Option(pgn,include_termination_tag)				"Skriv tag 'Termination'"
 ::export::mc::Option(pgn,include_mode_tag)						"Skriv tag 'Mode'"
@@ -2223,7 +2222,6 @@
 ::terminationbox::mc::Reason(TimeForfeit,both)		"Båda spelarna överskred tiden"
 ::terminationbox::mc::Reason(TimeForfeit,remis)		"%causer fick slut på tiden och %opponent kan inte vinna"
 ::terminationbox::mc::Reason(NoOpponent)				"Point given for game with no opponent" ;# NEW
-::terminationbox::mc::Reason(Unterminated)			"No finalizado" ;# NEW
 ::terminationbox::mc::Reason(Unterminated)			"Ej färdigspelat"
 
 ::terminationbox::mc::Termination(checkmate)			"%s är matt"

@@ -6,6 +6,42 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.10.18
+
+- **b1** – **Prüfreihe Lage 1: 80 Tests auf Text, und acht Funde beim ersten Lauf.**
+
+  Das Projekt hat keine Test-Suite; geprüft wurde bisher am laufenden Programm. Der Aufbau ist vom
+  Verteilerly-Projekt übernommen (reines `unittest`, kein pytest, kein Linter): `tests/` prüft
+  Versionen, Sprachdateien, Hilfe, Spiegel-Wächter, Bestand und Abbild. Die Reihe braucht **0,6 s**,
+  läuft in einem frischen Klon, schreibt nichts und geht nicht ins Netz; was ein gebautes Erzeugnis
+  braucht, wird übersprungen statt zu scheitern.
+
+      python3 -m unittest discover -s tests -t .
+
+  Beim ersten Lauf gefunden und behoben – alles bisher stillschweigende Fehler, denn die
+  Sprachdateien werden **zeilenweise** gelesen (`set [lindex $line 0] [lindex $line 1]`) und melden
+  nichts:
+
+  | Fund | Wirkung |
+  |---|---|
+  | `deutsch.tcl` schrieb `set ::playerdict::mc::WebSource …` | der Leser setzte eine Variable namens `set`; die deutsche „Webquelle" kam nie an |
+  | `Option(pgn,use_strict_pgn_standard` ohne `)` in en/es/hu/sv | der Eintrag wurde nie gesetzt, die Beschriftung blieb auf der Vorgabe |
+  | `ChooseAnother{Piece,Square}Style` hieß in en/es/it/hu/sv noch `CannotUse…WorkingSet` | der zweite Satz überschrieb den ersten: der Dialog zeigte den Hinweis zweimal und die eigentliche Meldung nie |
+  | `Reason(Unterminated)` in it/hu/sv doppelt, die erste Zeile mit **spanischem** Text | Überrest einer Kopie |
+  | `ImportingFile(pgn)` in sv doppelt, die zweite meinte die Datenbank | → `ImportingFile(db)` |
+  | drei Zeilen mit nicht vorangestelltem `#` (es, hu, sv) | wurden nicht übersprungen, sondern als Zuweisung ausgeführt |
+  | `hu/Contents.dat` hatte eine Klammer zu viel | `catch { source … }` schluckte es: das ungarische Inhaltsverzeichnis war **leer** |
+  | `sv/Welcome.html` und `sv/Overview.html` fehlten | schwedische Nutzer bekamen die englische Begrüßungsseite, obwohl die Übersetzung vorlag |
+
+  Die beiden schwedischen Seiten sind mit `make_html.tcl` aus den vorhandenen `.txt` erzeugt,
+  `hu/Contents.dat` mit `make_contents.tcl` neu – die Handfassung hatte eine Gruppe geöffnet und
+  nicht geschlossen.
+
+  Noch offen und darum als benannte Altlast im Wächter eingetragen: **drei Commits vom 23.09.2026
+  tragen eine persönliche Mailadresse** statt der noreply-Adresse. Sie entstanden auf einem anderen
+  Rechner, bevor die Identität global gesetzt war, und liegen seitdem im öffentlichen Spiegel; zu
+  ändern wäre das nur durch Umschreiben der Historie und einen Force-Push.
+
 ## 26.10.05
 
 - **b1** – **expat auf 2.9.0 gezogen (drei CVEs) und den einen offenen XML-Pfad geschlossen.**

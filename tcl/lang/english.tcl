@@ -958,10 +958,10 @@
 ::board::options::mc::YouCannotReverse		"You cannot reverse this action. File '%s' will be physically removed."
 
 ::board::options::mc::CannotUsePieceWorkingSet "Cannot create new theme with %s selected for piece style."
-::board::options::mc::CannotUsePieceWorkingSet "At first you have to save new piece style, or choose another piece style."
+::board::options::mc::ChooseAnotherPieceStyle "At first you have to save new piece style, or choose another piece style."
 
 ::board::options::mc::CannotUseSquareWorkingSet "Cannot create new theme with %s selected for square style."
-::board::options::mc::CannotUseSquareWorkingSet "At first you have to save new square style, or choose another square style."
+::board::options::mc::ChooseAnotherSquareStyle "At first you have to save new square style, or choose another square style."
 
 ### board::piece #######################################################
 ::board::piece::mc::Start						"Start"
@@ -1969,7 +1969,7 @@
 ::export::mc::Option(pgn,include_marks)							"Export marks (as comments)"
 ::export::mc::Option(pgn,use_scidb_import_format)				"Use Scidb import format"
 ::export::mc::Option(pgn,use_chessbase_format)					"Use ChessBase format"
-::export::mc::Option(pgn,use_strict_pgn_standard				"Use PGN standard"
+::export::mc::Option(pgn,use_strict_pgn_standard)				"Use PGN standard"
 ::export::mc::Option(pgn,include_ply_count_tag)					"Write tag 'PlyCount'"
 ::export::mc::Option(pgn,include_termination_tag)				"Write tag 'Termination'"
 ::export::mc::Option(pgn,include_mode_tag)						"Write tag 'Mode'"

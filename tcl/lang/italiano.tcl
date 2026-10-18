@@ -964,10 +964,10 @@
 ::board::options::mc::YouCannotReverse		"Non puoi ritornare su questa azione. Il file '%s' sarà rimosso fisicamente."
 
 ::board::options::mc::CannotUsePieceWorkingSet "Non posso creare un nuovo tema con %s selezionato per lo stile dei pezzi."
-::board::options::mc::CannotUsePieceWorkingSet "Prima devi salvare il nuovo stile pezzi, o scegliere un altro stile pezzi."
+::board::options::mc::ChooseAnotherPieceStyle "Prima devi salvare il nuovo stile pezzi, o scegliere un altro stile pezzi."
 
 ::board::options::mc::CannotUseSquareWorkingSet "Non posso creare un nuovo tema con %s selezionato per lo stile delle case."
-::board::options::mc::CannotUseSquareWorkingSet "Prima devi salvare il nuovo stile case, o scegliere un altro stile case."
+::board::options::mc::ChooseAnotherSquareStyle "Prima devi salvare il nuovo stile case, o scegliere un altro stile case."
 
 ### board::piece #######################################################
 ::board::piece::mc::Start						"Inizia"
@@ -2226,7 +2226,6 @@
 ::terminationbox::mc::Reason(TimeForfeit,both)		"Entrambi i giocatori perdono per tempo"
 ::terminationbox::mc::Reason(TimeForfeit,remis)		"%causer ha finito il tempo e %opponent non ha materiale per vincere"
 ::terminationbox::mc::Reason(NoOpponent)				"Point given for game with no opponent" ;# NEW
-::terminationbox::mc::Reason(Unterminated)			"No finalizado" ;# NEW
 ::terminationbox::mc::Reason(Unterminated)			"Non terminata"
 
 ::terminationbox::mc::Termination(checkmate)			"%s è scacco matto"
