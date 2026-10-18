@@ -43,3 +43,24 @@ Grundsaetze
 * Sie schreibt nichts und geht nicht ins Netz.
 * Bekannte Ausnahmen stehen als benannte Menge im Kopf der jeweiligen
   Datei, mit dem Grund daneben -- nicht als weggelassene Pruefung.
+
+Lage 2 -- C++-Unittests (src/tests/, seit 26.10.18-b2)
+------------------------------------------------------
+Aufruf:   make -C src check      (baut die Bibliotheken, dann ./src/dbtest)
+Einzeln:  ./src/dbtest ByteStream        bzw.  ./src/dbtest Decoder.deep_nesting_is_rejected
+
+Kein Rahmenwerk: t_assert.h bringt TEST/CHECK/CHECK_EQ/CHECK_THROWS, t_main.cpp
+den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
+
+  t_byte_stream.cpp   util::ByteStream: Grenzen, uint24, basisrelative capacity(),
+                      Fensterstroeme, Zeichenketten ohne Abschluss
+  t_decoder.cpp       MaxVariationLevel des SI3-Decoders (deckt SI3/4/5 ab)
+
+Drei Dinge, die Zeit gekostet haben:
+  * Ohne db::Board::initialize() & Co. in main() liefert Position::piece()
+    ueberall piece::None -- jeder Decoder-Test scheitert dann mit
+    "error while decoding game data", was nach einem Decoder-Fehler aussieht.
+  * Eine Varianten-Marke (Byte 13) allein genuegt im Strom nicht; davor
+    gehoert ein gueltiges Zugbyte (siehe Kommentar in t_decoder.cpp).
+  * Erwartete Ausnahmen drucken sonst die M_THROW-Diagnose samt Backtrace;
+    test::Quiet schaltet sie fuer den Fall ab.

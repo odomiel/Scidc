@@ -8,6 +8,12 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.10.18
 
+- **b2** – Prüfreihe Lage 2: C++-Unittests gegen `libdb.a` (`make -C src check`).
+  Eigener, rahmenloser Prüfstand in `src/tests/` (`t_assert.h`, `t_main.cpp`); 17 Fälle,
+  40 Prüfungen. Geprüft werden `util::ByteStream` (Grenzüberläufe, basisrelative
+  `capacity()`, Fensterströme) und der Rekursionsdeckel `MaxVariationLevel` des
+  SI3-Decoders – flache Verschachtelung muß am Stromende scheitern, tiefe am Deckel,
+  sonst belegt der Test nichts.
 - **b1** – **Prüfreihe Lage 1: 80 Tests auf Text, und acht Funde beim ersten Lauf.**
 
   Das Projekt hat keine Test-Suite; geprüft wurde bisher am laufenden Programm. Der Aufbau ist vom

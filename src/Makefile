@@ -77,6 +77,16 @@ SUBDIRS = db app mstl sys tcl tk/jpeg tk/svg/agg tk/svg tk/treectrl tk/html tk/t
 
 TARGETS = extend_eco dump_eco code2eco eco2code best_move guess_move pawn_progress cbh2si4 cdb2sci $(TK_PROGRAM) $(TCL_PROGRAM)
 
+# Tests der DB-Schicht (Lage 2). Sie binden dieselben Bibliotheken wie
+# cbh2si4 und brauchen weder Tcl-Oberflaeche noch Bildschirm.
+TEST_PROGRAM	= dbtest
+TEST_SRC = \
+	tests/t_main.cpp \
+	tests/t_byte_stream.cpp \
+	tests/t_decoder.cpp \
+
+TEST_OBJ = $(TEST_SRC:.cpp=.o)
+
 all: check-mtime recursive cbh2si4 cdb2sci $(TK_PROGRAM) $(TCL_PROGRAM)
 tkscidc-only: recursive $(TK_PROGRAM)
 
@@ -180,6 +190,7 @@ clean:
 	@echo "Clean `pwd`"
 	@rm -f $(TARGETS) Makefile.bak
 	@rm -f $(SRC:.cpp=.o)
+	@rm -f $(TEST_PROGRAM) $(TEST_OBJ) $(TEST_OBJ:.o=.d)
 	@for dir in $(SUBDIRS); do \
 		$(MAKE) -C $$dir clean; \
 	done
@@ -308,6 +319,27 @@ cdb2sci: cdb2sci.o $(LIBS)
 recover_index: recover_index.o $(LIBS)
 	@echo "Building $@"
 	@$(CXX) -o $@ $< $(LDFLAGS) $(PROFILING) $(ALL_LIBS)
+
+$(TEST_PROGRAM): $(TEST_OBJ) $(LIBS)
+	@echo "Building $@"
+	@$(CXX) -o $@ $(TEST_OBJ) $(LDFLAGS) $(ALL_LIBS)
+
+# -MMD/-MP erzeugt die Abhaengigkeiten mit: ohne sie uebersieht make eine
+# geaenderte t_assert.h oder einen geaenderten Kopf der DB-Schicht, und ein
+# veraltetes Objekt laeuft mit einer anderen Zusicherung weiter.
+tests/%.o: tests/%.cpp
+	@echo "Compiling $@"
+	@$(CXX) -c -o $@ -MMD -MP $(ALL_CXXFLAGS) $(EXTRA_CXXFLAGS) $(EXTRA_DEBUG_FLAGS) \
+		$(ALL_INCLUDE) -DSHAREDIR=\"$(DATADIR)\" $(SCIDB_VERSION) $(SCIDB_REVISION) $<
+
+-include $(TEST_OBJ:.o=.d)
+
+# Erst die Bibliotheken, dann das Testprogramm, dann laufen lassen --
+# nacheinander, weil $(LIBS) hier keine eigenen Regeln haben.
+check:
+	@$(MAKE) recursive
+	@$(MAKE) $(TEST_PROGRAM)
+	@./$(TEST_PROGRAM)
 
 $(TCL_PROGRAM): tclscidc.o $(TCL_LIBS) $(ZLIB_LIB)
 	@echo "Building $(TCL_PROGRAM)"

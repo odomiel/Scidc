@@ -42,3 +42,6 @@ fehler/
 migration.txt
 deps/.update-check
 __pycache__/
+src/dbtest
+src/tests/*.o
+src/tests/*.d
