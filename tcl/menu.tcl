@@ -583,7 +583,7 @@ proc dbOpen {parent} {
 		-customicon $::icon::16x16::filetypeArchive \
 		-customtooltip $mc::Archiving \
 		-customcommand [namespace code [list CreateArchive]] \
-		-customfiletypes {.sci .si5 .si4 .si3 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP} \
+		-customfiletypes {.sci .si4 .si3 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP} \
 	]
 	set FileSelBoxInUse 0
 
@@ -596,6 +596,11 @@ proc dbOpen {parent} {
 
 proc dbCreateArchive {parent {base ""}} {
 	if {[string length $base] == 0} { set base [::scidc::db::get name] }
+	# Das SCV-Archiv ist ein Scidb-Format und fuehrt nur die Formate, die
+	# Scidb selbst kennt. SI5 gehoert nicht dazu: ein Archiv mit .si5 waere
+	# fuer Scidb leer. .si5 ist hier also bewusst nicht aufgezaehlt und darf
+	# bei einer SI5-Durchsicht nicht "nachgetragen" werden.
+	if {[string tolower [file extension $base]] eq ".si5"} { return }
 	if {$base eq $::scidc::clipbaseName} { set name $::util::clipbaseName } else { set name $base}
 	set filetypes [list	[list $mc::ScidbArchives {.scv}]]
 	set result [::dialog::saveFile \
@@ -979,8 +984,12 @@ proc GetCompressionMethod {ext} {
 
 
 proc GetCount {file} {
+	# Das SCV-Archiv ist ein Scidb-Format und fuehrt nur die Formate, die
+	# Scidb selbst kennt. SI5 gehoert nicht dazu: ein Archiv mit .si5 waere
+	# fuer Scidb leer. .si5 ist hier also bewusst nicht aufgezaehlt und darf
+	# bei einer SI5-Durchsicht nicht "nachgetragen" werden.
 	switch [string tolower [file extension $file]] {
-		.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+		.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 			return [::scidc::misc::size $file]
 		}
 	}

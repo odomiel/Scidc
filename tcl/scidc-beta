@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.10.18 b2 Beta"
+	set version "26.10.26 b1 Beta"
 }
 
 
@@ -38011,7 +38011,7 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 								lassign $pair attr value
 								if {$attr eq "FileName"} {
 									switch [string tolower [file extension $value]] {
-										.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+										.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 											if {[string length $bases] > 0} { append bases \n }
 											set file [file tail $value]
 											append bases $file
@@ -106813,7 +106813,7 @@ proc OpenArchive {parent file byUser args} {
 			lassign $pair attr value
 			if {$attr eq "FileName"} {
 				switch [string tolower [file extension $value]] {
-					.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+					.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 						lappend bases $value
 						if {[file exists $value]} { lappend overwrite "\u26ab [file tail $value]" }
 					}
@@ -107369,6 +107369,7 @@ proc PopupMenu {parent x y {base ""}} {
 			-image $::icon::16x16::filetypeArchive \
 			-compound left \
 			-command [list ::menu::dbCreateArchive $top $base] \
+			-state [expr {$ext eq "si5" ? "disabled" : "normal"}] \
 			;
 
 		$menu add separator
@@ -149613,7 +149614,7 @@ proc dbOpen {parent} {
 		-customicon $::icon::16x16::filetypeArchive \
 		-customtooltip $mc::Archiving \
 		-customcommand [namespace code [list CreateArchive]] \
-		-customfiletypes {.sci .si5 .si4 .si3 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP} \
+		-customfiletypes {.sci .si4 .si3 .cbh .cbf .pgn .pgn.gz .bpgn .bpgn.gz .zip .CBF .PGN .ZIP} \
 	]
 	set FileSelBoxInUse 0
 
@@ -149626,6 +149627,7 @@ proc dbOpen {parent} {
 
 proc dbCreateArchive {parent {base ""}} {
 	if {[string length $base] == 0} { set base [::scidc::db::get name] }
+	if {[string tolower [file extension $base]] eq ".si5"} { return }
 	if {$base eq $::scidc::clipbaseName} { set name $::util::clipbaseName } else { set name $base}
 	set filetypes [list	[list $mc::ScidbArchives {.scv}]]
 	set result [::dialog::saveFile \
@@ -149972,7 +149974,7 @@ proc GetCompressionMethod {ext} {
 
 proc GetCount {file} {
 	switch [string tolower [file extension $file]] {
-		.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+		.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 			return [::scidc::misc::size $file]
 		}
 	}

@@ -6,6 +6,18 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.10.26
+
+- **b1** – SCV-Archiv wieder auf die Formate von Scidb zurückgebaut: SI5 ist kein
+  Archivformat mehr. `.si5` wurde an vier Stellen des Archivpfads geführt – beim Erkennen
+  der Datenbanken im Archiv (`app-database.tcl`), in der Archiv-Vorschau des Dateidialogs
+  (`fileselectionbox.tcl`), bei der Partienzählung und am Archiv-Knopf des Öffnen-Dialogs
+  (`menu.tcl`). Ein so erzeugtes Archiv wäre für Scidb leer gewesen. Jetzt: der
+  Menüeintrag „Archiv erstellen“ ist für SI5-Bestände ausgegraut, `dbCreateArchive`
+  weist SI5 ab, und ein Archiv mit `.si5` wird beim Öffnen nicht mehr als Datenbank
+  erkannt. SI5 als Datenbankformat bleibt unberührt – `mapExtension` und die
+  Öffnen-Dialoge führen `.si5` weiter.
+
 ## 26.10.18
 
 - **b2** – Prüfreihe Lage 2: C++-Unittests gegen `libdb.a` (`make -C src check`).

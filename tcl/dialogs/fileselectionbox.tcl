@@ -835,8 +835,12 @@ proc Inspect {parent {folder ""} {filename ""} {originalPath ""} {deletionDate "
 							foreach pair $entry {
 								lassign $pair attr value
 								if {$attr eq "FileName"} {
+									# Das SCV-Archiv ist ein Scidb-Format und fuehrt nur die Formate, die
+									# Scidb selbst kennt. SI5 gehoert nicht dazu: ein Archiv mit .si5 waere
+									# fuer Scidb leer. .si5 ist hier also bewusst nicht aufgezaehlt und darf
+									# bei einer SI5-Durchsicht nicht "nachgetragen" werden.
 									switch [string tolower [file extension $value]] {
-										.sci - .si3 - .si4 - .si5 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
+										.sci - .si3 - .si4 - .cbh - .cbf - .pgn - .pgn.gz - .bpgn - .bpgn.gz {
 											if {[string length $bases] > 0} { append bases \n }
 											set file [file tail $value]
 											append bases $file
