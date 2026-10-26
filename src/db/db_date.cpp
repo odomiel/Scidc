@@ -46,8 +46,15 @@ computeJulian(unsigned y, unsigned m, unsigned d)
 	}
 	else
 	{
+		// Januar und Februar gehoeren im maerz-basierten Kalender ins
+		// VORJAHR. Hier stand --y als ++y: damit war computeDate nicht
+		// mehr die Umkehrung von computeJulian, und jeder Januar- und
+		// Februartag kam knapp zwei Jahre spaeter zurueck (gemessen:
+		// 25059 von 154423 Tagen zwischen 1800 und 2222 falsch). Ausserdem
+		// sprang die Tageszahl an den Grenzen Dez->Jan und Feb->Mrz um
+		// etwa +-730, womit jede Differenzrechnung dort unbrauchbar war.
 		m += 9;
-		++y;
+		--y;
 	}
 
 	unsigned c = y/100;

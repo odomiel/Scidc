@@ -161,7 +161,14 @@ proc show {parent} {
 	if {!$Options(firstTime)} {
 		if {[string match periodically* $Options(mode)]} {
 			if {$Options(counter) > 0 && [incr Options(counter) -1] > 0} { return }
-			if {$Options(lastDay) + 7 > [::scidc::misc::julianDay]} { return }
+			set today [::scidc::misc::julianDay]
+			# Ein gespeicherter Tag in der Zukunft kann nicht stimmen. Bis
+			# 26.10.26-b1 rechnete Date::julianDay fuer Januar und Februar
+			# um knapp zwei Jahre zu hoch; eine zurueckgestellte Uhr wirkt
+			# genauso. Ohne diesen Riegel bliebe der Tipp danach bis zu
+			# zwei Jahre aus.
+			if {$Options(lastDay) > $today} { set Options(lastDay) $today }
+			if {$Options(lastDay) + 7 > $today} { return }
 		}
 	}
 

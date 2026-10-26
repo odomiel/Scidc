@@ -38,7 +38,7 @@ package require tkscidc
 
 namespace eval scidc {
 	set app		Scidc
-	set version "26.10.26 b1 Beta"
+	set version "26.10.26 b2 Beta"
 }
 
 
@@ -40525,7 +40525,9 @@ proc show {parent} {
 	if {!$Options(firstTime)} {
 		if {[string match periodically* $Options(mode)]} {
 			if {$Options(counter) > 0 && [incr Options(counter) -1] > 0} { return }
-			if {$Options(lastDay) + 7 > [::scidc::misc::julianDay]} { return }
+			set today [::scidc::misc::julianDay]
+			if {$Options(lastDay) > $today} { set Options(lastDay) $today }
+			if {$Options(lastDay) + 7 > $today} { return }
 		}
 	}
 

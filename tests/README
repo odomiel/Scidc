@@ -55,6 +55,15 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
   t_byte_stream.cpp   util::ByteStream: Grenzen, uint24, basisrelative capacity(),
                       Fensterstroeme, Zeichenketten ohne Abschluss
   t_decoder.cpp       MaxVariationLevel des SI3-Decoders (deckt SI3/4/5 ab)
+  t_date.cpp          db::Date: Teilangaben, Schaltjahre, 10-Bit-Jahr im Index
+  t_board.cpp         db::Board: FEN-Umlauf, validate, doMove/undoMove,
+                      Schach/Matt/Patt, alle 960 Aufstellungen
+  t_signature.cpp     db::Signature und db::HomePawns: der Vorfilter der
+                      Stellungssuche (ein falsches Nein verliert Partien)
+
+Nach einer Aenderung an der DB-Schicht immer "make -C src check" aufrufen, nicht
+"make -C src dbtest": das zweite Ziel baut nur die Testobjekte und bindet gegen
+eine veraltete libdb.a -- ein Fix sieht dann wirkungslos aus.
 
 Drei Dinge, die Zeit gekostet haben:
   * Ohne db::Board::initialize() & Co. in main() liefert Position::piece()

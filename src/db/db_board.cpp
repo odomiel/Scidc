@@ -1156,8 +1156,28 @@ Board::checkState(variant::Type variant) const
 		if (variant::isThreeCheck(variant) && m_checksGiven[m_stm ^ 1] >= 3)
 			return state |= ThreeChecks;
 
-		if (!(state & Check) || findAnyLegalMove(variant))
+		// Hier stand ein einziges || -- und die Kurzschlussauswertung
+		// sprang ohne Schach ueber findAnyLegalMove hinweg und kehrte
+		// sofort zurueck. Damit konnte checkState() im Normalschach NIE
+		// Stalemate melden: die Zuweisung darunter ist nur mit Check
+		// erreichbar, also war ihr Stalemate-Zweig toter Code. Mehrere
+		// Aufrufer werten das Bit aus (Game::setupTermination,
+		// PgnReader, CQL "stalemate", die Engine-Anzeige, isGameOver);
+		// Probe::probe meldete ein Patt sogar als Illegal_Position.
+		//
+		// Einsetzschach bleibt ausgenommen: dort kann ein Einsetzzug die
+		// Lage retten, findAnyLegalMove kennt aber keine Einsetzzuege --
+		// die Entscheidung faellt erst im Zweig unten anhand der Figuren
+		// in der Hand.
+		if (variant::isDropChess(variant))
+		{
+			if (!(state & Check) || findAnyLegalMove(variant))
+				return state;
+		}
+		else if (findAnyLegalMove(variant))
+		{
 			return state;
+		}
 
 		state |= (state & Check) ? Checkmate : Stalemate;
 

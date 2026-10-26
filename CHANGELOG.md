@@ -8,6 +8,26 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.10.26
 
+- **b2** – Prüfreihe Lage 2 erweitert (`t_date`, `t_board`, `t_signature`; 48 Fälle,
+  211 Prüfungen) – und dabei **zwei echte Fehler** gefunden und behoben:
+  - `Date::julianDay` rechnete für Januar und Februar um knapp zwei Jahre zu hoch:
+    im märzbasierten Kalender gehören beide Monate ins **Vorjahr**, im Code stand
+    `++y` statt `--y` (`db_date.cpp`). Gemessen waren 25 059 von 154 423 Tagen
+    (1800–2222) falsch, und die Tageszahl sprang an den Grenzen Dez→Jan und
+    Feb→Mär um etwa ±730. Betroffen: `addDays` (CQL-Datumsbereiche in
+    `cql_match.cpp`) und `::scidc::misc::julianDay` – der Tipp des Tages blieb
+    dadurch bis zu zwei Jahre aus. Dort jetzt zusätzlich ein Riegel gegen einen
+    gespeicherten Tag aus der Zukunft.
+  - `Board::checkState` konnte im Normalschach **nie** Patt melden: die
+    Kurzschlussauswertung in `if (!(state & Check) || findAnyLegalMove(variant))`
+    sprang ohne Schach über die Zugsuche hinweg, womit der Stalemate-Zweig
+    darunter toter Code war (`db_board.cpp`). Das Bit wird an mehreren Stellen
+    ausgewertet: Partie-Beendigung (`db_game.cpp`), PGN-Leser, CQL-Bedingung
+    `stalemate`, Engine-Anzeige, `gameIsOver` – und `Probe::probe` meldete ein
+    Patt als `Illegal_Position`. Einsetzschach bleibt ausgenommen, dort
+    entscheiden die Figuren in der Hand.
+
+## 26.10.26
 - **b1** – SCV-Archiv wieder auf die Formate von Scidb zurückgebaut: SI5 ist kein
   Archivformat mehr. `.si5` wurde an vier Stellen des Archivpfads geführt – beim Erkennen
   der Datenbanken im Archiv (`app-database.tcl`), in der Archiv-Vorschau des Dateidialogs

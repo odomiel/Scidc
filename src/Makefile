@@ -84,6 +84,9 @@ TEST_SRC = \
 	tests/t_main.cpp \
 	tests/t_byte_stream.cpp \
 	tests/t_decoder.cpp \
+	tests/t_date.cpp \
+	tests/t_board.cpp \
+	tests/t_signature.cpp \
 
 TEST_OBJ = $(TEST_SRC:.cpp=.o)
 
