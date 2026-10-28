@@ -1484,7 +1484,7 @@ Database::copyGames(	Database& destination,
 									log,
 									progress);
 	}
-	else // dstFormat == format::Scid3 || dstFormat == format::Scid4
+	else // dstFormat == format::Scid3 || Scid4 || Scid5 (alle ueber si3::Consumer)
 	{
 		si3::Consumer consumer(	srcFormat,
 										dynamic_cast<si3::Codec&>(destination.codec()),

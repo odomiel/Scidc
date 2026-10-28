@@ -8,6 +8,22 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.10.28
 
+- **b2** – `tests/test_quellen.py`: vier Eigenschaften des Quellbaums, die sich still
+  verlieren (92 Tests in Lage 1). Geprüft werden die **SI5-Format-Gates** (jede Stelle,
+  die `format::Scid4` nennt, ohne `Scid5` im Umfeld – die vier verbleibenden sind benannt
+  und je mit Grund belegt, darunter das absichtliche `useConsumer`-Verhalten für ein
+  SI5-Ziel), die **Latin-1-C++-Quellen**, die `SOURCES`-Liste von `tcl/Makefile` (Eintrag
+  ohne Datei, Datei ohne Eintrag) und der **Engine-Katalog** (Pflichtfelder, SHA-256 und
+  Größe je Build – ohne Prüfsumme fällt die Prüfung vor dem Ausführbarmachen lautlos weg).
+  Dabei herausgekommen: **nicht eine, sondern vier C++-Quellen sind Latin-1**
+  (`cbh_codec.cpp`, `db_site.cpp`, `sys_utf8_codec.cpp`, `u_emoticons.cpp`) – die drei
+  letzten waren nicht dokumentiert und hätten beim nächsten Edit still Schaden genommen.
+  Umgekehrt sind sechs Dateien mit Nicht-ASCII-Bytes gültiges UTF-8 und unbedenklich.
+  Nebenbei der veraltete Kommentar in `Database::copyGames` berichtigt (der `else`-Zweig
+  führt SI5 mit).
+
+## 26.10.28
+
 - **b1** – Lage 2 abgeschlossen und an Lage 1 angeschlossen. Neu `tests/test_cpp.py`:
   fährt `src/dbtest` mit, wenn es gebaut ist (sonst übersprungen), und prüft von außen,
   was nur dort zu sehen ist – jede `src/tests/t_*.cpp` muß in `TEST_SRC` stehen (sonst
