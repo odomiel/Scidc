@@ -1186,6 +1186,7 @@
 ::engine::mc::FeatureDetail(losers)				"Losing Chess is a variant of Antichess, where the goal is to lose the chess game, but with several conditions attached to the rules. The goal is to lose all of your pieces (except the king), although in Losers Chess, you can also win by getting checkmated (according to ICC rules)."
 ::engine::mc::FeatureDetail(3check)				"The characteristic of this chess variant: a player wins if he checks his opponent three times."
 ::engine::mc::FeatureDetail(playingStyle)		"This engine provides different playing styles, namely %s. See the handbook of the engine for an explanation of the different styles."
+::engine::mc::FeatureDetail(antichess)		"Antichess is a chess variant where the goal is to lose all pieces. Captures are mandatory and there is no check. In case of stalemate, the stalemated player wins (Lichess rules)."
 
 ### analysis ###########################################################
 ::application::analysis::mc::Control						"Control"
@@ -1502,6 +1503,13 @@
 ::playerdict::mc::Mode(c)			"Correspondence"
 ::playerdict::mc::Mode(-)			""
 ::playerdict::mc::Where				"in %country%"
+::playerdict::mc::DataSources					"Data Sources"
+::playerdict::mc::DataSourcesTitle			"Player Dictionary - Data Sources"
+::playerdict::mc::FileDate						"Last modified"
+::playerdict::mc::FileNotFound				"not found"
+::playerdict::mc::FileSize						"Size"
+::playerdict::mc::Region(w)					"World"
+::playerdict::mc::WebSource					"Web source"
 
 ### player-card ########################################################
 ::playercard::mc::PlayerCard					"Player Card"
@@ -2395,6 +2403,8 @@
 ::info::mc::Version					"Version"
 ::info::mc::Distributed				"This program is distributed under the terms of the GNU General Public License."
 ::info::mc::SpecialThanks			"Special thanks to %s for his terrific work. His effort is the basis for this application."
+::info::mc::AIAssistance						"AI-assisted Development"
+::info::mc::ScidcDevelopment					"Scidc Development"
 
 ### comment ############################################################
 ::comment::mc::CommentBeforeMove		"Comment before move"
@@ -3279,5 +3289,14 @@
 ::application::mc::WelcomeDownload	"Download selected"
 ::application::mc::WelcomeLater	"Later"
 ::application::mc::WelcomeNoCatalog	"The engine catalog was not found - engines can be installed later under Settings, Engines."
+
+::debug::mc::BuildMode							"Build: %s"
+::debug::mc::DebugBuild							"Debug"
+::debug::mc::Debugging							"De&bugging"
+::debug::mc::EngineLog							"Open engine communication log..."
+::debug::mc::OpenLogFolder						"Open log folder"
+::debug::mc::ReleaseBuild						"Release"
+::debug::mc::StderrActive						"Active log: %s"
+::debug::mc::StderrToFile						"Enable log"
 
 # vi:set ts=3 sw=3:

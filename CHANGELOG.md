@@ -8,6 +8,29 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.10.28
 
+- **b3** – **Lage 3 der Prüfreihe: das laufende Programm.** `tests/test_laufend.py`
+  startet eine eigene Instanz mit eigenem `HOME` und fragt sie über die
+  Anwendungskennung `Scidc` aus (base64-Protokoll über einen `wish`-Treiber, Zeitgrenze
+  statt Blockieren). Zehn Fälle, gut drei Sekunden; übersprungen ohne `DISPLAY`, ohne
+  gebaute Erzeugnisse und **wenn schon eine Instanz läuft** – das Programm des Benutzers
+  wird nie angefasst. Geprüft wird, was nur zur Laufzeit messbar ist: Version der
+  antwortenden Instanz, Trennung vom Benutzerbestand, Start ohne Ausnahme, alle sechs
+  Sprachen, die dokumentierten Widgetpfade, die Ziehbarkeit der Elo-Spalten (Rückfallprobe
+  zu 26.09.18-b5), die Farbauflösung im Nachtmodus, das SCV-Archiv ohne SI5 (26.10.26-b1)
+  und die C++-Brücke.
+
+  Dabei herausgekommen: **beim Zurückschalten auf Englisch blieben 18 Texte in der
+  vorigen Sprache stehen.** `::mc::selectLang` setzt nur, was in der gewählten Sprachdatei
+  steht, und stellt die eingebauten englischen Vorgaben nie wieder her – fehlt ein
+  Schlüssel in `english.tcl`, bleibt der Text, wie er war. Betroffen waren `::debug::*`
+  (8), `::playerdict::*` (7), `::info::AIAssistance`/`ScidcDevelopment` und
+  `FeatureDetail(antichess)`; alle 18 sind nun in `english.tcl` eingetragen.
+  `tests/test_sprachen.py::TestEnglischAlsRueckfall` hält die Invariante fest und führt
+  die 31 verwaisten Schlüssel, zu denen der Quelltext keine Vorgabe mehr hat
+  (umbenannte oder entfernte Features), als benannte Menge mit Grund.
+
+## 26.10.28
+
 - **b2** – `tests/test_quellen.py`: vier Eigenschaften des Quellbaums, die sich still
   verlieren (92 Tests in Lage 1). Geprüft werden die **SI5-Format-Gates** (jede Stelle,
   die `format::Scid4` nennt, ohne `Scid5` im Umfeld – die vier verbleibenden sind benannt

@@ -1,5 +1,14 @@
-Pruefreihe -- Lage 1: Text
-==========================
+Pruefreihe
+==========
+
+Drei Lagen:
+
+    Lage 1  Text und Quellbaum  -- tests/*.py, unittest, braucht nichts
+    Lage 2  C++ gegen libdb.a   -- src/tests/*.cpp, make -C src check
+    Lage 3  laufendes Programm  -- tests/test_laufend.py, ueber "send"
+
+Lage 1: Text
+------------
 
 Aufruf aus dem Wurzelverzeichnis:
 
@@ -9,7 +18,7 @@ Aufruf aus dem Wurzelverzeichnis:
 
 Es gibt kein pytest und keinen Linter im Repo -- geprueft wird mit
 unittest, wie im Verteilerly-Projekt, von dem der Aufbau uebernommen ist.
-Die ganze Reihe braucht unter einer Sekunde.
+Lage 1 braucht unter einer Sekunde, Lage 3 gut drei weitere.
 
 Was geprueft wird
 -----------------
@@ -27,13 +36,17 @@ test_bestand.py   Lizenztexte und die Versionen der aus dem Baum
                   gebauten Bibliotheken.
 test_abbild.py    Update-Information und zsync, die Abgleichpfade von
                   build-appimage.sh, AppRun, release.sh.
+test_cpp.py       Bruecke zu Lage 2: fuehrt src/dbtest mit, prueft die
+                  Vollstaendigkeit von TEST_SRC.
+test_quellen.py   Eigenschaften des Quellbaums: SI5-Format-Gates,
+                  Latin-1-Quellen, SOURCES, Engine-Katalog.
+test_laufend.py   Lage 3, siehe unten.
 
-Was sie nicht prueft
---------------------
-Kein Verhalten des laufenden Programms. Die DB-Schicht laesst sich
-gegen libdb.a pruefen (ein eigenes main, dieselbe Linkregel wie
-cbh2si4), die Oberflaeche ueber "send Scidc" oder Xvfb -- beides ist
-nicht Teil dieser Lage.
+Was keine Lage prueft
+---------------------
+Die Oberflaeche selbst: ob ein Dialog richtig aussieht, ob eine Farbe
+gefaellt, ob ein Mausweg sich gut anfuehlt. Lage 3 fragt Zustaende ab,
+sie klickt nicht.
 
 Grundsaetze
 -----------
@@ -73,3 +86,48 @@ Drei Dinge, die Zeit gekostet haben:
     gehoert ein gueltiges Zugbyte (siehe Kommentar in t_decoder.cpp).
   * Erwartete Ausnahmen drucken sonst die M_THROW-Diagnose samt Backtrace;
     test::Quiet schaltet sie fuer den Fall ab.
+
+
+Lage 3 -- das laufende Programm (tests/test_laufend.py, seit 26.10.28-b3)
+-------------------------------------------------------------------------
+Aufruf:   python3 -m unittest tests.test_laufend -v        (gut 3 Sekunden)
+
+Die Lage startet eine eigene Instanz und fragt sie ueber die
+Tk-Anwendungskennung "Scidc" aus -- derselbe Weg, der in CLAUDE.md unter
+"Pruefen am laufenden Programm" beschrieben ist, nur nicht von Hand.
+
+Aufbau: ein wish9.0 aus deps/tcltk fuehrt einen kleinen Treiber (TREIBER
+im Dateikopf), der zeilenweise base64-kodierte Skripte liest, sie per
+"send Scidc" weiterreicht und das Ergebnis base64-kodiert zurueckgibt.
+Die Kodierung haelt Zeilenumbrueche und Sonderzeichen aus dem Protokoll
+heraus, select() begrenzt das Warten.
+
+Fuenf Dinge, ohne die es nicht laeuft:
+  * HOME wird auf ein temporaeres Verzeichnis gesetzt; start.tcl leitet
+    ~/.scidc-beta daraus ab. Die Bestaende des Benutzers werden nicht
+    angefasst, und am Ende wird das Verzeichnis geloescht.
+  * Das Gerippe (Unterverzeichnisse und ein leeres config/options.dat)
+    muss vorher stehen: sonst ist $::scidc::dir::setup == 1, und
+    Startup2 oeffnet Sprach- und Engine-Dialog -- die Instanz wartet
+    dann auf einen Klick.
+  * Der Treiber MUSS als Datei laufen. Ein wish ohne Skriptargument
+    liest stdin interaktiv; Eingabeaufforderung und Ergebniszeilen
+    mischen sich, und das Lesen haengt.
+  * Laeuft schon eine Instanz unter dem Namen Scidc, wird die Lage
+    uebersprungen. Sonst wuerde sie das Programm des Benutzers
+    ausfragen und ihm die Sprache umstellen.
+  * Nach einem abgebrochenen Lauf bleibt ein tkscidc-beta stehen und
+    laesst den naechsten Lauf ueberspringen:
+    pkill -9 -f "[t]kscidc-beta".
+
+Uebersprungen wird ausserdem ohne DISPLAY und ohne gebaute Erzeugnisse
+(src/tkscidc-beta, tcl/scidc-beta, deps/tcltk/bin/wish9.0) -- ein
+frischer Klon meldet keinen Fehler.
+
+Geprueft werden zehn Dinge, die nur zur Laufzeit messbar sind: die
+Version der antwortenden Instanz, die Trennung vom Benutzerbestand, ein
+Start ohne Ausnahme auf stderr, dass alle sechs Sprachen angenommen
+werden und das Umschalten in beide Richtungen ankommt, die in CLAUDE.md
+genannten Widgetpfade, die Ziehbarkeit der Elo-Spalten (Rueckfallprobe
+zu 26.09.18-b5), die Farbaufloesung im Nachtmodus, das SCV-Archiv ohne
+SI5 (26.10.26-b1) und zwei Stichproben in die C++-Bruecke.

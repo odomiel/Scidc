@@ -162,3 +162,103 @@ class TestZeilen(unittest.TestCase):
                         all(glied in bekannt for glied in raum.split("::"))
                         or raum in bekannt,
                         "Namensraum '%s' gibt es im Quelltext nicht" % raum)
+
+
+# ----------------------------------------------------------------------
+# Schluessel, die eine Uebersetzung fuehrt, english.tcl aber nicht --
+# und die auch keine eingebaute Vorgabe mehr haben: der Quelltext kennt
+# sie nicht (umbenanntes oder entferntes Feature). Sie koennen nicht
+# wirken, denn niemand liest sie; sie bleiben nur stehen, damit eine
+# Wiederaufnahme des Features die Uebersetzung nicht sucht. Gemessen
+# am laufenden Programm, 26.10.28: keiner dieser Namen existierte dort
+# als Variable.
+#
+# Wer hier etwas eintraegt, muss vorher nachsehen, ob der Schluessel im
+# Quelltext eine Vorgabe hat. Hat er eine, gehoert er nach english.tcl,
+# nicht in diese Liste.
+# ----------------------------------------------------------------------
+VERWAISTE_SCHLUESSEL = {
+    # Engine-Download beim Erststart, inzwischen "Welcome*" (application.tcl)
+    "::application::mc::EngineChecksumMismatch",
+    "::application::mc::EngineDesc(fairy-stockfish-scidc)",
+    "::application::mc::EngineDesc(stockfish-scidc)",
+    "::application::mc::EngineDownloadBtn",
+    "::application::mc::EngineDownloadDone",
+    "::application::mc::EngineDownloadFailed",
+    "::application::mc::EngineDownloadMsg",
+    "::application::mc::EngineDownloadRestart",
+    "::application::mc::EngineDownloadTitle",
+    "::application::mc::EngineDownloading",
+    "::application::mc::EngineNoChecksumTool",
+    "::application::mc::EngineSkipBtn",
+    # umbenannt: ReallyCompactDetail(1|N) in app-database.tcl
+    "::application::database::mc::CompactDetail",
+    # Zugfolgen-Anzeige im Zugbaum: in app-tree.tcl auskommentiert
+    "::application::tree::mc::ComputeSpread",
+    "::application::tree::mc::MoveOrders",
+    "::application::tree::mc::ShowAllMoveOrders",
+    # kein Gegenstueck im Quelltext (mehr)
+    "::export::mc::Significant",
+    "::import::mc::Error(AbortedDueToInternalError)",
+    "::import::mc::Error(AbortedDueToIoError)",
+    "::import::mc::Error(UserHasInterrupted)",
+    # umbenannt: State(UnsupportedVariant) in import.tcl
+    "::import::mc::UnsupportedVariant",
+    # umbenannt: AllOthers in info.tcl
+    "::info::mc::AllOther",
+    "::info::mc::Inspired",
+    # steht in player-dict.tcl, aber als ::playerdict::mc::
+    "::playertable::mc::HelpPatternMatching",
+    "::setup::mc::Chess960Position",
+    "::setup::mc::ShuffleChessPosition",
+    "::setup::mc::SymmChess960Position",
+    "::terminationbox::mc::State(Checkmate)",
+    "::terminationbox::mc::State(Losing)",
+    "::terminationbox::mc::State(Stalemate)",
+    "::terminationbox::mc::State(ThreeChecks)",
+}
+
+
+class TestEnglischAlsRueckfall(unittest.TestCase):
+    """english.tcl muss jeden uebersetzten Schluessel selbst fuehren.
+
+    mc::selectLang setzt nur, was in der gewaehlten Datei steht -- die
+    eingebauten Vorgaben stellt es nie wieder her (i18n.tcl, ~Zeile
+    431). Fuehrt eine Uebersetzung einen Schluessel, den english.tcl
+    nicht fuehrt, bleibt dieser Text beim Zurueckschalten auf Englisch
+    in der alten Sprache stehen. Gemessen am laufenden Programm: nach
+    de -> en standen 18 Texte weiter auf Deutsch.
+    """
+
+    def schluesselmengen(self):
+        mengen = {}
+        for _, kuerzel, kodierung, datei in sprachen():
+            zeilen = sprachzeilen(os.path.join("tcl/lang", datei),
+                                  python_kodierung(kodierung))
+            mengen[kuerzel] = ({s for _, s, _ in zeilen}, datei)
+        return mengen
+
+    def test_english_fuehrt_jeden_uebersetzten_schluessel(self):
+        mengen = self.schluesselmengen()
+        englisch, _ = mengen["en"]
+        for kuerzel, (menge, datei) in sorted(mengen.items()):
+            if kuerzel == "en":
+                continue
+            fehlt = sorted(menge - englisch - VERWAISTE_SCHLUESSEL)
+            with self.subTest(datei=datei):
+                self.assertEqual(
+                    fehlt, [],
+                    "%s fuehrt diese Schluessel, english.tcl nicht -- sie "
+                    "bleiben beim Zurueckschalten auf Englisch stehen" % datei)
+
+    def test_die_ausnahmeliste_fuehrt_nichts_ueberfluessiges(self):
+        """Keine toten Eintraege: jeder Name steht in einer Uebersetzung."""
+        mengen = self.schluesselmengen()
+        englisch, _ = mengen["en"]
+        uebersetzt = set()
+        for kuerzel, (menge, _) in mengen.items():
+            if kuerzel != "en":
+                uebersetzt |= menge
+        self.assertEqual(sorted(VERWAISTE_SCHLUESSEL - uebersetzt), [])
+        self.assertEqual(sorted(VERWAISTE_SCHLUESSEL & englisch), [],
+                         "english.tcl fuehrt den Schluessel doch")
