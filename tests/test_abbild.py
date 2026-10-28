@@ -19,6 +19,7 @@
 # Was ein gebautes Abbild braucht, wird uebersprungen, wenn keines da ist.
 # ======================================================================
 
+import glob
 import os
 import re
 import subprocess
@@ -194,3 +195,121 @@ class TestReleaseskript(unittest.TestCase):
 
     def test_der_spiegel_wird_angestossen_und_abgewartet(self):
         self.assertIn("push_mirrors-sync", self.text)
+
+
+# ----------------------------------------------------------------------
+# Doppelpflege: AppDir gegen den Quellbaum.
+#
+# AppDir/usr/share/scidc-beta ist das, was ./run-scidb.sh laedt und was
+# ins Abbild wandert. Ein Teil wird von build-appimage.sh abgeglichen
+# (lang, engines.dat, die Wertungsskripte, vorhandene Hilfedateien), ein
+# Teil **nicht**: die ttk-Themes sind von Hand in beiden Baeumen zu
+# pflegen, und eine **neue** Hilfedatei kopiert das Skript nicht ("[ -f
+# $dest ] && cp"), die muss einmal selbst hinueber.
+#
+# Die Pruefungen oben lesen nur den Text des Bauskripts -- dass die
+# Pfade dort stehen. Hier wird verglichen, was wirklich liegt: ein in
+# tcl/ eingebauter Fix, der in AppDir fehlt, greift beim Start nicht,
+# und man sucht ihn im Quelltext.
+# ----------------------------------------------------------------------
+SHARE = os.path.join("AppDir", "usr", "share", "scidc-beta")
+
+
+def gleich(a, b):
+    with open(a, "rb") as f:
+        eins = f.read()
+    with open(b, "rb") as g:
+        zwei = g.read()
+    return eins == zwei
+
+
+class TestDoppelpflege(unittest.TestCase):
+
+    def setUp(self):
+        if not os.path.isdir(pfad(SHARE)):
+            self.skipTest("AppDir ist nicht gebaut")
+
+    def paare(self, quellmuster, zielordner):
+        """(Quelle, Ziel) je Datei, beide Pfade absolut."""
+        ergebnis = []
+        for quelle in sorted(glob.glob(pfad(*quellmuster))):
+            ziel = pfad(SHARE, zielordner, os.path.basename(quelle))
+            ergebnis.append((quelle, ziel))
+        return ergebnis
+
+    def vergleiche(self, paare, hinweis):
+        fehlt, abweichend = [], []
+
+        for quelle, ziel in paare:
+            name = os.path.relpath(quelle, WURZEL)
+            if not os.path.isfile(ziel):
+                fehlt.append(name)
+            elif not gleich(quelle, ziel):
+                abweichend.append(name)
+
+        self.assertNotEqual(paare, [], "nichts zu vergleichen")
+        self.assertEqual(fehlt, [], "in AppDir nicht vorhanden (%s)" % hinweis)
+        self.assertEqual(abweichend, [],
+                         "weicht von der AppDir-Kopie ab (%s)" % hinweis)
+
+    def test_die_sprachdateien_stimmen_ueberein(self):
+        self.vergleiche(self.paare(("tcl", "lang", "*.tcl"), "lang"),
+                        "build-appimage.sh gleicht sie ab")
+
+    def test_die_ttk_themes_stimmen_ueberein(self):
+        """Die einzige Stelle, die von Hand in beiden Baeumen liegt.
+
+        load.tcl sourct die Themes zur Laufzeit aus
+        $share/themes/ttk/*.tcl -- build-appimage.sh gleicht sie
+        **nicht** ab. Eine nur in tcl/ geaenderte Themedatei wirkt
+        darum nicht, und der Fix sieht folgenlos aus.
+        """
+        self.vergleiche(self.paare(("tcl", "themes", "ttk", "*.tcl"), "themes/ttk"),
+                        "von Hand zu pflegen, kein Abgleich im Bauskript")
+
+    def test_keine_themedatei_liegt_nur_in_appdir(self):
+        quellen = {os.path.basename(p)
+                   for p in glob.glob(pfad("tcl", "themes", "ttk", "*.tcl"))}
+        kopien = {os.path.basename(p)
+                  for p in glob.glob(pfad(SHARE, "themes", "ttk", "*.tcl"))}
+        self.assertEqual(sorted(kopien - quellen), [],
+                         "liegt nur in AppDir und ist nicht in Git")
+
+    def test_die_engine_konfiguration_stimmt_ueberein(self):
+        self.vergleiche(self.paare(("tcl", "engines", "engines.dat"), "engines"),
+                        "build-appimage.sh gleicht sie ab")
+
+    def test_die_wertungsskripte_stimmen_ueberein(self):
+        self.vergleiche(self.paare(("tcl", "update-*-players.py"), "scripts"),
+                        "build-appimage.sh gleicht sie ab")
+
+    def test_jede_hilfedatei_liegt_auch_in_appdir(self):
+        """Eine neue Hilfedatei kopiert das Bauskript nicht von selbst.
+
+        Es kopiert nur, was im Ziel schon existiert ("[ -f $dest ] &&
+        cp"). Der erste Kopiervorgang ist Handarbeit -- bleibt er aus,
+        zeigt die Hilfe im Abbild die Seite nie.
+        """
+        fehlt, abweichend = [], []
+
+        for quelle in sorted(glob.glob(pfad("tcl", "help", "*", "*.html"))):
+            name = os.path.relpath(quelle, pfad("tcl", "help"))
+            ziel = pfad(SHARE, "help", name)
+            if not os.path.isfile(ziel):
+                fehlt.append(name)
+            elif not gleich(quelle, ziel):
+                abweichend.append(name)
+
+        self.assertEqual(fehlt, [],
+                         "in AppDir fehlt die Hilfeseite -- einmal von Hand "
+                         "kopieren, siehe CLAUDE.md")
+        self.assertEqual(abweichend, [], "Hilfeseite weicht von der Kopie ab")
+
+    def test_jedes_inhaltsverzeichnis_stimmt_ueberein(self):
+        paare = []
+
+        for quelle in sorted(glob.glob(pfad("tcl", "help", "*", "Contents.dat"))):
+            sprache = os.path.basename(os.path.dirname(quelle))
+            paare.append((quelle, pfad(SHARE, "help", sprache, "Contents.dat")))
+
+        self.vergleiche(paare, "build-appimage.sh gleicht die Hilfe ab")

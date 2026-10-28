@@ -11,7 +11,13 @@
 #     stehen, sonst laeuft sie stillschweigend nie mit;
 #   * keine Sondierungsdatei darf liegenbleiben (t_probe_tmp.cpp,
 #     t_dbg_tmp.cpp und Verwandte sind beim Messen entstanden und
-#     gehoeren nicht in den Baum).
+#     gehoeren nicht in den Baum);
+#   * der Pruefstand darf nicht veralteter sein als das, wogegen er
+#     gebunden ist. "make -C src dbtest" baut die Bibliotheken NICHT,
+#     und diese Bruecke fuehrt nur das vorhandene Binary aus -- ohne
+#     die Pruefung unten meldet ein Lauf gegen eine Woche alte libdb.a
+#     gruen, und ein gerade eingebauter Fix sieht wirkungslos aus.
+#     Genau das hat zweimal Zeit gekostet.
 # ======================================================================
 
 import glob
@@ -27,6 +33,50 @@ def dbtest():
     """Pfad des gebauten Pruefstands, oder None."""
     p = pfad("src", "dbtest")
     return p if os.access(p, os.X_OK) else None
+
+
+def bibliotheken():
+    """Die .a aus $(LIBS) -- genau die Voraussetzungen der dbtest-Regel.
+
+    Aus dem Makefile gelesen, nicht geraten: ein Glob ueber alle lib*.a
+    nennt auch tcl/libtcl.a, und die steht in $(TCL_LIBS). make bindet
+    dbtest dann nicht neu, und die Pruefung unten waere dauerhaft rot.
+    """
+    block = re.search(r"^LIBS\s*=(.*?)^\s*$", lies("src/Makefile"), re.M | re.S)
+
+    if block is None:
+        return []
+
+    namen = sorted(set(re.findall(r"[\w/]+\.a", block.group(1))))
+
+    return [pfad("src", n) for n in namen if os.path.isfile(pfad("src", n))]
+
+
+def neuer_als_pruefstand():
+    """Dateien, die neuer sind als src/dbtest. Leer heisst: aktuell."""
+    programm = dbtest()
+
+    if programm is None:
+        return []
+
+    stand = os.path.getmtime(programm)
+    quellen = (glob.glob(pfad("src", "tests", "*.cpp"))
+               + glob.glob(pfad("src", "tests", "*.h")))
+
+    return sorted(os.path.relpath(p, WURZEL)
+                  for p in bibliotheken() + quellen
+                  if os.path.getmtime(p) > stand)
+
+
+def fordere_aktuell(fall):
+    """Bricht ab, wenn der Pruefstand veraltet ist -- statt falsch gruen."""
+    veraltet = neuer_als_pruefstand()
+
+    fall.assertEqual(
+        veraltet, [],
+        "src/dbtest ist aelter als %s -- der Lauf wuerde gegen einen "
+        "veralteten Stand messen. 'make -C src check' baut vorher die "
+        "Bibliotheken, 'make -C src dbtest' nicht." % ", ".join(veraltet))
 
 
 def test_quellen():
@@ -62,11 +112,19 @@ class TestLage2(unittest.TestCase):
             text = lies(f"src/tests/{name}")
             self.assertNotIn("DEBUG", text, f"{name} enthaelt eine DEBUG-Spur")
 
+    def test_der_pruefstand_ist_nicht_veraltet(self):
+        if dbtest() is None:
+            raise unittest.SkipTest("src/dbtest nicht gebaut (make -C src check)")
+
+        fordere_aktuell(self)
+
     def test_dbtest_laeuft_durch(self):
         programm = dbtest()
 
         if programm is None:
             raise unittest.SkipTest("src/dbtest nicht gebaut (make -C src check)")
+
+        fordere_aktuell(self)
 
         ergebnis = subprocess.run([programm], cwd=WURZEL,
                                   stdout=subprocess.PIPE,
@@ -91,6 +149,8 @@ class TestLage2(unittest.TestCase):
 
         if programm is None:
             raise unittest.SkipTest("src/dbtest nicht gebaut (make -C src check)")
+
+        fordere_aktuell(self)
 
         ausgabe = subprocess.run([programm], cwd=WURZEL,
                                  stdout=subprocess.PIPE,

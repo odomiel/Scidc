@@ -8,6 +8,24 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.10.28
 
+- **b4** – Drei Lücken der Prüfreihe geschlossen, alle drei von der Art „meldet grün,
+  obwohl nichts gemessen wurde". **Erstens:** `tests/test_cpp.py` führte das vorhandene
+  `src/dbtest` aus, ohne zu prüfen, ob es noch zu den Bibliotheken passt – ein Prüfstand
+  gegen eine veraltete `libdb.a` lief damit grün durch, genau die Falle, die beim
+  Patt-Fehler zweimal Zeit gekostet hat. Jetzt werden die Zeitstempel gegen die `.a` aus
+  `$(LIBS)` verglichen (aus dem Makefile gelesen: ein Glob über alle `lib*.a` nennt auch
+  `tcl/libtcl.a`, die keine Voraussetzung der `dbtest`-Regel ist, und wäre dauerhaft rot).
+  **Zweitens:** der Pre-Commit-Hook ruft `make -C src check` jetzt selbst auf – Lage 2 hing
+  bis dahin daran, dass jemand vorher gebaut hatte. Übersprungen, solange der Baum nie
+  gebaut wurde. **Drittens:** `TestDoppelpflege` in `test_abbild.py` vergleicht AppDir
+  byteweise gegen den Quellbaum – `lang/`, `themes/ttk/` (die einzige Stelle ohne
+  Abgleich im Bauskript), `engines.dat`, die beiden Wertungsskripte und jede Hilfe-HTML
+  samt `Contents.dat`. Bisher wurde nur geprüft, dass `build-appimage.sh` die Pfade
+  *nennt*; eine nur in `tcl/` geänderte Datei wirkte beim Start nicht und man suchte den
+  Fehler im Quelltext. Stand: 112 Prüfungen in Lage 1+3, 48 Fälle in Lage 2.
+
+## 26.10.28
+
 - **b3** – **Lage 3 der Prüfreihe: das laufende Programm.** `tests/test_laufend.py`
   startet eine eigene Instanz mit eigenem `HOME` und fragt sie über die
   Anwendungskennung `Scidc` aus (base64-Protokoll über einen `wish`-Treiber, Zeitgrenze

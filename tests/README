@@ -35,9 +35,13 @@ test_spiegel.py   Waechter fuer den oeffentlichen Push-Spiegel: kein
 test_bestand.py   Lizenztexte und die Versionen der aus dem Baum
                   gebauten Bibliotheken.
 test_abbild.py    Update-Information und zsync, die Abgleichpfade von
-                  build-appimage.sh, AppRun, release.sh.
+                  build-appimage.sh, AppRun, release.sh -- und die
+                  Doppelpflege: AppDir gegen den Quellbaum, Datei fuer
+                  Datei (lang, themes/ttk, engines.dat, die
+                  Wertungsskripte, Hilfe samt Inhaltsverzeichnis).
 test_cpp.py       Bruecke zu Lage 2: fuehrt src/dbtest mit, prueft die
-                  Vollstaendigkeit von TEST_SRC.
+                  Vollstaendigkeit von TEST_SRC und dass der Pruefstand
+                  nicht aelter ist als die .a aus $(LIBS).
 test_quellen.py   Eigenschaften des Quellbaums: SI5-Format-Gates,
                   Latin-1-Quellen, SOURCES, Engine-Katalog.
 test_laufend.py   Lage 3, siehe unten.
@@ -76,7 +80,14 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
 
 Nach einer Aenderung an der DB-Schicht immer "make -C src check" aufrufen, nicht
 "make -C src dbtest": das zweite Ziel baut nur die Testobjekte und bindet gegen
-eine veraltete libdb.a -- ein Fix sieht dann wirkungslos aus.
+eine veraltete libdb.a -- ein Fix sieht dann wirkungslos aus. Seit 26.10.28-b4
+faellt das auf: test_cpp.py vergleicht die Zeitstempel von src/dbtest und der .a
+aus $(LIBS) (aus dem Makefile gelesen, nicht geraten) und roetet, statt einen
+Lauf gegen einen veralteten Stand als gruen zu melden.
+
+Der Pre-Commit-Hook ruft "make -C src check" seit 26.10.28-b4 selbst auf, vor der
+Python-Reihe. Uebersprungen wird, solange der Baum nie gebaut wurde -- ein
+Vollbau gehoert nicht in einen Commit.
 
 Drei Dinge, die Zeit gekostet haben:
   * Ohne db::Board::initialize() & Co. in main() liefert Position::piece()
