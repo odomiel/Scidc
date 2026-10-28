@@ -6,6 +6,20 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.10.28
+
+- **b1** – Lage 2 abgeschlossen und an Lage 1 angeschlossen. Neu `tests/test_cpp.py`:
+  fährt `src/dbtest` mit, wenn es gebaut ist (sonst übersprungen), und prüft von außen,
+  was nur dort zu sehen ist – jede `src/tests/t_*.cpp` muß in `TEST_SRC` stehen (sonst
+  läuft sie stillschweigend nie mit), keine Sondierungsdatei und keine `DEBUG`-Spur darf
+  liegenbleiben, und jede `TEST`-Gruppe muß sich im Lauf melden. Zusammen 85 Tests
+  (Lage 1) und 48 Fälle / 215 Prüfungen (Lage 2).
+  Der in b2 als offen vermerkte Verdacht gegen `Signature::isReachable` hat sich
+  **nicht** bestätigt: `Qxd4` war in der Testzugfolge gar kein legaler Zug (die Dame
+  stand auf f3). Die Folge läuft jetzt über 20 Halbzüge samt beidseitiger Rochade und
+  einer Linie mit drei schwarzen Bauern – der Vorfilter hält an jedem Halbzug. Die
+  Fehlermeldung unterscheidet „ungültiger Zug“ jetzt von „nicht erreichbar“.
+
 ## 26.10.26
 
 - **b2** – Prüfreihe Lage 2 erweitert (`t_date`, `t_board`, `t_signature`; 48 Fälle,

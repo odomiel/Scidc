@@ -58,7 +58,13 @@ void playAndCheckReachable(char const* const* line, unsigned count)
 
 		if (!move.isLegal())
 		{
-			::test::failed(line[i], __FILE__, __LINE__);
+			// Unbedingt von "nicht erreichbar" unterscheiden: ein Tippfehler
+			// in der Zugfolge sah sonst wie ein Fehler im Vorfilter aus --
+			// genau darauf bin ich beim Schreiben hereingefallen.
+			char msg[128];
+			::snprintf(msg, sizeof(msg),
+							"gueltiger Zug Nr. %u (%s)", i + 1, line[i]);
+			::test::failed(msg, __FILE__, __LINE__);
 			return;
 		}
 
@@ -103,23 +109,16 @@ TEST(Signature, a_position_reaches_itself)
 TEST(Signature, every_position_of_a_played_line_stays_reachable)
 {
 	// Die eine Eigenschaft, an der die Vollstaendigkeit der Suche haengt.
-	// 16 Halbzuege mit Schlagzug, Rochade und Bauernzuegen.
-	//
-	// OFFEN, nicht als Fehler behauptet: setzt man die Folge mit
-	// "Qxd4", "O-O-O" fort, meldet Signature::isReachable fuer die
-	// Stellung nach Qxd4 **nicht** erreichbar, obwohl sie gerade
-	// gespielt wurde. Verdacht: der Bauern-Fortschritt (m_progress,
-	// pawns::Side mit nur zwei Rangbits je Farbe) kann zwei Bauern auf
-	// einer Linie nicht fuehren -- hier c6/c7 nach dxc6, dazu e5xd4 und
-	// der Verlust dieses Bauern. Trifft das zu, waere es ein falsches
-	// Nein im Vorfilter von db_tree.cpp (Zugbaum) und damit ein stilles
-	// Uebersehen von Partien. Vor einer Behauptung ist zu messen, welcher
-	// Teil ablehnt (isReachableFinalMaterial / isReachablePawnStructure)
-	// und ob die Tabelle aus Signature::initialize() den Fall deckt.
+	// 20 Halbzuege mit Schlagzuegen, Rochade auf beiden Seiten und einer
+	// Linie, auf der zeitweise DREI schwarze Bauern stehen (c7, c6, c3
+	// nach dxc6 und dxc3). Genau das ist der Fall, bei dem ein knapp
+	// gefuehrter Bauern-Fortschritt (pawns::Side hat nur zwei Rangbits
+	// je Farbe) ein falsches Nein liefern wuerde.
 	char const* line[] =
 	{
 		"e4", "e5", "Nf3", "Nc6", "Bb5", "a6", "Bxc6", "dxc6",
-		"O-O", "Bg4", "h3", "Bxf3", "Qxf3", "Qd7", "d4", "exd4"
+		"O-O", "Bg4", "h3", "Bxf3", "Qxf3", "Qd7", "d4", "exd4",
+		"c3", "dxc3", "Nxc3", "O-O-O"
 	};
 
 	playAndCheckReachable(line, sizeof(line)/sizeof(line[0]));
