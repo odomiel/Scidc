@@ -8,6 +8,28 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.14
 
+- **b4** – **Die drei SI5-Regeln der Namensliste sind jetzt geprüft** – bisher standen sie nur
+  in `CLAUDE.md`, nachdem sie einmal Daten verfälscht hatten. `db::si3::NameList` ist für
+  SI3/SI4 entworfen, wo die ID eines Eintrags seine Position in der **sortierten** Liste ist;
+  unter SI5 ist sie eine **Dateiposition**. Neu `src/tests/t_si5_name_list.cpp` (Lage 2, sechs
+  Fälle): die Liste wird so aufgebaut wie in `readNamebasesSi5` – einfügen, über die sortierte
+  Basis `append`, zusammengelegte Positionen mit `aliasId` nachtragen – und dann gemessen, was
+  die Regeln behaupten. Ein doppelter Name macht die Liste **länger als die Namensbasis** (3
+  gegen 2): ein Vektor nach `Namebase::size()` wäre zu kurz, genau Regel 2. Ein nach dem Öffnen
+  angelegter Eintrag steht nicht in `m_lookup`, muss also aus der Basis kommen (Regel 3). Und
+  `update()` übersteht eine Alias-Position nicht: es bricht mit `m_list.size() == size()` ab,
+  der Zusicherung aus `adjustListSize()` (Regel 1) – während es an einer SI3-artigen Liste
+  durchgeht, was als Gegenprobe dazugehört. Nebenbei herausgekommen: `readNamebasesSi5` zieht
+  `Namebase::setNextId` nicht nach, anders als der SI3-Lesepfad; `update()` scheitert deshalb
+  schon vorher in `buildList`. Folgen hat das derzeit keine – der Scid-Consumer holt neue IDs
+  aus `NameList::nextId()` und nie aus `Namebase::nextFreeId()`; am laufenden Programm
+  nachgemessen, eine wieder geöffnete SI5-Datenbank nimmt weitere Partien mit neuen Namen auf
+  und führt danach alle Spieler. Dazu `TestNamensbasisSi5` in `tests/test_quellen.py`: ob der
+  **Codec** sich noch an die Regeln hält (kein `update()` im SI5-Pfad, Vektorgröße aus
+  `list->size()`, der Zweig für IDs ≥ `origN`, `aliasId` für alle vier Namensbasen) – das
+  Verhalten ohne seinen Benutzer zu prüfen wäre halb. Stand: Lage 2 64 Fälle / 297 Prüfungen,
+  Lage 1+3 122 Fälle.
+
 - **b3** – **Lage 3 fragt jetzt auch Datenbanken ab.** `TestDatenbank` legt je Format
   (sci, si3, si4, si5) eine Datenbank im temporären `HOME` an, importiert zwei PGN-Partien,
   schließt, öffnet wieder und zählt – und zwar getrennt in beiden Richtungen: das Format als

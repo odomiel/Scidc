@@ -107,6 +107,71 @@ class TestFormatGates(unittest.TestCase):
         self.assertEqual(offen, [], "Format-Gate ohne Scid5:\n" + "\n".join(offen))
 
 
+class TestNamensbasisSi5(unittest.TestCase):
+    """Die drei Regeln aus CLAUDE.md, soweit sie am Quelltext haengen.
+
+    Gemessen wird das Verhalten von db::si3::NameList in Lage 2
+    (src/tests/t_si5_name_list.cpp). Was dort nicht hinreicht, ist die
+    Frage, ob der Codec sich noch daran haelt -- genau das steht hier.
+    """
+
+    KODEK = "src/db/si3/si3_codec.cpp"
+
+    def rumpf(self, name):
+        text = lies(self.KODEK, "latin-1")
+        anfang = text.index("Codec::%s" % name)
+        ende = text.index("\n}\n", anfang)
+        return text[anfang:ende]
+
+    def test_der_schreibpfad_ruft_update_nicht(self):
+        """Regel 1: NameList::update() gehoert nicht in einen SI5-Pfad.
+
+        Es setzt m_usedIdSet-Bits mit den IDs der Namensbasis zurueck,
+        fuehrt aber die Positionen der sortierten Liste -- unter SI5
+        sind das zwei verschiedene Dinge. Gemessen (Lage 2): mit einer
+        Alias-Position bricht update() ab.
+        """
+        for name in ("writeNamebasesSi5", "readNamebasesSi5"):
+            with self.subTest(funktion=name):
+                self.assertNotIn("update(", self.rumpf(name),
+                                 "update() im SI5-Pfad %s" % name)
+
+    def test_die_vektorgroesse_kommt_von_der_namensliste(self):
+        """Regel 2: NameList::size(), nicht Namebase::size().
+
+        NameList::size() ist die hoechste Dateiposition + 1 und deckt
+        damit auch die Alias-Positionen ab; Namebase::size() zaehlt nur
+        die eindeutigen Eintraege. Gemessen (Lage 2): bei einem
+        doppelten Namen ist die Liste laenger als die Basis -- ein
+        Vektor nach der Basis waere zu kurz.
+        """
+        rumpf = self.rumpf("writeNamebasesSi5")
+
+        self.assertIn("list->size()", rumpf,
+                      "die Groesse kommt nicht mehr von der Namensliste")
+        self.assertNotIn("names(base.size()", rumpf,
+                         "die Groesse kommt aus der Namensbasis")
+
+    def test_neue_eintraege_kommen_aus_der_namensbasis(self):
+        """Regel 3: IDs >= size() stehen nicht in m_lookup."""
+        rumpf = self.rumpf("writeNamebasesSi5")
+
+        self.assertIn("id >= origN", rumpf,
+                      "der Zweig fuer neue Eintraege fehlt")
+        self.assertIn("list->hasId(fp)", rumpf,
+                      "die urspruenglichen Positionen werden nicht mehr "
+                      "ueber die Namensliste geholt")
+
+    def test_der_lesepfad_traegt_die_aliasse_nach(self):
+        """Ohne aliasId fehlt jeder doppelte Name eine Dateiposition."""
+        rumpf = self.rumpf("readNamebasesSi5")
+
+        self.assertEqual(rumpf.count("->aliasId("), 4,
+                         "aliasId nicht fuer alle vier Namensbasen")
+        self.assertEqual(rumpf.count("->finish()"), 4,
+                         "finish() nicht fuer alle vier Namensbasen")
+
+
 class TestKodierungen(unittest.TestCase):
 
     def test_die_latin1_liste_stimmt(self):
