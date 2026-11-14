@@ -77,10 +77,16 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
                       Schach/Matt/Patt, alle 960 Aufstellungen
   t_signature.cpp     db::Signature und db::HomePawns: der Vorfilter der
                       Stellungssuche (ein falsches Nein verliert Partien)
-  t_sci_decoder.cpp   MaxVariationLevel der vier SCI-Decoder (aktuell, v91,
-                      v92, v93)
+  t_sci_decoder.cpp   zweierlei fuer die SCI-Decoder: MaxVariationLevel aller
+                      vier (aktuell, v91, v92, v93) und die Grenzen des
+                      Datenbereichs-Versatzes (sectionPtr) bei drei von ihnen
   t_cbf_decoder.cpp   MaxVariationLevel des CBF-Decoders
   t_cbh_decoder.cpp   MaxVariationDepth des CBH-Decoders
+
+Die Versatz-Faelle sind **gegengeprobt**: mit ausgeschaltetem sectionPtr-Waechter
+liefern sie EndOfStream statt Corrupted -- der Decoder liest dann ausserhalb des
+Datensatzes weiter, und genau das soll der Waechter verhindern. Ein Fall, der
+auch ohne Waechter gruen waere, wuerde nichts belegen.
 
 Damit ist der Deckel in allen **sechs** Decodern geprueft. Jeder Strom wird von
 Hand gebaut, und jedes Format hat seine eigene Falle:

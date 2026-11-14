@@ -22,6 +22,15 @@
 // auf jeder Ebene wieder gueltig -- zwei Bytes je Ebene genuegen fuer
 // beliebige Tiefe.
 //
+// Der zweite Teil der Datei prueft die andere Sicherheits-Zusicherung
+// derselben Decoder: **die Grenzen des Datenbereichs-Versatzes**. Der
+// uint24-Versatz kommt aus der Datei und wird zu einem Zeiger
+// verrechnet; ohne Pruefung gegen capacity() liest ein praeparierter
+// Satz ausserhalb des Datensatzes (sectionPtr in sci_decoder.cpp und
+// sci_v93_decoder.cpp, in v92 als eigene Zeilen). Geprueft wird beides:
+// dass ein Versatz genau am Satzende noch durchgeht und einer ein Byte
+// dahinter nicht.
+//
 // Welches Byte ein gueltiger Zug ist, wird **gemessen statt geraten**:
 // die Figurnummer steckt in den oberen vier Bit und haengt an der
 // Figurliste der Startstellung. Ein falsch geratenes Byte sieht wie ein
@@ -205,6 +214,100 @@ checkCap(Decode decode)
 }
 
 } // namespace
+
+
+namespace {
+
+unsigned const TextSection	= 1u << 15;         // flags::TextSection
+unsigned const HeaderSize	= 7;                 // Flags(2) + Versatz(3) + Lauf(2)
+
+
+/// Ein Satz, dessen Kopf von Hand gesetzt ist: Flags, Versatz des
+/// Datenbereichs und -- bei gesetztem TextSection -- das Laengenfeld
+/// des Textbereichs. Zuege stehen keine darin; der Decoder prueft den
+/// Versatz, bevor er welche liest. Kommt er durch, geht ihm hinterher
+/// der Strom aus, und das unterscheidet die beiden Faelle.
+Buffer
+makeOffsetRecord(unsigned flags, unsigned offset, unsigned textSize, bool withTextSize)
+{
+	Buffer data;
+
+	data.push_back(Byte((flags >> 8) & 0xff));
+	data.push_back(Byte(flags & 0xff));
+
+	data.push_back(Byte((offset >> 16) & 0xff));
+	data.push_back(Byte((offset >> 8) & 0xff));
+	data.push_back(Byte(offset & 0xff));
+
+	data.push_back(0);                                 // Lauflaenge 0
+	data.push_back(0);
+
+	if (withTextSize)
+	{
+		data.push_back(Byte((textSize >> 16) & 0xff));
+		data.push_back(Byte((textSize >> 8) & 0xff));
+		data.push_back(Byte(textSize & 0xff));
+	}
+
+	return data;
+}
+
+
+template <typename Decode>
+void
+checkOffsetBounds(Decode decode)
+{
+	unsigned const idn = unsigned(variant::Standard);
+
+	// Genau am Satzende: zulaessig (offset == capacity, keine Bytes
+	// gebraucht). Danach geht der Strom aus -- der Versatz war also
+	// nicht der Grund.
+	Buffer atEnd = makeOffsetRecord(idn, HeaderSize, 0, false);
+	CHECK_EQ(run(atEnd, decode), EndOfStream);
+
+	// Ein Byte dahinter: abgewiesen.
+	Buffer past = makeOffsetRecord(idn, HeaderSize + 1, 0, false);
+	CHECK_EQ(run(past, decode), Corrupted);
+
+	// Was eine praeparierte Datei mitbringen wuerde: der groesste
+	// uint24. Ohne Pruefung waere das base() + 16 MB.
+	Buffer far = makeOffsetRecord(idn, 0xffffff, 0, false);
+	CHECK_EQ(run(far, decode), Corrupted);
+
+	// Mit Textbereich: das Laengenfeld selbst kommt aus der Datei.
+	// Null ist zulaessig ...
+	Buffer emptyText = makeOffsetRecord(idn | TextSection, HeaderSize, 0, true);
+	CHECK_EQ(run(emptyText, decode), EndOfStream);
+
+	// ... eine Laenge, die ueber den Satz hinausreicht, nicht.
+	Buffer hugeText = makeOffsetRecord(idn | TextSection, HeaderSize, 0xffffff, true);
+	CHECK_EQ(run(hugeText, decode), Corrupted);
+
+	// Und der Textbereich braucht sein Laengenfeld: drei Bytes, die es
+	// hinter dem Versatz nicht mehr gibt.
+	Buffer noRoom = makeOffsetRecord(idn | TextSection, HeaderSize, 0, false);
+	CHECK_EQ(run(noRoom, decode), Corrupted);
+}
+
+} // namespace
+
+
+TEST(SciSection, the_current_decoder_bounds_the_offset)
+{
+	checkOffsetBounds(decodeCurrent);
+}
+
+
+TEST(SciSection, v93_bounds_the_offset)
+{
+	checkOffsetBounds(decodeV93);
+}
+
+
+TEST(SciSection, v92_bounds_the_offset)
+{
+	checkOffsetBounds(decodeV92);
+}
 
 
 TEST(SciDecoder, the_current_decoder_caps_the_recursion)

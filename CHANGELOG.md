@@ -8,6 +8,20 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.14
 
+- **b2** – Die zweite Sicherheits-Invariante der SCI-Decoder ist jetzt geprüft: **die
+  Grenzen des Datenbereichs-Versatzes**. Der `uint24`-Versatz kommt aus der (möglicherweise
+  präparierten) Datei und wird roh zu einem Zeiger verrechnet; `sectionPtr` prüft ihn gegen
+  `capacity()`. Die neue Gruppe `SciSection` in `t_sci_decoder.cpp` hält für den aktuellen
+  Decoder, `v92` und `v93` fest, dass ein Versatz genau am Satzende zulässig ist, einer ein
+  Byte dahinter nicht, der größte `uint24` nicht – und dass das ebenfalls aus der Datei
+  gelesene Längenfeld des Textbereichs mitgeprüft wird. **Gegengeprobt**: mit
+  ausgeschaltetem Wächter liefern zwei der Fälle `EndOfStream` statt `Corrupted`, der
+  Decoder liest also 16 MB hinter dem Satz weiter, ohne es zu merken. Beide Ausgänge stehen
+  darum ausdrücklich im Fall – ein Test, der auch ohne Wächter grün wäre, belegt nichts.
+  Stand: Lage 2 58 Fälle / 263 Prüfungen.
+
+## 26.11.14
+
 - **b1** – **Der Rekursionsdeckel ist jetzt in allen sechs Move-Decodern geprüft**, bis
   dahin in genau einem. `MaxVariationLevel = 300` ist die Zusicherung, die eine präparierte
   Datei davon abhält, den C-Stack zu sprengen – sie steckt in `si3_decoder.cpp`,
