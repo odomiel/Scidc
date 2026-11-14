@@ -6,6 +6,23 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.11.14
+
+- **b1** – **Der Rekursionsdeckel ist jetzt in allen sechs Move-Decodern geprüft**, bis
+  dahin in genau einem. `MaxVariationLevel = 300` ist die Zusicherung, die eine präparierte
+  Datei davon abhält, den C-Stack zu sprengen – sie steckt in `si3_decoder.cpp`,
+  `sci_decoder.cpp` samt `v91`/`v92`/`v93`, `cbf_decoder.cpp` und `cbh_game_decoder.cpp`,
+  und ein versehentlich entferntes `depth + 1` fiel nur dort auf, wo auch gemessen wurde.
+  Neu sind `src/tests/t_sci_decoder.cpp` (vier Decoder), `t_cbf_decoder.cpp` und
+  `t_cbh_decoder.cpp`; jeder Fall unterscheidet ausdrücklich den zu kurzen Strom vom
+  greifenden Deckel, sonst belegte er nur, dass irgendetwas geworfen wird. Die Ströme sind
+  von Hand gebaut – genau das kann ein Angreifer auch. Dabei herausgekommen: `ByteStream`
+  liest **großendig** (kleinendig geschrieben wird aus einem Versatz von 9 die Zahl 589824),
+  `v92` liest ein übriggebliebenes Byte nach der Variante noch als Tag-Bereich, CBF
+  verschleiert den Zugbereich und führt dessen Länge als 16-Bit-Zahl, und CBH verschiebt
+  jedes Byte gegen den Zugzähler, während `push()` den Zug nicht zurücknimmt – dort braucht
+  es Nullzüge. Stand: Lage 2 55 Fälle / 245 Prüfungen.
+
 ## 26.10.28
 
 - **b4** – Drei Lücken der Prüfreihe geschlossen, alle drei von der Art „meldet grün,

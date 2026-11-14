@@ -77,6 +77,27 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
                       Schach/Matt/Patt, alle 960 Aufstellungen
   t_signature.cpp     db::Signature und db::HomePawns: der Vorfilter der
                       Stellungssuche (ein falsches Nein verliert Partien)
+  t_sci_decoder.cpp   MaxVariationLevel der vier SCI-Decoder (aktuell, v91,
+                      v92, v93)
+  t_cbf_decoder.cpp   MaxVariationLevel des CBF-Decoders
+  t_cbh_decoder.cpp   MaxVariationDepth des CBH-Decoders
+
+Damit ist der Deckel in allen **sechs** Decodern geprueft. Jeder Strom wird von
+Hand gebaut, und jedes Format hat seine eigene Falle:
+
+  * ByteStream liest **grossendig** (data[0] << 8 | data[1]). Kleinendig
+    geschriebene Koepfe ergeben voellig andere Zahlen -- ein Versatz von 9 wird
+    zu 589824, und sectionPtr bricht ab, bevor ein Zug gelesen ist.
+  * v92 liest nach der Variante den Rest des Datenbereichs als Tag-Bereich.
+    Bleibt dort ein Byte uebrig, scheitert jeder Satz.
+  * CBF verschleiert den Zugbereich (xorBuffer, Schluessel mal 7 von hinten),
+    braucht die Stellung ausdruecklich mitgegeben (ohne Bit 0 in Kopfbyte 10
+    bleibt das Brett leer und *jedes* Zugbyte meldet "corrupt data") und fuehrt
+    die Laenge des Zugbereichs als 16-Bit-Zahl -- mehr als 32767 Ebenen lassen
+    sich dort nicht ausdruecken.
+  * CBH verschiebt jedes Byte gegen den Zugzaehler (Lookup[byte - count]), und
+    Push nimmt den Zug **nicht** zurueck. Darum Nullzuege: in jeder Stellung
+    zulaessig und beliebig wiederholbar.
 
 Nach einer Aenderung an der DB-Schicht immer "make -C src check" aufrufen, nicht
 "make -C src dbtest": das zweite Ziel baut nur die Testobjekte und bindet gegen
