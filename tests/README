@@ -101,6 +101,12 @@ Die Oberflaeche selbst: ob ein Dialog richtig aussieht, ob eine Farbe
 gefaellt, ob ein Mausweg sich gut anfuehlt. Lage 3 fragt Zustaende ab,
 sie klickt nicht.
 
+Und es gibt **keine CI** -- bewusst entschieden am 14.11.2026. Die Reihe
+laeuft lokal und im Pre-Commit-Haken; ein Dienst, der bei jedem Push von
+aussen mitlaeuft, ist hier nicht gewollt. Lage 1 waere dafuer geeignet
+(frischer Klon, nichts gebaut, kein Netz), aber sie wird nicht dort
+gefahren. Also bitte nicht als Luecke lesen.
+
 Die Haken in einem frischen Klon
 --------------------------------
 .git/hooks ist nicht versioniert: ein frischer Klon hat den
