@@ -8,6 +8,19 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.14
 
+- **b6** – **Die Git-Haken sind jetzt im Repository** – vorher hatte ein frischer Klon keinen
+  `pre-commit`, und damit fiel genau die Prüfung weg, die einen Commit mit auseinanderlaufenden
+  Versionen oder roter Reihe abweist. `.git/hooks` ist nicht versioniert; die Vorlage liegt
+  deshalb in `tools/hooks/pre-commit`, geholt wird sie mit `bash tools/install-hooks.sh`.
+  Ohne `--force` ersetzt das Skript einen vorhandenen, **abweichenden** Haken nicht, sondern
+  meldet es samt `diff`-Aufruf – ein von Hand angepasster Haken soll nicht stillschweigend
+  verschwinden. Daraus folgt dieselbe Doppelpflege wie bei AppDir, und `tests/test_haken.py`
+  hält sie fest: Vorlage und installierter Haken byteweise gleich, beide ausführbar, und die
+  Vorlage fährt noch alle vier Schritte (Versionsgleichheit, Bundle-Version, Lage 2, Lage 1+3).
+  Im frischen Klon wird der Vergleich übersprungen statt zu scheitern. Gegengeprobt: eine
+  angehängte Zeile im installierten Haken rötet den Fall, `--force` macht ihn wieder grün.
+  Stand: Lage 1+3 130 Fälle.
+
 - **b5** – **Der Abgleich zwischen Hilfequelle und Hilfeseite ist jetzt geprüft** – und hat
   beim ersten Lauf zwei Stellen gefunden. `make` wird für `tcl/help` nicht aufgerufen, `.txt`
   und `.html` werden von Hand synchron gehalten, und genau das geht vergessen:

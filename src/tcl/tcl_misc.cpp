@@ -70,7 +70,7 @@
 #include <fcntl.h>
 
 #ifdef CODEBLOCKS
-# define SCIDB_VERSION	"26.11.14 b5 Beta"
+# define SCIDB_VERSION	"26.11.14 b6 Beta"
 # define SCIDB_REVISION	"1532"
 #endif
 

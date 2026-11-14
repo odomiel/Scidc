@@ -1,0 +1,105 @@
+#!/bin/bash
+# pre-commit - Prüft, ob alle Scidc-Versionen synchron sind
+
+# Version aus Makefile.version extrahieren
+VERSION_MAKEFILE=$(awk -F'"' '/SCIDB_VERSION/ {print $2}' Makefile.version | tr -d '\\')
+
+# Version aus src/tcl/tcl_misc.cpp extrahieren
+VERSION_CPP=$(awk -F'"' '/# define SCIDB_VERSION/ {print $2}' src/tcl/tcl_misc.cpp)
+
+# Version aus tcl/exec.tcl extrahieren
+VERSION_TCL=$(awk -F'"' '/set version/ {print $2}' tcl/exec.tcl)
+
+# Prüfen, ob alle Versionen gelesen wurden
+if [ -z "$VERSION_MAKEFILE" ] || [ -z "$VERSION_CPP" ] || [ -z "$VERSION_TCL" ]; then
+    echo "FEHLER: Konnte nicht alle Versionen lesen"
+    echo "  Makefile.version: $VERSION_MAKEFILE"
+    echo "  src/tcl/tcl_misc.cpp: $VERSION_CPP"
+    echo "  tcl/exec.tcl: $VERSION_TCL"
+    exit 1
+fi
+
+# Versionen vergleichen (Leerzeichen und Bindestriche normalisieren)
+NORM_MAKEFILE=$(echo "$VERSION_MAKEFILE" | sed 's/ //g; s/-//g; s/Beta//g')
+NORM_CPP=$(echo "$VERSION_CPP" | sed 's/ //g; s/-//g; s/Beta//g')
+NORM_TCL=$(echo "$VERSION_TCL" | sed 's/ //g; s/-//g; s/Beta//g')
+
+if [ "$NORM_MAKEFILE" != "$NORM_CPP" ] || [ "$NORM_MAKEFILE" != "$NORM_TCL" ]; then
+    echo "FEHLER: Versionen sind nicht synchron!"
+    echo ""
+    echo "Aktuelle Versionen:"
+    echo "  Makefile.version:  $VERSION_MAKEFILE"
+    echo "  src/tcl/tcl_misc.cpp: $VERSION_CPP"
+    echo "  tcl/exec.tcl:        $VERSION_TCL"
+    echo ""
+    echo "Tipp: Führe 'bash bump-version.sh' aus, um die Versionen zu synchronisieren."
+    echo ""
+    exit 1
+fi
+
+# Prüfen, ob tcl/scidc-beta existiert und die gleiche Version hat
+if [ -f "tcl/scidc-beta" ]; then
+    VERSION_BUNDLE=$(awk -F'"' '/set version/ {print $2}' tcl/scidc-beta)
+    NORM_BUNDLE=$(echo "$VERSION_BUNDLE" | sed 's/ //g; s/-//g; s/Beta//g')
+    
+    if [ "$NORM_MAKEFILE" != "$NORM_BUNDLE" ]; then
+        echo "FEHLER: tcl/scidc-beta hat eine andere Version!"
+        echo ""
+        echo "  tcl/scidc-beta:     $VERSION_BUNDLE"
+        echo "  Erwartet:            $VERSION_TCL"
+        echo ""
+        echo "Tipp: Führe 'make -C tcl' aus, um das Bundle neu zu generieren."
+        echo ""
+        exit 1
+    fi
+fi
+
+echo "Alle Versionen sind synchron: $VERSION_MAKEFILE"
+
+# Lage 2 (C++ gegen libdb.a). "make -C src check" baut erst die
+# Bibliotheken, bindet dann den Pruefstand neu und laesst ihn laufen --
+# "make -C src dbtest" wuerde gegen eine veraltete libdb.a binden.
+# Aktuell kostet das unter einer Sekunde; nur was sich geaendert hat,
+# wird uebersetzt.
+#
+# Uebersprungen wird, solange der Baum nie gebaut wurde (kein
+# src/Makefile aus ./configure, keine libdb.a): ein Vollbau gehoert
+# nicht in einen Commit.
+if [ -f src/Makefile ] && [ -f src/db/libdb.a ] && command -v make >/dev/null 2>&1; then
+    if ! AUSGABE=$(make -C src check 2>&1); then
+        echo ""
+        echo "FEHLER: Lage 2 (C++) schlaegt fehl."
+        echo ""
+        echo "$AUSGABE" | tail -40
+        echo ""
+        echo "Tipp: 'make -C src check' zeigt alles."
+        echo ""
+        exit 1
+    fi
+    echo "Lage 2: $(echo "$AUSGABE" | grep -o '[0-9]* Faelle.*' | head -1) -- OK"
+else
+    echo "Lage 2: uebersprungen (Baum nicht gebaut)"
+fi
+
+# Pruefreihe (Lage 1: Text, Lage 3: laufendes Programm). Lage 1 braucht
+# unter einer Sekunde, schreibt nichts und geht nicht ins Netz; Lage 3
+# startet eine eigene Instanz und wird uebersprungen, wenn kein
+# Bildschirm da ist oder schon eine Instanz laeuft. Darunter der
+# Spiegel-Waechter -- was einmal gepusht ist, laesst sich nicht
+# zurueckholen.
+if [ -d tests ] && command -v python3 >/dev/null 2>&1; then
+    if ! AUSGABE=$(python3 -m unittest discover -s tests -t . 2>&1); then
+        echo ""
+        echo "FEHLER: Die Pruefreihe schlaegt fehl."
+        echo ""
+        echo "$AUSGABE" | tail -40
+        echo ""
+        echo "Tipp: 'python3 -m unittest discover -s tests -t .' zeigt alles."
+        echo "      Mit 'git commit --no-verify' liesse sich das uebergehen."
+        echo ""
+        exit 1
+    fi
+    echo "Pruefreihe: $(echo "$AUSGABE" | grep -o 'Ran [0-9]* tests.*' | head -1) -- OK"
+fi
+
+exit 0

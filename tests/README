@@ -52,6 +52,8 @@ test_cpp.py       Bruecke zu Lage 2: fuehrt src/dbtest mit, prueft die
 test_quellen.py   Eigenschaften des Quellbaums: SI5-Format-Gates,
                   die drei Namensbasis-Regeln von SI5, Latin-1-Quellen,
                   SOURCES, Engine-Katalog.
+test_haken.py     Die Git-Haken: Vorlage, Installierer, und dass der
+                  installierte pre-commit die Vorlage ist.
 test_laufend.py   Lage 3, siehe unten.
 
 Der Abgleich .txt <-> .html
@@ -98,6 +100,27 @@ Was keine Lage prueft
 Die Oberflaeche selbst: ob ein Dialog richtig aussieht, ob eine Farbe
 gefaellt, ob ein Mausweg sich gut anfuehlt. Lage 3 fragt Zustaende ab,
 sie klickt nicht.
+
+Die Haken in einem frischen Klon
+--------------------------------
+.git/hooks ist nicht versioniert: ein frischer Klon hat den
+pre-commit-Haken **nicht**, und damit faellt die Pruefung weg, die einen
+Commit mit auseinanderlaufenden Versionen oder roter Reihe abweist. Darum:
+
+    bash tools/install-hooks.sh            # installieren
+    bash tools/install-hooks.sh --diff     # Unterschied zeigen
+    bash tools/install-hooks.sh --force    # vorhandenen Haken ersetzen
+
+Die Vorlage liegt in tools/hooks/ und ist versioniert. Ohne --force
+ersetzt das Skript einen vorhandenen, abweichenden Haken **nicht**, sondern
+meldet es samt diff-Aufruf -- ein von Hand angepasster Haken soll nicht
+stillschweigend verschwinden.
+
+Daraus folgt dieselbe Doppelpflege wie bei AppDir: wer den Haken in
+.git/hooks aendert und die Vorlage stehen laesst, verliert die Aenderung
+beim naechsten Klon; wer nur die Vorlage aendert, bei dem greift sie lokal
+nicht. test_haken.py vergleicht beide byteweise, solange beide da sind, und
+ueberspringt den Fall im frischen Klon.
 
 Grundsaetze
 -----------
