@@ -8,6 +8,28 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.14
 
+- **b5** – **Der Abgleich zwischen Hilfequelle und Hilfeseite ist jetzt geprüft** – und hat
+  beim ersten Lauf zwei Stellen gefunden. `make` wird für `tcl/help` nicht aufgerufen, `.txt`
+  und `.html` werden von Hand synchron gehalten, und genau das geht vergessen:
+  `tests/test_hilfe.py::TestAbgleich` vergleicht darum über alle 149 Paare die
+  Abschnittsüberschriften und inneren Verweise – nicht den Fließtext, der steht in der Quelle
+  als Markup und im Erzeugnis gesetzt. **Gefunden:** in `es/Overview.txt` stand noch der
+  Verweis auf die gelöschte Seite `Development-Roadmap.html` (Schritt 4 der
+  Entfernen-Checkliste, nur für `es` vergessen), und in `es/Database-Formats.txt` hieß ein
+  Abschnitt „formato antiguo", im ausgelieferten `.html` aber „formato anterior". Beides
+  behoben. Heraus müssen beim Vergleich Kommentarblöcke, die Bereiche zwischen
+  `EXCLUDE`/`EXCLUDE-END` (in `CQL-Position-List.txt` liegt ein ganzer darin) und Überschriften
+  mit `%…%`-Platzhaltern; geprüft wird die Richtung Quelle → Erzeugnis, die Gegenrichtung ist so
+  nicht messbar. **Nebenbei gemessen, wie der Baum zum Generator steht:** 79 der 149 `.html`
+  sind byteweise das, was `make_html.tcl` aus ihrer Quelle macht, 31 nicht – ihr Kopf wurde von
+  Hand modernisiert, während der Generator noch den Scidb-Stand mit sourceforge-Verweisen
+  erzeugt; ein `make` in `tcl/help` würde diese Köpfe zurücksetzen. 36 Quellen führen keine
+  `END`-Direktive und werden mit „Missing mandatory END" abgewiesen: die 18 in diesem Projekt
+  neu geschriebenen Seiten, je in `de` und `en`. `TestErzeugbarkeit` hält diese Liste fest,
+  damit eine **neue** Seite `END` bekommt statt stillschweigend in dieselbe Lage zu geraten.
+  Ein Lauf des Generators über alle Seiten dauert gut 30 Sekunden – darum prüft die Reihe die
+  Struktur und nicht die Bytes. Stand: Lage 1+3 124 Fälle.
+
 - **b4** – **Die drei SI5-Regeln der Namensliste sind jetzt geprüft** – bisher standen sie nur
   in `CLAUDE.md`, nachdem sie einmal Daten verfälscht hatten. `db::si3::NameList` ist für
   SI3/SI4 entworfen, wo die ID eines Eintrags seine Position in der **sortierten** Liste ist;

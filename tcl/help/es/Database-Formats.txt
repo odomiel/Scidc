@@ -145,7 +145,7 @@ Una base de datos Scid 5 consiste en los siguientes archivos:
 
 <h2 id="Scid">
 <img src="../images/ft-scid.png" />
-Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; formato antiguo
+Scid (<abbr>.si4</abbr>, <abbr>.si3</abbr>) &ndash; formato anterior
 </h2>
 
 <p>

@@ -32,7 +32,10 @@ test_sprachen.py  Die sechs Sprachdateien: Kodierung gegen die
                   Deklaration in localization.tcl, Zeilenformat,
                   doppelte Schluessel, Namensraeume.
 test_hilfe.py     Inhaltsverzeichnisse, Rueckfall auf en/de, die
-                  gemischten Kodierungen von .txt und .html.
+                  gemischten Kodierungen von .txt und .html -- und der
+                  Abgleich der Paare: jede Quelle muss dieselben
+                  Abschnitte und inneren Verweise nennen wie ihr
+                  Erzeugnis (siehe unten).
 test_spiegel.py   Waechter fuer den oeffentlichen Push-Spiegel: kein
                   Hostname, keine private Adresse, keine
                   Sitzungskennung, keine fremde Mailadresse im Commit.
@@ -50,6 +53,45 @@ test_quellen.py   Eigenschaften des Quellbaums: SI5-Format-Gates,
                   die drei Namensbasis-Regeln von SI5, Latin-1-Quellen,
                   SOURCES, Engine-Katalog.
 test_laufend.py   Lage 3, siehe unten.
+
+Der Abgleich .txt <-> .html
+---------------------------
+make wird fuer die Hilfe nicht aufgerufen; Quelle und Erzeugnis werden von
+Hand synchron gehalten, und genau das geht vergessen. test_hilfe.py vergleicht
+darum Abschnittsueberschriften und innere Verweise -- nicht den Fliesstext, der
+steht in der Quelle als Markup und im Erzeugnis gesetzt.
+
+Drei Dinge muessen dabei heraus, sonst meldet der Vergleich Unterschiede, die
+keine sind: Kommentarbloecke (Lizenzkopf, stillgelegte Absaetze), die Bloecke
+zwischen EXCLUDE und EXCLUDE-END (die nimmt make_html.tcl ausdruecklich nicht
+mit -- in CQL-Position-List.txt liegt ein ganzer darin) und Ueberschriften mit
+%...%-Platzhaltern (im Erzeugnis stehen dort die uebersetzten Texte).
+
+Geprueft wird **eine** Richtung: was in der Quelle steht, muss im Erzeugnis
+ankommen. Die Gegenrichtung ist so nicht messbar, denn der Generator fuegt
+Querverweise hinzu und loest Platzhalter zu Ueberschriften auf, die in der
+Quelle nirgends stehen.
+
+Beim ersten Lauf fiel zweierlei auf: in es/Overview.txt stand noch der Verweis
+auf die geloeschte Seite Development-Roadmap.html (Schritt 4 der
+Entfernen-Checkliste, nur fuer es vergessen), und in es/Database-Formats.txt
+hiess ein Abschnitt "formato antiguo", im ausgelieferten .html aber
+"formato anterior". Beides behoben.
+
+Der Zustand gegenueber dem Generator, gemessen 26.11.14 ueber alle 149 Paare:
+79 Erzeugnisse sind byteweise das, was make_html.tcl aus ihrer Quelle macht;
+31 sind davon abgewichen (ihr Kopf wurde von Hand modernisiert, der Generator
+steht noch auf dem Scidb-Stand mit sourceforge-Verweisen); 36 Quellen fuehren
+keine END-Direktive und werden vom Generator abgewiesen -- es sind die 18 in
+diesem Projekt neu geschriebenen Seiten, je in de und en; drei scheitern an
+ihrer Kodierung (Latin-1 ohne CHARSET-Zeile). Ein Lauf des Generators ueber
+alle Seiten braucht gut 30 Sekunden und wuerde die 31 modernisierten Koepfe
+zuruecksetzen -- darum prueft die Reihe die Struktur und nicht die Bytes.
+Nachmessen:
+
+    cd tcl/help/de && LD_LIBRARY_PATH=../../../deps/tcltk/lib \
+        ../../../deps/tcltk/bin/wish9.0 ../make_html.tcl Clipbase.txt \
+        | diff - Clipbase.html
 
 Was keine Lage prueft
 ---------------------
