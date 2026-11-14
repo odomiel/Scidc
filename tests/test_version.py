@@ -135,3 +135,35 @@ class TestChangelog(unittest.TestCase):
         daten = re.findall(r"^## (\d{2}\.\d{2}\.\d{2})$", self.text, re.M)
         self.assertEqual(daten, sorted(daten, reverse=True),
                          "Die Abschnitte sind nicht nach Datum absteigend")
+
+    def test_kein_datum_hat_zwei_abschnitte(self):
+        """26.11.14 hatte zwei -- und beide Male fiel es nicht auf.
+
+        Die Suche nach dem Eintrag endet am naechsten "## ": steht ein
+        zweiter Abschnitt zum selben Datum darunter, zaehlt sein Inhalt
+        nicht mehr dazu. release.sh findet den Text dann nicht, obwohl
+        er in der Datei steht, und die absteigende Sortierung stoert
+        ein doppeltes Datum nicht.
+        """
+        daten = re.findall(r"^## (\d{2}\.\d{2}\.\d{2})$", self.text, re.M)
+        doppelt = sorted({d for d in daten if daten.count(d) > 1})
+        self.assertEqual(doppelt, [],
+                         "Datum mit mehr als einem Abschnitt: " + ", ".join(doppelt))
+
+    def test_die_zaehler_eines_abschnitts_stehen_absteigend(self):
+        """Ein Eintrag im falschen Abschnitt faellt sonst nicht auf."""
+        for datum, abschnitt in self.abschnitte():
+            zaehler = [int(n) for n in re.findall(r"^- \*\*b(\d+)\*\*", abschnitt, re.M)]
+
+            with self.subTest(datum=datum):
+                self.assertEqual(zaehler, sorted(zaehler, reverse=True),
+                                 "Zaehler nicht absteigend unter %s: %s" % (datum, zaehler))
+                self.assertEqual(len(zaehler), len(set(zaehler)),
+                                 "Zaehler doppelt unter %s: %s" % (datum, zaehler))
+
+    def abschnitte(self):
+        marken = list(re.finditer(r"^## (\d{2}\.\d{2}\.\d{2})$", self.text, re.M))
+
+        for i, treffer in enumerate(marken):
+            ende = marken[i + 1].start() if i + 1 < len(marken) else len(self.text)
+            yield treffer.group(1), self.text[treffer.end():ende]

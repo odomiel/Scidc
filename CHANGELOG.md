@@ -8,6 +8,29 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.14
 
+- **b3** – **Lage 3 fragt jetzt auch Datenbanken ab.** `TestDatenbank` legt je Format
+  (sci, si3, si4, si5) eine Datenbank im temporären `HOME` an, importiert zwei PGN-Partien,
+  schließt, öffnet wieder und zählt – und zwar getrennt in beiden Richtungen: das Format als
+  **Ziel** (für SI5 der nachträglich eingezogene Schreibpfad mit seinen `format::Scid5`-Gates)
+  und als **Quelle** (dort sieht `cmdImport` die Endung an, und genau da fehlte `si5` bis
+  26.09.14-b3). Gegengeprobt: mit entferntem `|| ext == "si5"` meldet der Quellfall
+  „unsupported extension 'si5'“, die übrigen drei Formate bleiben grün – ein Fall, der auch
+  ohne das Gate grün wäre, belegte nichts. Dazu der Lesemodus je Format (sci/si5 schreibend,
+  si3/si4 nur lesend), am Rumpf von `openBase` in der laufenden Instanz gemessen statt
+  provoziert: SI3 schreibend zu öffnen antwortet mit einer Zusicherungsverletzung, die in
+  einem `NREQ`-Bau gar nicht entstünde. Beim Bauen des Prüfstands kostete dreierlei Zeit –
+  ohne `::scidc::db::attach` landet nichts auf der Platte (`new` allein hält die Datenbank im
+  Speicher, der Import meldet trotzdem zwei angenommene Partien), `::scidc::db::open` nimmt
+  nur pgn/gz/zip, und eine geschriebene Datenbank wird mit `load … -readonly 0|1` geöffnet.
+  Lage 3 zählt damit 14 Fälle.
+  Beim Eintragen dieser Zeile fiel nebenbei auf, dass dieses Änderungsprotokoll fünf
+  **doppelte Datumsüberschriften** trug (26.11.14, 26.10.26, 26.10.28 dreimal): die Suche
+  von `release.sh` endet an der nächsten `## `-Zeile, der Text darunter zählte also nicht
+  mehr zum Abschnitt – und die bisherige Prüfung „neueste zuerst“ stört ein doppeltes
+  Datum nicht. Überschriften zusammengeführt, dazu zwei Fälle in `tests/test_version.py`:
+  kein Datum mit zwei Abschnitten, und die Zähler eines Abschnitts absteigend und ohne
+  Wiederholung. Der zweite fand zwei alte Einträge, die beide `b11` trugen (26.07.12).
+
 - **b2** – Die zweite Sicherheits-Invariante der SCI-Decoder ist jetzt geprüft: **die
   Grenzen des Datenbereichs-Versatzes**. Der `uint24`-Versatz kommt aus der (möglicherweise
   präparierten) Datei und wird roh zu einem Zeiger verrechnet; `sectionPtr` prüft ihn gegen
@@ -19,8 +42,6 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
   Decoder liest also 16 MB hinter dem Satz weiter, ohne es zu merken. Beide Ausgänge stehen
   darum ausdrücklich im Fall – ein Test, der auch ohne Wächter grün wäre, belegt nichts.
   Stand: Lage 2 58 Fälle / 263 Prüfungen.
-
-## 26.11.14
 
 - **b1** – **Der Rekursionsdeckel ist jetzt in allen sechs Move-Decodern geprüft**, bis
   dahin in genau einem. `MaxVariationLevel = 300` ist die Zusicherung, die eine präparierte
@@ -55,8 +76,6 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
   *nennt*; eine nur in `tcl/` geänderte Datei wirkte beim Start nicht und man suchte den
   Fehler im Quelltext. Stand: 112 Prüfungen in Lage 1+3, 48 Fälle in Lage 2.
 
-## 26.10.28
-
 - **b3** – **Lage 3 der Prüfreihe: das laufende Programm.** `tests/test_laufend.py`
   startet eine eigene Instanz mit eigenem `HOME` und fragt sie über die
   Anwendungskennung `Scidc` aus (base64-Protokoll über einen `wish`-Treiber, Zeitgrenze
@@ -78,8 +97,6 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
   die 31 verwaisten Schlüssel, zu denen der Quelltext keine Vorgabe mehr hat
   (umbenannte oder entfernte Features), als benannte Menge mit Grund.
 
-## 26.10.28
-
 - **b2** – `tests/test_quellen.py`: vier Eigenschaften des Quellbaums, die sich still
   verlieren (92 Tests in Lage 1). Geprüft werden die **SI5-Format-Gates** (jede Stelle,
   die `format::Scid4` nennt, ohne `Scid5` im Umfeld – die vier verbleibenden sind benannt
@@ -93,8 +110,6 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
   Umgekehrt sind sechs Dateien mit Nicht-ASCII-Bytes gültiges UTF-8 und unbedenklich.
   Nebenbei der veraltete Kommentar in `Database::copyGames` berichtigt (der `else`-Zweig
   führt SI5 mit).
-
-## 26.10.28
 
 - **b1** – Lage 2 abgeschlossen und an Lage 1 angeschlossen. Neu `tests/test_cpp.py`:
   fährt `src/dbtest` mit, wenn es gebaut ist (sonst übersprungen), und prüft von außen,
@@ -129,7 +144,6 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
     Patt als `Illegal_Position`. Einsetzschach bleibt ausgenommen, dort
     entscheiden die Figuren in der Hand.
 
-## 26.10.26
 - **b1** – SCV-Archiv wieder auf die Formate von Scidb zurückgebaut: SI5 ist kein
   Archivformat mehr. `.si5` wurde an vier Stellen des Archivpfads geführt – beim Erkennen
   der Datenbanken im Archiv (`app-database.tcl`), in der Archiv-Vorschau des Dateidialogs
@@ -578,8 +592,7 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 ## 26.07.12
 
 - **b12** – Modernisierung: Phase 5 – tk_compat.h in alle Dateien mit tkInt.h integriert
-- **b11** – Modernisierung: Phase 3.1 – Alle direkten Tk-Strukturzugriffe in tk_busy.cpp durch Kompatibilitäts-Wrapper ersetzt
-- **b11** – Modernisierung: Phase 3 – Direkte TkWindow-Strukturzugriffe in tk_base.cpp und tk_fixes.cpp durch tkCompat-Wrapper ersetzt
+- **b11** – Modernisierung: Phase 3 – Direkte TkWindow-Strukturzugriffe in tk_base.cpp und tk_fixes.cpp durch tkCompat-Wrapper ersetzt; Phase 3.1 – dasselbe für alle Tk-Strukturzugriffe in tk_busy.cpp. (Beide Commits trugen denselben Zähler b11; die Einträge sind hier zusammengeführt.)
 - **b10** – Modernisierung: Skript update-version.sh korrigiert (generische Patterns statt hardcoded Versionen)
 - **b9** – Modernisierung: Skript update-version.sh zur automatischen Versionssynchronisation hinzugefügt
 - **b8** – Modernisierung: Tcl C-API auf moderne Funktionen aktualisiert (Tcl_ResetResult/Tcl_AppendResult → Tcl_SetObjResult, Tcl_Eval → Tcl_EvalEx)

@@ -84,6 +84,7 @@ class Instanz:
         self.treiber = None
         self.treiberdatei = None
         self.protokoll = os.path.join(self.heim, "lauf.log")
+        self.startausgabe = None
 
     # --- Aufbau ----------------------------------------------------
 
@@ -126,6 +127,7 @@ class Instanz:
             stderr=subprocess.DEVNULL)
 
         self.warten()
+        self.startausgabe = self.ausgabe()
 
     def warten(self):
         """Wartet auf die Kennung -- nicht blind schlafen."""
@@ -214,6 +216,20 @@ class Instanz:
         except OSError:
             return "(kein Protokoll)"
 
+    def startprotokoll(self):
+        """Das Protokoll, wie es **nach dem Hochfahren** aussah.
+
+        Spaetere Faelle schreiben selbst hinein -- der
+        Datenbankbetrieb etwa provoziert absichtlich Fehler. Der
+        Startlauf ist aber nur das, was bis zur ersten Antwort
+        aufgelaufen ist, und genau darauf prueft
+        test_startlauf_ohne_ausnahme.
+        """
+        if self.startausgabe is None:
+            self.startausgabe = self.ausgabe()
+
+        return self.startausgabe
+
 
 INSTANZ = None
 GRUND = None
@@ -285,7 +301,7 @@ class TestLaufend(unittest.TestCase):
                          "Erststart erkannt -- die Dialoge haetten den Lauf angehalten")
 
     def test_startlauf_ohne_ausnahme(self):
-        text = INSTANZ.ausgabe()
+        text = INSTANZ.startprotokoll()
 
         for marke in ("(what)", "(func)", "assertion failed",
                       "precondition violation", "TWM load failed"):
@@ -423,3 +439,210 @@ class TestLaufend(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ----------------------------------------------------------------------
+# Datenbankbetrieb. Bis hierher fragte Lage 3 nur Zustaende ab -- keine
+# Datenbank wurde angelegt, befuellt, geschlossen und wieder geoeffnet.
+# Genau dort lagen aber die letzten echten Fehler: die falsche Meldung
+# beim Aendern einer Scid-Partie (26.09.14-b2), die vier Importfehler
+# samt appendResult (26.09.14-b3) und die vergessenen
+# format::Scid5-Zweige.
+#
+# Alles laeuft im eigenen HOME der Instanz und wird mit ihr geloescht;
+# die Bestaende des Benutzers werden nicht angefasst.
+#
+# Der Weg ist der, den die Oberflaeche geht (app-database.tcl):
+#
+#   anlegen   ::scidc::db::new <datei> <variante> <typ>
+#             ::scidc::db::attach <datei> <datei>     <- ohne das wird
+#                                                        nichts auf die
+#                                                        Platte geschrieben
+#   fuellen   ::scidc::db::import <db> <pgn> <log> {} <fortschritt> {}
+#   zaehlen   ::scidc::db::count games <db> <variante>
+#   schliessen ::scidc::db::close <db>
+#   oeffnen   ::scidc::db::load <datei> <fortschritt> {} -readonly <flag>
+#
+# ::scidc::db::open ist **nicht** der Weg, eine Datenbank zu oeffnen:
+# es nimmt nur pgn/gz/zip und meldet fuer alles andere "unsupported
+# extension" -- das kostete beim ersten Anlauf Zeit.
+# ----------------------------------------------------------------------
+
+#: Endung, beim Wiederoeffnen beschreibbar, die drei Dateien des Formats.
+#: SI3/SI4 oeffnet das Programm absichtlich nur lesend (app-database.tcl),
+#: SCI und SI5 lesend und schreibend.
+FORMATE = (
+    ("sci", True,  ("sci", "scg", "scn")),
+    ("si3", False, ("si3", "sg3", "sn3")),
+    ("si4", False, ("si4", "sg4", "sn4")),
+    ("si5", True,  ("si5", "sg5", "sn5")),
+)
+
+PROBE_PGN = """[Event "Probe"]
+[Site "Nirgendwo"]
+[Date "2026.11.14"]
+[Round "1"]
+[White "Weiss, W"]
+[Black "Schwarz, S"]
+[Result "1-0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Probe"]
+[Site "Nirgendwo"]
+[Date "2026.11.14"]
+[Round "2"]
+[White "Schwarz, S"]
+[Black "Weiss, W"]
+[Result "1/2-1/2"]
+
+1. d4 d5 2. c4 e6 1/2-1/2
+"""
+
+
+class TestDatenbank(unittest.TestCase):
+    """Anlegen, importieren, schliessen, wieder oeffnen -- je Format."""
+
+    def setUp(self):
+        if INSTANZ is None:
+            raise unittest.SkipTest(GRUND or "keine Instanz")
+
+        self.pgn = os.path.join(INSTANZ.heim, "probe.pgn")
+
+        with open(self.pgn, "w", encoding="utf-8") as f:
+            f.write(PROBE_PGN)
+
+        # Rueckrufe muessen echte Prozeduren sein: ::scidc::db::import
+        # ruft seinen Protokoll- und Fortschrittsrueckruf auf, *bevor*
+        # es die Argumente prueft. "puts" als Platzhalter erzeugt dort
+        # irrefuehrende Fehler.
+        INSTANZ.frage("proc ::probeLog {args} { return 0 }")
+        INSTANZ.frage("proc ::probeProgress {args} { return 0 }")
+
+    def datei(self, name, endung):
+        return os.path.join(INSTANZ.heim, "%s.%s" % (name, endung))
+
+    def anlegen(self, ziel):
+        INSTANZ.frage("::scidc::db::new {%s} Normal 0" % ziel)
+        INSTANZ.frage("::scidc::db::attach {%s} {%s}" % (ziel, ziel))
+
+    def importieren(self, ziel):
+        return INSTANZ.frage(
+            "::scidc::db::import {%s} {%s} ::probeLog {} ::probeProgress {}"
+            % (ziel, self.pgn))
+
+    def partien(self, ziel):
+        return INSTANZ.frage("::scidc::db::count games {%s} Normal" % ziel)
+
+    def test_jedes_format_nimmt_den_import_auf(self):
+        """Hier ist das Format das *Ziel* -- also der Schreibpfad.
+
+        Fuer SI5 ist das der nachtraeglich eingezogene: er geht durch
+        dieselben Format-Gates, die beim Nachruesten reihenweise
+        vergessen wurden (`format::Scid5`). Die Quelle ist stets PGN;
+        das Gegenstueck -- eine Datenbank *als Quelle* -- steht in
+        `test_jedes_format_taugt_auch_als_quelle`.
+
+        Der Rueckgabewert von import ist
+        {angenommen abgewiesen {...} {...} {}} -- die beiden Zahlen
+        kamen aus demselben Fehlerbild wie appendResult.
+        """
+        for endung, _, dateien in FORMATE:
+            ziel = self.datei("import", endung)
+
+            with self.subTest(format=endung):
+                try:
+                    self.anlegen(ziel)
+                    antwort = self.importieren(ziel)
+                    felder = antwort.split(None, 2)
+
+                    self.assertEqual(felder[0], "2", "angenommene Partien: " + antwort)
+                    self.assertEqual(felder[1], "0", "abgewiesene Partien: " + antwort)
+                    self.assertEqual(self.partien(ziel), "2")
+                finally:
+                    INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+                for teil in dateien:
+                    name = self.datei("import", teil)
+                    self.assertTrue(os.path.isfile(name), name)
+                    self.assertGreater(os.path.getsize(name), 0, name)
+
+    def test_eine_geschriebene_datenbank_laesst_sich_wieder_oeffnen(self):
+        """Erst das belegt, dass der Import auf der Platte gelandet ist."""
+        for endung, beschreibbar, _ in FORMATE:
+            ziel = self.datei("umlauf", endung)
+
+            with self.subTest(format=endung):
+                try:
+                    self.anlegen(ziel)
+                    self.importieren(ziel)
+                finally:
+                    INSTANZ.frage("::scidc::db::close {%s}" % ziel)
+
+                lesemodus = 0 if beschreibbar else 1
+
+                try:
+                    INSTANZ.frage(
+                        "::scidc::db::load {%s} ::probeProgress {} -readonly %d"
+                        % (ziel, lesemodus))
+                    self.assertEqual(self.partien(ziel), "2")
+                finally:
+                    INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+    def test_der_lesemodus_je_format_steht_noch_so_da(self):
+        """SCI und SI5 schreibend, SI3 und SI4 nur lesend.
+
+        Nachgefragt wird der Rumpf von openBase in der laufenden
+        Instanz, nicht der Quelltext auf der Platte -- so faellt auch
+        ein Bundle auf, das nicht neu erzeugt wurde.
+
+        Nicht gemessen wird das, indem SI3 schreibend geoeffnet wird:
+        die DB-Schicht antwortet darauf mit einer
+        **Zusicherungsverletzung** (db_database.cpp:252), nicht mit
+        einem geordneten Fehler. Das schreibt einen Backtrace ins
+        Protokoll, und in einem Bau mit NREQ gaebe es die Meldung gar
+        nicht -- der Fall haenge dann an der Bauart statt am Verhalten.
+        """
+        rumpf = INSTANZ.frage("info body ::application::database::openBase")
+
+        self.assertIn("sci - si3 - si4 - si5 - cbh - cbf", rumpf,
+                      "der Format-Zweig von openBase sieht anders aus")
+        self.assertIn('$ext ne "sci" && $ext ne "si5"', rumpf,
+                      "die Unterscheidung schreibbar/nur lesend fehlt")
+
+    def test_jedes_format_taugt_auch_als_quelle(self):
+        """Das Gegenstueck: die Datenbank ist die *Quelle*, Ziel ist SCI.
+
+        Darauf sieht `cmdImport` die Endung der Quelle an
+        (tcl_database.cpp), und genau dort fehlte `si5` bis 26.09.14-b3
+        -- eine .si5-Quelle fiel bis in den Zweig "unsupported
+        extension" durch. Gegengeprobt: mit entferntem `|| ext ==
+        "si5"` meldet dieser Fall fuer si5 "unsupported extension
+        'si5'", die uebrigen drei bleiben gruen.
+
+        Die Quelle wird vorher geschlossen -- dann nimmt cmdImport den
+        anderen der beiden Wege (`scidb->contains(src)` ist falsch, es
+        oeffnet die Datei selbst als ::db::Database).
+        """
+        for endung, _, _ in FORMATE:
+            quelle = self.datei("quelle", endung)
+            ziel = self.datei("ziel-%s" % endung, "sci")
+
+            with self.subTest(format=endung):
+                try:
+                    self.anlegen(quelle)
+                    self.importieren(quelle)
+                finally:
+                    INSTANZ.frage("::scidc::db::close {%s}" % quelle)
+
+                try:
+                    self.anlegen(ziel)
+                    antwort = INSTANZ.frage(
+                        "::scidc::db::import {%s} {%s} ::probeLog {} "
+                        "::probeProgress {}" % (ziel, quelle))
+
+                    self.assertEqual(antwort.split(None, 2)[0], "2",
+                                     "%s als Quelle: %s" % (endung, antwort))
+                    self.assertEqual(self.partien(ziel), "2")
+                finally:
+                    INSTANZ.roh("::scidc::db::close {%s}" % ziel)

@@ -23,7 +23,11 @@ Lage 1 braucht unter einer Sekunde, Lage 3 gut drei weitere.
 Was geprueft wird
 -----------------
 test_version.py   Die Version an ihren drei Stellen, das Schema, das
-                  erzeugte Bundle und der CHANGELOG-Eintrag dazu.
+                  erzeugte Bundle, der CHANGELOG-Eintrag dazu und der
+                  Aufbau des Protokolls: kein Datum mit zwei
+                  Abschnitten, Zaehler absteigend und ohne
+                  Wiederholung -- release.sh sucht den Eintrag nur bis
+                  zur naechsten "## "-Zeile.
 test_sprachen.py  Die sechs Sprachdateien: Kodierung gegen die
                   Deklaration in localization.tcl, Zeilenformat,
                   doppelte Schluessel, Namensraeume.
@@ -169,3 +173,33 @@ werden und das Umschalten in beide Richtungen ankommt, die in CLAUDE.md
 genannten Widgetpfade, die Ziehbarkeit der Elo-Spalten (Rueckfallprobe
 zu 26.09.18-b5), die Farbaufloesung im Nachtmodus, das SCV-Archiv ohne
 SI5 (26.10.26-b1) und zwei Stichproben in die C++-Bruecke.
+
+Dazu vier Faelle um Datenbanken (TestDatenbank, seit 26.11.14-b3). Sie
+legen je Format eine Datenbank im temporaeren HOME an, importieren
+zwei PGN-Partien, schliessen, oeffnen wieder und zaehlen:
+
+  * als *Ziel* (Schreibpfad) fuer sci, si3, si4, si5 -- fuer SI5 ist
+    das der nachtraeglich eingezogene Pfad, der durch dieselben
+    format::Scid5-Gates geht, die beim Nachruesten reihenweise
+    vergessen wurden;
+  * als *Quelle*, mit SCI als Ziel -- dort sieht cmdImport die Endung
+    an, und genau da fehlte si5 bis 26.09.14-b3. Gegengeprobt: mit
+    entferntem "|| ext == \"si5\"" meldet der Fall fuer si5
+    "unsupported extension 'si5'", die uebrigen drei bleiben gruen;
+  * der Umlauf ueber die Platte, je Format im richtigen Lesemodus
+    (sci/si5 schreibend, si3/si4 nur lesend);
+  * der Lesemodus-Zweig von openBase, im Rumpf der laufenden Instanz
+    nachgefragt -- so faellt auch ein Bundle auf, das make nicht neu
+    erzeugt hat.
+
+Drei Dinge, die dabei Zeit gekostet haben:
+  * Ohne ::scidc::db::attach landet nichts auf der Platte. new allein
+    legt die Datenbank nur im Speicher an; der Import meldet dann
+    brav zwei angenommene Partien, und die Dateien fehlen.
+  * ::scidc::db::open nimmt nur pgn/gz/zip. Eine Datenbank wird mit
+    load geoeffnet, mit -readonly je Format.
+  * SI3 schreibend zu oeffnen beantwortet die DB-Schicht mit einer
+    Zusicherungsverletzung (db_database.cpp:252), nicht mit einem
+    geordneten Fehler -- und in einem Bau mit NREQ gaebe es sie gar
+    nicht. Darum wird der Lesemodus am Rumpf von openBase gemessen
+    und nicht provoziert.
