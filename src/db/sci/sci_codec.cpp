@@ -357,6 +357,24 @@ Init::Init()
 } // namespace
 
 
+/// Liest einen Namensbasis-Index nach, der aus der Datei kommt.
+///
+/// Ohne diese Pruefung wird der gelesene Wert roh als Index in die
+/// Nachschlagetabelle benutzt; bei einem uint24 liegt das bis zu 64 MB
+/// hinter dem Vektor. mstl::vector::operator[] faengt das nur mit
+/// eingeschalteten Zusicherungen, und die fallen mit -DNREQ weg --
+/// deshalb eine echte Fehlerpruefung, wie in den Folgeschleifen der
+/// Namensbasis-Leser.
+inline static unsigned
+lookupAt(mstl::vector<unsigned> const& lookup, unsigned index)
+{
+	if (index >= lookup.size())
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
+
+	return lookup[index];
+}
+
+
 inline static NamebaseSite*
 getSite(Namebase& base, unsigned index)
 {
@@ -1724,6 +1742,11 @@ Codec::readNamebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 	char*		prev		= base.alloc(length);
 	Lookup&	lookup	= m_lookup[base.type()];
 
+	// Der *erste* Eintrag wurde nicht geprueft, die Folgeschleife unten
+	// schon -- ein Index >= nextId schrieb hinter den Vektor.
+	if (index >= lookup.size())
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
+
 	bstrm.get(prev, length);
 	name.hook(prev, length);
 	base.append(name, index);
@@ -1769,6 +1792,9 @@ Codec::readSitebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 	unsigned	length	= bstrm.get();
 	char*		prev		= base.alloc(length);
 	Lookup&	lookup	= m_lookup[Namebase::Site];
+
+	if (index >= lookup.size())
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
 
 	bstrm.get(prev, length);
 	name.hook(prev, length);
@@ -1821,6 +1847,9 @@ Codec::readEventbase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pr
 	unsigned	length	= bstrm.get();
 	Lookup&	lookup	= m_lookup[Namebase::Event];
 
+	if (id >= lookup.size())
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
+
 	prev = base.alloc(length);
 	bstrm.get(prev, length);
 	name.hook(prev, length);
@@ -1828,7 +1857,11 @@ Codec::readEventbase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pr
 printf("0 -> %u (%s)\n", id, name.c_str());
 #endif
 
-	NamebaseSite* site = ::getSite(namebase(Namebase::Site), m_lookup[Namebase::Site][bstrm.uint24()]);
+	// Nicht nur das Ergebnis pruefen (das tut ::getSite), sondern auch den
+	// Index selbst: er kommt aus der Datei und wird hier zum Index in die
+	// Nachschlagetabelle.
+	NamebaseSite* site = ::getSite(namebase(Namebase::Site),
+											::lookupAt(m_lookup[Namebase::Site], bstrm.uint24()));
 
 	site->incrRef();
 
@@ -1910,7 +1943,8 @@ printf("0 -> %u (%s)\n", id, name.c_str());
 printf("%u -> %u (%s)\n", i, index, name.c_str());
 #endif
 
-		NamebaseSite* site = ::getSite(namebase(Namebase::Site), m_lookup[Namebase::Site][bstrm.uint24()]);
+		NamebaseSite* site = ::getSite(namebase(Namebase::Site),
+												::lookupAt(m_lookup[Namebase::Site], bstrm.uint24()));
 
 		site->incrRef();
 
@@ -1970,6 +2004,9 @@ Codec::readPlayerbase(ByteStream& bstrm, Namebase& base, unsigned count, util::P
 	unsigned	length	= bstrm.get();
 	char*		prev		= base.alloc(length);
 	Lookup&	lookup	= m_lookup[Namebase::Player];
+
+	if (index >= lookup.size())
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
 
 	bstrm.get(prev, length);
 	name.hook(prev, length);

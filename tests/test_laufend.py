@@ -646,3 +646,114 @@ class TestDatenbank(unittest.TestCase):
                     self.assertEqual(self.partien(ziel), "2")
                 finally:
                     INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+
+class TestBeschaedigteDatenbank(unittest.TestCase):
+    """Eine praeparierte Datei muss einen geordneten Fehler ergeben.
+
+    Hintergrund ist Befund H1 des Audits vom 08.11.2026: in den vier
+    Namensbasis-Lesern von `sci_codec.cpp` wurde der Index des
+    **ersten** Eintrags nicht geprueft, waehrend die Folgeschleife es
+    tat. Ein Index jenseits von `nextId` schrieb damit hinter den
+    Vektor (`lookup[index] = 0`).
+
+    Die Probe wird hier **erzeugt**, nicht als Datei mitgefuehrt: eine
+    frische SCI-Datenbank, dann ein Feld der `.scn` verfaelscht. Der
+    erste Spielereintrag steht unverkuerzt in der Datei -- drei Bytes
+    Index (uint24), ein Laengenbyte, dann der Name. Gesucht wird
+    deshalb nach Laenge+Name, und die drei Bytes davor sind der Index.
+
+    Geprueft werden drei Dinge, denn der blosse Fehlschlag belegt
+    wenig: die Meldung muss die **des Codecs** sein (ohne den Fix
+    scheiterte es mit dem leeren Tcl-Ergebnis "0"), es darf **keine
+    Zusicherungsverletzung** ins Protokoll laufen (ohne den Fix stand
+    dort `(what) precondition violation: n < size()` samt Backtrace,
+    und in einem Bau mit -DNREQ waere es ein Heap-Overflow gewesen),
+    und die Instanz muss hinterher **weiterlaufen**.
+    """
+
+    NAME = b"Schwarz, S"
+
+    def setUp(self):
+        if INSTANZ is None:
+            raise unittest.SkipTest(GRUND or "keine Instanz")
+
+        self.pgn = os.path.join(INSTANZ.heim, "kaputt.pgn")
+
+        with open(self.pgn, "w", encoding="utf-8") as f:
+            f.write(PROBE_PGN)
+
+        INSTANZ.frage("proc ::probeLog {args} { return 0 }")
+        INSTANZ.frage("proc ::probeProgress {args} { return 0 }")
+
+    def anlegen(self, ziel):
+        INSTANZ.frage("::scidc::db::new {%s} Normal 0" % ziel)
+        INSTANZ.frage("::scidc::db::attach {%s} {%s}" % (ziel, ziel))
+        INSTANZ.frage(
+            "::scidc::db::import {%s} {%s} ::probeLog {} ::probeProgress {}"
+            % (ziel, self.pgn))
+        INSTANZ.frage("::scidc::db::close {%s}" % ziel)
+
+    def verfaelsche_ersten_spielerindex(self, datei, wert=0x004000):
+        with open(datei, "rb") as f:
+            rohdaten = f.read()
+
+        marke = bytes([len(self.NAME)]) + self.NAME
+        stelle = rohdaten.find(marke)
+
+        self.assertGreater(stelle, 3,
+                           "der erste Spielereintrag steht nicht wie erwartet "
+                           "in %s" % datei)
+        self.assertEqual(rohdaten.count(marke), 1,
+                         "die Marke kommt mehrfach vor")
+
+        index = stelle - 3
+        neu = (rohdaten[:index]
+               + bytes(((wert >> 16) & 0xff, (wert >> 8) & 0xff, wert & 0xff))
+               + rohdaten[stelle:])
+
+        self.assertEqual(len(neu), len(rohdaten))
+        self.assertNotEqual(neu, rohdaten, "die Datei ist unveraendert")
+
+        with open(datei, "wb") as f:
+            f.write(neu)
+
+    def test_ein_zu_grosser_namensindex_wird_abgewiesen(self):
+        ziel = os.path.join(INSTANZ.heim, "kaputt.sci")
+        self.anlegen(ziel)
+        self.verfaelsche_ersten_spielerindex(
+            os.path.join(INSTANZ.heim, "kaputt.scn"))
+
+        vorher = len(INSTANZ.ausgabe())
+
+        ok, text = INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)
+
+        if ok:
+            # Nur schliessen, was wirklich geoeffnet wurde: ein close auf
+            # eine nicht geoeffnete Datenbank ist selbst eine
+            # Zusicherungsverletzung (app_application.cpp:806) und
+            # verfaelschte die Protokollpruefung unten.
+            INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+        self.assertFalse(ok, "die praeparierte Datei wurde geoeffnet: " + text)
+        self.assertIn("Namebase", text, "nicht die Meldung des Codecs: " + text)
+        self.assertIn("Corrupted", text, "nicht die Meldung des Codecs: " + text)
+
+        # Die Ausnahme druckt ihre M_THROW-Diagnose auf stderr -- erwartet
+        # ist die des Codecs, nicht die einer Zusicherung. Ohne den Fix
+        # stand hier "(func) operator[] ... precondition violation:
+        # n < size()", also der Griff hinter den Vektor.
+        neu = INSTANZ.ausgabe()[vorher:]
+
+        self.assertIn("namebase file is broken", neu,
+                      "die Diagnose des Codecs fehlt:\n" + neu[-1500:])
+        self.assertIn("db::IOException", neu,
+                      "kein geordneter Codec-Fehler:\n" + neu[-1500:])
+        self.assertNotIn("precondition violation", neu,
+                         "Zusicherungsverletzung statt Fehlerpruefung:\n"
+                         + neu[-1500:])
+
+        # Die Instanz muss den Fall ueberlebt haben.
+        self.assertEqual(vergleichbar(INSTANZ.frage("set ::scidc::version")),
+                         vergleichbar(version_aus_makefile()))

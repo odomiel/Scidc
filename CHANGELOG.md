@@ -6,6 +6,27 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 > mit der neuen Versionsnummer ergänzen – analog zum Versions-Bump in den drei Versionsdateien.
 > Reine Housekeeping-Commits ohne `bN` müssen nicht eingetragen werden.
 
+## 26.11.15
+
+- **b1** – **Befund H1 des Audits behoben: der erste Namensbasis-Eintrag einer SCI-Datei war
+  ungeprüft.** `readNamebases` liest die Vektorgröße `nextId` **aus der Datei** und dimensioniert
+  `m_lookup` darauf; die Folgeschleife jedes der vier Leser prüft dann brav
+  `index >= lookup.size()` und wirft `IO_RAISE(Namebase, Corrupted, …)` – nur der **erste**
+  Eintrag tat es nicht und schrieb `lookup[index] = 0` dorthin, wo die Datei es verlangte. Mit
+  eingeschalteten Zusicherungen (das ausgelieferte Beta) endete das in einer
+  *internen* Meldung aus `mstl::vector::operator[]`, mit `-DNREQ` (dem Vorgabeprofil von
+  `./configure`) in einem **Heap-Overflow-Write** – nachgewiesen im Audit vom 08.11.2026 mit ASan
+  und einem PoC. Die Prüfung steht jetzt in allen vier Lesern, als echte Fehlerprüfung und nicht
+  als Zusicherung. **Dabei zwei weitere Stellen gefunden**, die der Bericht nicht nennt: in
+  `readEventbase` wird der Ortsindex des Eintrags roh als Index in die Nachschlagetabelle
+  benutzt (`m_lookup[Site][bstrm.uint24()]`), im ersten Eintrag *und* in der Schleife – bei einem
+  `uint24` greift das bis zu 64 MB hinter den Vektor. `::getSite` prüft nur das *Ergebnis*, nicht
+  den Index; beide gehen jetzt über den neuen Helfer `lookupAt`. Dazu ein Fall in Lage 3: er legt
+  eine SCI-Datenbank an, verfälscht in der `.scn` den Index des ersten Spielers und verlangt die
+  Meldung **des Codecs** – ohne den Fix scheitert das Laden mit dem leeren Tcl-Ergebnis „0" und
+  schreibt `precondition violation: n < size()` ins Protokoll. Die Probe wird erzeugt, nicht als
+  Datei mitgeführt. Stand: Lage 1+3 131 Fälle.
+
 ## 26.11.14
 
 - **b6** – **Die Git-Haken sind jetzt im Repository** – vorher hatte ein frischer Klon keinen

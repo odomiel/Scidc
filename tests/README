@@ -280,6 +280,25 @@ zwei PGN-Partien, schliessen, oeffnen wieder und zaehlen:
     nachgefragt -- so faellt auch ein Bundle auf, das make nicht neu
     erzeugt hat.
 
+Dazu ein Fall um eine **praeparierte** Datei (TestBeschaedigteDatenbank,
+seit 26.11.15-b1, Befund H1 des Audits vom 08.11.2026): er legt eine
+SCI-Datenbank an, verfaelscht in der .scn den Index des ersten Spielers und
+verlangt beim Laden die Meldung **des Codecs**
+("%IO-Error% Namebase Corrupted"), kein Protokolleintrag mit
+"precondition violation" und eine Instanz, die hinterher noch antwortet.
+Ohne den Fix scheitert das Laden mit dem leeren Tcl-Ergebnis "0" und schreibt
+"(func) operator[] ... precondition violation: n < size()" ins Protokoll -- in
+einem Bau mit -DNREQ waere es ein Heap-Overflow-Write.
+
+Zwei Dinge dazu:
+  * Die Probe wird **erzeugt**, nicht als Datei mitgefuehrt. Der erste
+    Spielereintrag steht unverkuerzt in der .scn -- drei Bytes Index (uint24),
+    ein Laengenbyte, dann der Name. Gesucht wird nach Laenge+Name, die drei
+    Bytes davor sind der Index.
+  * Geschlossen wird nur, was wirklich geoeffnet wurde: ein close auf eine
+    nicht geoeffnete Datenbank ist selbst eine Zusicherungsverletzung
+    (app_application.cpp:806) und verfaelscht die Protokollpruefung.
+
 Drei Dinge, die dabei Zeit gekostet haben:
   * Ohne ::scidc::db::attach landet nichts auf der Platte. new allein
     legt die Datenbank nur im Speicher an; der Import meldet dann
