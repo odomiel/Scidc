@@ -51,7 +51,9 @@ test_cpp.py       Bruecke zu Lage 2: fuehrt src/dbtest mit, prueft die
                   nicht aelter ist als die .a aus $(LIBS).
 test_quellen.py   Eigenschaften des Quellbaums: SI5-Format-Gates,
                   die drei Namensbasis-Regeln von SI5, Latin-1-Quellen,
-                  SOURCES, Engine-Katalog.
+                  SOURCES, Engine-Katalog -- und der Prolog-Waechter des
+                  FIDE-Skripts, der hier wirklich gefahren wird (Bombe
+                  abweisen, gesunden Strom vollstaendig durchlassen).
 test_haken.py     Die Git-Haken: Vorlage, Installierer, und dass der
                   installierte pre-commit die Vorlage ist.
 test_laufend.py   Lage 3, siehe unten.
@@ -162,6 +164,14 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
                       Dateiposition, keine sortierte Listenposition --
                       Alias-Positionen, neue Eintraege, und dass
                       update() daran scheitert
+  t_mark.cpp          db::Mark: die drei Aufzaehlungen einer Markierung
+                      kommen aus der Datei. Der Befehl wird abgewiesen,
+                      Typ und Farbe fallen zurueck -- jeweils mit der
+                      Gegenprobe am groessten *gueltigen* Wert
+  t_bit_functions.cpp mstl::bf: eine Drehung um 0 und um die ganze Breite
+                      muss der Bezeichner bleiben. Faellt am alten Stand
+                      **nicht** durch (x86 maskiert die Weite ohnehin) --
+                      der Nachweis des UB kommt aus -fsanitize=undefined
 
 Die Versatz-Faelle sind **gegengeprobt**: mit ausgeschaltetem sectionPtr-Waechter
 liefern sie EndOfStream statt Corrupted -- der Decoder liest dann ausserhalb des

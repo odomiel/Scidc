@@ -17,9 +17,16 @@
 #   * **Der Engine-Katalog.** Jede geladene Datei wird gegen ihre
 #     SHA-256 geprueft, bevor sie ausfuehrbar gemacht wird. Fehlt die
 #     Pruefsumme, faellt diese Sicherung lautlos weg.
+#   * **Das FIDE-Skript parst fremdes XML.** ElementTree expandiert
+#     interne Entities; eine Datei mit Dokumenttyp-Deklaration kann den
+#     Speicher auftreiben, bevor ein einziger <player> gelesen ist
+#     (Befund H6 des Audits vom 08.11.2026). Der Waechter davor laesst
+#     sich hier wirklich ausfuehren, nicht nur im Text nachsehen.
 # ======================================================================
 
 import glob
+import importlib.util
+import io
 import os
 import re
 import unittest
@@ -271,6 +278,75 @@ class TestEngineKatalog(unittest.TestCase):
                 gefunden += 1
 
         self.assertGreaterEqual(gefunden, 6, "zu wenige Builds im Katalog")
+
+
+class TestFideXml(unittest.TestCase):
+    """Der Prolog-Waechter in `tcl/update-fide-players.py` (Befund H6).
+
+    Geladen wird das Skript ueber seinen Pfad -- es liegt lose in `tcl/`
+    und ist kein Paket. Gefahren wird der Waechter selbst, ohne Netz:
+    eine Deklaration muss abgewiesen werden, ein gesunder Strom
+    unveraendert durchlaufen. Das Zweite gehoert dazu, denn der Waechter
+    liest 64 KiB voraus und muss sie wieder vorlegen -- ein
+    verschluckter Kopf faellt sonst erst beim Benutzer auf.
+    """
+
+    BOMBE = (b'<?xml version="1.0"?>\n'
+             b'<!DOCTYPE liste [<!ENTITY a "aaaaaaaaaa">]>\n'
+             b'<playerslist><player><fideid>1</fideid></player></playerslist>')
+
+    GESUND = (b'<?xml version="1.0"?>\n'
+              b'<playerslist>\n'
+              b'<player><fideid>7</fideid><name>Probe, P</name>'
+              b'<country>GER</country><rating>2000</rating></player>\n'
+              b'</playerslist>')
+
+    @classmethod
+    def setUpClass(cls):
+        ort = pfad("tcl", "update-fide-players.py")
+        spur = importlib.util.spec_from_file_location("fide_probe", ort)
+        cls.modul = importlib.util.module_from_spec(spur)
+        spur.loader.exec_module(cls.modul)
+
+    def test_eine_dokumenttyp_deklaration_wird_abgewiesen(self):
+        with self.assertRaises(ValueError) as fall:
+            self.modul.vet_prolog(io.BytesIO(self.BOMBE))
+
+        self.assertIn("doctype", str(fall.exception).lower())
+
+    def test_eine_entity_deklaration_ohne_doctype_wird_abgewiesen(self):
+        with self.assertRaises(ValueError):
+            self.modul.vet_prolog(io.BytesIO(
+                b'<?xml version="1.0"?><!ENTITY a "aa"><liste/>'))
+
+    def test_ein_prolog_ohne_wurzelelement_wird_abgewiesen(self):
+        # Ohne Wurzelelement im Kopf koennte eine Deklaration dahinter
+        # stehen -- der Waechter wuesste es nicht und darf nicht raten.
+        with self.assertRaises(ValueError):
+            self.modul.vet_prolog(io.BytesIO(
+                b"<!-- " + b"x" * (self.modul.PROLOG_LIMIT + 10)))
+
+    def test_ein_gesunder_strom_kommt_vollstaendig_an(self):
+        import xml.etree.ElementTree as ET
+
+        strom = self.modul.vet_prolog(io.BytesIO(self.GESUND))
+        spieler = [e for ereignis, e in ET.iterparse(strom, events=("end",))
+                   if e.tag == "player"]
+
+        self.assertEqual(len(spieler), 1)
+        self.assertEqual(spieler[0].findtext("name"), "Probe, P")
+
+    def test_der_waechter_steht_vor_dem_parser(self):
+        # Der Aufruf selbst, nicht nur seine Verfuegbarkeit: ein
+        # iterparse ohne vet_prolog waere wieder offen.
+        quelle = lies(pfad("tcl", "update-fide-players.py"))
+
+        # Jeder Aufruf, nicht nur der eine: ein blosses "in" liesse einen
+        # zweiten, ungeschuetzten daneben zu.
+        aufrufe = [z.strip() for z in quelle.splitlines() if "ET.iterparse(" in z]
+
+        self.assertEqual(len(aufrufe), 1, aufrufe)
+        self.assertIn("ET.iterparse(vet_prolog(", aufrufe[0])
 
 
 if __name__ == "__main__":

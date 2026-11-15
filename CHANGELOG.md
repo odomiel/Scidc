@@ -8,6 +8,25 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.15
 
+- **b4** – H5 und H6 des Audits. **H5**, drei Stellen mit undefiniertem
+  Verhalten: `rotate_left`/`rotate_right` schoben um `sizeof(T)*8 - shift` und
+  damit bei `shift == 0` um die ganze Breite des Typs – der häufigste Fall
+  überhaupt, denn die Aufrufer übergeben `count - 1`; gemessen mit
+  `-fsanitize=undefined` als „shift exponent 64 is too large", der Wert selbst
+  bleibt gleich (der x86-Befehl maskiert ohnehin, nachgeprüft – diese Zahlen
+  stecken als Stellungsschlüssel in Datenbanken und Eröffnungsbüchern). In
+  `Mark::decode` kamen Befehl, Typ und Farbe als rohe Casts aus der Datei: der
+  Befehl wird jetzt abgewiesen, wenn er keiner ist (an ihm hängt die
+  Satzlänge, und `Mark::skip` wirft dort längst), Typ und Farbe fallen auf
+  `DefaultType`/`DefaultColor` zurück. Und `nsSMState` spannte seinen eigenen
+  Wertebereich nicht auf, obwohl die Zustandstabellen beliebige Nummern führen
+  – ein Grenzwert `eStateMax` deckt die 4-Bit-Tabellen ab. **H6**: das
+  FIDE-Skript prüft den XML-Prolog, bevor `iterparse` ihn sieht, und weist
+  Dokumenttyp- und Entity-Deklarationen ab (kein `defusedxml` nötig, keine
+  zusätzliche Abhängigkeit im AppImage). Dazu zwei neue Lage-2-Dateien
+  (`t_mark.cpp`, `t_bit_functions.cpp`) und fünf Lage-1-Fälle, die den
+  Wächter wirklich fahren.
+
 - **b3** – H3 des Audits, gezielt: die Grenzen von `BlockFile::get` hingen an
   `M_REQUIRE` und liefen dazu selbst über. Versatz und Länge eines
   Partiesatzes kommen aus der Datei – bei SI3/4/5 aus dem Indexsatz, bei SCI

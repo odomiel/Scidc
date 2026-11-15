@@ -91,6 +91,8 @@ TEST_SRC = \
 	tests/t_cbf_decoder.cpp \
 	tests/t_cbh_decoder.cpp \
 	tests/t_si5_name_list.cpp \
+	tests/t_mark.cpp \
+	tests/t_bit_functions.cpp \
 
 TEST_OBJ = $(TEST_SRC:.cpp=.o)
 

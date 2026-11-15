@@ -537,7 +537,28 @@ Mark::decode(ByteStream& strm)
 	M_REQUIRE(isEmpty());
 	M_REQUIRE(isMark(strm.peek()));
 
-	m_command = mark::Command(strm.get());
+	// Die Bytes stammen aus der Datei, und ein Wert jenseits der Aufzaehlung
+	// ist schon beim *Laden* undefiniert (UBSan: "load of value N, which is not
+	// a valid value for type 'Command'") -- unabhaengig davon, dass
+	// commandName() & Co. einen Rueckfall haben. Beim Befehl ist das ein
+	// Fehler, denn an ihm haengt die Satzlaenge und Mark::skip() wirft dort
+	// laengst; bei Typ und Farbe genuegt ein Rueckfall auf den Vorgabewert (wie
+	// bei den Wertungsarten in decodeIndexSi5) -- eine Markierung ist Zierrat
+	// und soll keine Partie unlesbar machen.
+	Byte command = strm.get();
+
+	switch (command)
+	{
+		case mark::None:
+		case mark::Draw:
+		case mark::Diagram:
+			break;
+
+		default:
+			IO_RAISE(Game, Corrupted, "corrupted game data");
+	}
+
+	m_command = mark::Command(command);
 
 	if (m_command == mark::None)
 		return;
@@ -558,7 +579,7 @@ Mark::decode(ByteStream& strm)
 		}
 		else
 		{
-			m_type = mark::Type(byte);
+			m_type = byte <= mark::Disk ? mark::Type(byte) : DefaultType;
 		}
 
 		byte = strm.get();
@@ -566,12 +587,10 @@ Mark::decode(ByteStream& strm)
 		if (byte & 0x80)
 		{
 			m_square2 = byte & 63;
-			m_color = mark::Color(strm.get());
+			byte = strm.get();
 		}
-		else
-		{
-			m_color = mark::Color(byte);
-		}
+
+		m_color = byte <= mark::Black ? mark::Color(byte) : DefaultColor;
 	}
 }
 

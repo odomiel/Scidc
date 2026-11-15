@@ -295,6 +295,16 @@ reverse(T x)
 }
 
 
+// Eine Verschiebung um die ganze Breite des Typs ist undefiniert, und
+// shift == 0 erzeugt genau die -- der haeufigste Fall ueberhaupt, denn die
+// Aufrufer uebergeben "count - 1" (db_board.cpp:505 u.a., app_polyglot_book.cpp).
+// Gemessen mit -fsanitize=undefined: "m_bit_functions.ipp:307: shift exponent
+// 64 is too large for 64-bit type". Der Wert aendert sich dadurch nicht: der
+// x86-Befehl maskiert die Weite ohnehin, die Drehung um 0 ergab schon vorher
+// x | x == x -- gepruefte Voraussetzung, denn diese Werte stecken als
+// Stellungsschluessel in Datenbanken und Eroeffnungsbuechern.
+#define BF_ROTATE_MASK(T) (sizeof(T)*8 - 1)
+
 template <typename T>
 T
 rotate_left(T x, unsigned shift)
@@ -304,7 +314,8 @@ rotate_left(T x, unsigned shift)
 	// the GNU compiler knows that the C code only rotates the bits and that
 	// this can be done with the x86 rol and ror instructions.
 	// Also see <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=17886>.
-	return (x << shift) | (x >> (sizeof(T)*8 - shift));
+	shift &= BF_ROTATE_MASK(T);
+	return shift ? (x << shift) | (x >> (sizeof(T)*8 - shift)) : x;
 }
 
 
@@ -317,7 +328,8 @@ rotate_right(T x, unsigned shift)
 	// the GNU compiler knows that the C code only rotates the bits and that
 	// this can be done with the x86 rol and ror instructions.
 	// Also see <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=17886>.
-	return (x >> shift) | (x << (sizeof(T)*8 - shift));
+	shift &= BF_ROTATE_MASK(T);
+	return shift ? (x >> shift) | (x << (sizeof(T)*8 - shift)) : x;
 }
 
 } // namespace bf

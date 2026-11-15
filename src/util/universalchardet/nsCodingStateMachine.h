@@ -48,7 +48,16 @@
 typedef enum {
    eStart = 0,
    eError = 1,
-   eItsMe = 2 
+   eItsMe = 2,
+   /* Die gepackten Zustandstabellen fuehren beliebige Zustandsnummern, nicht
+    * nur diese drei -- jede davon wird in NextState() nach nsSMState
+    * gewandelt. Ohne einen Wert, der den Bereich aufspannt, ist das Laden
+    * eines solchen Zustands undefiniert (UBSan: "load of value N, which is not
+    * a valid value for type 'nsSMState'", nsCodingStateMachine.h:72/78/81).
+    * Alle Zustandstabellen in nsMBCSSM.cpp und nsEscSM.cpp sind 4-Bit-gepackt
+    * (eIdxSft4bits/eUnitMsk4bits), ein Zustand ist also immer 0..15.
+    */
+   eStateMax = 0x0f
 } nsSMState;
 
 #define GETCLASS(c) GETFROMPCK(((unsigned char)(c)), mModel->classTable)

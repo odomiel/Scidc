@@ -33,6 +33,7 @@ rather than a one-liner.
 
 import sys
 import os
+import re
 import tempfile
 import zipfile
 import urllib.request
@@ -40,6 +41,15 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 FIDE_XML_URL = "https://ratings.fide.com/download/players_list_xml.zip"
+
+# ElementTree expands internal entities, so a declaration like
+#   <!DOCTYPE x [<!ENTITY a "aaaa..."><!ENTITY b "&a;&a;&a;...">]>
+# can blow up memory before a single <player> is seen ("billion laughs").
+# A DOCTYPE may only appear in the prolog, before the root element, so
+# inspecting the prolog is enough -- and does not need defusedxml, which
+# would be an extra dependency for a script that ships inside the AppImage.
+PROLOG_LIMIT = 1 << 16
+ROOT_START = re.compile(rb"<[A-Za-z_]")
 
 TITLE_MAP = {
     "GM":  "gm",
@@ -91,6 +101,51 @@ def make_line(fideid, name, title, federation, rating, games, birth, female,
             + " " + rap_part + rgm_part)
 
 
+class CheckedProlog:
+    """Hands out the stream again after the prolog has been vetted.
+
+    Only read() is needed: nothing else is called on the stream.
+    """
+
+    def __init__(self, head, rest):
+        self._head = head
+        self._rest = rest
+
+    def read(self, size=-1):
+        if not self._head:
+            return self._rest.read(size)
+
+        if size is None or size < 0:
+            data, self._head = self._head + self._rest.read(), b""
+            return data
+
+        data, self._head = self._head[:size], self._head[size:]
+        return data
+
+
+def vet_prolog(fobj):
+    """Reject a DTD, then return a stream that still holds every byte."""
+    head = fobj.read(PROLOG_LIMIT)
+    lowered = head.lower()
+
+    for marker in (b"<!doctype", b"<!entity"):
+        if marker in lowered:
+            raise ValueError(
+                "refusing a FIDE list with a document type declaration "
+                "(%s): internal entities can be expanded into a memory "
+                "bomb" % marker.decode("ascii"))
+
+    # Once the root element has started, no DOCTYPE can follow. If it has
+    # not started within PROLOG_LIMIT bytes, the prolog itself is the
+    # anomaly -- do not hand such a file to the parser unchecked.
+    if not ROOT_START.search(head):
+        raise ValueError(
+            "no root element within the first %d bytes of the FIDE list"
+            % PROLOG_LIMIT)
+
+    return CheckedProlog(head, fobj)
+
+
 def download_to_file(url, path):
     """Stream-download url in 1 MB chunks to path (atomic via .part temp file)."""
     print("Downloading FIDE player list (XML, ~50 MB)...", flush=True)
@@ -132,7 +187,8 @@ def convert_streaming(xml_fobj, out_zip_path):
     count    = 0
     rapid_count = 0
 
-    for event, elem in ET.iterparse(xml_fobj, events=("start", "end")):
+    for event, elem in ET.iterparse(vet_prolog(xml_fobj),
+                                    events=("start", "end")):
         if event == "start" and root_elem is None:
             root_elem = elem  # capture document root on first start
             continue
