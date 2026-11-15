@@ -125,6 +125,23 @@ check(T* p)
 }
 
 
+/// Holt den Knoten zu einer Namens-ID, die aus der Datei kommt.
+///
+/// NameList::lookup() prueft zwei Dinge, aber nur mit Zusicherungen
+/// (si3_name_list.ipp:76) -- und die fallen mit -DNREQ weg. ::check()
+/// oben greift zu spaet: es prueft den *Eintrag*, der Knoten ist bei
+/// ->entry schon dereferenziert. hasId() prueft beides, die obere
+/// Grenze und die Luecke.
+static inline NameList::Node*
+lookupNode(NameList& list, unsigned id)
+{
+	if (!list.hasId(id))
+		IO_RAISE(Index, Corrupted, "name id is out of range");
+
+	return list.lookup(id);
+}
+
+
 static void
 checkNamebase(unsigned maxFrequency, char const* msg)
 {
@@ -1401,17 +1418,19 @@ Codec::decodeIndexSi5(ByteStream& strm, unsigned index)
 	if (eventID > maxEventID)  eventID = 0;
 	if (siteID  > maxSiteID)   siteID  = 0;
 	if (roundID > maxRoundID)  roundID = 0;
+	// Das Klemmen oben reicht nicht: bei leerer Liste ist maxPlayerID 0 und
+	// nicht "keine", die Null geht durch und der Knoten dazu fehlt.
 	NamebasePlayer* whitePlayer =
-		::check((NamebasePlayer*)(m_playerList->lookup(whiteID)->entry));
+		::check((NamebasePlayer*)(::lookupNode(*m_playerList, whiteID)->entry));
 	NamebasePlayer* blackPlayer =
-		::check((NamebasePlayer*)(m_playerList->lookup(blackID)->entry));
+		::check((NamebasePlayer*)(::lookupNode(*m_playerList, blackID)->entry));
 	whitePlayer->incrRef(); blackPlayer->incrRef();
 	item.m_player[color::White] = whitePlayer;
 	item.m_player[color::Black] = blackPlayer;
 
-	NamebaseEvent* event = ::check((NamebaseEvent*)(m_eventList->lookup(eventID)->entry));
-	NamebaseSite*  site  = ::check((NamebaseSite* )(m_siteList->lookup(siteID)->entry));
-	NamebaseEntry* round = ::check((NamebaseEntry*)(m_roundList->lookup(roundID)->entry));
+	NamebaseEvent* event = ::check((NamebaseEvent*)(::lookupNode(*m_eventList, eventID)->entry));
+	NamebaseSite*  site  = ::check((NamebaseSite* )(::lookupNode(*m_siteList,  siteID )->entry));
+	NamebaseEntry* round = ::check((NamebaseEntry*)(::lookupNode(*m_roundList, roundID)->entry));
 
 	m_roundLookup[index] = round;
 	unsigned rnd, subrnd;
@@ -1854,10 +1873,12 @@ Codec::decodeIndex(ByteStream& strm, unsigned index)
 	uint32_t whiteId			= strm.uint16() | (whiteBlackHigh >> 4) << 16;
 	uint32_t blackId			= strm.uint16() | (whiteBlackHigh & 0x0f) << 16;
 
+	// Die IDs stehen in der Indexdatei und sind hier gar nicht geklemmt --
+	// 20 Bit, waehrend die Namensliste aus den Kopfzahlen dimensioniert ist.
 	NamebasePlayer* whitePlayer =
-		::check((NamebasePlayer*)(m_playerList->lookup(whiteId)->entry));
+		::check((NamebasePlayer*)(::lookupNode(*m_playerList, whiteId)->entry));
 	NamebasePlayer* blackPlayer =
-		::check((NamebasePlayer*)(m_playerList->lookup(blackId)->entry));
+		::check((NamebasePlayer*)(::lookupNode(*m_playerList, blackId)->entry));
 
 	whitePlayer->incrRef(); blackPlayer->incrRef();
 
@@ -1870,9 +1891,9 @@ Codec::decodeIndex(ByteStream& strm, unsigned index)
 	uint32_t siteId				= strm.uint16() | (((eventSiteRnd_High >> 2) & 7) << 16);
 	uint32_t roundId				= strm.uint16() | ((eventSiteRnd_High & 3) << 16);
 
-	NamebaseEvent* event	= ::check((NamebaseEvent*)(m_eventList->lookup(eventId)->entry));
-	NamebaseSite*  site	= ::check((NamebaseSite* )(m_siteList->lookup(siteId)->entry));
-	NamebaseEntry* round	= ::check((NamebaseEntry*)(m_roundList->lookup(roundId)->entry));
+	NamebaseEvent* event	= ::check((NamebaseEvent*)(::lookupNode(*m_eventList, eventId)->entry));
+	NamebaseSite*  site	= ::check((NamebaseSite* )(::lookupNode(*m_siteList,  siteId )->entry));
+	NamebaseEntry* round	= ::check((NamebaseEntry*)(::lookupNode(*m_roundList, roundId)->entry));
 
 	m_roundLookup[index] = round;
 

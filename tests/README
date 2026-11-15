@@ -290,6 +290,16 @@ Ohne den Fix scheitert das Laden mit dem leeren Tcl-Ergebnis "0" und schreibt
 "(func) operator[] ... precondition violation: n < size()" ins Protokoll -- in
 einem Bau mit -DNREQ waere es ein Heap-Overflow-Write.
 
+Seit 26.11.15-b2 liegen zwei weitere Faelle daneben (Befund H2): eine .sn5,
+die nur noch ein Nullbyte enthaelt -- vier leere Namenslisten, waehrend der
+Index weiter auf Spieler 0 zeigt -- und ein einzelnes verfaelschtes Byte im
+SI4-Index (Kopf 174 + 8 Bytes Magic, Satz 47 Bytes, im Satz Versatz 9: die
+oberen vier Bits beider Spieler-IDs). Erwartet ist beide Male
+"name id is out of range" und **keine** Zusicherung im Protokoll; ohne den
+Wachter melden sie "assertion failed: m_lookup[id]" bzw.
+"assertion failed: id < m_lookup.size()" und mit -DNREQ waere es ein Griff
+hinter den Vektor.
+
 Zwei Dinge dazu:
   * Die Probe wird **erzeugt**, nicht als Datei mitgefuehrt. Der erste
     Spielereintrag steht unverkuerzt in der .scn -- drei Bytes Index (uint24),

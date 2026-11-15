@@ -8,6 +8,19 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.15
 
+- **b2** – H2 des Audits: `decodeIndexSi5` folgte einem Null-Knoten. Der
+  Lesepfad klemmt die aus der Datei gelesenen Namens-IDs nur nach oben; bei
+  leerer Namensliste ist die Obergrenze aber 0 und nicht „keine", und
+  `lookup(0)->entry` greift auf einen fehlenden Knoten zu. `::check()` kommt zu
+  spät – es prüft den Eintrag, der Knoten ist da schon dereferenziert. Neu
+  führt der Helfer `lookupNode` beide Lesepfade und prüft über `hasId()` die
+  obere Grenze **und** die Lücke; gemessen: vorher
+  `assertion failed: m_lookup[id]`, jetzt
+  `%IO-Error% Index Corrupted {name id is out of range}`. Dieselbe Stelle im
+  SI3/SI4-Lesepfad ist mitgefasst – dort ist die 20-Bit-ID aus der Indexdatei
+  gar nicht geklemmt und las mit `-DNREQ` hinter den Vektor. Zwei Fälle in
+  Lage 3.
+
 - **b1** – **Befund H1 des Audits behoben: der erste Namensbasis-Eintrag einer SCI-Datei war
   ungeprüft.** `readNamebases` liest die Vektorgröße `nextId` **aus der Datei** und dimensioniert
   `m_lookup` darauf; die Folgeschleife jedes der vier Leser prüft dann brav

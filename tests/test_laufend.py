@@ -757,3 +757,93 @@ class TestBeschaedigteDatenbank(unittest.TestCase):
         # Die Instanz muss den Fall ueberlebt haben.
         self.assertEqual(vergleichbar(INSTANZ.frage("set ::scidc::version")),
                          vergleichbar(version_aus_makefile()))
+
+    def test_eine_zu_grosse_spieler_id_im_si4_index_wird_abgewiesen(self):
+        """Derselbe Griff im SI3/SI4-Lesepfad -- dort ohne jedes Klemmen.
+
+        `decodeIndex` liest die Spieler-ID als 20-Bit-Zahl aus der
+        Indexdatei und gibt sie unverandert an `lookup()`. Die
+        Namensliste ist aus den Kopfzahlen dimensioniert; eine ID
+        jenseits davon las mit -DNREQ hinter den Vektor und folgte dann
+        einem Zufallszeiger -- schlimmer als die Null in SI5.
+
+        Verfaelscht wird **ein** Byte: der Kopf ist 174 Bytes plus 8
+        Bytes Magic, der Satz 47 Bytes, und im Satz steht an Versatz 9
+        das Byte mit den oberen vier Bits beider Spieler-IDs
+        (`whiteId |= (whiteBlackHigh >> 4) << 16`). 0xf0 setzt sie alle.
+        """
+        ziel = os.path.join(INSTANZ.heim, "indexid.si4")
+        self.anlegen(ziel)
+
+        stelle = 174 + 8 + 9
+        with open(ziel, "r+b") as f:
+            f.seek(stelle)
+            self.assertEqual(len(f.read(1)), 1, "der Index ist zu kurz")
+            f.seek(stelle)
+            f.write(b"\xf0")
+
+        vorher = len(INSTANZ.ausgabe())
+
+        ok, text = INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)
+
+        if ok:
+            INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+        self.assertFalse(ok, "die praeparierte Datei wurde geoeffnet: " + text)
+        self.assertIn("Corrupted", text, "nicht die Meldung des Codecs: " + text)
+
+        neu = INSTANZ.ausgabe()[vorher:]
+
+        self.assertIn("name id is out of range", neu,
+                      "die Diagnose des Codecs fehlt:\n" + neu[-1500:])
+        self.assertNotIn("assertion failed", neu,
+                         "Zusicherung statt Fehlerpruefung:\n" + neu[-1500:])
+
+        self.assertEqual(vergleichbar(INSTANZ.frage("set ::scidc::version")),
+                         vergleichbar(version_aus_makefile()))
+
+    def test_eine_leere_si5_namensbasis_wird_abgewiesen(self):
+        """Befund H2: `decodeIndexSi5` greift auf einen Null-Knoten zu.
+
+        Der Lesepfad klemmt die aus der Datei gelesenen Namens-IDs nur
+        nach **oben** (`if (whiteID > maxPlayerID) whiteID = 0`). Ist die
+        Namensliste leer, ist `maxPlayerID` aber 0 und nicht "keine" --
+        die Null geht durch, und `lookup(0)->entry` greift auf einen
+        Null-Knoten zu. `::check()` kommt zu spaet: es prueft den
+        Eintrag, dereferenziert ist der Knoten schon.
+
+        Verfaelscht wird die **Namensdatei**, nicht der Index: eine
+        .sn5, die nur noch ein Nullbyte enthaelt, laesst den Leser mit
+        vier leeren Listen zuruecklaufen (`len == 0` wird
+        uebersprungen), waehrend der Index weiter auf Spieler 0 zeigt.
+        """
+        ziel = os.path.join(INSTANZ.heim, "leer.si5")
+        self.anlegen(ziel)
+
+        with open(os.path.join(INSTANZ.heim, "leer.sn5"), "wb") as f:
+            f.write(b"\x00")
+
+        vorher = len(INSTANZ.ausgabe())
+
+        ok, text = INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)
+
+        if ok:
+            INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+        self.assertFalse(ok, "die praeparierte Datei wurde geoeffnet: " + text)
+        self.assertIn("Index", text, "nicht die Meldung des Codecs: " + text)
+        self.assertIn("Corrupted", text, "nicht die Meldung des Codecs: " + text)
+
+        neu = INSTANZ.ausgabe()[vorher:]
+
+        self.assertIn("name id is out of range", neu,
+                      "die Diagnose des Codecs fehlt:\n" + neu[-1500:])
+        self.assertIn("db::IOException", neu,
+                      "kein geordneter Codec-Fehler:\n" + neu[-1500:])
+        self.assertNotIn("assertion failed", neu,
+                         "Zusicherung statt Fehlerpruefung:\n" + neu[-1500:])
+
+        self.assertEqual(vergleichbar(INSTANZ.frage("set ::scidc::version")),
+                         vergleichbar(version_aus_makefile()))
