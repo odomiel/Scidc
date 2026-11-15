@@ -932,7 +932,24 @@ BlockFile::shrink(unsigned newSize, unsigned offset, unsigned minSize)
 unsigned
 BlockFile::get(View& view, ByteStream& result, unsigned offset, unsigned size)
 {
-	M_REQUIRE(offset + size + (mode() == ReadWriteLength ? 3 : 0) <= this->size());
+	// Versatz und Laenge stammen aus einer fremden Datei: bei RequireLength aus
+	// dem Indexsatz, bei ReadWriteLength aus dem Satz selbst. Die Grenze hing
+	// bisher allein an M_REQUIRE -- das faellt mit -DNREQ weg, und "offset +
+	// size" laeuft als unsigned ueber, unterwandert die Pruefung also auch mit
+	// eingeschalteten Zusicherungen. Darum eine echte Pruefung, und zwar ohne
+	// Summen: IllegalOffset ist der dafuer vorgesehene Rueckgabewert, aus dem
+	// DatabaseCodec::getGameRecord "Game Corrupted" macht.
+	unsigned const limit = this->size();
+	unsigned const extra = (m_mode == ReadWriteLength ? 3u : 0u);
+
+	if (offset > limit || limit - offset < extra || limit - offset - extra < size)
+		return IllegalOffset;
+
+	// Auch die Obergrenze gehoert hierher und nicht in die Zusicherungen der
+	// Einstiegspunkte: put() laesst keinen groesseren Satz zu, also ist alles
+	// darueber verfaelscht.
+	if (size > MaxSpanSize)
+		return IllegalOffset;
 
 	if (m_mode == ReadWriteLength)
 	{
@@ -943,6 +960,18 @@ BlockFile::get(View& view, ByteStream& result, unsigned offset, unsigned size)
 
 		if (size <= MaxFileSize)	// otherwise it's an error code
 		{
+			// Diese Laenge kommt aus dem Satz selbst. Weniger als die drei
+			// Bytes des Laengenfeldes laesst "size - 3" unterlaufen; was
+			// hinter das Dateiende reicht, ergibt einen Zeiger jenseits des
+			// Puffers. Und countSpans(size) stimmt nur, solange der Satz die
+			// Zusage von put() haelt -- in einen Block passen oder auf einer
+			// Blockgrenze beginnen.
+			if (size < 3 || size > MaxSpanSize || limit - offset < size)
+				return IllegalOffset;
+
+			if (blockOffset(offset) != 0 && blockOffset(offset) + size > m_blockSize)
+				return IllegalOffset;
+
 			unsigned span = countSpans(size);
 
 			if (span > 1)

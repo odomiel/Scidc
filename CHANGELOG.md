@@ -8,6 +8,24 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.15
 
+- **b3** – H3 des Audits, gezielt: die Grenzen von `BlockFile::get` hingen an
+  `M_REQUIRE` und liefen dazu selbst über. Versatz und Länge eines
+  Partiesatzes kommen aus der Datei – bei SI3/4/5 aus dem Indexsatz, bei SCI
+  aus dem Satz selbst –, geprüft wurde beides nur mit
+  `M_REQUIRE(offset + size <= this->size())`: mit `-DNREQ` fällt die Zeile weg,
+  und die Summe läuft als `unsigned` über. Gemessen: Versatz `0xffff0011` mit
+  Länge `0xffff` ergibt als 32-Bit-Summe 16, kam durch die Prüfung und
+  scheiterte erst an der nächsten Zusicherung tiefer im Code
+  (`blockNumber < m_sizeInfo.size()`); eine Satzlänge von 1 unterlief
+  `size - 3` und lieferte eine **stillschweigend gelesene** Partie über einen
+  4-GB-Strom. Jetzt prüft `get` ohne Summen und gibt den dafür vorgesehenen
+  `IllegalOffset` zurück, aus dem `getGameRecord` längst „Game Corrupted"
+  macht; die aus dem Satz gelesene Länge wird zusätzlich gegen `< 3`,
+  `MaxSpanSize`, das Dateiende und die Zusage von `put()` geprüft (in einen
+  Block passen oder auf einer Blockgrenze beginnen). Vier Fälle in Lage 3,
+  darunter eine Gegenprobe über alle vier Formate, dass nichts Gesundes
+  abgewiesen wird.
+
 - **b2** – H2 des Audits: `decodeIndexSi5` folgte einem Null-Knoten. Der
   Lesepfad klemmt die aus der Datei gelesenen Namens-IDs nur nach oben; bei
   leerer Namensliste ist die Obergrenze aber 0 und nicht „keine", und

@@ -758,6 +758,145 @@ class TestBeschaedigteDatenbank(unittest.TestCase):
         self.assertEqual(vergleichbar(INSTANZ.frage("set ::scidc::version")),
                          vergleichbar(version_aus_makefile()))
 
+    def satzkette(self, datei):
+        """Sucht den ersten Satz der .scg und prueft die Kette.
+
+        Ein Satz traegt seine Laenge als uint24 voran (grossendig), und
+        die Saetze liegen hintereinander. Der Anfang haengt an der Groesse
+        des Magic-Blocks, wird hier also nicht geraten: genommen wird der
+        Versatz, von dem aus die Kette **genau** am Dateiende und bei
+        **genau** zwei Saetzen aufgeht.
+        """
+        with open(datei, "rb") as f:
+            roh = f.read()
+
+        treffer = []
+
+        for anfang in range(4, 32):
+            stelle, saetze = anfang, 0
+            while stelle + 3 <= len(roh):
+                laenge = int.from_bytes(roh[stelle:stelle + 3], "big")
+                if laenge < 4 or stelle + laenge > len(roh):
+                    break
+                stelle += laenge
+                saetze += 1
+            if stelle == len(roh) and saetze == 2:
+                treffer.append(anfang)
+
+        self.assertEqual(len(treffer), 1,
+                         "die Satzkette von %s ist nicht eindeutig: %r"
+                         % (datei, treffer))
+        return treffer[0]
+
+    def test_gesunde_saetze_bleiben_lesbar(self):
+        """Gegenprobe zu den Faellen unten: nichts Gesundes wird abgewiesen.
+
+        Die Pruefungen in `BlockFile::get` liegen im Lesepfad **jeder**
+        Partie. Ein zu scharfer Wachter faellt hier auf, nicht erst beim
+        Benutzer.
+        """
+        for endung, _, _ in FORMATE:
+            ziel = os.path.join(INSTANZ.heim, "gesund." + endung)
+
+            with self.subTest(format=endung):
+                self.anlegen(ziel)
+                ok, text = INSTANZ.roh(
+                    "::scidc::db::load {%s} ::probeProgress {} -readonly 1"
+                    % ziel)
+                self.assertTrue(ok, text)
+
+                try:
+                    for nummer in (0, 1):
+                        self.assertEqual(
+                            INSTANZ.frage("::scidc::game::load %d {%s} Normal %d"
+                                          % (nummer, ziel, nummer)),
+                            "1", "Partie %d aus %s" % (nummer, endung))
+                finally:
+                    INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+    def test_ein_satzversatz_jenseits_der_datei_wird_abgewiesen(self):
+        """Befund H3: die Grenze von `BlockFile::get` lief selbst ueber.
+
+        Versatz und Laenge eines Partiesatzes kommen aus der Datei --
+        bei SI3/4/5 aus dem Indexsatz. Geprueft wurde das nur mit
+        `M_REQUIRE(offset + size <= this->size())`, und zwar doppelt
+        unzuverlaessig: mit -DNREQ faellt die Zeile weg, und die Summe
+        laeuft als `unsigned` ueber.
+
+        Genau das wird hier vorgefuehrt. Versatz 0xffff0011 und Laenge
+        0xffff ergeben als 32-Bit-Summe **16** -- weniger als die
+        Dateigroesse, die Pruefung liess es durch. Gemessen am
+        zurueckgebauten Stand: `assertion failed: blockNumber <
+        m_sizeInfo.size()` aus `fetch`, also hielt erst die naechste
+        Zusicherung tiefer im Code; ohne sie steht dort ein Lesezugriff
+        hinter `m_sizeInfo` und dessen Ergebnis wird die Laenge eines
+        `seek_and_read`.
+        """
+        ziel = os.path.join(INSTANZ.heim, "versatz.si4")
+        self.anlegen(ziel)
+
+        # Kopf 174 Bytes plus 8 Bytes Magic, dann der erste Indexsatz:
+        # vier Bytes Versatz, zwei Bytes Satzlaenge.
+        with open(ziel, "r+b") as f:
+            f.seek(174 + 8)
+            f.write(bytes((0xff, 0xff, 0x00, 0x11, 0xff, 0xff)))
+
+        self.assertTrue(*INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)[::-1])
+
+        vorher = len(INSTANZ.ausgabe())
+        ok, text = INSTANZ.roh("::scidc::game::load 0 {%s} Normal 0" % ziel)
+        INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+        self.assertFalse(ok, "der Satz wurde gelesen: " + text)
+        self.assertIn("illegal offset", text, "nicht die Meldung des Codecs: " + text)
+
+        neu = INSTANZ.ausgabe()[vorher:]
+        self.assertNotIn("assertion failed", neu,
+                         "Zusicherung statt Fehlerpruefung:\n" + neu[-1500:])
+        self.assertNotIn("precondition violation", neu,
+                         "Zusicherung statt Fehlerpruefung:\n" + neu[-1500:])
+
+    def test_eine_unmoegliche_satzlaenge_wird_abgewiesen(self):
+        """Dieselbe Grenze von der anderen Seite: SCI holt die Laenge aus
+        dem Satz selbst (`BlockFile::ReadWriteLength`).
+
+        Zwei Werte sind dabei toedlich und werden getrennt geprueft:
+        eine Laenge **unter 3** liess `size - 3` unterlaufen -- aus 1
+        wurde eine Streckenlaenge von 4 GB --, und eine Laenge jenseits
+        des Dateiendes ergab einen Zeiger hinter dem Blockpuffer. Die
+        drei Bytes gehoeren zum Satz, die Nutzdaten sind `size - 3`.
+        """
+        for wert in (1, 2, 0xffffff):
+            ziel = os.path.join(INSTANZ.heim, "laenge%d.sci" % wert)
+            scg = ziel[:-3] + "scg"
+
+            with self.subTest(laenge=wert):
+                self.anlegen(ziel)
+                stelle = self.satzkette(scg)
+
+                with open(scg, "r+b") as f:
+                    f.seek(stelle)
+                    f.write(wert.to_bytes(3, "big"))
+
+                self.assertTrue(*INSTANZ.roh(
+                    "::scidc::db::load {%s} ::probeProgress {} -readonly 1"
+                    % ziel)[::-1])
+
+                vorher = len(INSTANZ.ausgabe())
+                ok, text = INSTANZ.roh(
+                    "::scidc::game::load 0 {%s} Normal 0" % ziel)
+                INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+                self.assertFalse(ok, "der Satz wurde gelesen: " + text)
+                self.assertIn("illegal offset", text,
+                              "nicht die Meldung des Codecs: " + text)
+
+                neu = INSTANZ.ausgabe()[vorher:]
+                self.assertNotIn("assertion failed", neu,
+                                 "Zusicherung statt Fehlerpruefung:\n"
+                                 + neu[-1500:])
+
     def test_eine_zu_grosse_spieler_id_im_si4_index_wird_abgewiesen(self):
         """Derselbe Griff im SI3/SI4-Lesepfad -- dort ohne jedes Klemmen.
 

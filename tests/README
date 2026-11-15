@@ -300,6 +300,16 @@ Wachter melden sie "assertion failed: m_lookup[id]" bzw.
 "assertion failed: id < m_lookup.size()" und mit -DNREQ waere es ein Griff
 hinter den Vektor.
 
+Seit 26.11.15-b3 liegen vier weitere daneben, um die Grenzen von
+BlockFile::get (Befund H3): ein Indexsatz mit Versatz 0xffff0011 und Laenge
+0xffff -- die 32-Bit-Summe ist 16 und kam durch die alte Pruefung -- und eine
+SCI-Satzlaenge von 1, 2 und 0xffffff. Dazu eine **Gegenprobe** ueber alle vier
+Formate, dass gesunde Saetze weiter gelesen werden: die Pruefung liegt im
+Lesepfad jeder Partie, ein zu scharfer Waechter muss hier auffallen. Die
+Satzkette der .scg wird nicht geraten, sondern gesucht -- genommen wird der
+Versatz, von dem aus sie genau am Dateiende und bei genau zwei Saetzen
+aufgeht.
+
 Zwei Dinge dazu:
   * Die Probe wird **erzeugt**, nicht als Datei mitgefuehrt. Der erste
     Spielereintrag steht unverkuerzt in der .scn -- drei Bytes Index (uint24),

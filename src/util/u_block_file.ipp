@@ -52,9 +52,9 @@ unsigned
 BlockFile::get(ByteStream& result, unsigned offset, unsigned size)
 {
 	M_REQUIRE(isOpen());
-	M_REQUIRE(size <= MaxSpanSize);
-	M_REQUIRE(offset + size <= this->size());
 
+	// Grenzen von Versatz und Laenge prueft get() selbst -- sie kommen aus der
+	// Datei, nicht vom Aufrufer, und duerfen nicht an Zusicherungen haengen.
 	return get(m_view, result, offset, size);
 }
 
@@ -75,9 +75,8 @@ unsigned
 BlockFileReader::get(ByteStream& result, unsigned offset, unsigned size)
 {
 	M_REQUIRE(m_blockFile.isOpen());
-	M_REQUIRE(size <= BlockFile::MaxSpanSize);
-	M_REQUIRE(offset + size <= m_blockFile.size());
 
+	// wie oben: die Pruefung liegt in BlockFile::get
 	return m_blockFile.get(*this, result, offset, size);
 }
 
