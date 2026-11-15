@@ -54,10 +54,15 @@ struct uninitialized<0>
 template <size_t NBytes>
 struct uninitialized_pod
 {
+	// Ein leerer Bereich kann aus einem noch nicht belegten Block kommen,
+	// first ist dann 0 -- und memmove() ist mit einem Nullzeiger auch bei
+	// Laenge 0 undefiniert (nonnull-Attribut). Gemeldet von
+	// -fsanitize=undefined aus vector::reserve() eines leeren map.
 	template <typename InputIterator, typename T>
 	inline static T* copy(InputIterator first, InputIterator last, T* result)
 	{
-		::memmove((void*)result, first, NBytes*(last - first));
+		if (last != first)
+			::memmove((void*)result, first, NBytes*(last - first));
 		return result + (last - first);
 	}
 
@@ -74,7 +79,8 @@ struct uninitialized_pod<1>
 	template <typename InputIterator, typename T>
 	inline static T* copy(InputIterator first, InputIterator last, T* result)
 	{
-		::memmove((void*)result, first, last - first);
+		if (last != first)
+			::memmove((void*)result, first, last - first);
 		return result + (last - first);
 	}
 

@@ -506,8 +506,15 @@ board::base::initialize()
 
 	for (unsigned i = 0; i < 56; ++i)
 	{
-		MaskProtectedPawn[White][i] = set1Bit(i - 1) | set1Bit(i + 1);
-		MaskProtectedPawn[Black][i] = set1Bit(i - 1) | set1Bit(i + 1);
+		// set1Bit(i - 1) ist bei i == 0 ein Schieben um -1 und damit
+		// undefiniert (gemeldet von -fsanitize=undefined). Auf x86 maskiert
+		// der Befehl die Weite und setzt Bit 63 -- also h8 als Nachbar von
+		// a1. Gelesen wird MaskProtectedPawn nirgends im Baum, und ein Bauer
+		// kann nicht auf Reihe 1 stehen; das Bit bleibt jetzt weg.
+		uint64_t const sideBits = (i > 0 ? set1Bit(i - 1) : 0) | set1Bit(i + 1);
+
+		MaskProtectedPawn[White][i] = sideBits;
+		MaskProtectedPawn[Black][i] = sideBits;
 
 		if (i > 15)
 			MaskProtectedPawn[White][i] |= set1Bit(i - 7) | set1Bit(i - 9);

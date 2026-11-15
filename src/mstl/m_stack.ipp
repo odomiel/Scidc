@@ -232,7 +232,17 @@ stack<T>::reserve(size_type n)
 		return;
 
 	memblock<T> block(memblock<T>::compute_capacity(capacity(), n, 4));
-	block.m_finish = ::mstl::uninitialized_move(this->m_start, this->m_finish + 1, block.m_start) - 1;
+
+	// Ein leerer Stapel haelt m_finish auf m_start - 1. Solange noch kein
+	// Block belegt ist, ist m_start 0, und m_finish + 1 rechnet von
+	// 0 - sizeof(T) wieder auf 0 zurueck -- als Zeigerarithmetik undefiniert
+	// (von -fsanitize=undefined gemeldet, aus chunk_allocator::new_chunk).
+	// Zu verschieben ist dann ohnehin nichts.
+	if (this->m_start)
+		block.m_finish = ::mstl::uninitialized_move(this->m_start, this->m_finish + 1, block.m_start) - 1;
+	else
+		block.m_finish = block.m_start - 1;
+
 	block.swap(*this);
 }
 

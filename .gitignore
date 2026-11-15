@@ -41,6 +41,8 @@ lizenzübersicht.txt
 fehler/
 migration.txt
 deps/.update-check
+# Schattenbaum von tools/check-ubsan.sh (Verweise + instrumentierte Objekte)
+build-ubsan/
 __pycache__/
 src/dbtest
 src/tests/*.o

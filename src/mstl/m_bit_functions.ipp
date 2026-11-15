@@ -61,8 +61,16 @@ inline unsigned pc(unsigned int x)			{ return __builtin_popcount(x); }
 inline unsigned pc(unsigned long x)			{ return __builtin_popcountl(x); }
 inline unsigned pc(unsigned long long x)	{ return __builtin_popcountll(x); }
 
-inline unsigned msb(uint8_t x)				{ return  7 - clz(unsigned(x)); }
-inline unsigned msb(uint16_t x)				{ return 15 - clz(unsigned(x)); }
+// clz() zaehlt in der Breite von unsigned, also 32 Bit -- auch wenn das
+// Argument ein Byte ist. "7 - clz" bzw. "15 - clz" ergab darum fuer *jede*
+// Eingabe einen negativen Wert: msb(uint8_t(1)) war -24, msb(uint8_t(0x80))
+// -17. Aufgefallen ist es ueber das Schieben mit dem Ergebnis
+// (db_board_base.cpp:601, von -fsanitize=undefined gemeldet). Einzige Nutzer
+// der Byte-Fassung sind die zwei Zeilen, die IsOutside[] fuellen; dort blieb
+// die Maske durch die Maskierung des x86-Befehls unberuehrt, die Tabelle war
+// also durchweg 0xff. Die 16-Bit-Fassung hat im Baum keinen Aufrufer.
+inline unsigned msb(uint8_t x)				{ return 31 - clz(unsigned(x)); }
+inline unsigned msb(uint16_t x)				{ return 31 - clz(unsigned(x)); }
 inline unsigned msb(uint32_t x)				{ return 31 - clz(x); }
 inline unsigned msb(uint64_t x)				{ return 63 - clz(x); }
 

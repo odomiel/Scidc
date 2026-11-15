@@ -110,12 +110,19 @@ inline static string cast(uint32_t v) { return cast(v, "%" PRIu32); }
 inline static string cast(uint64_t v) { return cast(v, "%" PRIu64); }
 
 
+// memcpy()/memmove() sind mit einem Nullzeiger auch bei Laenge 0
+// undefiniert (nonnull-Attribut, von -fsanitize=undefined gemeldet). Mit
+// m_capacity == 0 ist m_data aber durchaus 0: so legt string(const_pointer)
+// ihn an, bevor init() ueber reserve() den ersten Block holt. Die Laenge ist
+// dann ebenfalls 0, es ist also nichts zu kopieren -- geprueft wird hier,
+// nicht an den vier Aufrufstellen.
 template <typename T>
 inline
 static void
 copy(T* dst, T const* src, size_t n)
 {
-	memcpy(dst, src, n*sizeof(T));
+	if (n)
+		memcpy(dst, src, n*sizeof(T));
 }
 
 
@@ -124,7 +131,8 @@ inline
 static void
 move(T* dst, T const* src, size_t n)
 {
-	memmove(dst, src, n*sizeof(T));
+	if (n)
+		memmove(dst, src, n*sizeof(T));
 }
 
 
@@ -137,8 +145,8 @@ fill(T* dst, size_t n, T value)
 }
 
 
-inline static void copy(char* dst, char const* src, size_t n)	{ memcpy(dst, src, n); }
-inline static void move(char* dst, char const* src, size_t n)	{ memmove(dst, src, n); }
+inline static void copy(char* dst, char const* src, size_t n)	{ if (n) memcpy(dst, src, n); }
+inline static void move(char* dst, char const* src, size_t n)	{ if (n) memmove(dst, src, n); }
 inline static void fill(char* dst, size_t n, char value)			{ memset(dst, value, n); }
 
 

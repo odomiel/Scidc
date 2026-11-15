@@ -1,5 +1,5 @@
 // ======================================================================
-// mstl::bf -- Bitdrehungen.
+// mstl::bf -- Bitdrehungen und Bitindizes.
 //
 // rotate_left/rotate_right schoben um "sizeof(T)*8 - shift". Bei
 // shift == 0 ist das eine Verschiebung um die ganze Breite des Typs und
@@ -23,6 +23,10 @@
 // gespeicherten Schluessel. Was der Fall festhaelt, ist die Zusage;
 // der Nachweis des Fehlers kommt aus -fsanitize=undefined, nicht aus
 // der Reihe.
+//
+// Die zweite Gruppe steht anders da: msb_index() war fuer Byte- und
+// Kurzwort-Breite **falsch**, und zwar fuer jede Eingabe. Sie faellt am
+// alten Stand durch.
 // ======================================================================
 
 #include "t_assert.h"
@@ -70,5 +74,54 @@ TEST(BitFunctions, a_rotation_moves_the_bits_around)
 		CHECK_EQ(mstl::bf::count_bits(mstl::bf::rotate_left(x, shift)), 2u);
 	}
 }
+
+TEST(BitFunctions, the_index_of_the_highest_bit_counts_over_the_whole_value)
+{
+	// msb(uint8_t) zog von 7 ab, msb(uint16_t) von 15 -- clz() zaehlt aber
+	// in der Breite von unsigned, also 32 Bit. Damit war das Ergebnis fuer
+	// *jede* Eingabe negativ: msb_index(uint8_t(1)) ergab -24, als unsigned
+	// 0xffffffe8. Aufgefallen ist es ueber ein Schieben mit dem Ergebnis
+	// (db_board_base.cpp:601, -fsanitize=undefined).
+	CHECK_EQ(mstl::bf::msb_index(uint8_t(1)), 0u);
+	CHECK_EQ(mstl::bf::msb_index(uint8_t(0x80)), 7u);
+	CHECK_EQ(mstl::bf::msb_index(uint8_t(0xff)), 7u);
+
+	CHECK_EQ(mstl::bf::msb_index(uint16_t(1)), 0u);
+	CHECK_EQ(mstl::bf::msb_index(uint16_t(0x8000)), 15u);
+
+	CHECK_EQ(mstl::bf::msb_index(uint32_t(1)), 0u);
+	CHECK_EQ(mstl::bf::msb_index(uint32_t(0x80000000u)), 31u);
+	CHECK_EQ(mstl::bf::msb_index(UINT64_C(1) << 63), 63u);
+
+	// Die eigentliche Zusage: derselbe Wert ergibt in jeder Breite denselben
+	// Index. Genau das war verletzt, und nur die 32- und 64-Bit-Fassungen
+	// hatten Aufrufer -- darum fiel es nie auf.
+	for (unsigned bit = 0; bit < 8; ++bit)
+	{
+		CHECK_EQ(mstl::bf::msb_index(uint8_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::msb_index(uint16_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::msb_index(uint32_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::msb_index(UINT64_C(1) << bit), bit);
+	}
+}
+
+
+TEST(BitFunctions, the_index_of_the_lowest_bit_does_not_depend_on_the_width)
+{
+	// Die Gegenprobe: lsb zaehlt von unten, ctz() ist darum von der Breite
+	// unabhaengig -- diese Haelfte war auch vorher richtig, und ohne sie
+	// belegte die Gruppe oben nicht, wo der Fehler sass.
+	for (unsigned bit = 0; bit < 8; ++bit)
+	{
+		CHECK_EQ(mstl::bf::lsb_index(uint8_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::lsb_index(uint16_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::lsb_index(uint32_t(1u << bit)), bit);
+		CHECK_EQ(mstl::bf::lsb_index(UINT64_C(1) << bit), bit);
+	}
+
+	CHECK_EQ(mstl::bf::lsb_index(uint8_t(0xff)), 0u);
+	CHECK_EQ(mstl::bf::lsb_index(uint8_t(0x80)), 7u);
+}
+
 
 // vi:set ts=3 sw=3:

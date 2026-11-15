@@ -350,6 +350,15 @@ check:
 	@$(MAKE) $(TEST_PROGRAM)
 	@./$(TEST_PROGRAM)
 
+# Dieselbe Reihe unter -fsanitize=undefined. Einige Zusagen lassen sich am
+# Ergebnis nicht pruefen: ein Schieben um die ganze Typbreite ist undefiniert,
+# der x86-Befehl maskiert die Weite aber selbst -- tests/t_bit_functions.cpp
+# ist darum auch am alten Stand gruen. Das Skript baut in einen eigenen
+# Objektbaum (build-ubsan/), damit hier keine instrumentierten Objekte liegen
+# bleiben; Einzelheiten in seinem Kopf.
+check-ubsan:
+	@bash ../tools/check-ubsan.sh
+
 $(TCL_PROGRAM): tclscidc.o $(TCL_LIBS) $(ZLIB_LIB)
 	@echo "Building $(TCL_PROGRAM)"
 	@$(CXX) -o $@ $< $(LDFLAGS) $(TCL_LIBRARY) $(ZLIB_LIB)
@@ -1478,7 +1487,7 @@ tkscidc.o: mstl/m_ostream.ipp
 # ======================================================================
 # Versionsverwaltung
 # ======================================================================
-.PHONY: bump-version
+.PHONY: bump-version check check-ubsan
 bump-version:
 	@OLD_VERSION=$$(grep SCIDB_VERSION ../Makefile.version | sed 's/.*="\(.*\)"/\1/'); \
 	NEW_VERSION=$$(echo "$$OLD_VERSION" | sed 's/-b\([0-9]\+\)-Beta/-b$$((\1+1))-Beta/'); \

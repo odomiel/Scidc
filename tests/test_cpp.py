@@ -169,5 +169,41 @@ class TestLage2(unittest.TestCase):
             self.assertIn(gruppe, ausgabe, f"Gruppe {gruppe} fehlt im Lauf")
 
 
+class TestUbsan(unittest.TestCase):
+    """Das Sanitizer-Tor: Skript, make-Ziel und der Schattenbaum.
+
+    Gefahren wird es nicht von hier -- ein Lauf baut gut 300 Dateien neu
+    und braucht Minuten. Geprueft wird nur, dass es da ist und dass sein
+    Schattenbaum nicht ins Repository geraten kann: build-ubsan/ haelt
+    Verweise auf den ganzen Quellbaum und instrumentierte Objekte, und
+    das Repository wird bei jedem Push oeffentlich.
+    """
+
+    def test_das_skript_ist_ausfuehrbar(self):
+        p = pfad("tools", "check-ubsan.sh")
+        self.assertTrue(os.path.isfile(p), "tools/check-ubsan.sh fehlt")
+        self.assertTrue(os.access(p, os.X_OK), "tools/check-ubsan.sh ist nicht ausfuehrbar")
+
+    def test_das_make_ziel_ruft_es_auf(self):
+        makefile = lies("src/Makefile")
+        self.assertIn("check-ubsan:", makefile, "Ziel check-ubsan fehlt in src/Makefile")
+        self.assertIn("tools/check-ubsan.sh", makefile,
+                      "check-ubsan ruft das Skript nicht auf")
+
+    def test_der_schattenbaum_ist_ignoriert(self):
+        self.assertIn("build-ubsan/", lies(".gitignore"),
+                      "build-ubsan/ fehlt in .gitignore")
+
+    def test_kein_schattenbaum_ist_getrackt(self):
+        ergebnis = subprocess.run(["git", "ls-files", "build-ubsan"], cwd=WURZEL,
+                                  stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+        if ergebnis.returncode != 0:          # kein Git-Baum
+            raise unittest.SkipTest("kein Git-Repository")
+
+        self.assertEqual(ergebnis.stdout.decode().strip(), "",
+                         "build-ubsan/ ist eingecheckt")
+
+
 if __name__ == "__main__":
     unittest.main()

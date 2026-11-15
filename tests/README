@@ -173,10 +173,14 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
                       kommen aus der Datei. Der Befehl wird abgewiesen,
                       Typ und Farbe fallen zurueck -- jeweils mit der
                       Gegenprobe am groessten *gueltigen* Wert
-  t_bit_functions.cpp mstl::bf: eine Drehung um 0 und um die ganze Breite
-                      muss der Bezeichner bleiben. Faellt am alten Stand
-                      **nicht** durch (x86 maskiert die Weite ohnehin) --
-                      der Nachweis des UB kommt aus -fsanitize=undefined
+  t_bit_functions.cpp mstl::bf: zweierlei. Eine Drehung um 0 und um die
+                      ganze Breite muss der Bezeichner bleiben -- dieser
+                      Teil faellt am alten Stand **nicht** durch (x86
+                      maskiert die Weite ohnehin), der Nachweis des UB
+                      kommt aus -fsanitize=undefined. Und msb_index()/
+                      lsb_index() ueber alle vier Breiten: msb war fuer
+                      Byte und Kurzwort fuer *jede* Eingabe falsch
+                      (21 Fehlschlaege am alten Stand)
 
 Die Versatz-Faelle sind **gegengeprobt**: mit ausgeschaltetem sectionPtr-Waechter
 liefern sie EndOfStream statt Corrupted -- der Decoder liest dann ausserhalb des
@@ -231,6 +235,52 @@ Drei Dinge, die Zeit gekostet haben:
     gehoert ein gueltiges Zugbyte (siehe Kommentar in t_decoder.cpp).
   * Erwartete Ausnahmen drucken sonst die M_THROW-Diagnose samt Backtrace;
     test::Quiet schaltet sie fuer den Fall ab.
+
+
+Dasselbe unter -fsanitize=undefined (seit 26.11.15-b6)
+------------------------------------------------------
+Aufruf:   make -C src check-ubsan      bzw.  bash tools/check-ubsan.sh [Gruppe]
+
+Manche Zusagen lassen sich am Ergebnis nicht pruefen. Ein Schieben um die ganze
+Typbreite ist undefiniert, der x86-Befehl maskiert die Weite aber selbst -- die
+Drehungsfaelle in t_bit_functions.cpp sind darum auch am alten Stand gruen. Erst
+der Sanitizer zeigt den Verstoss, und er zeigt ihn in *jeder* Zeile, die die
+Reihe durchlaeuft, nicht nur in der gemessenen.
+
+Gebaut wird in einen eigenen Objektbaum build-ubsan/ (gitignored): Verzeichnisse
+echt, Dateien als Verweise. In src/ uebersetzt wuerden die instrumentierten
+Objekte beim naechsten make in tkscidc-beta wandern, und ohne -fsanitize am
+Binder blieben Symbole offen. Instrumentiert wird nur eigener Code (mstl, sys,
+util, db, app); libTeXt, libharu, libhyphenate, minizip, expat, zlib und zziplib
+kommen gebaut aus dem echten Baum -- der Sanitizer wirkt je
+Uebersetzungseinheit, und ihre Treffer waeren hier nicht zu verantworten.
+
+Vier Dinge, die beim Anfassen Zeit kosten:
+  * EXTRA_CXXFLAGS wird **ergaenzt**, nicht gesetzt. In Makefile.in stehen dort
+    -std=c++14, -DBROKEN_LINKER_HACK=1, -DDONT_USE_GDB und die dreizehn
+    -Werror=-Kategorien; eine Zuweisung auf der Kommandozeile gewinnt gegen die
+    Datei. Ohne den Vorrat baut der Schatten ohne den Linker-Hack, und
+    Board::initialize() stolpert schon beim Start in eine Zusicherung -- ein
+    Fehlerbild, das nach einem echten Fund aussieht.
+  * make kennt die Uebersetzungsschalter nicht. Aendern sie sich, bleiben die
+    Objekte des vorigen Laufs liegen und das Ergebnis ist gemischt (erst so kam
+    ein "typeinfo for db::BpgnReader" zurueck, der mit -fno-sanitize=vptr
+    langst weg war). Darum ein Stempel build-ubsan/.ubsan-flags -- weicht er
+    ab, wird der Objektbestand verworfen.
+  * -fno-sanitize=vptr ist Pflicht: der Zeigerpruefer verlangt Typinformation
+    zu jeder polymorphen Klasse, und db::BpgnReader hat keine
+    Schluesselfunktion in einer eigenen Uebersetzungseinheit.
+  * Uebersetzt wird **mit** Fortsetzung (kein -fno-sanitize-recover), der
+    Abbruch kommt aus UBSAN_OPTIONS=halt_on_error=1. So laesst sich derselbe
+    Bau mit halt_on_error=0 vollstaendig ausfragen, statt am ersten Fund zu
+    enden -- und der Rueckgabewert taugt trotzdem als Tor.
+
+Was der erste Lauf gefunden hat (alles in b6 behoben, in CHANGELOG.md im
+Einzelnen): msb_index() fuer Byte- und Kurzwort-Breite, ShiftL45[63] == 64 im
+Zugerzeuger, set1Bit(i - 1) bei i == 0, und drei leere Bereiche, die mit einem
+Nullzeiger an memcpy/memmove gingen. Zwei davon waren nicht bloss formal: die
+Tabelle IsOutside[] blieb durch den msb-Fehler durchweg 0xff, ihre Auswertung
+in db_guess_eval.cpp lief also ohne Maske.
 
 
 Lage 3 -- das laufende Programm (tests/test_laufend.py, seit 26.10.28-b3)

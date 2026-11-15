@@ -91,6 +91,13 @@ static unsigned const ShiftR45[64] =
 	57, 49, 41, 33, 25, 17,  9,  1,
 };
 
+// Der letzte Eintrag stand auf 64 und bezeichnete damit das Feld *hinter*
+// Bit 63: h8 liegt auf einer h1a8-Diagonale der Laenge 1, dort ist nichts zu
+// holen. Ein Schieben um die ganze Typbreite ist aber undefiniert (gemeldet
+// von -fsanitize=undefined an db_board.cpp:254, also im Zugerzeuger selbst);
+// auf x86 maskiert der Befehl die Weite und es wurde um 0 geschoben.
+// L45Attacks[63][*] ist fuer *jeden* Index 0 -- nachgemessen vor und nach der
+// Aenderung --, der Wert ist also beliebig, solange er gueltig ist.
 static unsigned const ShiftL45[64] =
 {
 	 9, 17, 25, 33, 41, 49, 57,  1,
@@ -100,7 +107,7 @@ static unsigned const ShiftL45[64] =
 	41, 49, 57,  1, 10, 19, 28, 37,
 	49, 57,  1, 10, 19, 28, 37, 46,
 	57,  1, 10, 19, 28, 37, 46, 55,
-	 1, 10, 19, 28, 37, 46, 55, 64,
+	 1, 10, 19, 28, 37, 46, 55, 63,
 };
 
 extern uint64_t HomeRankMask[2];

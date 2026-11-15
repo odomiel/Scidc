@@ -8,6 +8,28 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.15
 
+- **b6** – ein Tor unter `-fsanitize=undefined` (`make -C src check-ubsan`,
+  `tools/check-ubsan.sh`) und die sechs Verstöße, die es gefunden hat. Das
+  Skript baut in einen eigenen Objektbaum `build-ubsan/` (Verzeichnisse echt,
+  Dateien verlinkt): in `src/` übersetzt würden instrumentierte Objekte beim
+  nächsten `make` in `tkscidc-beta` wandern. Instrumentiert wird nur eigener
+  Code; die Fremdbibliotheken kommen gebaut aus dem Baum. Gefunden und behoben:
+  **`msb_index()` war für Byte- und Kurzwort-Breite für *jede* Eingabe falsch** –
+  `clz()` zählt in 32 Bit, abgezogen wurde von 7 bzw. 15, `msb(uint8_t(1))`
+  ergab −24. Einziger Nutzer sind die zwei Zeilen, die `IsOutside[]` füllen;
+  durch die Maskierung des x86-Befehls blieb die Tabelle durchweg `0xff`, die
+  Auswertung in `db_guess_eval.cpp:1976` lief also jahrelang ohne ihre Maske.
+  **`ShiftL45[63]` stand auf 64** und schob damit im Zugerzeuger selbst
+  (`db_board.cpp:254`) um die ganze Typbreite; h8 liegt auf einer
+  h1a8-Diagonale der Länge 1, `L45Attacks[63][*]` ist für jeden Index 0 –
+  nachgemessen vor und nach der Änderung. **`set1Bit(i - 1)` bei `i == 0`**
+  setzte Bit 63 in `MaskProtectedPawn[*][0]`, einem Eintrag, den niemand liest.
+  Dazu drei Stellen, an denen ein leerer Bereich mit einem Nullzeiger an
+  `memcpy`/`memmove` ging (`m_string.cpp`, `m_uninitialized.ipp`) oder
+  `m_finish + 1` eines unbelegten Stapels auf 0 zurückrechnete
+  (`m_stack.ipp`). Zwei neue Fälle in Lage 2 halten `msb_index`/`lsb_index`
+  über alle vier Breiten fest (21 Fehlschläge am alten Stand), vier in Lage 1
+  das Tor selbst samt `.gitignore`-Eintrag.
 - **b5** – der Rest von H3: vier Grenzen, die nur an `M_REQUIRE`/`M_ASSERT`
   hingen. **Tag-Bytes**: ein Byte aus dem Satz wird zu `tag::ID`, und damit
   greift `tag::toName` in `NameLookup[]` und `TagSet::set` in Felder der Größe
