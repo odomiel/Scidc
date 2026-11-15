@@ -8,6 +8,25 @@ Versionierte Änderungen, neueste zuerst. Versionsschema **`JJ.MM.TT bN`** (Jahr
 
 ## 26.11.15
 
+- **b5** – der Rest von H3: vier Grenzen, die nur an `M_REQUIRE`/`M_ASSERT`
+  hingen. **Tag-Bytes**: ein Byte aus dem Satz wird zu `tag::ID`, und damit
+  greift `tag::toName` in `NameLookup[]` und `TagSet::set` in Felder der Größe
+  `tag::ExtraTag` (127) – ein Byte reicht bis 255, also ein Schreibzugriff
+  hinter `m_values[]`. Neu führt der Helfer `tagId` alle acht Leseschleifen der
+  vier SCI-Decoder. **Namen der SCI-Namensbasis**: SCI speichert UTF-8, der
+  Leser gab die Bytes aber ungeprüft an `insertPlayer` weiter; `checkName`
+  weist sie jetzt ab (repariert wird nicht – die Bytes dienen dem nächsten
+  Eintrag als Präfix). **SI5-Namen**: dort wird repariert
+  (`forceValidUtf8`), aber ausdrücklich **nicht** umgewandelt – der Schreiber
+  gibt `entry->name()` unverwandelt zurück, eine Umwandlung beim Lesen würde
+  die eigenen Dateien doppelt kodieren. **`startVariation`**: eine Variante
+  darf aufgehen, bevor in der umgebenden Linie ein Zug steht – das ist
+  gültiges PGN (`1. e4 ((( 1. d4 ))) *`, dreifach geschachtelt kommt es durch
+  den `nestedVar`-Abfang des Lesers), und der Rückzug wird jetzt ausgelassen
+  statt vorausgesetzt. Dazu `country::fromString(char const*)`, das drei
+  Zeichen vergleicht und kürzere überlas. Fünf neue Lage-3-Fälle, zwei neue
+  Lage-2-Fälle.
+
 - **b4** – H5 und H6 des Audits. **H5**, drei Stellen mit undefiniertem
   Verhalten: `rotate_left`/`rotate_right` schoben um `sizeof(T)*8 - shift` und
   damit bei `shift == 0` um die ganze Breite des Typs – der häufigste Fall

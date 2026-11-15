@@ -164,6 +164,11 @@ den Laeufer. Gebunden wird gegen dieselben .a wie cbh2si4.
                       Dateiposition, keine sortierte Listenposition --
                       Alias-Positionen, neue Eintraege, und dass
                       update() daran scheitert
+  t_sci_decoder.cpp   (Gruppe SciTags) die Tag-IDs: ein Byte aus dem Satz
+                      wird zu tag::ID und greift in Felder der Groesse
+                      tag::ExtraTag. Gemessen am aktuellen Decoder und
+                      v93 -- v91 und v92 legen ihren Tag-Bereich anders,
+                      dort steht derselbe Waechter ohne eigenen Fall
   t_mark.cpp          db::Mark: die drei Aufzaehlungen einer Markierung
                       kommen aus der Datei. Der Befehl wird abgewiesen,
                       Typ und Farbe fallen zurueck -- jeweils mit der
@@ -319,6 +324,15 @@ Lesepfad jeder Partie, ein zu scharfer Waechter muss hier auffallen. Die
 Satzkette der .scg wird nicht geraten, sondern gesucht -- genommen wird der
 Versatz, von dem aus sie genau am Dateiende und bei genau zwei Saetzen
 aufgeht.
+
+Seit 26.11.15-b5 liegen fuenf weitere daneben, fuer den Rest von H3: ein
+ungueltiges UTF-8-Byte in einem SCI-Namen (abgewiesen -- repariert wird dort
+nicht, die Bytes dienen dem naechsten Eintrag als Praefix), dasselbe in einer
+SI5-Namensbasis (**nicht** abgewiesen, sondern ersetzt), der Umlauf eines
+Umlauts durch SI5 (die Datei bleibt UTF-8, auch nach einem zweiten Schreiben
+-- deshalb wird beim Lesen nicht umgewandelt), und ein dreifach geschachtelter
+Variantenanfang im PGN, der gueltig ist und angenommen werden muss
+("1. e4 ((( 1. d4 ))) *").
 
 Zwei Dinge dazu:
   * Die Probe wird **erzeugt**, nicht als Datei mitgefuehrt. Der erste

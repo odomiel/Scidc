@@ -54,6 +54,7 @@
 #include "m_type_traits.h"
 #include "m_assert.h"
 
+#include "sys_utf8.h"
 #include "sys_utf8_codec.h"
 #include "sys_file.h"
 
@@ -365,6 +366,22 @@ Init::Init()
 /// eingeschalteten Zusicherungen, und die fallen mit -DNREQ weg --
 /// deshalb eine echte Fehlerpruefung, wie in den Folgeschleifen der
 /// Namensbasis-Leser.
+/// Prueft einen Namen, der aus der Datei kommt.
+///
+/// SCI speichert Namen in UTF-8 -- eine ungueltige Folge kann also nur aus
+/// einer verfaelschten Datei kommen. Repariert wird sie *nicht*: die Bytes
+/// liegen im Zwischenspeicher der Namensbasis und dienen dem naechsten
+/// Eintrag als Praefix, ein Umschreiben wuerde die Kette verschieben. Bisher
+/// hing das allein an M_REQUIRE in Namebase::insertPlayer & Co., und das
+/// faellt mit -DNREQ weg.
+inline static void
+checkName(mstl::string const& name)
+{
+	if (!::sys::utf8::validate(name))
+		IO_RAISE(Namebase, Corrupted, "namebase file is broken");
+}
+
+
 inline static unsigned
 lookupAt(mstl::vector<unsigned> const& lookup, unsigned index)
 {
@@ -1749,6 +1766,7 @@ Codec::readNamebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 
 	bstrm.get(prev, length);
 	name.hook(prev, length);
+	::checkName(name);
 	base.append(name, index);
 	lookup[index] = 0;
 
@@ -1771,6 +1789,7 @@ Codec::readNamebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 		::memcpy(curr, prev, prefix);
 		bstrm.get(curr + prefix, length - prefix);
 		name.hook(curr, length);
+		::checkName(name);
 		prev = curr;
 		base.append(name, index);
 		lookup[index] = i;
@@ -1798,6 +1817,7 @@ Codec::readSitebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 
 	bstrm.get(prev, length);
 	name.hook(prev, length);
+	::checkName(name);
 
 	base.appendSite(name, index, country::Code(bstrm.uint16()));
 	lookup[index] = 0;
@@ -1823,6 +1843,7 @@ Codec::readSitebase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pro
 			::memcpy(curr, prev, prefix);
 			bstrm.get(curr + prefix, length - prefix);
 			name.hook(curr, length);
+			::checkName(name);
 			prev = curr;
 		}
 
@@ -1853,6 +1874,7 @@ Codec::readEventbase(ByteStream& bstrm, Namebase& base, unsigned count, util::Pr
 	prev = base.alloc(length);
 	bstrm.get(prev, length);
 	name.hook(prev, length);
+	::checkName(name);
 #if FIX_INCORRECT_ID
 printf("0 -> %u (%s)\n", id, name.c_str());
 #endif
@@ -1937,6 +1959,7 @@ printf("0 -> %u (%s)\n", id, name.c_str());
 			::memcpy(curr, prev, prefix);
 			bstrm.get(curr + prefix, length - prefix);
 			name.hook(curr, length);
+			::checkName(name);
 			prev = curr;
 		}
 #if FIX_INCORRECT_ID
@@ -2010,6 +2033,7 @@ Codec::readPlayerbase(ByteStream& bstrm, Namebase& base, unsigned count, util::P
 
 	bstrm.get(prev, length);
 	name.hook(prev, length);
+	::checkName(name);
 
 	if (Byte flags = bstrm.get())
 	{
@@ -2083,6 +2107,7 @@ Codec::readPlayerbase(ByteStream& bstrm, Namebase& base, unsigned count, util::P
 			::memcpy(curr, prev, prefix);
 			bstrm.get(curr + prefix, length - prefix);
 			name.hook(curr, length);
+			::checkName(name);
 			prev = curr;
 		}
 

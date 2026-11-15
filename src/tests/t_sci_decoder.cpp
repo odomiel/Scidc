@@ -219,6 +219,7 @@ checkCap(Decode decode)
 namespace {
 
 unsigned const TextSection	= 1u << 15;         // flags::TextSection
+unsigned const TagSect		= 1u << 14;         // flags::TagSection
 unsigned const HeaderSize	= 7;                 // Flags(2) + Versatz(3) + Lauf(2)
 
 
@@ -289,7 +290,84 @@ checkOffsetBounds(Decode decode)
 	CHECK_EQ(run(noRoom, decode), Corrupted);
 }
 
+/// Ein Satz mit Tag-Bereich: Kopf, dann [Tag-Byte][Wert][0].
+///
+/// Gemessen wird der aktuelle Decoder und v93 -- beide lesen den
+/// Tag-Bereich am Anfang des Datenbereichs, gesteuert ueber das Flag.
+/// v91 legt ihn hinter den Textbereich, v92 kennt das Flag gar nicht und
+/// liest *nach* der Variante, was vom Datenbereich uebrig ist (und holt
+/// seine Zugbytes aus dem Satzstrom, nicht aus dem Datenbereich). Beide
+/// haben denselben Waechter, aber ein Satz, der dort wirklich bis
+/// decodeTags kommt, sieht anders aus -- hier steht nur, was auch
+/// gemessen ist.
+///
+/// Das Tag-Byte wird zu tag::ID, und damit greift tag::toName() in
+/// NameLookup[] und TagSet::set() in Felder der Groesse tag::ExtraTag
+/// (127) -- ein Byte reicht aber bis 255. Der Wert darf nicht leer sein
+/// (TagSet::set besteht darauf), und tag::Event ist 0 und beendet die
+/// Schleife, taugt hier also nicht als gueltiges Beispiel.
+Buffer
+makeTagRecord(Byte tagByte)
+{
+	Buffer data = makeOffsetRecord(unsigned(variant::Standard) | TagSect,
+	                               HeaderSize, 0, false);
+
+	data.push_back(tagByte);
+	data.push_back(Byte('x'));                         // Wert, nicht leer
+	data.push_back(0);                                 //   Abschluss
+	data.push_back(0);                                 // Ende des Tag-Bereichs
+
+	return data;
+}
+
+
+template <typename Decode>
+void
+checkTagBounds(Decode decode)
+{
+	// Ein gueltiges Tag geht durch; danach geht der Strom aus, weil keine
+	// Zuege folgen. Dieser Ausgang gehoert dazu: ein Waechter, der alles
+	// abweist, waere genauso "gruen" wie einer, der richtig trennt.
+	Buffer good = makeTagRecord(Byte(tag::Site));
+	CHECK_EQ(run(good, decode), EndOfStream);
+
+	// tag::ExtraTag ist selbst kein gueltiges Tag, sondern die Marke fuer
+	// ein benanntes Zusatz-Tag -- auch das muss durchgehen (Name und Wert
+	// folgen, hier "x" und der leere Rest).
+	Buffer extra = makeTagRecord(Byte(tag::ExtraTag));
+	CHECK_EQ(run(extra, decode), EndOfStream);
+
+	// Jenseits von ExtraTag: abgewiesen. Ohne den Waechter schreibt
+	// TagSet::set hinter m_values[] -- mit Zusicherungen eine
+	// Zusicherungsverletzung, ohne sie ein Schreibzugriff im Halde.
+	Buffer beyond = makeTagRecord(Byte(tag::ExtraTag + 1));
+	CHECK_EQ(run(beyond, decode), Corrupted);
+
+	Buffer highest = makeTagRecord(0xff);
+	CHECK_EQ(run(highest, decode), Corrupted);
+
+	// Und die Luecke *innerhalb* des Bereichs: zwischen LastTag und
+	// BughouseTag liegen die RESERVED_*-Werte. Die sind im Feld noch
+	// drin, aber kein Tag -- tag::isValid sagt das, und toName() haette
+	// dort einen Nullzeiger geliefert.
+	Buffer reserved = makeTagRecord(Byte(tag::LastTag + 1));
+	CHECK_EQ(run(reserved, decode), Corrupted);
+}
+
 } // namespace
+
+
+TEST(SciTags, the_current_decoder_bounds_the_tag_id)
+{
+	checkTagBounds(decodeCurrent);
+}
+
+
+TEST(SciTags, v93_bounds_the_tag_id)
+{
+	checkTagBounds(decodeV93);
+}
+
 
 
 TEST(SciSection, the_current_decoder_bounds_the_offset)

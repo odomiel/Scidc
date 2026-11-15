@@ -59,6 +59,24 @@ throwCorruptData()
 }
 
 
+/// Prueft ein Tag-Byte, das aus der Datei kommt.
+///
+/// tag::toName() greift mit dem Wert in NameLookup[], TagSet::set() in
+/// Felder der Groesse tag::ExtraTag (127) -- ein Byte reicht aber bis 255.
+/// Geprueft wurde das nur mit M_REQUIRE/M_ASSERT, und die fallen mit -DNREQ
+/// weg: dann schreibt ein praeparierter Satz hinter m_values[]. tag::ExtraTag
+/// selbst ist kein gueltiges Tag, sondern die Marke fuer ein benanntes
+/// Zusatz-Tag -- darum ausdruecklich zugelassen.
+inline static tag::ID
+tagId(unsigned byte)
+{
+	if (byte != tag::ExtraTag && !tag::isValid(tag::ID(byte)))
+		::throwCorruptData();
+
+	return tag::ID(byte);
+}
+
+
 // Guard against unbounded recursion from deeply nested variations in a
 // corrupt/malicious file (each '(' recurses one C-stack frame deeper).
 static unsigned const MaxVariationLevel = 300;
@@ -580,7 +598,7 @@ Decoder::decodeTags(ByteStream& strm, TagSet& tags)
 	mstl::string name;
 	mstl::string value;
 
-	for (tag::ID id = tag::ID(strm.get()); id; id = tag::ID(strm.get()))
+	for (tag::ID id = ::tagId(strm.get()); id; id = ::tagId(strm.get()))
 	{
 		if (id == 75)
 		{

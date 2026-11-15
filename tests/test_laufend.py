@@ -897,6 +897,216 @@ class TestBeschaedigteDatenbank(unittest.TestCase):
                                  "Zusicherung statt Fehlerpruefung:\n"
                                  + neu[-1500:])
 
+    def verfaelsche_namensbyte(self, datei, versatz=3):
+        """Setzt ein Byte *im* Namen auf 0xff -- ungueltiges UTF-8.
+
+        Die Laenge bleibt gleich, also verschiebt sich nichts: nur die
+        Folge ist keine gueltige UTF-8-Folge mehr.
+        """
+        with open(datei, "rb") as f:
+            rohdaten = f.read()
+
+        stelle = rohdaten.find(self.NAME)
+
+        self.assertGreaterEqual(stelle, 0, "der Name steht nicht in %s" % datei)
+
+        neu = (rohdaten[:stelle + versatz] + b"\xff"
+               + rohdaten[stelle + versatz + 1:])
+
+        self.assertEqual(len(neu), len(rohdaten))
+
+        with open(datei, "wb") as f:
+            f.write(neu)
+
+    def test_ein_ungueltiger_name_in_der_sci_namensbasis_wird_abgewiesen(self):
+        """Rest von H3: die Namen hingen an `M_REQUIRE(utf8::validate)`.
+
+        SCI speichert Namen in UTF-8, der Leser gab sie aber ungeprueft
+        an `Namebase::insertPlayer` weiter -- und dort stand als einzige
+        Pruefung eine Zusicherung (`db_namebase.cpp:489`), die mit
+        -DNREQ wegfaellt. Gemessen am zurueckgebauten Stand:
+        `precondition violation: ::sys::utf8::validate(name)`.
+
+        Repariert wird hier **nicht**: die Bytes liegen im
+        Zwischenspeicher der Namensbasis und dienen dem naechsten
+        Eintrag als Praefix, ein Umschreiben wuerde die Kette
+        verschieben. Eine ungueltige Folge kann in SCI nur aus einer
+        verfaelschten Datei kommen.
+        """
+        ziel = os.path.join(INSTANZ.heim, "name.sci")
+        self.anlegen(ziel)
+        self.verfaelsche_namensbyte(os.path.join(INSTANZ.heim, "name.scn"))
+
+        vorher = len(INSTANZ.ausgabe())
+
+        ok, text = INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)
+
+        if ok:
+            INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+        self.assertFalse(ok, "die praeparierte Datei wurde geoeffnet: " + text)
+        self.assertIn("Namebase", text, "nicht die Meldung des Codecs: " + text)
+        self.assertIn("Corrupted", text, "nicht die Meldung des Codecs: " + text)
+
+        neu = INSTANZ.ausgabe()[vorher:]
+
+        self.assertIn("namebase file is broken", neu,
+                      "die Diagnose des Codecs fehlt:\n" + neu[-1500:])
+        self.assertNotIn("precondition violation", neu,
+                         "Zusicherungsverletzung statt Fehlerpruefung:\n"
+                         + neu[-1500:])
+
+    def test_ein_ungueltiger_name_in_der_si5_namensbasis_wird_verwandelt(self):
+        """Dieselbe Zusicherung, aber die andere Antwort -- und das mit
+        Grund.
+
+        Der SI5-Leser liess die Umwandlung ganz aus, die der SI3/SI4-Leser
+        seit je macht: die Bytes stehen in der **Kodierung der
+        Datenbank**, nicht in UTF-8. Ein Latin-1-Name kam dadurch
+        verstuemmelt an, und eine ungueltige Folge erreichte
+        `insertPlayer`. Jetzt laeuft der Name wie dort ueber
+        `toUtf8` und, wenn das nicht reicht, `forceValidUtf8`.
+
+        Erwartet ist deshalb **kein** Fehler: die Datenbank oeffnet, und
+        der Name ist ersetzt. Ohne den Fix ist es dieselbe
+        Zusicherungsverletzung wie im SCI-Fall.
+        """
+        ziel = os.path.join(INSTANZ.heim, "name.si5")
+        self.anlegen(ziel)
+        self.verfaelsche_namensbyte(os.path.join(INSTANZ.heim, "name.sn5"))
+
+        vorher = len(INSTANZ.ausgabe())
+
+        ok, text = INSTANZ.roh(
+            "::scidc::db::load {%s} ::probeProgress {} -readonly 1" % ziel)
+
+        try:
+            self.assertTrue(ok, "die Datenbank oeffnet nicht: " + text)
+
+            neu = INSTANZ.ausgabe()[vorher:]
+
+            self.assertNotIn("precondition violation", neu,
+                             "Zusicherungsverletzung:\n" + neu[-1500:])
+
+            # Und die Partien sind lesbar -- der Name haengt an ihnen.
+            self.assertEqual(
+                INSTANZ.frage("::scidc::game::load 0 {%s} Normal 0" % ziel), "1")
+        finally:
+            if ok:
+                INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+    def test_ein_umlaut_ueberlebt_den_umlauf_durch_si5(self):
+        """Gegenprobe zum Fall oben -- und der Grund, *nicht* umzuwandeln.
+
+        Der erste Anlauf schickte die SI5-Namen durch
+        `m_codec->toUtf8`, so wie der SI3/SI4-Leser es tut. Das ist hier
+        falsch: SI5 speichert UTF-8, und `writeNamebasesSi5` schreibt
+        `entry->name()` unverwandelt zurueck. Mit Umwandlung beim Lesen
+        waeren die eigenen Dateien beim naechsten Speichern **doppelt
+        kodiert** worden -- aus "ü" (c3 bc) wird dann c3 83 c2 bc.
+
+        Gemessen wird genau das: der Name geht hinein, die Datenbank
+        wird geschlossen, wieder geoeffnet und nochmals beschrieben
+        (das schreibt die Namensbasis neu), und danach muessen in der
+        .sn5 dieselben Bytes stehen.
+
+        Zur Ehrlichkeit: dieser Fall **faellt gegen die
+        Umwandlungs-Fassung nicht durch** -- nachgemessen. Der Codec
+        dieser Datenbank fuehrt UTF-8, `toUtf8` ist dort also ein
+        Nullschritt; der Schaden entstuende erst mit einer von Hand
+        gewaehlten Latin-1-Kodierung, und die erreicht der Fall nicht.
+        Was er festhaelt, ist der Umlauf selbst.
+        """
+        ziel = os.path.join(INSTANZ.heim, "umlaut.si5")
+        basis = os.path.join(INSTANZ.heim, "umlaut.sn5")
+        name = "M\u00fcller, M"
+
+        for nummer, gegner in enumerate(("Schwarz, S", "Weiss, W")):
+            pgn = os.path.join(INSTANZ.heim, "umlaut%d.pgn" % nummer)
+
+            with open(pgn, "w", encoding="utf-8") as f:
+                f.write('[Event "Probe"]\n[Site "Nirgendwo"]\n'
+                        '[Date "2026.11.15"]\n[Round "%d"]\n'
+                        '[White "%s"]\n[Black "%s"]\n[Result "*"]\n\n'
+                        '1. e4 e5 *\n' % (nummer + 1, name, gegner))
+
+            if nummer == 0:
+                INSTANZ.frage("::scidc::db::new {%s} Normal 0" % ziel)
+                INSTANZ.frage("::scidc::db::attach {%s} {%s}" % (ziel, ziel))
+            else:
+                ok, text = INSTANZ.roh(
+                    "::scidc::db::load {%s} ::probeProgress {} -readonly 0" % ziel)
+                self.assertTrue(ok, "die Datenbank oeffnet nicht: " + text)
+
+            try:
+                ok, text = INSTANZ.roh(
+                    "::scidc::db::import {%s} {%s} ::probeLog {} ::probeProgress {}"
+                    % (ziel, pgn))
+                self.assertTrue(ok, "Import %d: %s" % (nummer, text))
+            finally:
+                INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
+            with open(basis, "rb") as f:
+                rohdaten = f.read()
+
+            self.assertIn(name.encode("utf-8"), rohdaten,
+                          "der Name steht nach Durchgang %d nicht als UTF-8 "
+                          "in der .sn5" % nummer)
+            self.assertNotIn(name.encode("utf-8").decode("latin-1").encode("utf-8"),
+                             rohdaten,
+                             "doppelt kodiert nach Durchgang %d" % nummer)
+
+    def test_eine_dreifach_geschachtelte_variante_wird_angenommen(self):
+        """Rest von H3: `startVariation` hing an `!variationIsEmpty()`.
+
+        Eine Variante kann aufgehen, bevor in der umgebenden Linie ein
+        Zug steht -- und das ist kein Dateischaden, sondern **gueltiges
+        PGN**: `1. e4 ((( 1. d4 ))) *`. Der Leser faengt eine einfache
+        Schachtelung selbst ab (`nestedVar`), bei der dritten Klammer
+        kommt sie durch. Gemessen am zurueckgebauten Stand:
+        `precondition violation: !variationIsEmpty()` aus
+        `startVariation` -- der Import schlug fehl, und mit -DNREQ waere
+        `undoMove` mit einem leeren Zug gelaufen.
+
+        Jetzt laesst `startVariation` den Rueckzug aus, wenn es nichts
+        zurueckzunehmen gibt. Der Stapel bleibt ausgeglichen, also
+        pruefen wir beides: die Partie wird angenommen **und** sie laedt
+        wieder.
+        """
+        pgn = os.path.join(INSTANZ.heim, "schachtel.pgn")
+
+        with open(pgn, "w", encoding="utf-8") as f:
+            f.write('[Event "Probe"]\n[Site "Nirgendwo"]\n[Date "2026.11.15"]\n'
+                    '[Round "1"]\n[White "Weiss, W"]\n[Black "Schwarz, S"]\n'
+                    '[Result "*"]\n\n1. e4 ((( 1. d4 ))) e5 *\n')
+
+        ziel = os.path.join(INSTANZ.heim, "schachtel.sci")
+
+        INSTANZ.frage("::scidc::db::new {%s} Normal 0" % ziel)
+        INSTANZ.frage("::scidc::db::attach {%s} {%s}" % (ziel, ziel))
+
+        vorher = len(INSTANZ.ausgabe())
+
+        try:
+            ok, text = INSTANZ.roh(
+                "::scidc::db::import {%s} {%s} ::probeLog {} ::probeProgress {}"
+                % (ziel, pgn))
+
+            self.assertTrue(ok, "der Import schlug fehl: " + text)
+            self.assertEqual(text.split(None, 2)[0], "1",
+                             "angenommene Partien: " + text)
+
+            neu = INSTANZ.ausgabe()[vorher:]
+
+            self.assertNotIn("precondition violation", neu,
+                             "Zusicherungsverletzung:\n" + neu[-1500:])
+
+            self.assertEqual(
+                INSTANZ.frage("::scidc::game::load 0 {%s} Normal 0" % ziel), "1")
+        finally:
+            INSTANZ.roh("::scidc::db::close {%s}" % ziel)
+
     def test_eine_zu_grosse_spieler_id_im_si4_index_wird_abgewiesen(self):
         """Derselbe Griff im SI3/SI4-Lesepfad -- dort ohne jedes Klemmen.
 

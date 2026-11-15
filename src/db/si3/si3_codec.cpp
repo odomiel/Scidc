@@ -1729,7 +1729,20 @@ Codec::readNamebasesSi5(mstl::string const& filename, util::Progress& progress)
 		fstrm.read(buf, (size_t)(len));
 		if (fstrm.fail()) break;
 		buf[len] = '\0';
+
 		mstl::string name(buf, (unsigned)(len));
+
+		// SI5 speichert Namen in UTF-8 -- anders als SI3/SI4, wo der Leser
+		// sie ueber m_codec->toUtf8 aus der Kodierung der Datenbank holt.
+		// Hier *darf* nicht umgewandelt werden: writeNamebasesSi5 schreibt
+		// entry->name() unverwandelt zurueck, eine Umwandlung beim Lesen
+		// wuerde die eigenen Dateien beim naechsten Speichern doppelt
+		// kodieren. Geprueft werden muss trotzdem: eine ungueltige Folge
+		// erreichte insertPlayer, wo nur ein M_REQUIRE stand (und das faellt
+		// mit -DNREQ weg). Der SI3-Leser macht an dieser Stelle dasselbe.
+		if (!sys::utf8::validate(name))
+			m_codec->forceValidUtf8(name);
+
 		unsigned id = (nt < 4) ? typeCounts[nt]++ : 0;
 		switch (nt) {
 			case 0: players.push_back(IdName(id,name)); break;

@@ -582,14 +582,24 @@ Consumer::afterSendMove(Entry& entry)
 void
 Consumer::startVariation()
 {
-	M_REQUIRE(!variationIsEmpty());
-
 	if (m_terminated)
 		return;
 
 	m_stack.dup();
 	Entry& entry = m_stack.top();
-	entry.board.undoMove(entry.move, m_useVariant);
+
+	// Eine Variante kann auch aufgehen, bevor in der umgebenden Linie ein Zug
+	// steht -- im PGN "((1.d4))" oder eine Klammer am Anfang einer Linie. Dann
+	// gibt es nichts zurueckzunehmen, und undoMove() bekaeme einen leeren Zug.
+	// Bisher stand hier nur M_REQUIRE(!variationIsEmpty()), und das faellt mit
+	// -DNREQ weg. Die Datei-Decoder weisen den Fall selbst ab
+	// (if (!move) throwCorruptData()); fuer den PGN-Leser ist er dagegen die
+	// normale Schreibweise einer Variante, die an derselben Stellung beginnt --
+	// also nicht abweisen, sondern den Rueckzug auslassen. Der Stapel bleibt
+	// dabei ausgeglichen, finishVariation() raeumt ihn wie immer ab.
+	if (!entry.empty)
+		entry.board.undoMove(entry.move, m_useVariant);
+
 	entry.empty = true;
 	entry.move.clear();
 }

@@ -3622,9 +3622,11 @@ country::toRegion(Code code)
 country::Code
 country::fromString(char const* country)
 {
-	M_REQUIRE(*country == 0 || ::strlen(country) >= 3);
-
-	if (*country == '\0')
+	// compareNames vergleicht drei Zeichen; eine kuerzere Zeichenkette wird
+	// dabei ueberlesen. Das hing nur an M_REQUIRE, und die Zeichenkette kommt
+	// aus einer PGN-Datei. Die mstl::string-Fassung unten macht genau das
+	// schon: zu kurz heisst Unknown.
+	if (country[0] == '\0' || country[1] == '\0' || country[2] == '\0')
 		return Unknown;
 
 	void const* p = ::bsearch(	country,
